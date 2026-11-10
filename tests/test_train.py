@@ -34,7 +34,7 @@ def test_harvest_builds_the_three_kinds_of_examples():
     run_searches([solved, failed], UniformProposer(rng), k=8)
     assert solved.solved_node is not None and failed.solved_node is None
     buffer = ReplayBuffer(1000)
-    harvest([solved, failed], buffer, rng)
+    harvest([solved, failed], buffer, rng, minimise=False)
     assert len(buffer.solve) == len(solved.solution_path()) - 1 >= 1
     assert buffer.negative and buffer.hindsight
     for src, tgt in buffer.solve + buffer.hindsight:
@@ -44,6 +44,30 @@ def test_harvest_builds_the_three_kinds_of_examples():
     config = TrainConfig(batch_size=16)
     src, tgt_in, tgt_out, value, mask = make_batch(buffer, config, rng, torch.device("cpu"))
     assert src.shape[0] == tgt_in.shape[0] == 16 and tgt_in.shape == tgt_out.shape
+
+
+def test_minimal_examples_drop_useless_moves():
+    """A proof found with a detour is cut down to the moves that matter."""
+    from alphafe.search import Node
+    from alphafe.env import step
+    from alphafe.moves import parse_move
+    from alphafe.tokenizer import encode_move
+    from alphafe.train import minimal_examples
+
+    search = BestFirstSearch(Problem.parse("f(x+y) = f(x) + y"), budget=10)
+    node = search.root
+    for text in ["sub P: y:=1", "sub P: x:=0"]:      # the first move is not needed
+        move = parse_move(text)
+        ids = encode_move(move, node.view)
+        state, applied = step(node.state, move)
+        node = Node(state, node.proof + applied, node, ids, 0.0, node.depth + 1)
+    assert node.state.solved
+    search.solved_node = node
+    pairs = minimal_examples(search)
+    assert len(pairs) == 1
+    src, tgt = pairs[0]
+    assert tgt == tuple(encode_move(parse_move("sub P: x:=0"), search.root.view))
+    assert src == tuple(search.root.view.tokens)
 
 
 @pytest.mark.slow

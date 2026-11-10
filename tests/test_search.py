@@ -48,3 +48,9 @@ def test_many_searches_advance_together():
     searches = [BestFirstSearch(p, budget=300) for p in problems]
     run_searches(searches, UniformProposer(random.Random(2)), k=8)
     assert all(s.done for s in searches) and sum(s.solved_node is not None for s in searches) == 3
+
+
+def test_value_guided_search_still_solves():
+    search = BestFirstSearch(Problem.parse("f(x+y) = f(x) + y"), budget=300, value_weight=1.0)
+    run_searches([search], UniformProposer(random.Random(0)), k=8)
+    assert search.result().solved and not search.unvalued

@@ -37,7 +37,9 @@ from .generate import N_TIERS, benchmark_keys, generate
 from .model import (SRC_BUCKET, TGT_BUCKET, ModelConfig, NeuralProposer, PolicyValueNet, pad_batch, pick_device,
                     save_checkpoint)
 from .search import BestFirstSearch, GreedySearch, UniformProposer, run_searches
-from .tokenizer import BOS, PAD, encode_state
+from .checker import Reject
+from .env import start, step
+from .tokenizer import BOS, PAD, decode_move, encode_move, encode_state
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 
@@ -62,6 +64,7 @@ class TrainConfig:
     warmup: int = 200
     weight_decay: float = 0.01
     value_weight: float = 0.5
+    minimise: bool = True              # drop unneeded moves from found proofs before learning from them
     hindsight_fraction: float = 0.25   # share of each batch
     negative_fraction: float = 0.15
     buffer_size: int = 120_000
@@ -112,12 +115,60 @@ class ReplayBuffer:
         return len(self.solve) + len(self.hindsight) + len(self.negative)
 
 
-def harvest(searches: list, buffer: ReplayBuffer, rng: random.Random, max_hindsight: int = 4) -> None:
+def minimal_examples(search) -> list:
+    """Solve examples from a successful search, with useless moves removed.
+
+    A found proof can contain creative moves that were not needed. We try
+    dropping each one and replaying the rest; if the problem is still solved
+    the move was dead weight and teaching it would teach noise. The examples
+    are rebuilt from the replay, so each (state, move) pair is consistent.
+    Returns [(state tokens, move tokens), ...].
+    """
+    path = search.solution_path()
+    moves = [decode_move(node.move_ids, node.parent.view) for node in path[1:]]
+
+    def replay(sequence):
+        state, _ = start(search.problem)
+        pairs = []
+        for move in sequence:
+            if state.solved:
+                return None  # leftover moves after the end: not a clean proof
+            view = encode_state(state)
+            ids = encode_move(move, view)
+            if ids is None:
+                return None
+            try:
+                state, _ = step(state, move)
+            except Reject:
+                return None
+            pairs.append((tuple(view.tokens), tuple(ids)))
+        return pairs if state.solved else None
+
+    index = 0
+    while index < len(moves) and len(moves) > 1:
+        shorter = moves[:index] + moves[index + 1:]
+        if replay(shorter) is not None:
+            moves = shorter
+        else:
+            index += 1
+    pairs = replay(moves)
+    if pairs is None:  # should not happen; fall back to the path as found
+        pairs = [(tuple(node.parent.view.tokens), tuple(node.move_ids)) for node in path[1:]]
+    return pairs
+
+
+def harvest(searches: list, buffer: ReplayBuffer, rng: random.Random, max_hindsight: int = 4,
+            minimise: bool = True) -> None:
     """Turn finished self-play searches into training examples."""
     for search in searches:
         path = search.solution_path()
-        for node in path[1:]:
-            buffer.add("solve", (tuple(node.parent.view.tokens), tuple(node.move_ids)))
+        if len(path) > 1:
+            if minimise:
+                pairs = minimal_examples(search)
+            else:
+                pairs = [(tuple(node.parent.view.tokens), tuple(node.move_ids)) for node in path[1:]]
+            for pair in pairs:
+                buffer.add("solve", pair)
         if not path:
             picks = [search.root] + rng.sample(search.nodes, min(2, len(search.nodes)))
             for node in picks:
@@ -245,7 +296,7 @@ def train(config: TrainConfig, resume: bool = False) -> dict:
         selfplay_seconds = time.time() - tick
 
         # 3-4. learn
-        harvest(searches, buffer, rng)
+        harvest(searches, buffer, rng, minimise=config.minimise)
         losses = {}
         if buffer.solve:
             losses, state["step"] = train_steps(model, optimizer, buffer, config, rng, device, state["step"])

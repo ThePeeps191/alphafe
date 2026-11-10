@@ -167,18 +167,31 @@ class BestFirstSearch(_Search):
 
     source = "network-search"
 
-    def __init__(self, problem: Problem, budget: int = 256, max_depth: int = 10, revisit_penalty: float = 3.0):
+    def __init__(self, problem: Problem, budget: int = 256, max_depth: int = 10, revisit_penalty: float = 3.0,
+                 value_weight: float = 0.0):
         super().__init__(problem, budget, max_depth)
         self.revisit_penalty = revisit_penalty
+        self.value_weight = value_weight      # > 0: also rank states by the value head's estimate
         self._counter = itertools.count()
         self.frontier: list = []
         self._current: Optional[Node] = None
+        self.unvalued: list = []              # new states waiting for a value estimate
+        self._bonus: dict = {}
         if not self.done:
             self._push(self.root)
 
     def _push(self, node: Node) -> None:
-        priority = node.logp - self.revisit_penalty * node.expansions
+        priority = node.logp - self.revisit_penalty * node.expansions + self._bonus.get(id(node), 0.0)
         heapq.heappush(self.frontier, (-priority, next(self._counter), node))
+
+    def set_values(self, values: list) -> None:
+        """Receive value estimates (probabilities) for the states in ``unvalued`` and queue them."""
+        import math
+
+        for node, value in zip(self.unvalued, values):
+            self._bonus[id(node)] = self.value_weight * math.log(max(value, 1e-6))
+            self._push(node)
+        self.unvalued = []
 
     def request(self) -> Optional[Node]:
         if self.done:
@@ -199,7 +212,10 @@ class BestFirstSearch(_Search):
             if self.done:
                 return
             if child is not None and child.depth < self.max_depth:
-                self._push(child)
+                if self.value_weight > 0:
+                    self.unvalued.append(child)
+                else:
+                    self._push(child)
         if self.calls >= self.budget:
             self.done, self.reason = True, "budget exhausted"
             return
@@ -212,6 +228,9 @@ class UniformProposer:
 
     def __init__(self, rng):
         self.rng = rng
+
+    def values(self, views: list) -> list:
+        return [0.5] * len(views)
 
     def propose(self, views: list, k: int) -> list:
         out = []
@@ -240,3 +259,13 @@ def run_searches(searches: list, proposer, k: int) -> None:
         proposals = proposer.propose([node.view for _, node in pending], k)
         for (search, _), props in zip(pending, proposals):
             search.feed(props)
+        # Value-guided searches: score the newly reached states in one batch.
+        waiting = [search for search, _ in pending if getattr(search, "unvalued", None) and not search.done]
+        if waiting:
+            views = [node.view for search in waiting for node in search.unvalued]
+            values = proposer.values(views)
+            offset = 0
+            for search in waiting:
+                count = len(search.unvalued)
+                search.set_values(values[offset: offset + count])
+                offset += count
