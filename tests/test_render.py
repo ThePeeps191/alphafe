@@ -29,7 +29,7 @@ def test_render_cases():
     problem = Problem.parse("f(x)f(y) = f(xy) + x + y", "R")
     text = render(problem, parse_proof("sub P: x:=0, y:=0\nsplit [f(0)^2 = f(0)]\nsub P: y:=0\nsub P: y:=0\nconclude"))
     assert "we have f(0) = 0 or f(0) = 1" in text
-    assert "Case f(0) = 0." in text and "contradiction" in text
+    assert "Case f(0) = 0." in text and "So this case is impossible." in text
     assert "Case f(0) = 1." in text
 
 

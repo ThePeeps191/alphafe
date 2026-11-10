@@ -85,7 +85,7 @@ def _describe(problem: Problem, entry: LogEntry) -> list[str]:
             bindings = ", ".join(f"{name} = {T.show(term)}" for name, term in move.bindings)
             lead = f"Putting {bindings} in {_eq(entry.source)}"
         if entry.closed == "contradiction":
-            lines.append(f"{lead} leads to a contradiction: {entry.reason}.")
+            lines.append(f"{lead} leads to {_absurd(entry.reason)}. So this case is impossible.")
             return lines
         shown = entry.instance
         if shown is not None and not shown.is_zero():
@@ -104,7 +104,7 @@ def _describe(problem: Problem, entry: LogEntry) -> list[str]:
             lines.append("Either " + " or ".join(labels) + ".")
         for label, reason in entry.children:
             if reason is not None:
-                lines.append(f"The case {label} is impossible: {reason}.")
+                lines.append(f"The case {label} is impossible: with the relations above it leads to {_absurd(reason)}.")
     elif isinstance(move, Divide):
         lines.append(f"Since {poly_str(entry.extra)} is nonzero we may divide {_eq(entry.source)} by it.")
         lines.extend(_fact_line(entry))
@@ -149,7 +149,7 @@ def _describe(problem: Problem, entry: LogEntry) -> list[str]:
             )
         return lines
     if entry.closed == "contradiction" and not isinstance(move, Subst):
-        lines.append(f"This is a contradiction: {entry.reason}. So this case is impossible.")
+        lines.append(f"This leads to {_absurd(entry.reason)}. So this case is impossible.")
         return lines
     if isinstance(move, Cauchy):
         lines.extend(_fact_line(entry, skip=entry.instance))
@@ -157,6 +157,13 @@ def _describe(problem: Problem, entry: LogEntry) -> list[str]:
         lines.extend(_fact_line(entry))
     lines.extend(_props(entry))
     return lines
+
+
+def _absurd(reason: str) -> str:
+    """Phrase a contradiction found by the checker."""
+    if reason.endswith(" = 0") and reason[:-4].lstrip("-").replace("/", "").isdigit():
+        return f"the absurd equation {reason}"
+    return f"a contradiction ({reason})"
 
 
 def _fact_line(entry: LogEntry, skip: Poly | None = None) -> list[str]:
