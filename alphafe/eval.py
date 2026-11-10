@@ -165,22 +165,26 @@ def synthetic_heldout(seed: int, per_tier: int, limit: int) -> dict:
 
 def full_eval(checkpoint, tag: str, seed: int = 0, per_tier: int = 3000, heldout: int = 200,
               baseline_budgets=(SEARCH_BUDGET, 2000), device: str = "auto", workers: int = 8,
-              big_budget: int = 0, value_weight: float = 0.0) -> dict:
+              big_budget: int = 0, value_weight: float = 0.0, diverse: bool = True) -> dict:
     """The three-mode evaluation on every benchmark. Returns {suite: {solver label: rows}} and saves JSON.
 
     ``big_budget`` > 0 adds a network search with that many checker calls on
     the seed and real suites (to compare with brute force at the same budget).
     ``value_weight`` > 0 makes the network searches rank states with the value head too.
+    ``diverse`` samples each state's proposals at a spread of temperatures
+    (``model.DIVERSE``); False uses temperature 1 for every sample (the first
+    evaluation, M5, used 0.7 without backtracking and 1.0 in search).
     """
     import random
 
     import torch
 
     from .bench import load_real, load_seed
-    from .model import NeuralProposer, PolicyValueNet, load_model, pick_device
+    from .model import DIVERSE, NeuralProposer, PolicyValueNet, load_model, pick_device
     from .search import UniformProposer
 
     dev = pick_device(device)
+    temperature = DIVERSE if diverse else 1.0
     model, payload = load_model(checkpoint, dev)
     torch.manual_seed(0)
     untrained = PolicyValueNet(model.config).to(dev)
@@ -197,17 +201,17 @@ def full_eval(checkpoint, tag: str, seed: int = 0, per_tier: int = 3000, heldout
     for suite, benches in suites.items():
         runs: dict = {}
         policies = (
-            ("network", lambda temp: NeuralProposer(model, dev, temperature=temp)),
-            ("untrained network", lambda temp: NeuralProposer(untrained, dev, temperature=temp)),
-            ("uniform policy", lambda temp: UniformProposer(random.Random(0))),
+            ("network", lambda: NeuralProposer(model, dev, temperature=temperature)),
+            ("untrained network", lambda: NeuralProposer(untrained, dev, temperature=temperature)),
+            ("uniform policy", lambda: UniformProposer(random.Random(0))),
         )
         for name, make in policies:
-            runs[f"{name}, no backtracking ({GREEDY_BUDGET} calls)"] = run_policy(benches, make(0.7), "greedy", GREEDY_BUDGET)
+            runs[f"{name}, no backtracking ({GREEDY_BUDGET} calls)"] = run_policy(benches, make(), "greedy", GREEDY_BUDGET)
             runs[f"{name}, search ({SEARCH_BUDGET} calls)"] = run_policy(
-                benches, make(1.0), "search", SEARCH_BUDGET, value_weight=value_weight if name == "network" else 0.0)
+                benches, make(), "search", SEARCH_BUDGET, value_weight=value_weight if name == "network" else 0.0)
             if big_budget and name == "network" and suite in ("seed", "real"):
                 runs[f"{name}, search ({big_budget} calls)"] = run_policy(
-                    benches, make(1.0), "search", big_budget, value_weight=value_weight)
+                    benches, make(), "search", big_budget, value_weight=value_weight)
         for budget in baseline_budgets:
             runs[f"brute force ({budget} calls)"] = run_baseline(benches, budget, 120.0, workers=workers)
         for label, rows in runs.items():
@@ -243,9 +247,12 @@ def main(argv=None) -> None:
                         help="also run the network search with this many checker calls on seed/real")
     parser.add_argument("--value-weight", type=float, default=0.0,
                         help="rank search states by policy log-probability plus this times log(value)")
+    parser.add_argument("--single-temperature", action="store_true",
+                        help="sample all proposals at temperature 1 instead of a spread")
     args = parser.parse_args(argv)
     results = full_eval(args.checkpoint, args.tag, heldout=args.heldout, device=args.device,
-                        big_budget=args.big_budget, value_weight=args.value_weight)
+                        big_budget=args.big_budget, value_weight=args.value_weight,
+                        diverse=not args.single_temperature)
     text = report(results)
     RESULTS_DIR.mkdir(exist_ok=True)
     (RESULTS_DIR / f"{args.tag}.md").write_text(text)

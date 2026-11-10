@@ -34,7 +34,7 @@ import torch
 import torch.nn.functional as F
 
 from .generate import N_TIERS, benchmark_keys, generate
-from .model import (SRC_BUCKET, TGT_BUCKET, ModelConfig, NeuralProposer, PolicyValueNet, pad_batch, pick_device,
+from .model import (DIVERSE, SRC_BUCKET, TGT_BUCKET, ModelConfig, NeuralProposer, PolicyValueNet, pad_batch, pick_device,
                     save_checkpoint)
 from .search import BestFirstSearch, GreedySearch, UniformProposer, run_searches
 from .checker import Reject
@@ -58,6 +58,7 @@ class TrainConfig:
     k: int = 8                      # proposals per expanded state ...
     n_uniform: int = 2              # ... of which this many are uniform-random (exploration)
     temperature: float = 1.0
+    diverse: bool = True            # sample proposals at a spread of temperatures (model.DIVERSE)
     steps_per_iter: int = 60
     batch_size: int = 128
     lr: float = 3e-4
@@ -313,7 +314,7 @@ def train(config: TrainConfig, resume: bool = False) -> dict:
         # 1-2. self-play
         items = pool.sample_train(rng, tier, config.problems_per_iter)
         searches = [BestFirstSearch(item.problem(), budget=config.budget) for item in items]
-        proposer = NeuralProposer(model, device, config.temperature, config.n_uniform, rng)
+        proposer = NeuralProposer(model, device, DIVERSE if config.diverse else config.temperature, config.n_uniform, rng)
         run_searches(searches, proposer, config.k)
         on_tier = [s for s, item in zip(searches, items) if item.tier == tier]
         rate = sum(s.solved_node is not None for s in on_tier) / max(1, len(on_tier))
@@ -340,7 +341,7 @@ def train(config: TrainConfig, resume: bool = False) -> dict:
 
         # periodic held-out evaluation (greedy, no exploration)
         if state["iteration"] % config.eval_every == 0:
-            eval_proposer = NeuralProposer(model, device, temperature=0.7)
+            eval_proposer = NeuralProposer(model, device, temperature=DIVERSE if config.diverse else 0.7)
             for t in range(1, tier + 1):
                 problems = [g.problem() for g in pool.test[t][: config.eval_problems]]
                 record[f"heldout_t{t}_greedy"] = evaluate(problems, eval_proposer, "greedy", config.eval_budget)["rate"]

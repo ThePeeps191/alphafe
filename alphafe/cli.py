@@ -22,17 +22,17 @@ DEFAULT_CHECKPOINT = ROOT / "checkpoints" / "best.pt"
 
 
 def _solve_with_network(problem: Problem, checkpoint, budget: int, device: str) -> SearchResult:
-    from .model import NeuralProposer, load_model, pick_device
+    from .model import DIVERSE, NeuralProposer, load_model, pick_device
     from .search import BestFirstSearch, GreedySearch, run_searches
 
     dev = pick_device(device)
     model, _ = load_model(checkpoint, dev)
     greedy = GreedySearch(problem, budget=min(32, budget))
-    run_searches([greedy], NeuralProposer(model, dev, temperature=0.7), k=8)
+    run_searches([greedy], NeuralProposer(model, dev, temperature=DIVERSE), k=8)
     if greedy.solved_node is not None:
         return greedy.result()
     search = BestFirstSearch(problem, budget=budget)
-    run_searches([search], NeuralProposer(model, dev, temperature=1.0), k=8)
+    run_searches([search], NeuralProposer(model, dev, temperature=DIVERSE), k=8)
     result = search.result()
     result.checker_calls += greedy.calls
     return result

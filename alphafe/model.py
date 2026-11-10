@@ -113,14 +113,26 @@ def pad_batch(sequences: list, device=None, multiple: int = 1) -> torch.Tensor:
     return out.to(device) if device is not None else out
 
 
+# Sampling temperatures for the proposals of one state. A trained policy is
+# often almost certain of one move; sampling eight times at one temperature
+# then returns the same move eight times. Spreading the temperatures keeps a
+# few faithful samples and adds progressively more adventurous ones.
+DIVERSE = (0.6, 0.8, 1.0, 1.0, 1.3, 1.6, 2.0, 3.0)
+
+
 class NeuralProposer:
     """Samples moves from the network under the move grammar.
+
+    ``temperature`` is one number, or a tuple that is cycled over the samples
+    of each state (see ``DIVERSE``). Whatever temperature a sample was drawn
+    at, the log-probability reported for it is the model's own (temperature
+    1), so proposals from different temperatures can be ranked together.
 
     ``n_uniform`` of the ``k`` proposals per state are drawn from the uniform
     grammar policy instead (exploration during self-play; 0 for evaluation).
     """
 
-    def __init__(self, model: PolicyValueNet, device, temperature: float = 1.0, n_uniform: int = 0, rng=None,
+    def __init__(self, model: PolicyValueNet, device, temperature=1.0, n_uniform: int = 0, rng=None,
                  max_batch: int = 2048):
         self.model = model
         self.device = device
@@ -177,6 +189,9 @@ class NeuralProposer:
         # up to t, so the padding to its right is harmless.
         tgt = torch.full((batch, TGT_BUCKET), PAD, dtype=torch.long, device=device)
         tgt[:, 0] = BOS
+        ladder = self.temperature if isinstance(self.temperature, (tuple, list)) else (self.temperature,)
+        temps = torch.tensor([ladder[j % len(ladder)] for _ in range(len(views)) for j in range(k)],
+                             dtype=torch.float32, device=device).unsqueeze(1)
         logps = torch.zeros(batch, device=device)
         vocab = self.model.config.vocab_size
         for position in range(MAX_MOVE_TOKENS + 1):
@@ -191,11 +206,10 @@ class NeuralProposer:
             mask = torch.full((batch, vocab), float("-inf"))
             mask[rows, cols] = 0.0
             active = torch.tensor([not g.done for g in grammars], device=device)
-            logits = self.model.decode(memory, pad, tgt)[:, position, :] / self.temperature
-            logits = logits + mask.to(device)
+            logits = self.model.decode(memory, pad, tgt)[:, position, :] + mask.to(device)
             logits[~active] = 0.0                      # finished rows: any distribution, result ignored
-            log_probs = F.log_softmax(logits, dim=-1)
-            choice = torch.multinomial(log_probs.exp(), 1).squeeze(1)
+            log_probs = F.log_softmax(logits, dim=-1)  # the model's own probabilities (for ranking)
+            choice = torch.multinomial(F.softmax(logits / temps, dim=-1), 1).squeeze(1)
             logps = logps + torch.where(active, log_probs.gather(1, choice.unsqueeze(1)).squeeze(1), torch.zeros_like(logps))
             choice_list = choice.tolist()
             next_col = []
