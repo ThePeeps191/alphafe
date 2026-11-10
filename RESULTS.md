@@ -134,10 +134,13 @@ The real benchmark is empty (the owners have not added problems yet).
 1. **On problems like its training data, the network learned something real.**
    On every held-out tier it solves more than the untrained network and the
    uniform policy, and it needs about one checker call where they need 4-10.
-   With 128 calls it beats brute force at the same budget on all four tiers,
-   and on tiers 1-2 it beats brute force given 15 times more calls.
-2. **It does not beat brute force everywhere.** With 2,000 calls brute force
-   is ahead on tier 3 (40.0% vs 36.5%) and level on tier 4.
+   With 128 calls it is ahead of brute force at the same budget on all four
+   tiers; the margin is clear on tier 2 (80.5% vs 66.0%) and within noise on
+   the others (these are single sampling runs on 200 problems, so differences
+   under about 7 points are not meaningful).
+2. **It does not beat brute force everywhere.** Brute force with 2,000 calls
+   is level with the network at 128 calls on tiers 3 and 4 (40.0% vs 36.5%,
+   26.0% vs 25.5%).
 3. **On the seed benchmark, training did not help, and without backtracking it
    hurt.** Search: 27/46 trained, 27/46 untrained. No backtracking: 20/46
    trained against 24/46 untrained. Brute force with 2,000 calls solves 33/46.
@@ -167,9 +170,25 @@ depth or expressiveness, so it is what M6 attacks first.
 
 ## M6: experiments after the first failure analysis
 
-Each experiment lists what changed, the commit, and what happened. All numbers
-are on the same seed benchmark (46 problems) and the same held-out synthetic
-problems (200 per tier) as M5 unless stated.
+Each experiment lists what changed, the commit, and what happened. E1-E3 use
+the same seed benchmark (46 problems) and exactly the same held-out synthetic
+problems (200 per tier) as M5; the held-out list is now frozen in
+`benchmarks/synthetic/heldout.jsonl` (verified identical to the problems
+evaluated in M5 and E2).
+
+**Caveats that apply to everything below.**
+
+* *The seed benchmark has become a development set.* The lemmas, the
+  temperature spread and the case commit were all chosen by looking at seed
+  failures. Seed numbers from here on show whether a fix did what it was meant
+  to do; they are not an unbiased estimate of anything. The held-out synthetic
+  set was not used to choose fixes, and the real benchmark, once the owners
+  fill it, will be the only untouched one.
+* *Noise.* Network rows up to and including E2 are a single sampling run, and
+  each training configuration was run with one seed. On 200 problems a
+  difference of fewer than about 14 problems (7 points) between two solvers is
+  within what one would expect from chance alone; on the seed set, about 3
+  problems. E4 reports ranges over sampling seeds.
 
 ### E1. Language: lemmas over Q and unique roots (commit `49e942d`)
 
@@ -214,13 +233,16 @@ Held-out synthetic problems (M5 value in brackets):
 | brute force (128 calls) | 86.5% | 66.0% | 30.0% | 23.0% |
 | brute force (2,000 calls) | 88.5% | 72.0% | 40.5% | 26.0% |
 
-Reading: this helped a lot. The same weights now beat both references on
-the seed benchmark in both modes, and with 2,000 calls the network solves more
-seed problems than brute force with 2,000 (37 vs 35) using about half the
-calls. The untrained network did not benefit (24 -> 22 without backtracking),
-so the gain is the trained policy's knowledge finally being usable, not just
-extra randomness. Tier 3 at 2,000 brute-force calls is still ahead of the
-network at 128.
+Reading: this helped. The same weights now solve more seed problems than
+both references in both modes (28 vs 22 and 18 without backtracking; 32 vs 28
+and 28 with search), where in M5 they did not. The untrained network did not
+benefit from the spread (24 -> 22 without backtracking), so the gain is the
+trained policy's knowledge becoming usable, not just extra randomness. Given
+the noise caveat above, the comparisons with brute force are ties rather than
+wins: 37 vs 35 seeds at 2,000 calls, 27.0% vs 23.0% on tier 4 at 128 calls,
+38.5% vs 40.5% on tier 3 (128 network calls against 2,000 brute-force calls).
+The clear differences are against the untrained references on every tier, and
+against brute force on tier 2 (81.5% vs 66.0% at 128 calls).
 
 Failure groups, network search with 128 calls (14 unsolved): too deep 2
 (s33, s34); network did not find it 12 (s18, s24, s25, s31, s37, s38, s39,
@@ -231,8 +253,11 @@ find 7 (s37, s38, s39, s40, s42, s43, s46).
 
 Change: when a move closes a case, both the network's best-first search and
 the brute force drop every other state on the frontier and continue from
-there. The remaining cases are the same however the case was closed, so this
-loses nothing. It targets the "too deep" group (s33, s34: two nested splits).
+there. Among states that came from the same split this loses nothing (cases
+share no facts, so the remaining cases are identical). Against states that
+never made the split it is a heuristic: still safe, because each remaining
+case knows everything the unsplit state knew, but possibly more expensive.
+It targets the "too deep" group (s33, s34: two nested splits).
 
 Brute force on seeds, before (E1) -> after: 128 calls 28 -> 28; 2,000 calls
 35 -> 35; 20,000 calls 39 -> 41 (s33 and s34 solved;

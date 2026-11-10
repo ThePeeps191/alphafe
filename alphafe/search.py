@@ -214,10 +214,14 @@ class BestFirstSearch(_Search):
                 return
             if child is not None and child.depth < self.max_depth:
                 if len(child.state.branches) < len(node.state.branches):
-                    # A case has been closed. The remaining cases are the same
-                    # whichever way this one was closed (cases do not share
-                    # facts), so every other state on the frontier is now
-                    # redundant: commit to this one.
+                    # A case has been closed: commit to this state and drop the
+                    # rest of the frontier. Cases share no facts, so among the
+                    # states that came from the same split the remaining cases
+                    # are identical and nothing is lost. Compared with states
+                    # that never made the split this is a heuristic: it is
+                    # still safe (each remaining case knows everything the
+                    # unsplit state knew, so whatever was provable there is
+                    # provable here), but it can cost more moves.
                     self.frontier = []
                     self.unvalued = []
                     self.commits += 1

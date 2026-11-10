@@ -119,8 +119,10 @@ def brute_force(problem: Problem, max_calls: int = 20000, max_seconds: float = 3
     ladder = LADDER if widening else (LADDER[-1],)
     reason = "search space exhausted"
     # ``base`` is where every rung starts. It moves forward whenever a case is
-    # closed: the remaining cases do not depend on how that one was closed, so
-    # nothing is lost by committing to it.
+    # closed. Among states from the same split the remaining cases do not
+    # depend on how that case was closed; against states that never split it
+    # is a heuristic that stays safe (each case knows at least what the
+    # unsplit state knew) but may cost more moves.
     base_state, base_proof = first_state, first_proof
     for rung, (n_single, n_pair, max_depth) in enumerate(ladder):
         last = rung == len(ladder) - 1

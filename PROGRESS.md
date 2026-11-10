@@ -35,15 +35,24 @@ A fresh session should read this file, `DECISIONS.md` and `git log` first.
 - **Checker extensions (first M6 language fix)**: polynomial Cauchy and the
   quadratic lemma over Q, unique-root deduction (`tests/test_lemmas.py`).
 
+- **M5** and **M6 experiments E1-E4**: see RESULTS.md. Search now commits when a
+  case closes; proposals are sampled at a spread of temperatures; training
+  minimises proofs and mirrors them (x <-> y); the held-out set is frozen in
+  `benchmarks/synthetic/heldout.jsonl`; seeds s47-s50 are three-variable.
+
 ## Next
 
-See the end of RESULTS.md for the current failure analysis and the list of
-experiments tried. Open directions, most promising first:
+See the end of RESULTS.md for the current failure analysis. Open directions,
+most promising first:
 
-1. More self-play at larger budgets on tiers 3-4 (the network's weak spot).
-2. Product reasoning in the checker (multiply an identity by a term and reduce
-   products), needed for s36 `f(x-y) = f(x)f(y)`.
-3. Wider injectivity/surjectivity criteria.
+1. The unsolved 10M seeds (s37, s38, s42, s46, s43) each hinge on one "idea"
+   substitution the network gives almost no probability (`scripts/diagnose.py`
+   shows which). More self-play at larger budgets on tiers 3-4, or a generator
+   that produces more problems needing such substitutions, is the next thing to try.
+2. Give the generator three-variable problems.
+3. Product reasoning in the checker (multiply an identity by a term and reduce
+   products) and wider injectivity/surjectivity criteria.
+4. More training seeds and sampling seeds, to turn "within noise" into answers.
 
 ## How to run
 
@@ -57,6 +66,8 @@ experiments tried. Open directions, most promising first:
 .venv/bin/python scripts/show_log.py NAME            # summarise logs/NAME/train.jsonl
 .venv/bin/alphafe eval --checkpoint checkpoints/NAME/last.pt --tag NAME   # three-mode evaluation
 .venv/bin/python scripts/analyse_failures.py results/FILE.json   # sort seed failures into groups
+.venv/bin/python scripts/diagnose.py checkpoints/NAME/last.pt [ids]   # probability the network gives each hand-proof move
+.venv/bin/python scripts/freeze_heldout.py           # (re)write benchmarks/synthetic/heldout.jsonl; do not rerun casually
 ```
 
 ## Known problems

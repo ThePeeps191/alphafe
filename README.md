@@ -157,19 +157,20 @@ inj / surj                 establish injectivity / surjectivity
 cancel                     f(A) = f(B) gives A = B (needs injectivity)
 pre 0                      pick a with f(a) = 0 (needs surjectivity)
 onto R2: y                 y occurs only as f(y) and f is surjective: replace f(y) by y
-cauchy                     additive over Q implies linear
+cauchy                     additive (up to a polynomial term) over Q implies polynomial
+quadratic                  f(x+y) + f(x-y) = 2f(x) + 2f(y) over Q implies f(x) = f(1)x^2
 conclude                   read off f(x) = ..., pin down constants by substituting back
 div R3 by f(0)             divide by a proven-nonzero constant
 ```
 
 A proof is a flat list of moves acting on the first open case. See
-`benchmarks/seed/proofs/` for 32 hand-written examples, and
+`benchmarks/seed/proofs/` for 48 worked examples (47 written by hand, one found by the network), and
 `scripts/play.py` to step through a proof and see the state after each move.
 
 ### The network
 
 The search environment applies the moves that need no creative input
-(`conclude`, `cauchy`, `inj`, `surj`, `cancel`) automatically. The network
+(`conclude`, `cauchy`, `quadratic`, `inj`, `surj`, `cancel`) automatically. The network
 chooses the rest: substitutions (writing the substituted term token by token,
 there is no fixed pool), case splits, preimages. It reads the tokenised case
 and writes a move under a grammar that only permits well-formed moves; a
@@ -184,17 +185,26 @@ used to produce, label or filter training data.
 
 ## Benchmarks
 
-* `benchmarks/seed/seed.jsonl`: 46 classic easy problems written for this
-  project, with expected answers (all verified) and estimated MOHS.
+* `benchmarks/seed/*.jsonl`: 50 classic easy problems written for this
+  project (four of them in three variables), with expected answers (all
+  verified) and estimated MOHS. It has been used to choose fixes, so treat it
+  as a development set.
+* `benchmarks/synthetic/heldout.jsonl`: 800 frozen held-out synthetic problems
+  (200 per curriculum tier), never trained on.
 * `benchmarks/real/`: empty; the owners add hand-picked problems there (format
   in its README) and `alphafe eval` picks them up automatically.
-* Synthetic held-out split: about 10% of generated problems, chosen by a hash
-  of the canonical equation. Training never sees it, the seed set or the real set.
+* The held-out split is about 10% of generated problems, chosen by a hash of
+  the canonical equation. Training never sees it, the seed set or the real set.
 
 ## Honest limitations
 
 * The checker's injectivity and surjectivity tests are syntactic patterns.
   A human can prove these properties in more ways than the checker recognises.
-* No lemma for quadratic or "polynomial Cauchy" equations yet, and no way to
-  multiply an identity by an expression before eliminating.
-* See `RESULTS.md` for what is and is not solved, and by which method.
+* There is no move for multiplying an identity by an expression, and products
+  of f-values are only eliminated when they match exactly.
+* The synthetic generator only produces two-variable problems. Three-variable
+  problems are supported and tested (four seed problems), but the network has
+  never trained on one.
+* The network is small and each training run is about half an hour on a
+  laptop GPU. See `RESULTS.md` for what is and is not solved, by which method,
+  and how much of each comparison is within noise.
