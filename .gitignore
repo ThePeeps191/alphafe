@@ -1,0 +1,16 @@
+.venv/
+__pycache__/
+*.pyc
+*.egg-info/
+.pytest_cache/
+.hypothesis/
+build/
+dist/
+# training artefacts: never commit
+checkpoints/
+data/
+logs/
+runs/
+*.pt
+*.ckpt
+.DS_Store

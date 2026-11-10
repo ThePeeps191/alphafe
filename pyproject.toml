@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "alphafe"
+version = "0.1.0"
+description = "A solver for easy olympiad functional equations: exact symbolic checker + small neural policy"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+dependencies = ["torch"]
+
+[project.optional-dependencies]
+dev = ["pytest", "hypothesis", "sympy"]
+
+[project.scripts]
+alphafe = "alphafe.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["alphafe*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+filterwarnings = ["ignore:Failed to initialize NumPy"]
+markers = ["slow: slower tests (search, training smoke tests)"]
