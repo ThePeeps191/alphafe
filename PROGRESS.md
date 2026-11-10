@@ -35,7 +35,8 @@ A fresh session should read this file, `DECISIONS.md` and `git log` first.
 - **Checker extensions (first M6 language fix)**: polynomial Cauchy and the
   quadratic lemma over Q, unique-root deduction (`tests/test_lemmas.py`).
 
-- **M5** and **M6 experiments E1-E4**: see RESULTS.md. Search now commits when a
+- **M5** and **M6 experiments E1-E7**: see RESULTS.md (E1-E4 helped; E5 subterm
+  exploration, E6 longer training and E7 value-guided search did not). Search now commits when a
   case closes; proposals are sampled at a spread of temperatures; training
   minimises proofs and mirrors them (x <-> y); the held-out set is frozen in
   `benchmarks/synthetic/heldout.jsonl`; seeds s47-s50 are three-variable.
@@ -69,6 +70,14 @@ most promising first:
 .venv/bin/python scripts/diagnose.py checkpoints/NAME/last.pt [ids]   # probability the network gives each hand-proof move
 .venv/bin/python scripts/freeze_heldout.py           # (re)write benchmarks/synthetic/heldout.jsonl; do not rerun casually
 ```
+
+## State of the local (uncommitted) artefacts
+
+- `checkpoints/v1/m5.pt` (M5), `checkpoints/v2/e4.pt` (28 min), `checkpoints/v2/e6.pt`
+  (56 min, also copied to `checkpoints/best.pt`, which `alphafe solve` loads),
+  `checkpoints/v3/e5.pt` (subterm exploration). None are in git; retrain with
+  `alphafe train` if they are gone.
+- `logs/` has the raw training logs; compact copies are in `results/train_*_log.json`.
 
 ## Known problems
 

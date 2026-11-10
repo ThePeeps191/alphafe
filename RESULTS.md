@@ -422,3 +422,69 @@ training is flat from about minute 20 onward
 (`results/train_v2_log.json`). More of the same self-play is not what is
 holding the network back; with this generator, budget and model size it has
 roughly converged.
+
+### E7. Ranking search states with the value head: did not help
+
+Change: in best-first search, a state's priority becomes the log-probability
+of its path plus log(value head's estimate), instead of the path
+log-probability alone (`alphafe eval --value-weight 1.0`). No retraining;
+weights are v2 at 56 minutes (E6). Three sampling seeds (`results/e7_value_*`).
+The first attempt at this evaluation crashed on tier 3 with an out-of-memory
+error on the Apple GPU (the value batches had free-form shapes); that was
+fixed in commit `39d468d` and the evaluation rerun in full.
+
+Number solved with search (ranges over three sampling seeds):
+
+| ranking | seed, 128 calls | seed, 2,000 calls | tier 1 | tier 2 | tier 3 | tier 4 |
+|---|---|---|---|---|---|---|
+| path probability only (E6) | 36-40 | 41-45 | 186 | 170-176 | 88-91 | 53-57 |
+| path probability + value | 35-40 | 42-43 | 185-187 | 167-169 | 86-89 | 57 |
+
+Reading: no gain, and slightly worse on tier 2. The value head is trained on
+noisy labels (a state counts as "unsolvable" whenever a 48-call attempt
+failed), so this is not surprising. The option stays in the code, off by
+default.
+
+## Where things stand after M6
+
+**Soundness.** In every evaluation run to date, each proof found for a
+problem with a recorded answer produced exactly the recorded answer (the
+`AnswerMismatch` canary never fired). The model-check fuzzer has tested about
+100,000 accepted random moves on the 50 seed problems and 110,000 on 1,600
+synthetic problems against known solutions without a violation. The one
+discrepancy it ever reported was in the answer canonicaliser, not in a proof
+move (`x^2 - a^2 + b` was not recognised as `x^2 + c`); fixed before M3.
+
+**What works.**
+
+* 0M and 5M seed problems: the network with search solves all 37 given 2,000
+  checker calls, and 35-36 of them within 128.
+* The trained network needs roughly a third to a half of the checker calls
+  brute force needs on problems both solve, and at equal small budgets it
+  solves more held-out problems, clearly so on tiers 2 and 3.
+* Three seed problems (s36, s37, s38) have network proofs and no brute-force
+  proof at 20,000 calls with the default search.
+
+**What does not.**
+
+* 10M: 4-5 of 11 with 2,000 calls. s33 and s34 (two nested case splits, 7
+  creative moves) have never been solved by the network; s40, s42 and the 20M
+  problem s46 neither. Over all runs so far the trained network has solved 45
+  of the 50 seed problems at least once, brute force 48 (using budgets up to
+  50,000 calls), and s46 has been solved by nothing.
+* A large enough brute-force budget still beats the network at 128 calls on
+  every held-out tier (188/178/97/63 of 200 at 20,000 calls).
+* More training time (E6), state-derived exploration (E5) and value-guided
+  search (E7) each made no measurable difference.
+
+**Experiments that helped:** lemmas over Q (E1), sampling proposals at a
+spread of temperatures (E2), committing when a case closes (E3, for brute
+force at large budgets), and the retraining bundle of E4.
+**Experiments that did not:** E5, E6, E7.
+
+**What we would try next**, in order: (1) a generator that produces problems
+whose proofs need the "idea" substitutions the network lacks, including
+three-variable problems; (2) several training seeds, to find out which of the
+small differences above are real; (3) a larger self-play budget on tiers 3-4
+together with a cleaner value target; (4) product reasoning and wider
+injectivity/surjectivity criteria in the checker.
