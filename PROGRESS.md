@@ -20,9 +20,14 @@ A fresh session should read this file, `DECISIONS.md` and `git log` first.
   - `tests/test_traps.py`: wrong proofs for every soundness trap, all rejected.
   - `tests/test_modelcheck.py` + `scripts/fuzz.py`: random moves vs known solutions.
 
+- **M3 baselines**: `alphafe/env.py` (search environment: free moves applied
+  after each proposed move, `SearchResult`, `confirm`), `alphafe/baseline/`
+  (guesser, brute force with iterative widening), `alphafe/bench.py` (benchmark
+  loading + answer canary), `alphafe/eval.py` (scoring, tables, `results/*.json`).
+  Seed solve rates are in RESULTS.md (37/46 at 20,000 checker calls).
+
 ## Next
 
-- M3 baseline guesser + brute force, results in RESULTS.md.
 - M4 generator/tokenizer/model/training; M5; M6.
 
 ## How to run
@@ -32,6 +37,7 @@ A fresh session should read this file, `DECISIONS.md` and `git log` first.
 .venv/bin/python scripts/check_seed_proofs.py     # hand-written seed proofs
 .venv/bin/python scripts/play.py "f(x+y) = f(x) + y" R proof.txt   # replay a proof step by step
 .venv/bin/python scripts/fuzz.py 40 80            # long soundness fuzz
+.venv/bin/python scripts/run_baseline.py 20000 120   # baseline on seed (+ real) benchmarks
 ```
 
 ## Known problems

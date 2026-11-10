@@ -24,3 +24,8 @@ One line (or a short paragraph) per choice, newest at the bottom.
 - **Extra move `div`**: explicit division by a proven-nonzero constant exists mainly so the "divide by something not proven nonzero" trap can be tested; the normaliser performs legal divisions itself.
 - **Size caps** (rows per case, monomials per identity, term size, open cases) reject moves that blow up. They limit what can be proven, never what is sound.
 - **Model-check fuzzing** (`alphafe/modelcheck.py`, `tests/test_modelcheck.py`, `scripts/fuzz.py`): random accepted moves are tested against known solutions of the seed problems. It is a test tool and is never used to accept a proof.
+- **Free moves**: the search environment (`alphafe/env.py`) applies conclude, cauchy, inj, surj and cancel automatically after every proposed move, for the baseline and the network alike. They need no creative input. The network therefore only chooses substitutions, case splits, preimages and `onto`. Free moves are still ordinary proof moves and are re-checked.
+- **"Checker calls"** counts proposed moves only (accepted or rejected), not the free moves that follow them.
+- **Brute force uses iterative widening** (tiny pool deep, then larger pools). Plain BFS is kept as an option and both are reported; widening is the stronger control.
+- **Answer canary**: if a checked proof yields a solution set different from a recorded answer, evaluation raises `AnswerMismatch` instead of scoring it.
+- **Baseline isolation**: `tests/test_isolation.py` fails if any training module imports `alphafe.baseline`. The baseline is not used to label, filter or order training problems.
