@@ -544,3 +544,54 @@ three-variable problems; (2) several training seeds, to find out which of the
 small differences above are real; (3) a larger self-play budget on tiers 3-4
 together with a cleaner value target; (4) product reasoning and wider
 injectivity/surjectivity criteria in the checker.
+
+## M7: the real benchmark, version 1 baseline
+
+### Protocol (written and committed before the run)
+
+The real benchmark (`benchmarks/real/real.jsonl`, 137 competition problems)
+was compiled without running the solver. This is the solver's first contact
+with it, and the point of the run is to record what version 1 does on unseen
+problems before anything is changed in response.
+
+* **Solver.** The code as it was when the benchmark was compiled (commit
+  `a199cda`), plus changes to the evaluation harness only: suite selection,
+  provenance, mismatch handling, flagged-problem tables, and an equation the
+  checker cannot load being scored as unsolved. No move, search rule, pool
+  or weight was changed. The harness check below shows the numbers of an
+  existing run are reproduced.
+* **Weights.** The published file `alphafe-v2-56min.pt` (release `v0.1.0`,
+  sha256 `8f52cc59...9bee3`), the same weights as E6.
+* **Command.** `alphafe eval --suite real --tag v1 --checkpoint
+  checkpoints/alphafe-v2-56min.pt --seeds 3 --big-budget 2000`, run once from
+  a clean tree on the Apple GPU, followed by `python
+  scripts/run_baseline.py 20000 120 widening v1 --suite real` for brute force at
+  20,000 calls.
+* **Rows.** The trained network without backtracking (32 calls), with search
+  at 128 and at 2,000 calls, each with three sampling seeds; the untrained
+  network and the uniform policy at 32 and 128; brute force at 128, 2,000 and
+  20,000.
+* **Tables.** Each on all 137 problems and again on the 124 that carry no
+  flag (12 are flagged as seen in development and 1 as in the training
+  pool), and by MOHS value. The flagged-free numbers are obtained by
+  filtering the rows of the one run, since a second run on a smaller suite
+  would draw different samples.
+* **What counts.** The headline is the 124-problem table. The 12 problems
+  seen in development are mostly ones the solver was already known to fail
+  on, so including them lowers the rate; they are reported and not hidden.
+  132 of the 137 MOHS values are estimates, so the MOHS columns are a rough
+  grouping.
+* **Harness check.** Before the run, the changed harness was run on the
+  seed suite with the same weights, seeds and budgets as E6 (`e6_v2b`). All
+  nine result files came out identical to the committed ones, row for row,
+  in which problems are solved and in checker calls (network rows for all
+  three sampling seeds: 34/34/33, 40/37/36 and 42/41/45). `git diff --stat
+  a199cda -- alphafe/` at the run commit touches `eval.py` (the harness),
+  `benchcheck.py` and `baseline/guesser.py` (validator, exponent limit),
+  and a few lines each in `checker.py`, `env.py`, `search.py`,
+  `baseline/search.py`, `bench.py`, `cli.py`, `terms.py` and `train.py`, all
+  for reporting an unloadable equation or a mismatch.
+* **If something goes wrong.** An answer mismatch stops everything else: the
+  record is re-read against its source, and if the record is right it is a
+  soundness bug that outranks all other work. If a harness bug forces a
+  second run, both runs are reported.
