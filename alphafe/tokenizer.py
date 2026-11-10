@@ -139,7 +139,7 @@ def _subterms(polys: list) -> list:
     """
     seen: dict = {}
     for poly in polys:
-        for atom in poly.all_atoms():
+        for atom in sorted(poly.all_atoms()):      # sorted: sets have no stable order between runs
             if atom[0] != "f":
                 continue
             arg = Poly.from_key(atom[1])

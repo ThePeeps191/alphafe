@@ -149,11 +149,12 @@ def test_subterm_exploration_proposes_expressions_from_the_state():
     assert {"f(y)", "f(x)", "f(y) + x"} <= shown
     rng = random.Random(0)
     moves = set()
-    for _ in range(300):
+    for _ in range(1500):
         sample = sample_subterm_move(view, rng)
         assert sample is not None
         ids, logp = sample
         assert ids[-1] == EOS and logp < 0
         moves.add(show_move(decode_move(ids, view)))
     assert "sub P: y:=f(y)" in moves and "sub P: x:=-f(y)" in moves
+    assert view.subterms == encode_state(state).subterms          # same order every time
     assert all(m.startswith("sub ") for m in moves)
