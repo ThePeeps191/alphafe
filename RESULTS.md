@@ -360,3 +360,38 @@ network, but one "idea" step gets a probability around e^-10 to e^-20, for
 example `y:=f(y)` in s42, `x:=x+y, y:=0` in s39, `y:=-f(x)` in s46. For
 comparison, v1 gave the median hardest step of a seed proof log-probability
 -15.5 and v2 gives it -10.8.
+
+### E5. Exploration from expressions in the state (run `v3`): did not help
+
+Hypothesis (from the E4 diagnosis): the network never learns "idea"
+substitutions such as `y:=f(y)` because self-play almost never stumbles on
+them, so let exploration propose terms that already occur in the state.
+Change: in self-play, 2 of the 8 proposals per state substitute t, -t, v+t or
+v-t for a variable v, where t is an f(...) or an argument of f taken from the
+current identities; 1 proposal stays uniform-random (v2 had 2 uniform, 0 of
+these). Everything else as v2. New run from random weights, 28 minutes, 96
+iterations; evaluated at the same commit as E4 with three sampling seeds
+(`results/e5_v3_*`). The heuristic is not used at evaluation time and is
+unrelated to the brute-force baseline's term pool.
+
+Number solved (ranges over three sampling seeds):
+
+| solver | seed (50) | tier 1 | tier 2 | tier 3 | tier 4 |
+|---|---|---|---|---|---|
+| v2 network, no backtracking (32 calls) | 32-35 | 179-180 | 155-159 | 79-81 | 46-51 |
+| v3 network, no backtracking (32 calls) | 32-33 | 180-182 | 156-163 | 77-80 | 49-50 |
+| v2 network, search (128 calls) | 35-38 | 185 | 168-172 | 84-89 | 56-58 |
+| v3 network, search (128 calls) | 34-37 | 184 | 161-163 | 81-84 | 53-56 |
+| v2 network, search (2,000 calls) | 43-44 | | | | |
+| v3 network, search (2,000 calls) | 43-45 | | | | |
+
+Reading: no gain. v3 is level with v2 on the seed set and without
+backtracking, and behind v2 with search on tier 2 (161-163 vs 168-172; the
+ranges do not overlap) and probably tier 3. On the hand-proof diagnosis v3
+does give the idea moves more probability (median hardest step -9.8 against
+-10.8 for v2; `x:=f(y)` in s42 went from about 0.0001% to 0.7%), but not
+enough to change what gets solved within the budgets, and the exploration
+slots it took from the network's own proposals seem to have cost a little on
+ordinary problems. With one training seed per run even the tier-2 gap could
+be run-to-run variation. Kept in the code as an option (`n_subterm`), off by
+default.
