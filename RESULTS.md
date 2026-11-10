@@ -263,3 +263,100 @@ Brute force on seeds, before (E1) -> after: 128 calls 28 -> 28; 2,000 calls
 35 -> 35; 20,000 calls 39 -> 41 (s33 and s34 solved;
 `results/baseline_seed_*_commit.json`). Remaining at 20,000: s36, s37, s38,
 s42, s46. The effect on the network is measured in E4's evaluation.
+
+### E4. Retraining with the fixes (run `v2`), compared with `v1` at the same commit
+
+Change: a new run from random weights with the same schedule and self-play
+budget as `v1`, plus a *bundle* of training changes: proposals sampled at a
+spread of temperatures during self-play, mirror augmentation (each proof also
+learned with x and y exchanged), minimised proofs as training examples, and
+length-sorted batches (which made iterations faster: 90 in 28 minutes instead
+of 76). Because these changed together, a difference between v1 and v2
+cannot be attributed to any single one of them. One training seed each.
+
+Both checkpoints were evaluated at commit `ae1b3a3` (so both use the lemmas
+and the case commit), with **three sampling seeds** for the trained-network
+rows; a range `a-b` is the minimum and maximum over the three. From here on
+the seed benchmark has 50 problems (four three-variable problems added).
+Commands: `alphafe eval --checkpoint checkpoints/v2/e4.pt --tag e4_v2 --seeds 3 --big-budget 2000`
+and the same for v1. Tables below are produced by `scripts/compare_runs.py e4_v1 e4_v2`.
+
+Number solved, held-out synthetic problems (200 per tier):
+
+| solver | tier 1 | tier 2 | tier 3 | tier 4 |
+|---|---|---|---|---|
+| v1 network, no backtracking (32 calls) | 176-178 | 153-156 | 68-70 | 43-44 |
+| **v2 network, no backtracking (32 calls)** | 179-180 | 155-159 | 79-81 | 46-51 |
+| v1 network, search (128 calls) | 182-183 | 160-164 | 76-80 | 53-55 |
+| **v2 network, search (128 calls)** | 185 | 168-172 | 84-89 | 56-58 |
+| untrained network, no backtracking (32) | 148 | 102 | 42 | 27 |
+| untrained network, search (128) | 169 | 129 | 65 | 41 |
+| uniform policy, search (128) | 162 | 128 | 57 | 37 |
+| brute force (128 calls) | 173 | 132 | 60 | 46 |
+| brute force (2,000 calls) | 177 | 144 | 81 | 52 |
+| brute force (20,000 calls) | 188 | 178 | 97 | 63 |
+
+Number solved, seed benchmark (50 problems):
+
+| solver | v1 | v2 |
+|---|---|---|
+| network, no backtracking (32 calls) | 30-32 | 32-35 |
+| network, search (128 calls) | 34 | 35-38 |
+| network, search (2,000 calls) | 41-42 | 43-44 |
+| untrained network, no backtracking (32) / search (128) | 25 / 32 | |
+| uniform policy, no backtracking (32) / search (128) | 14 / 29 | |
+| brute force, 128 / 2,000 / 20,000 calls | 32 / 39 / 45 | |
+
+v2 on the seed benchmark by difficulty (first sampling seed): no backtracking
+21/22, 9/15, 1/11, 1/1, 0/1 for 0M, 5M, 10M, 15M, 20M; search with 128 calls
+21/22, 14/15, 2/11, 1/1, 0/1; search with 2,000 calls 22/22, 15/15, 5/11, 1/1,
+0/1. Brute force with 2,000 calls: 22/22, 12/15, 4/11, 1/1, 0/1.
+
+Checker calls on the problems both solvers solve (v2, first sampling seed):
+
+| suite | v2 search (128) vs brute force (128) | problems in common |
+|---|---|---|
+| seed | 3.5 vs 9.1 | 31 |
+| tier 1 | 1.9 vs 4.3 | 172 |
+| tier 2 | 2.9 vs 4.0 | 132 |
+| tier 3 | 3.1 vs 6.6 | 59 |
+| tier 4 | 4.3 vs 13.6 | 44 |
+
+On the seed set, v2 search with 2,000 calls uses 70.1 calls against 107.9 for
+brute force with 2,000 on the 38 problems both solve.
+
+**Reading.**
+
+* *v2 against v1.* v2 is at least as good on every row, and the ranges do not
+  overlap on tier 3 (both modes), on tier 2 and tier 1 with search, and on the
+  seed set with 2,000 calls. Elsewhere they touch or overlap. With one
+  training seed per run this says "the bundle probably helped, most clearly
+  on nested-f problems", not more.
+* *v2 against brute force at the same budget (128 calls).* Ahead on all four
+  tiers; the margin is large on tiers 2 and 3 (about 37 and 26 problems of
+  200) and small on tiers 1 and 4 (about 12 and 11).
+* *v2 with 128 calls against brute force with 2,000.* Ahead on tier 2
+  (168-172 vs 144), slightly ahead elsewhere (185 vs 177, 84-89 vs 81, 56-58
+  vs 52); the last three are too close to call.
+* *The ceiling.* Brute force with 20,000 calls still solves more than the
+  network with 128 on every tier (188, 178, 97, 63). A fair summary: the
+  network gets most of what brute force gets, for one to two orders of
+  magnitude fewer checker calls, and has not yet shown it can reach problems
+  that a big enough brute-force budget cannot, on the synthetic set.
+* *Seed set (development set, see caveat).* v2 with 2,000 calls solves 43-44
+  of 50 against 39 for brute force with 2,000 and 45 with 20,000. The sets
+  differ: the network proves s36, s37 and s38, which brute force does not
+  find even with 20,000 calls, while brute force with 20,000 gets s33, s34,
+  s39, s40 and s43, which the network misses. Neither solves s42 or s46.
+* The network was never trained on a three-variable problem, yet v2 solves
+  all four three-variable seeds in every mode. (Four easy problems; do not
+  read much into it.)
+
+Failure groups for v2, search with 2,000 calls (first sampling seed, 7
+unsolved): too deep (5+ creative moves): s33, s34. Network did not find it:
+s39, s40, s42, s43, s46. `scripts/diagnose.py` on these shows the same
+pattern each time: every move of the known proof can be written by the
+network, but one "idea" step gets a probability around e^-10 to e^-20, for
+example `y:=f(y)` in s42, `x:=x+y, y:=0` in s39, `y:=-f(x)` in s46. For
+comparison, v1 gave the median hardest step of a seed proof log-probability
+-15.5 and v2 gives it -10.8.
