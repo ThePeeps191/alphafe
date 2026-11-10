@@ -1,0 +1,2 @@
+sub P: x:=0        # f(y) = y^2 + f(0)
+conclude

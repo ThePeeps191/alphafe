@@ -1,0 +1,8 @@
+inj
+sub P: y:=0                 # f(x - f(0)) = f(x)
+cancel                      # f(0) = 0
+sub P: x:=f(y)              # f(f(y)) = y
+sub P: y:=f(y)              # f(x - y) = f(x) - f(y)
+sub P: x:=x + y, y:=f(y)    # f(x) = f(x + y) - f(y): f is additive
+cauchy
+conclude

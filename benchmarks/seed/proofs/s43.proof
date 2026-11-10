@@ -1,0 +1,5 @@
+sub P: x:=1                 # f(f(y)) = f(y) + 1
+sub P: y:=0                 # f(x f(0)) = x + f(0)
+surj
+onto [f(f(y)) = f(y) + 1]: y    # f(y) = y + 1 for all y
+conclude
