@@ -1090,9 +1090,553 @@ development (issue #2) before this rule existed, so it cannot count as unseen.
 | International Zhautykov Olympiad (IZhO) 2014, First Day, Problem 2 | https://mathnet.mit.edu/explorer.html?p=zhk_2014_96a9ab | not "find all f" (does there exist); extra hypothesis: surjective |
 | International Zhautykov Olympiad (IZhO) 2018, 1-st round, 5. | https://mathnet.mit.edu/explorer.html?p=zhk_2018_bc1dee | not "find all f" (find all a); equation uses floor [y] |
 | International Zhautykov Olympiad (IZhO), Second day, №5. | https://mathnet.mit.edu/explorer.html?p=zhk_f9d334 | domain not supported (Z) |
+| Asia Pacific Mathematics Olympiad (APMO) 1993, 2 | https://mathnet.mit.edu/explorer.html?p=apm_1993_5590e4 | not a functional equation (counting values of a floor-sum function) |
+| Asia Pacific Mathematics Olympiad (APMO) 2008, Problem 4 | https://mathnet.mit.edu/explorer.html?p=apm_2008_ec38c0 | not a functional equation (recursively defined function on N0); domain not supported |
+| Bulgarian Mathematical Olympiad 2003, Spring Mathematical Competition, Problem 12.1 | https://mathnet.mit.edu/explorer.html?p=bgr_2003_71574e | not a functional equation (calculus) |
+| Bulgarian Mathematical Olympiad 2004, Regional round, Problem 12.2. | https://mathnet.mit.edu/explorer.html?p=bgr_2004_a2d4bb | not a functional equation (calculus: maximum of a given function) |
+| Bulgarian Mathematical Olympiad 2004, Regional round, Problem 10.4. | https://mathnet.mit.edu/explorer.html?p=bgr_2004_c2a9fd | not a functional equation (polynomial roots with parameter) |
+| Bulgarian Mathematical Olympiad 2004, Team selection test for 21. BMO, Problem 3. | https://mathnet.mit.edu/explorer.html?p=bgr_2004_e21482 | not a functional equation (combinatorics: counting functions on a finite set) |
+| Bulgarian Mathematical Olympiad 2004, Team selection test for 21. BMO, Problem 5. | https://mathnet.mit.edu/explorer.html?p=bgr_2004_e37987 | not a functional equation (polynomial problem) |
+| Bulgarian Mathematical Olympiad 2005, Winter Mathematical Competition, 12.3 | https://mathnet.mit.edu/explorer.html?p=bgr_2005_426424 | not a functional equation (image of a given function, parameter) |
+| Bulgarian Mathematical Olympiad 2006, Winter Mathematical Competition, 12.1 | https://mathnet.mit.edu/explorer.html?p=bgr_2006_8c6c5b | not a functional equation (calculus) |
+| Bulgarian Mathematical Olympiad 2006, 10, Problem 10.2. | https://mathnet.mit.edu/explorer.html?p=bgr_2006_d830e7 | not a functional equation (maximum of a given function) |
+| IMO TST 2007, 6 | https://mathnet.mit.edu/explorer.html?p=bgr_2007_7a83f0 | not "find all f" (largest number of values); domain not supported (subsets of a finite set) |
+| Bulgarian Winter Tournament 2007, 10.1 | https://mathnet.mit.edu/explorer.html?p=bgr_2007_c04ae4 | not a functional equation (equations/inequalities in x for given functions) |
+| Bulgarian Spring Tournament 2007, 12.2 | https://mathnet.mit.edu/explorer.html?p=bgr_2007_f6bbb4 | not a functional equation (trigonometric equation roots with parameter) |
+| Bulgarian Autumn Tournament 2008, 9, 9.1 | https://mathnet.mit.edu/explorer.html?p=bgr_2008_167a2c | not a functional equation (graphs and area) |
+| Bulgarian Mathematical Olympiad 2010, 59. National Mathematical Olympiad Final round, Problem 2. | https://mathnet.mit.edu/explorer.html?p=bgr_2010_d68d44 | not a functional equation (geometry of a cubic graph; proof) |
+| Bulgarian Mathematical Olympiad 2011, National Mathematical Olympiad, Final round, 3 | https://mathnet.mit.edu/explorer.html?p=bgr_2011_a70d59 | not "find all f" (prove an inequality); domain not supported (R+) |
+| Bulgarian Mathematical Olympiad 2022, Winter Mathematical Competitions, 10.4 | https://mathnet.mit.edu/explorer.html?p=bgr_2022_ae0a6d | not a functional equation (combinatorics: counting injections) |
+| Bulgarian Autumn Tournament 2023, 9.1, 1.5 | https://mathnet.mit.edu/explorer.html?p=bgr_2023_35921b | not a functional equation (graphs and area) |
+| Bulgarian Autumn Tournament 2023, 12.4, 1.20 | https://mathnet.mit.edu/explorer.html?p=bgr_2023_725427 | not a functional equation (combinatorial geometry) |
+| Bulgarian Winter Tournament 2023, 12, 2.19 | https://mathnet.mit.edu/explorer.html?p=bgr_2023_c4adaa | not a functional equation (combinatorics/calculus; prove monotonicity) |
+| Belarusian Mathematical Olympiad 2012, FINAL ROUND - Category D, 5 | https://mathnet.mit.edu/explorer.html?p=blr_2012_9176e7 | not a functional equation (intersections of graphs; find parameters) |
+| Belarusian Mathematical Olympiad 2019, FINAL ROUND, 3 | https://mathnet.mit.edu/explorer.html?p=blr_2019_efe8a5 | not a functional equation (polynomial problem; prove inequality) |
+| IMO TST 2024, Fourth Selection Test, 14 | https://mathnet.mit.edu/explorer.html?p=blr_2024_548b33 | not a functional equation (set partition under a quadratic map) |
+| Balkan Mathematical Olympiad Shortlist (BMO Shortlist) 2012, Algebra, A4 | https://mathnet.mit.edu/explorer.html?p=bmo_2012_0ec531 | not a functional equation (geometric extremum) |
+| Balkan Mathematical Olympiad Shortlist (BMO Shortlist) 2012, Algebra, A5 | https://mathnet.mit.edu/explorer.html?p=bmo_2012_f7e2ed | not a functional equation (inequality) |
+| Balkan Mathematical Olympiad Shortlist (BMO Shortlist) 2020, Number Theory, N3 | https://mathnet.mit.edu/explorer.html?p=bmo_2020_e0be37 | domain not supported (positive integers); divisibility condition, not an equation; k variables |
+| Balkan Mathematical Olympiad (BMO) 2021, ALGEBRA, A4 | https://mathnet.mit.edu/explorer.html?p=bmo_2021_2fdefd | not a functional equation (combinatorics of lattice jumps) |
+| Balkan Mathematical Olympiad (BMO) 2024, Combinatorics, C2. | https://mathnet.mit.edu/explorer.html?p=bmo_2024_4b7efa | not a functional equation (combinatorics on functions of a finite set) |
+| Balkan Mathematical Olympiad (BMO) 2024, Geometry, G7. | https://mathnet.mit.edu/explorer.html?p=bmo_2024_e13d37 | not "find all f" (prove f constant); domain not supported (plane points, geometric condition) |
+| Brazilian Mathematical Olympiad (OBM) 2000, 5 | https://mathnet.mit.edu/explorer.html?p=bra_2000_75b48f | not a functional equation (combinatorics: counting isometries) |
+| Brazilian Mathematical Olympiad (OBM) 2000, 3 | https://mathnet.mit.edu/explorer.html?p=bra_2000_f14c8f | not a functional equation (number theory sum of a given function) |
+| Brazilian Mathematical Olympiad (OBM) 2006, Problem Set 6, 7 | https://mathnet.mit.edu/explorer.html?p=bra_2006_10d6b2 | not a functional equation (iterating a given table function) |
+| Brazilian Mathematical Olympiad (OBM) 2009, Undergraduates, Problem 1 | https://mathnet.mit.edu/explorer.html?p=bra_2009_c707da | not a functional equation (calculus) |
+| Brazilian Mathematical Olympiad (OBM) 2011, Aritmética e Álgebra, 83 | https://mathnet.mit.edu/explorer.html?p=bra_2011_7d3d0a | not a functional equation (evaluate a sum) |
+| Brazilian Mathematical Olympiad (OBM) 2012, Undergraduates, Problem 5 | https://mathnet.mit.edu/explorer.html?p=bra_2012_9d39ab | not a functional equation (calculus/differential equation); domain not supported (R+) |
+| Brazilian Mathematical Olympiad (OBM), Lista 3, 1. Carro flex | https://mathnet.mit.edu/explorer.html?p=bra_b582f9 | not a functional equation (word problem) |
+| Baltic Way 1996, 14. | https://mathnet.mit.edu/explorer.html?p=btw_1996_795c30 | not a functional equation (polynomial graph geometry) |
+| Baltic Way 2010, ALGEBRA, LAT2 | https://mathnet.mit.edu/explorer.html?p=btw_2010_dd2184 | not a functional equation (sequence recurrence; proof) |
+| Baltic Way 2014, Algebra, A-11 | https://mathnet.mit.edu/explorer.html?p=btw_2014_b14134 | not a functional equation (functional inequality; yes/no question) |
+| Baltic Way 2019, Combinatorics, C13 | https://mathnet.mit.edu/explorer.html?p=btw_2019_bea5f3 | not a functional equation (combinatorics: counting functions) |
+| Baltic Way 2020, Geometry, G-8. | https://mathnet.mit.edu/explorer.html?p=btw_2020_25872d | domain not supported (half-strip of the plane); geometric conditions, not a single equation |
+| Canadian Mathematical Olympiad (CMO) 1975, Problem 7 | https://mathnet.mit.edu/explorer.html?p=can_1975_b5a06d | not a functional equation (periodicity of sin(x^2)) |
+| Canadian Mathematical Olympiad (CMO) 1990, Problem 5 | https://mathnet.mit.edu/explorer.html?p=can_1990_541caa | not a functional equation (recursively defined sequence) |
+| Canadian Mathematical Olympiad (CMO) 1996, Problem 5 | https://mathnet.mit.edu/explorer.html?p=can_1996_66183b | not a functional equation (extremes of a floor-sum function) |
+| Canadian Mathematical Olympiad (CMO) 2008, 4. | https://mathnet.mit.edu/explorer.html?p=can_2008_79e03b | domain not supported (natural numbers); congruence condition |
+| Canadian Mathematical Olympiad (CMO) 2017, Problem Set, 2 | https://mathnet.mit.edu/explorer.html?p=can_2017_f44777 | not "find all f" (prove f(p) prime); domain not supported (positive integers) |
+| IMO TST 2005, 6. | https://mathnet.mit.edu/explorer.html?p=che_2005_f66679 | domain not supported (triples of non-negative integers); domain and codomain differ |
+| IMO TST 2023, Fourth Exam, 12. | https://mathnet.mit.edu/explorer.html?p=che_2023_d46f87 | not a functional equation (combinatorics) |
+| China Mathematical Competition 2002, Part I Multiple-choice Questions, 1 | https://mathnet.mit.edu/explorer.html?p=chn_2002_2ca662 | not a functional equation (monotonicity of a given function) |
+| China Mathematical Competition 2002, Part III Word Problems, 15 | https://mathnet.mit.edu/explorer.html?p=chn_2002_59ddeb | not a functional equation (quadratic with conditions; find maximal m) |
+| China Mathematical Competition 2002, Part I Multiple-choice Questions, 3 | https://mathnet.mit.edu/explorer.html?p=chn_2002_b1a220 | not a functional equation (parity of a given function) |
+| China Mathematical Competition 2004, Part II Short-answer Questions, 7 | https://mathnet.mit.edu/explorer.html?p=chn_2004_2cb376 | not a functional equation (area between graphs) |
+| China Mathematical Competition 2004, Part III Word Problems, 15 | https://mathnet.mit.edu/explorer.html?p=chn_2004_f2ce96 | not a functional equation (extrema and inequality) |
+| China Mathematical Competition 2005, Part II Short-answer Questions, 8 | https://mathnet.mit.edu/explorer.html?p=chn_2005_434d09 | not a functional equation (inequality via monotonicity) |
+| China Mathematical Competition 2005, First Day, 3 | https://mathnet.mit.edu/explorer.html?p=chn_2005_792f2b | not a functional equation (evaluate a sum) |
+| China Mathematical Competition 2005, First Day, 2 | https://mathnet.mit.edu/explorer.html?p=chn_2005_d660ee | not a functional equation (minimum of a given function) |
+| China Mathematical Competition 2010, Part I Short-Answer Questions, 5 | https://mathnet.mit.edu/explorer.html?p=chn_2010_c3b298 | not a functional equation (extrema of a given function) |
+| China Mathematical Olympiad (CMO) 2013, Second Day, 5 | https://mathnet.mit.edu/explorer.html?p=chn_2013_895030 | not a functional equation (combinatorics) |
+| China Mathematical Competition 2020, First Round, Test Paper A, 3 | https://mathnet.mit.edu/explorer.html?p=chn_2020_ce83b8 | not a functional equation (minima of a given function) |
+| China Mathematical Competition 2021, First Round, Test Paper B, 4 | https://mathnet.mit.edu/explorer.html?p=chn_2021_0e568a | not "find all f" (sum of zeros); domain not supported (R\{0}); division by a variable |
+| China Mathematical Competition 2021, First Round, Test Paper A1, 9 | https://mathnet.mit.edu/explorer.html?p=chn_2021_248190 | not a functional equation (given function, find a value) |
+| China Mathematical Competition 2021, First Round, Test Paper B1, 10 | https://mathnet.mit.edu/explorer.html?p=chn_2021_4a44dc | not a functional equation (given function, find a minimum) |
+| China Mathematical Competition 2021, First Round, Test Paper A2, 11 | https://mathnet.mit.edu/explorer.html?p=chn_2021_bd790a | not a functional equation (polynomial problem) |
+| China Mathematical Competition 2021, First Round, Test Paper B1, 1 | https://mathnet.mit.edu/explorer.html?p=chn_2021_f08ba9 | not "find all f" (value of f(f(-1)) for an odd function) |
+| IMO TST 2022, Test 2 Day 2, 5 | https://mathnet.mit.edu/explorer.html?p=chn_2022_5a13de | not a functional equation (number theory; prove equivalence) |
+| European Girls' Mathematical Olympiad (EGMO) 2024, Problem 5 | https://mathnet.mit.edu/explorer.html?p=egm_2024_efd366 | domain not supported (positive integers); divisor/gcd conditions, not an equation |
+| Spanish Mathematical Olympiad 1963, Primera sesión, 1/2. | https://mathnet.mit.edu/explorer.html?p=esp_1963_78ee68 | not a functional equation (piecewise linear word problem) |
+| Spanish Mathematical Olympiad 1986, Segunda sesión, 22/4 | https://mathnet.mit.edu/explorer.html?p=esp_1986_180079 | not a functional equation (comparison of means; convexity) |
+| Spanish Mathematical Olympiad 1996, Primera sesión, 32/3 | https://mathnet.mit.edu/explorer.html?p=esp_1996_804e11 | not a functional equation (polynomial inequality) |
+| Spanish Mathematical Olympiad 2002, Primera sesión, 38/3 | https://mathnet.mit.edu/explorer.html?p=esp_2002_1a1ff5 | not a functional equation (recursively defined function on naturals) |
+| Spanish Mathematical Olympiad 2010, Problema 2 | https://mathnet.mit.edu/explorer.html?p=esp_2010_6cee4b | not a functional equation (recursively defined function on N0) |
+| Iberoamerican Mathematical Olympiad (OIM) 2014, 5 | https://mathnet.mit.edu/explorer.html?p=esp_2014_e47faf | not a functional equation (combinatorics on a finite set; proof) |
+| BarcelonaTech Mathcontest 2014, 4 | https://mathnet.mit.edu/explorer.html?p=esp_2014_f61bcb | not a functional equation (permutations; proof) |
+| None, Problema 3 | https://mathnet.mit.edu/explorer.html?p=esp_7a737a | not a functional equation (recursively defined function on naturals) |
+| Spanish Mathematical Olympiad, Primera sesión, 12/2 | https://mathnet.mit.edu/explorer.html?p=esp_a449aa | not a functional equation (calculus: study and graph a function) |
+| French Mathematical Olympiad 2017, Exercices communs, Exercice 6. | https://mathnet.mit.edu/explorer.html?p=fra_2017_b06dd9 | not a functional equation (combinatorics: counting functions) |
+| French Mathematical Olympiad Preparation 2019, Exercices du groupe Junior, Exercice 4 | https://mathnet.mit.edu/explorer.html?p=fra_2019_1a5273 | not "find all f" (prove f constant); domain and codomain differ (Z -> R); extra hypothesis: bounded |
+| French Mathematical Olympiad Preparation 2021, Test du 17 Novembre 2021, Exercice 4 | https://mathnet.mit.edu/explorer.html?p=fra_2021_516414 | not a functional equation (sequence convergence) |
+| French Mathematical Olympiad Preparation 2022, Exercices Seniors, Exercice 13 | https://mathnet.mit.edu/explorer.html?p=fra_2022_6a321b | not "find all f" (prove f(p) prime); domain not supported (positive integers) |
+| IMO TST 2019, Test 1, 1 | https://mathnet.mit.edu/explorer.html?p=hkg_2019_ce479d | not a functional equation (calculus: maximum of a given function) |
+| Croatia National Mathematical Competition (Final Round) 2012, Second round – County competition, 4.3. | https://mathnet.mit.edu/explorer.html?p=hrv_2012_6347d3 | not a functional equation (geometry of a parabola) |
+| Croatia National Mathematical Competition (Final Round) 2012, Final round – National competition, 3.1. | https://mathnet.mit.edu/explorer.html?p=hrv_2012_953fee | not a functional equation (periodicity of a given function) |
+| Croatia National Mathematical Competition (Final Round) 2014, First round – City competition, 2.3 | https://mathnet.mit.edu/explorer.html?p=hrv_2014_49c4cd | not a functional equation (discriminant of a quadratic) |
+| Croatia National Mathematical Competition (Final Round) 2014, First round – City competition, 3.1 | https://mathnet.mit.edu/explorer.html?p=hrv_2014_d2ba71 | not a functional equation (extrema of a given function) |
+| Croatia National Mathematical Competition (Final Round) 2015, First round – City competition, 4.1 | https://mathnet.mit.edu/explorer.html?p=hrv_2015_bbb454 | not a functional equation (evaluate a given function) |
+| Ibero-American Mathematical Olympiad (OIM) 1989, 4th Iberoamerican, B2 | https://mathnet.mit.edu/explorer.html?p=ibe_1989_3ae839 | not a functional equation (recursively defined function on positive integers; find its range) |
+| Ibero-American Mathematical Olympiad (OIM) 1990, 5th Iberoamerican, A1 | https://mathnet.mit.edu/explorer.html?p=ibe_1990_245211 | not a functional equation (recursively defined function on non-negative integers) |
+| International Mathematical Olympiad (IMO) 2008, Number Theory, N5 | https://mathnet.mit.edu/explorer.html?p=imo_2008_40ef71 | domain not supported (natural numbers); divisor-count and divisibility conditions |
+| IMO Shortlist 2012, Algebra, A7 | https://mathnet.mit.edu/explorer.html?p=imo_2012_6a3ef7 | not a functional equation (metapolynomials; proof) |
+| IMO Shortlist 2015, Number Theory, N7 | https://mathnet.mit.edu/explorer.html?p=imo_2015_b5a2eb | not a functional equation (number theory: find k for which a k-good f: Z>0 -> Z>0 exists) |
+| International Mathematical Olympiad (IMO) 2017, Number Theory, N8 | https://mathnet.mit.edu/explorer.html?p=imo_2017_4a4305 | not "find all f" (prove an inequality; f: Z>0 x Z>0 -> {0,1}) |
+| IMO Shortlist 2019, Geometry, G8 | https://mathnet.mit.edu/explorer.html?p=imo_2019_7bd8a9 | not a functional equation (geometry: f on lines of the plane) |
+| Indian National Mathematical Olympiad (INMO) 2006, 3. | https://mathnet.mit.edu/explorer.html?p=ind_2006_16deec | not a functional equation (find integer triples fixed by f o f) |
+| Indian National Mathematical Olympiad (INMO) 2007, 6 | https://mathnet.mit.edu/explorer.html?p=ind_2007_9757d0 | not a functional equation (combinatorics: counting over permutations) |
+| Indian National Mathematical Olympiad (INMO) 2024, Indian National Mathematical Olympiad, 4. | https://mathnet.mit.edu/explorer.html?p=ind_2024_29557d | not a functional equation (combinatorics on sets; asks for values of f(2024), domain N) |
+| Irish Mathematical Olympiad 2017, 16 | https://mathnet.mit.edu/explorer.html?p=irl_2017_54189d | not "find all f" (existence question; f: Z -> Z with congruence conditions) |
+| Irish Mathematical Olympiad 2024, Problems, 20 | https://mathnet.mit.edu/explorer.html?p=irl_2024_3316c9 | not a functional equation (polynomial roots) |
+| Irish Mathematical Olympiad 2024, Problems, 4 | https://mathnet.mit.edu/explorer.html?p=irl_2024_36c8f5 | not a functional equation (polynomial roots) |
+| Iranian Mathematical Olympiad 2010, Third Round, 11 | https://mathnet.mit.edu/explorer.html?p=irn_2010_2002e3 | not "find all f" (prove a statement; f: N -> N increasing) |
+| Iranian Mathematical Olympiad 2010, Third Round, 8 | https://mathnet.mit.edu/explorer.html?p=irn_2010_5f459a | not a functional equation (graph theory) |
+| Iranian Mathematical Olympiad 2010, Second Round, 4 | https://mathnet.mit.edu/explorer.html?p=irn_2010_c2ad22 | not "find all f" (existence question; inequality in two functions) |
+| Iranian Mathematical Olympiad 2012, Second Round, 7 | https://mathnet.mit.edu/explorer.html?p=irn_2012_1b5675 | not a functional equation (set theory/combinatorics) |
+| Iranian Mathematical Olympiad 2021, Team Selection Test, 3 | https://mathnet.mit.edu/explorer.html?p=irn_2021_a0eca0 | not "find all f" (prove a statement; multiplicative f, g: N -> {0,1}) |
+| Iranian Mathematical Olympiad 2025, Third Round - Algebra, 3 | https://mathnet.mit.edu/explorer.html?p=irn_2025_255e36 | not a functional equation (analysis inequality on an explicit function) |
+| Iranian Mathematical Olympiad 2025, Team Selection Test - Second Exam, 2 | https://mathnet.mit.edu/explorer.html?p=irn_2025_664197 | not a functional equation (number theory/polynomials) |
+| Junior Balkan Mathematical Olympiad (JBMO) 2003, Grade 12, 12.7 | https://mathnet.mit.edu/explorer.html?p=jbm_2003_9d702c | not a functional equation (analytic geometry) |
+| Junior Balkan Mathematical Olympiad (JBMO) 2003, Grade 12, 12.6 | https://mathnet.mit.edu/explorer.html?p=jbm_2003_ec611d | not a functional equation (calculus: antiderivatives) |
+| JBMO Shortlist 2007, Number Theory, NT4 | https://mathnet.mit.edu/explorer.html?p=jbm_2007_505f4f | not a functional equation (number theory) |
+| Moldova Mathematical Olympiad 2018, clasa a XI - a, 11.8. | https://mathnet.mit.edu/explorer.html?p=mda_2018_200a89 | not a functional equation (prove a fixed point exists) |
+| Moldova Mathematical Olympiad 2018, clasa a XI - a, 11.1. | https://mathnet.mit.edu/explorer.html?p=mda_2018_b3f1d3 | not a functional equation (calculus: range of an explicit function) |
+| Moldova Mathematical Olympiad 2018, Clasa a X-a, ziua întâi, 10.1. | https://mathnet.mit.edu/explorer.html?p=mda_2018_efe906 | not a functional equation (inequality) |
+| Moldova Mathematical Olympiad 2019, Prima zi, 11.1. | https://mathnet.mit.edu/explorer.html?p=mda_2019_436650 | not a functional equation (calculus: extrema) |
+| Moldova Mathematical Olympiad 2020, Ziua a doua, Clasa a XII-a, 12.5 | https://mathnet.mit.edu/explorer.html?p=mda_2020_207dbe | not a functional equation (calculus: antiderivatives) |
+| Moldova Mathematical Olympiad 2020, Ziua a doua, Clasa a XII-a, 12.8 | https://mathnet.mit.edu/explorer.html?p=mda_2020_710a6a | not a functional equation (integral equation for continuous f on an interval) |
+| Moldova Mathematical Olympiad 2022, Clasa a XI-a, 11.2 | https://mathnet.mit.edu/explorer.html?p=mda_2022_6df63a | not a functional equation (differential equation) |
+| Moldova Mathematical Olympiad 2022, Clasa a XII-a, 12.1. | https://mathnet.mit.edu/explorer.html?p=mda_2022_9cf75a | not a functional equation (calculus: antiderivative) |
+| Moldova Mathematical Olympiad 2023, Clasa a XI-a Prima zi, 11.4. | https://mathnet.mit.edu/explorer.html?p=mda_2023_a250cf | not a functional equation (calculus: limit of a sequence) |
+| None 2010, Number Theory, 8. | https://mathnet.mit.edu/explorer.html?p=mkd_2010_bc2848 | not "find all f" (compute a value; f: N -> R) |
+| International Mathematical Olympiad (IMO) 2017, 24-th Macedonian mathematical olympiad, 5 | https://mathnet.mit.edu/explorer.html?p=mkd_2017_e39b7f | not a functional equation (sequences/combinatorics) |
+| IMO TST 2019, Opgave 2. | https://mathnet.mit.edu/explorer.html?p=nld_2019_8f5e59 | not a functional equation (combinatorics: find n for which f, g on a finite set exist) |
+| Nordic Mathematical Contest (NMC) 1999, 99.1. | https://mathnet.mit.edu/explorer.html?p=nmo_1999_b96235 | not "find all f" (recursively defined f on non-negative integers; solve f(n) = 1999) |
+| Philippine Mathematical Olympiad (PMO), PART I, 6. | https://mathnet.mit.edu/explorer.html?p=phl_1eba6f | not a functional equation (multiple-choice algebra) |
+| Philippine Mathematical Olympiad (PMO) 2010, Part I, 9. | https://mathnet.mit.edu/explorer.html?p=phl_2010_fc6e04 | not a functional equation (range of an explicit function) |
+| Philippine Mathematical Olympiad (PMO) 2011, National Stage, Oral Phase, 19. | https://mathnet.mit.edu/explorer.html?p=phl_2011_c472b4 | not a functional equation (domain of an explicit function) |
+| Philippine Mathematical Olympiad (PMO) 2014, PART I, 12. | https://mathnet.mit.edu/explorer.html?p=phl_2014_dc6cd4 | not a functional equation (algebra on an explicit function) |
+| Philippine Mathematical Olympiad (PMO) 2016, AVERAGE, 7. | https://mathnet.mit.edu/explorer.html?p=phl_2016_89393f | not "find all f" (recurrence with given values; compute f(2016)) |
+| Philippine Mathematical Olympiad (PMO) 2016, AVERAGE, 4. | https://mathnet.mit.edu/explorer.html?p=phl_2016_94b502 | not a functional equation (polynomial problem) |
+| Philippine Mathematical Olympiad (PMO) 2018, EASY, 4. | https://mathnet.mit.edu/explorer.html?p=phl_2018_3dfad6 | not a functional equation (algebra: fixed points of explicit quadratics) |
+| Philippine Mathematical Olympiad (PMO) 2018, Part II, 3. | https://mathnet.mit.edu/explorer.html?p=phl_2018_96fcdc | not a functional equation (sequence sum; f: N -> Z) |
+| Philippine Mathematical Olympiad (PMO) 2020, DIFFICULT, 4. | https://mathnet.mit.edu/explorer.html?p=phl_2020_201344 | not a functional equation (polynomial problem: fixed points) |
+| Philippine Mathematical Olympiad (PMO) 2020, EASY, 15. | https://mathnet.mit.edu/explorer.html?p=phl_2020_f860f6 | not a functional equation (trivia question on the Collatz conjecture) |
+| Philippine Mathematical Olympiad (PMO) 2021, PART I, 2. | https://mathnet.mit.edu/explorer.html?p=phl_2021_83cbe1 | not a functional equation (quadratic inequality) |
+| Philippine Mathematical Olympiad (PMO) 2021, PART II, 24. | https://mathnet.mit.edu/explorer.html?p=phl_2021_c82f45 | not a functional equation (combinatorics: counting functions on a finite set) |
+| Philippine Mathematical Olympiad (PMO) 2022, PART II., 25. | https://mathnet.mit.edu/explorer.html?p=phl_2022_29836b | not a functional equation (geometry: area of a region) |
+| Philippine Mathematical Olympiad (PMO), PART I., 4. | https://mathnet.mit.edu/explorer.html?p=phl_6f15b7 | not a functional equation (logarithms) |
+| Philippine Mathematical Olympiad (PMO), Part I, 11. | https://mathnet.mit.edu/explorer.html?p=phl_85e783 | not a functional equation (polynomial problem: find roots) |
+| Philippine Mathematical Olympiad (PMO), Part I, 5. | https://mathnet.mit.edu/explorer.html?p=phl_9299f3 | not a functional equation (quadratic function) |
+| Philippine Mathematical Olympiad (PMO), Part I, 2. | https://mathnet.mit.edu/explorer.html?p=phl_c864a8 | not a functional equation (quadratic function) |
+| Philippine Mathematical Olympiad (PMO), PART II, 6. | https://mathnet.mit.edu/explorer.html?p=phl_e6ed27 | not a functional equation (range of an explicit function) |
+| Polish Mathematical Olympiad, Rozwiązania zadań konkursowych zawodów stopnia pierwszego, 8. | https://mathnet.mit.edu/explorer.html?p=pol_11891f | not a functional equation (combinatorics: permutations) |
+| Polish Mathematical Olympiad, zawodów stopnia trzeciego, 6. | https://mathnet.mit.edu/explorer.html?p=pol_22a76b | not a functional equation (sequences) |
+| Polish Mathematical Olympiad, Rozwiązania zadań konkursowych zawodów stopnia trzeciego, 6. | https://mathnet.mit.edu/explorer.html?p=pol_682c82 | not a functional equation (sequences) |
+| Polish Mathematical Olympiad, zawodów stopnia pierwszego, 1. | https://mathnet.mit.edu/explorer.html?p=pol_d936df | not a functional equation (quadratic inequality) |
+| Olympic Revenge 2016, 5. | https://mathnet.mit.edu/explorer.html?p=prt_2016_25e13d | not "find all f" (prove f = 0; f on integer sequences) |
+| Romanian Mathematical Olympiad 2009, The Danube Mathematical Competition, Problem 5. | https://mathnet.mit.edu/explorer.html?p=rou_2009_5b16c1 | not a functional equation (combinatorics) |
+| Romanian Mathematical Olympiad Shortlist 2010, Putnam Seniors, 24. | https://mathnet.mit.edu/explorer.html?p=rou_2010_17ec11 | not a functional equation (calculus) |
+| Romanian Mathematical Olympiad 2010, Final Round, Problem 4. | https://mathnet.mit.edu/explorer.html?p=rou_2010_1d1ed7 | not a functional equation (calculus) |
+| Romanian Mathematical Olympiad 2010, District Round, Problem 3. | https://mathnet.mit.edu/explorer.html?p=rou_2010_4cdedb | not a functional equation (calculus) |
+| Romanian Mathematical Olympiad Shortlist 2010, Putnam Seniors, 23. | https://mathnet.mit.edu/explorer.html?p=rou_2010_56be71 | not a functional equation (calculus) |
+| Romanian Mathematical Olympiad 2010, District Round, Problem 4. | https://mathnet.mit.edu/explorer.html?p=rou_2010_69bc80 | not a functional equation (calculus) |
+| Romanian Mathematical Olympiad 2010, Final Round, Problem 3. | https://mathnet.mit.edu/explorer.html?p=rou_2010_c4709f | not "find all f" (prove an equivalence; functional inequality, f: R -> [0, inf)) |
+| Romanian Mathematical Olympiad Shortlist 2010, Putnam Seniors, 25. | https://mathnet.mit.edu/explorer.html?p=rou_2010_dbc3be | not a functional equation (calculus: integral inequality) |
+| Romanian Mathematical Olympiad Shortlist 2010, Putnam Seniors, 19. | https://mathnet.mit.edu/explorer.html?p=rou_2010_dc1d85 | not a functional equation (real analysis) |
+| Balkan Mathematical Olympiad TST (BMO TST) 2010, First Selection Test, Problem 2. | https://mathnet.mit.edu/explorer.html?p=rou_2010_f6c5ca | not a functional equation (monotonicity of an explicit function) |
+| Romanian Mathematical Olympiad Shortlist 2011, PUTNAM SENIORS, 10 | https://mathnet.mit.edu/explorer.html?p=rou_2011_3ac425 | not a functional equation (calculus: differential inequality on an interval) |
+| Romanian Mathematical Olympiad Shortlist 2011, PUTNAM SENIORS, 4 | https://mathnet.mit.edu/explorer.html?p=rou_2011_46ebb5 | not a functional equation (real analysis) |
+| Romanian Mathematical Olympiad Shortlist 2011, PUTNAM SENIORS, 9 | https://mathnet.mit.edu/explorer.html?p=rou_2011_6762ec | not a functional equation (calculus) |
+| IMO TST 2011, SIXTH SELECTION TEST, 15 | https://mathnet.mit.edu/explorer.html?p=rou_2011_85273b | not a functional equation (recursive sequence on positive integers) |
+| Romanian Mathematical Olympiad 2011, FINAL ROUND, 3 | https://mathnet.mit.edu/explorer.html?p=rou_2011_abee56 | not a functional equation (calculus) |
+| Romanian Mathematical Olympiad 2011, FINAL ROUND, 4 | https://mathnet.mit.edu/explorer.html?p=rou_2011_b4942e | not a functional equation (calculus) |
+| Romanian Mathematical Olympiad 2011, FINAL ROUND, 3 | https://mathnet.mit.edu/explorer.html?p=rou_2011_d8a213 | not a functional equation (monotonicity of an explicit function) |
+| Romanian Mathematical Olympiad 2011, DISTRICT ROUND, 3 | https://mathnet.mit.edu/explorer.html?p=rou_2011_dfb416 | not a functional equation (calculus) |
+| Romanian Mathematical Olympiad Shortlist 2011, PUTNAM SENIORS, 8 | https://mathnet.mit.edu/explorer.html?p=rou_2011_f4a583 | not a functional equation (calculus) |
+| Romanian Mathematical Olympiad 2012, Etapa Judeţeană şi a Municipiului Bucureşti, CLASA a XI-a, Problema 4. | https://mathnet.mit.edu/explorer.html?p=rou_2012_42dda9 | not a functional equation (real analysis) |
+| Romanian Mathematical Olympiad Shortlist 2013, Seniors, 4 | https://mathnet.mit.edu/explorer.html?p=rou_2013_09b66d | domain not supported (f: N* -> N*, increasing, number-theoretic condition) |
+| Romanian Mathematical Olympiad 2013, 11th GRADE, 4 | https://mathnet.mit.edu/explorer.html?p=rou_2013_1181b6 | not a functional equation (real analysis) |
+| Romanian Mathematical Olympiad 2013, 11th GRADE, 4 | https://mathnet.mit.edu/explorer.html?p=rou_2013_2e28ae | not a functional equation (calculus: differential equation on [0, inf)) |
+| Romanian Mathematical Olympiad 2013, XI. OSZTÁLY, 4. feladat | https://mathnet.mit.edu/explorer.html?p=rou_2013_34c676 | not a functional equation (real analysis) |
+| Romanian Mathematical Olympiad 2013, CLASA a XI-a, Problema 4 | https://mathnet.mit.edu/explorer.html?p=rou_2013_36b8f9 | not a functional equation (calculus: differential equation on [0, inf)) |
+| Romanian Mathematical Olympiad 2013, 11th GRADE, 3 | https://mathnet.mit.edu/explorer.html?p=rou_2013_437231 | not a functional equation (real analysis) |
+| Romanian Mathematical Olympiad Shortlist 2013, Putnam Seniors, 3 | https://mathnet.mit.edu/explorer.html?p=rou_2013_4c60c2 | not a functional equation (real analysis) |
+| Romanian Mathematical Olympiad 2013, 9th GRADE, 2 | https://mathnet.mit.edu/explorer.html?p=rou_2013_5bf470 | not "find all f" (prove f = g) |
+| Romanian Mathematical Olympiad 2013, XII. OSZTÁLY, 3. feladat | https://mathnet.mit.edu/explorer.html?p=rou_2013_751217 | not a functional equation (calculus) |
+| Romanian Mathematical Olympiad Shortlist 2013, Putnam Seniors, 4 | https://mathnet.mit.edu/explorer.html?p=rou_2013_7b91e1 | not a functional equation (real analysis) |
+| Romanian Mathematical Olympiad 2013, 12th GRADE, 3 | https://mathnet.mit.edu/explorer.html?p=rou_2013_94509c | not a functional equation (calculus: optimization over functions) |
+| Romanian Mathematical Olympiad Shortlist 2013, Putnam Seniors, 8 | https://mathnet.mit.edu/explorer.html?p=rou_2013_951cf8 | not a functional equation (calculus) |
+| Romanian Mathematical Olympiad 2013, Clasa a XII-a, Problema 3 | https://mathnet.mit.edu/explorer.html?p=rou_2013_a85d75 | not a functional equation (calculus: optimization over functions) |
+| Romanian Mathematical Olympiad 2013, 12th GRADE, 3 | https://mathnet.mit.edu/explorer.html?p=rou_2013_cf030c | not a functional equation (calculus) |
+| Romanian Mathematical Olympiad Shortlist 2013, Putnam Seniors, 5 | https://mathnet.mit.edu/explorer.html?p=rou_2013_d2ba6d | not a functional equation (calculus: differentiability, integral inequality; domain [0,inf)) |
+| Romanian Mathematical Olympiad 2013, CLASA a XII-a, Problema 3. | https://mathnet.mit.edu/explorer.html?p=rou_2013_fb046a | not a functional equation (integral inequality) |
+| Romanian Mathematical Olympiad Shortlist 2014, Putnam Seniors, 1. | https://mathnet.mit.edu/explorer.html?p=rou_2014_194984 | not a functional equation (sequence convergence) |
+| Romanian Mathematical Olympiad Shortlist 2014, Putnam Seniors, 8. | https://mathnet.mit.edu/explorer.html?p=rou_2014_2e7f27 | not a functional equation (calculus/inequality equivalence) |
+| Romanian Mathematical Olympiad 2014, District Round, Problem 2. | https://mathnet.mit.edu/explorer.html?p=rou_2014_32db76 | not a functional equation (sequence limit, calculus) |
+| Romanian Mathematical Olympiad Shortlist 2014, Putnam Seniors, 10. | https://mathnet.mit.edu/explorer.html?p=rou_2014_4c1a3d | not a functional equation (sequence convergence) |
+| Romanian Mathematical Olympiad 2014, Final Round, Problem 3. | https://mathnet.mit.edu/explorer.html?p=rou_2014_4fcc26 | not a functional equation (calculus limits) |
+| Romanian Mathematical Olympiad 2014, Final Round, Problem 3. | https://mathnet.mit.edu/explorer.html?p=rou_2014_620d29 | not a functional equation (combinatorics: counting functions) |
+| Romanian Mathematical Olympiad 2014, District Round, Problem 1. | https://mathnet.mit.edu/explorer.html?p=rou_2014_694f23 | not a functional equation (calculus: integral limit) |
+| Romanian Mathematical Olympiad 2014, Final Round, Problem 2. | https://mathnet.mit.edu/explorer.html?p=rou_2014_975414 | not a functional equation (differential equation proof) |
+| Romanian Mathematical Olympiad 2014, District Round, Problem 4. | https://mathnet.mit.edu/explorer.html?p=rou_2014_a41f92 | not a functional equation (sequences) |
+| Romanian Mathematical Olympiad 2015, DISTRICT ROUND - 11th GRADE, Problem 1 | https://mathnet.mit.edu/explorer.html?p=rou_2015_3657e4 | not a functional equation (real analysis) |
+| Romanian Mathematical Olympiad 2015, FINAL ROUND - 12th GRADE, Problem 3 | https://mathnet.mit.edu/explorer.html?p=rou_2015_4ff71a | not a functional equation (calculus: integral maximization) |
+| Romanian Mathematical Olympiad 2015, CLASA a XII-a, Problema 4 | https://mathnet.mit.edu/explorer.html?p=rou_2015_5dc1b0 | not a functional equation (calculus: polynomial/integral problem) |
+| Romanian Mathematical Olympiad Shortlist 2015, PUTNAM SENIORS, 8 | https://mathnet.mit.edu/explorer.html?p=rou_2015_5fc9b4 | not a functional equation (integral equation on [0,1]) |
+| Romanian Mathematical Olympiad 2015, FINAL ROUND - 11th GRADE, Problem 1 | https://mathnet.mit.edu/explorer.html?p=rou_2015_717c04 | not a functional equation (calculus: derivative conditions) |
+| Romanian Mathematical Olympiad 2015, CLASA a IX-a, Problema 2 | https://mathnet.mit.edu/explorer.html?p=rou_2015_71ba6a | not a functional equation (quadratic function interval lengths, proof) |
+| Romanian Mathematical Olympiad 2015, CLASA a XII-a, Problema 3 | https://mathnet.mit.edu/explorer.html?p=rou_2015_85d164 | not a functional equation (calculus: integral maximization) |
+| Romanian Mathematical Olympiad 2015, CLASA a XI-a, Problema 1 | https://mathnet.mit.edu/explorer.html?p=rou_2015_8ba85a | not a functional equation (calculus: derivative conditions) |
+| Romanian Mathematical Olympiad 2015, FINAL ROUND - 9th GRADE, Problem 2 | https://mathnet.mit.edu/explorer.html?p=rou_2015_ba5f97 | not a functional equation (quadratic function interval lengths, proof) |
+| Romanian Mathematical Olympiad 2015, FINAL ROUND - 10th GRADE, Problem 2 | https://mathnet.mit.edu/explorer.html?p=rou_2015_baf4c9 | not a functional equation (combinatorics: counting functions) |
+| Romanian Mathematical Olympiad Shortlist 2015, PUTNAM SENIORS, 7 | https://mathnet.mit.edu/explorer.html?p=rou_2015_c393ea | not a functional equation (calculus: primitives) |
+| IMAR Mathematical Competition 2015, Problem 4. | https://mathnet.mit.edu/explorer.html?p=rou_2015_e2ed1c | not a functional equation (polynomial approximation, proof) |
+| Romanian Mathematical Olympiad 2015, FINAL ROUND - 12th GRADE, Problem 4 | https://mathnet.mit.edu/explorer.html?p=rou_2015_fe9716 | not a functional equation (calculus: polynomial/integral problem) |
+| Romanian Mathematical Olympiad 2016, Clasa a XII-a, Subiectul I. | https://mathnet.mit.edu/explorer.html?p=rou_2016_110ffd | not a functional equation (calculus: primitive, involves \|x-1\|) |
+| Romanian Mathematical Olympiad 2016, Etapa Judeţeană şi a Municipiului Bucureşti, CLASA a XII-a, Problema 2 | https://mathnet.mit.edu/explorer.html?p=rou_2016_12b288 | not a functional equation (integral inequality) |
+| Romanian Mathematical Olympiad 2016, District Round, 12th Grade, Problem 4. | https://mathnet.mit.edu/explorer.html?p=rou_2016_2a90d6 | not a functional equation (calculus: sequence of integrals) |
+| Romanian Mathematical Olympiad 2016, Etapa Locală, Clasa a XII-a, 2. | https://mathnet.mit.edu/explorer.html?p=rou_2016_4299f3 | not a functional equation (calculus: improper integrals) |
+| Romanian Mathematical Olympiad 2016, Final Round, 12th Grade, Problem 31. | https://mathnet.mit.edu/explorer.html?p=rou_2016_4889ac | not a functional equation (calculus: continuity criterion) |
+| Romanian Mathematical Olympiad Shortlist 2016, Putnam Seniors, 6. | https://mathnet.mit.edu/explorer.html?p=rou_2016_4c4563 | not a functional equation (calculus: limit) |
+| IMO TST 2016, Third Selection Test, Problem 9. | https://mathnet.mit.edu/explorer.html?p=rou_2016_5a3051 | not a functional equation (combinatorics on finite sets; domain not supported) |
+| Romanian Mathematical Olympiad Shortlist 2016, Putnam Seniors, 7. | https://mathnet.mit.edu/explorer.html?p=rou_2016_6de781 | not a functional equation (calculus: mean value) |
+| Romanian Mathematical Olympiad 2016, Etapa Judeţeană şi a Municipiului Bucureşti, CLASA a XII-a, Problema 4 | https://mathnet.mit.edu/explorer.html?p=rou_2016_7a942f | not a functional equation (calculus: sequence of integrals) |
+| Romanian Mathematical Olympiad 2016, Final Round, 10th Grade, Problem 21. | https://mathnet.mit.edu/explorer.html?p=rou_2016_81755c | not a functional equation (monotonicity proof) |
+| Romanian Mathematical Olympiad 2016, Final Round, 10th Grade, Problem 22. | https://mathnet.mit.edu/explorer.html?p=rou_2016_c3acf9 | not a functional equation (functional inequalities, proof) |
+| Romanian Mathematical Olympiad 2016, District Round, 11th Grade, Problem 4. | https://mathnet.mit.edu/explorer.html?p=rou_2016_db8d25 | not a functional equation (inequality in two functions, division by x-y) |
+| Romanian Mathematical Olympiad 2016, District Round, 12th Grade, Problem 2. | https://mathnet.mit.edu/explorer.html?p=rou_2016_edfe95 | not a functional equation (integral inequality) |
+| Romanian Mathematical Olympiad 2017, Final Round - 11th Grade, Problem 4 | https://mathnet.mit.edu/explorer.html?p=rou_2017_2f9867 | not a functional equation (calculus: mean value theorem) |
+| Romanian Mathematical Olympiad Shortlist 2017, PUTNAM SENIORS, 5. | https://mathnet.mit.edu/explorer.html?p=rou_2017_469209 | not a functional equation (calculus: derivatives/Darboux) |
+| Romanian Mathematical Olympiad 2017, District Round - 12th Grade, Problem 2 | https://mathnet.mit.edu/explorer.html?p=rou_2017_4bc0e3 | not a functional equation (group theory) |
+| Romanian Mathematical Olympiad Shortlist 2017, PUTNAM SENIORS, 7. | https://mathnet.mit.edu/explorer.html?p=rou_2017_6fad7a | not a functional equation (calculus: integral limit) |
+| Romanian Mathematical Olympiad 2017, Final Round - 12th Grade, Problem 4 | https://mathnet.mit.edu/explorer.html?p=rou_2017_80ce1c | not a functional equation (calculus: limits) |
+| Romanian Mathematical Olympiad Shortlist 2017, PUTNAM SENIORS, 8. | https://mathnet.mit.edu/explorer.html?p=rou_2017_bef254 | not a functional equation (quasiconvexity inequality, proof) |
+| Romanian Mathematical Olympiad 2017, Final Round - 12th Grade, Problem 1 | https://mathnet.mit.edu/explorer.html?p=rou_2017_c540a0 | not a functional equation (calculus: sequence limit) |
+| Romanian Mathematical Olympiad Shortlist 2017, PUTNAM SENIORS, 9. | https://mathnet.mit.edu/explorer.html?p=rou_2017_c912b2 | not a functional equation (integral inequality, convex functions) |
+| Romanian Mathematical Olympiad 2017, District Round - 12th Grade, Problem 1 | https://mathnet.mit.edu/explorer.html?p=rou_2017_e1388d | not a functional equation (integral inequality) |
+| Romanian Mathematical Olympiad Shortlist 2017, PUTNAM SENIORS, 6. | https://mathnet.mit.edu/explorer.html?p=rou_2017_ea4b95 | not a functional equation (calculus: integral maximization) |
+| Romanian Mathematical Olympiad 2018, District Round - 11th Grade, 4 | https://mathnet.mit.edu/explorer.html?p=rou_2018_0318f8 | not a functional equation (real analysis: continuity proof) |
+| Romanian Mathematical Olympiad 2018, 12th Grade, 3 | https://mathnet.mit.edu/explorer.html?p=rou_2018_046bda | not a functional equation (calculus: integral inequality) |
+| Romanian Mathematical Olympiad 2018, District Round - 12th Grade, 1 | https://mathnet.mit.edu/explorer.html?p=rou_2018_0611c5 | not a functional equation (calculus: integral functional extremum) |
+| Romanian Mathematical Olympiad 2018, District Round - 12th Grade, 3 | https://mathnet.mit.edu/explorer.html?p=rou_2018_444b9b | not a functional equation (integral inequality criterion) |
+| Romanian Mathematical Olympiad 2018, CLASA a XII-a, Problema 3 | https://mathnet.mit.edu/explorer.html?p=rou_2018_728717 | not a functional equation (integral inequality criterion) |
+| Romanian Mathematical Olympiad 2018, Etapa Judeteana si a Municipiului Bucuresti, CLASA a XI-a, varianta 2, Problema 4 | https://mathnet.mit.edu/explorer.html?p=rou_2018_76ba8d | not a functional equation (real analysis: continuity proof) |
+| Romanian Mathematical Olympiad 2018, Clasa a X-a, Problema 1 | https://mathnet.mit.edu/explorer.html?p=rou_2018_83cdc7 | not a functional equation (monotonicity proof) |
+| Romanian Mathematical Olympiad 2018, District Round - 9th Grade, 4 | https://mathnet.mit.edu/explorer.html?p=rou_2018_a9adf5 | not a functional equation (monotonicity proof) |
+| Romanian Mathematical Olympiad 2018, 12th Grade, 2 | https://mathnet.mit.edu/explorer.html?p=rou_2018_c41631 | not a functional equation (calculus: integral minimization) |
+| Romanian Mathematical Olympiad 2018, 10th Grade, 1 | https://mathnet.mit.edu/explorer.html?p=rou_2018_d457d3 | not a functional equation (monotonicity proof) |
+| Romanian Mathematical Olympiad 2018, CLASA a XII-a, 3. | https://mathnet.mit.edu/explorer.html?p=rou_2018_e1844e | not a functional equation (calculus: integral inequality) |
+| Romanian Mathematical Olympiad 2018, 9th Grade, 3 | https://mathnet.mit.edu/explorer.html?p=rou_2018_e98188 | not a functional equation (quadratic functions, integer values proof) |
+| Romanian Mathematical Olympiad Shortlist 2018, Putnam Seniors, 5 | https://mathnet.mit.edu/explorer.html?p=rou_2018_f4ca4c | not a functional equation (calculus: integral limit) |
+| Romanian Mathematical Olympiad 2018, CLASA a XII-a, Problema 1 | https://mathnet.mit.edu/explorer.html?p=rou_2018_f7c764 | not a functional equation (calculus: integral functional extremum) |
+| Romanian Mathematical Olympiad Shortlist 2019, PUTNAM SENIORS, 3. | https://mathnet.mit.edu/explorer.html?p=rou_2019_69548e | not a functional equation (calculus: mean value theorem) |
+| Romanian Mathematical Olympiad 2019, FINAL ROUND - 12th GRADE, Problem 1. | https://mathnet.mit.edu/explorer.html?p=rou_2019_81db82 | not a functional equation (calculus: integral minimization) |
+| Romanian Mathematical Olympiad Shortlist 2019, PUTNAM SENIORS, 8. | https://mathnet.mit.edu/explorer.html?p=rou_2019_a783e0 | not a functional equation (integral equation with differentiability hypotheses; domain [0,inf)) |
+| Romanian Mathematical Olympiad 2019, DISTRICT ROUND - 12th GRADE, Problem 2. | https://mathnet.mit.edu/explorer.html?p=rou_2019_a81975 | not a functional equation (calculus: integrals) |
+| Romanian Mathematical Olympiad 2019, FINAL ROUND - 10th GRADE, Problem 4. | https://mathnet.mit.edu/explorer.html?p=rou_2019_ab0820 | not a functional equation (combinatorics: counting functions on subsets) |
+| Romanian Mathematical Olympiad 2019, DISTRICT ROUND - 11th GRADE, Problem 4. | https://mathnet.mit.edu/explorer.html?p=rou_2019_bb3a17 | not a functional equation (real analysis: fixed points, sequences) |
+| Romanian Mathematical Olympiad 2019, DISTRICT ROUND - 12th GRADE, Problem 1. | https://mathnet.mit.edu/explorer.html?p=rou_2019_d12564 | not a functional equation (group theory; domain is a finite group) |
+| Romanian Mathematical Olympiad Shortlist 2019, PUTNAM SENIORS, 7. | https://mathnet.mit.edu/explorer.html?p=rou_2019_f1edde | not a functional equation (calculus: Riemann sums) |
+| Romanian Mathematical Olympiad 2020, 12th GRADE, Problem 4. | https://mathnet.mit.edu/explorer.html?p=rou_2020_4bf972 | not a functional equation (calculus: integral mean value) |
+| Gazeta Matematică National Olympiad 2021, Etapa a 3 -a - clasa a XII-a, Problema 1. | https://mathnet.mit.edu/explorer.html?p=rou_2021_691011 | not a functional equation (integral equation) |
+| Gazeta Matematică National Olympiad 2021, Etapa a 3 -a - clasa a XII-a, Problema 4. | https://mathnet.mit.edu/explorer.html?p=rou_2021_806bea | not a functional equation (integral inequality) |
+| Gazeta Matematică National Olympiad 2021, Etapa III - clasa a XI-a, Problema 3. | https://mathnet.mit.edu/explorer.html?p=rou_2021_a7847e | not a functional equation (calculus: limits of derivatives) |
+| Gazeta Matematică National Olympiad 2021, Etapa III - clasa a XI-a, Problema 1. | https://mathnet.mit.edu/explorer.html?p=rou_2021_d71056 | not a functional equation (Darboux property, existence proof) |
+| Romanian Mathematical Olympiad 2023, 12th GRADE, 1 | https://mathnet.mit.edu/explorer.html?p=rou_2023_04086d | not a functional equation (differential/integral inequality) |
+| Romanian Mathematical Olympiad 2023, 11th GRADE, 4 | https://mathnet.mit.edu/explorer.html?p=rou_2023_62c1db | not a functional equation (calculus: differentiability) |
+| Romanian Mathematical Olympiad 2023, 12th GRADE, 3 | https://mathnet.mit.edu/explorer.html?p=rou_2023_70dc4f | not a functional equation (calculus: integral limits) |
+| Romanian Mathematical Olympiad Shortlist 2023, PUTNAM SENIORS, 7 | https://mathnet.mit.edu/explorer.html?p=rou_2023_79649c | not a functional equation (group theory of homeomorphisms) |
+| Romanian Mathematical Olympiad 2023, 11th GRADE, 1 | https://mathnet.mit.edu/explorer.html?p=rou_2023_925b1f | not a functional equation (differential inequality) |
+| Romanian Mathematical Olympiad 2023, 12th GRADE, 4 | https://mathnet.mit.edu/explorer.html?p=rou_2023_ab99e3 | not a functional equation (calculus: integrals) |
+| Romanian Mathematical Olympiad Shortlist 2023, PUTNAM SENIORS, 2 | https://mathnet.mit.edu/explorer.html?p=rou_2023_ecacb0 | not a functional equation (differential inequality) |
+| Romanian Mathematical Olympiad Shortlist 2023, PUTNAM SENIORS, 8 | https://mathnet.mit.edu/explorer.html?p=rou_2023_fc5500 | not a functional equation (Jensen-type integral inequality, convexity proof) |
+| Romanian Mathematical Olympiad 2024, District Round, Problem 4. | https://mathnet.mit.edu/explorer.html?p=rou_2024_0d5708 | not a functional equation (real analysis: limits, monotone functions) |
+| Romanian Mathematical Olympiad 2024, Final Round, Problem 3. | https://mathnet.mit.edu/explorer.html?p=rou_2024_34676d | not a functional equation (linear algebra: matrices) |
+| Romanian Mathematical Olympiad 2024, Final Round, Problem 1. | https://mathnet.mit.edu/explorer.html?p=rou_2024_4b698f | not a functional equation (integral inequality) |
+| Romanian Mathematical Olympiad 2024, Final Round, Problem 3. | https://mathnet.mit.edu/explorer.html?p=rou_2024_648842 | not a functional equation (calculus: limit) |
+| Romanian Mathematical Olympiad Shortlist 2024, Putnam Seniors, 6. | https://mathnet.mit.edu/explorer.html?p=rou_2024_677b09 | not a functional equation (integral inequality, convex functions) |
+| Romanian Mathematical Olympiad 2024, District Round, Problem 4. | https://mathnet.mit.edu/explorer.html?p=rou_2024_9400e7 | not a functional equation (integral inequality) |
+| Romanian Mathematical Olympiad 2024, District Round, Problem 2. | https://mathnet.mit.edu/explorer.html?p=rou_2024_962f3f | not a functional equation (calculus: inverse functions, integrals) |
+| Romanian Mathematical Olympiad 2024, Final Round, Problem 1. | https://mathnet.mit.edu/explorer.html?p=rou_2024_9d06f5 | not a functional equation (calculus) |
+| Romanian Mathematical Olympiad Shortlist 2024, Putnam Seniors, 7. | https://mathnet.mit.edu/explorer.html?p=rou_2024_e615d9 | not a functional equation (calculus: integrals) |
+| Romanian Mathematical Olympiad 2024, Final Round, Problem 3. | https://mathnet.mit.edu/explorer.html?p=rou_2024_ec339c | not a functional equation (combinatorics: counting functions on a finite set) |
+| Romanian Mathematical Olympiad 2024, Final Round, Problem 2. | https://mathnet.mit.edu/explorer.html?p=rou_2024_ff44b1 | not a functional equation (affine functions with inequalities) |
+| Romanian Mathematical Olympiad 2025, Shortlisted Problems - PUTNAM SENIORS, 7. | https://mathnet.mit.edu/explorer.html?p=rou_2025_37154a | not a functional equation (calculus: integrals) |
+| Romanian Mathematical Olympiad 2025, District Round - 12th GRADE, Problem 4 | https://mathnet.mit.edu/explorer.html?p=rou_2025_4ffbdb | not a functional equation (calculus) |
+| Romanian Mathematical Olympiad 2025, Final Round - 11th GRADE, Problem 3 | https://mathnet.mit.edu/explorer.html?p=rou_2025_61ff37 | not a functional equation (calculus: differentiability) |
+| Romanian Mathematical Olympiad 2025, District Round - 12th GRADE, Problem 3 | https://mathnet.mit.edu/explorer.html?p=rou_2025_65fab9 | not a functional equation (calculus: integrals) |
+| Romanian Mathematical Olympiad 2025, Shortlisted Problems - PUTNAM SENIORS, 8. | https://mathnet.mit.edu/explorer.html?p=rou_2025_7ea59a | not a functional equation (calculus: limits) |
+| Romanian Mathematical Olympiad 2025, District Round - 11th GRADE, Problem 3 | https://mathnet.mit.edu/explorer.html?p=rou_2025_94e841 | not a functional equation (calculus: limits) |
+| Romanian Mathematical Olympiad 2025, Final Round - 12th GRADE, Problem 3 | https://mathnet.mit.edu/explorer.html?p=rou_2025_be14df | not a functional equation (calculus: inequality) |
+| Romanian Mathematical Olympiad 2025, Shortlisted Problems - SENIORS, 3. | https://mathnet.mit.edu/explorer.html?p=rou_2025_de5ac8 | domain not supported (f: N* -> N; cube and monotonicity conditions, no equation) |
+| Romanian Mathematical Olympiad 2025, Final Round - 12th GRADE, Problem 2 | https://mathnet.mit.edu/explorer.html?p=rou_2025_e13840 | not a functional equation (integral inequality) |
+| Russian Mathematical Olympiad 2009, Final round, 10 grade, 10.3 | https://mathnet.mit.edu/explorer.html?p=rus_2009_ad6a4c | not a functional equation (trigonometry: sign changes) |
+| All-Russian Mathematical Olympiad 2025, 9 класс, 9.5 | https://mathnet.mit.edu/explorer.html?p=rus_2025_21b815 | not a functional equation (quadratic polynomials) |
+| Saudi Arabian Mathematical Competitions 2012, January-February tests - Test 2, 4 | https://mathnet.mit.edu/explorer.html?p=sau_2012_65cf6f | not a functional equation (counting quadratics) |
+| Saudi Arabian Mathematical Competitions 2014, Team selection tests for the Balkan Mathematical Olympiad 2014 - Day II, 2 | https://mathnet.mit.edu/explorer.html?p=sau_2014_6519ef | not a functional equation (combinatorics: coloring of integers) |
+| Saudi Arabian Mathematical Competitions 2016, Team selection tests for Gulf Mathematical Olympiad 2016 - Level 4, day 1, 1 | https://mathnet.mit.edu/explorer.html?p=sau_2016_d535a4 | not a functional equation (quadratic polynomial inequality) |
+| IMO TST 2018, The third day, Problem 3 | https://mathnet.mit.edu/explorer.html?p=sau_2018_d16fcb | not a functional equation (polynomial problem) |
+| International Mathematical Olympiad (IMO) 2022, November camp - Test 1, 2 | https://mathnet.mit.edu/explorer.html?p=sau_2022_a8aef3 | not a functional equation (polynomial iteration) |
+| International Mathematical Olympiad (IMO) 2022, March camp - Test 5, 3 | https://mathnet.mit.edu/explorer.html?p=sau_2022_f9e7bb | not a functional equation (combinatorics: partitions) |
+| International Mathematical Olympiad (IMO) 2023, Test 2, Problem 2. | https://mathnet.mit.edu/explorer.html?p=sau_2023_5615e7 | domain not supported (f: N -> N; divisibility condition) |
+| Singapore International Math Olympiad Challenge (SIMOC) 2018, Camp Quiz Day 2, 4 | https://mathnet.mit.edu/explorer.html?p=sgp_2018_06a70a | domain not supported (f: N\{1} -> N; gcd/lcm condition) |
+| Silk Road Mathematics Competition (SRMC) 2016, 3 | https://mathnet.mit.edu/explorer.html?p=slk_2016_a66067 | not "find all f" (prove statement; f: N -> N divisibility) |
+| All-Union Mathematical Olympiad 1976, 10th ASU problems, Problem 15 | https://mathnet.mit.edu/explorer.html?p=sun_1976_18fb14 | not a functional equation (geometry on a sphere) |
+| Slovenian Mathematical Olympiad for Technical Schools 2002, 3. LETNIK, 2. | https://mathnet.mit.edu/explorer.html?p=svn_2002_16c150 | not a functional equation (trigonometric equation) |
+| Slovenian Mathematical Olympiad for Technical Schools 2002, 1. LETNIK, 5. | https://mathnet.mit.edu/explorer.html?p=svn_2002_8fcd8f | not a functional equation (graph and area) |
+| Slovenian Mathematical Olympiad for Technical Schools 2002, 2. LETNIK, 3. | https://mathnet.mit.edu/explorer.html?p=svn_2002_95a47f | not a functional equation (determine a quadratic from values) |
+| Slovenian Mathematical Olympiad for Technical Schools 2002, 4. LETNIK, 1. | https://mathnet.mit.edu/explorer.html?p=svn_2002_b8335e | not a functional equation (rational inequality) |
+| Slovenian Mathematical Olympiad for Technical Schools 2004, NALOGE ZA 4. LETNIK, 4. | https://mathnet.mit.edu/explorer.html?p=svn_2004_1f8b6b | not a functional equation (determine parameters from values) |
+| Slovenian Mathematical Olympiad for Technical Schools 2006, 3. LETNIK, 1. | https://mathnet.mit.edu/explorer.html?p=svn_2006_40105e | not a functional equation (exponential functions) |
+| Slovenian Mathematical Olympiad for Technical Schools 2006, 2. LETNIK, 2. | https://mathnet.mit.edu/explorer.html?p=svn_2006_cc0132 | not a functional equation (linear function graph) |
+| Slovenian Mathematical Olympiad 2008, 2. letnik, 1. | https://mathnet.mit.edu/explorer.html?p=svn_2008_02b3a8 | not a functional equation (linear function parameters) |
+| Slovenian Mathematical Olympiad 2008, 3. letnik, 4. | https://mathnet.mit.edu/explorer.html?p=svn_2008_af9996 | not a functional equation (exponential function parameters) |
+| Slovenian Mathematical Olympiad 2008, 4. letnik, 3. | https://mathnet.mit.edu/explorer.html?p=svn_2008_ea002f | not a functional equation (rational function parameters) |
+| Slovenian Mathematical Olympiad for Technical Schools 2010, Naloge za 4. letnik, 2. | https://mathnet.mit.edu/explorer.html?p=svn_2010_6a479d | not a functional equation (domain of a logarithmic function) |
+| Slovenian Mathematical Olympiad 2012, First Round - Grade Three, A2 | https://mathnet.mit.edu/explorer.html?p=svn_2012_7e872b | not a functional equation (zeros of given functions) |
+| Slovenian Mathematical Olympiad 2013, Grade Four, A2. | https://mathnet.mit.edu/explorer.html?p=svn_2013_45fafc | not a functional equation (evaluate expression for given f) |
+| Slovenian Mathematical Olympiad 2013, Naloge za 3. letnik, 1. | https://mathnet.mit.edu/explorer.html?p=svn_2013_b62bb9 | not a functional equation (logarithmic function graph) |
+| Slovenian Mathematical Olympiad 2013, Naloge za 3. letnik, 4. | https://mathnet.mit.edu/explorer.html?p=svn_2013_d34c04 | not a functional equation (quadratic functions and inequality) |
+| Slovenian Mathematical Olympiad for Technical Schools 2014, 3. letnik, 3. | https://mathnet.mit.edu/explorer.html?p=svn_2014_3eb6dc | not a functional equation (quadratic function parameter) |
+| Slovenian Mathematical Olympiad for Technical Schools 2014, 2. letnik, 1. | https://mathnet.mit.edu/explorer.html?p=svn_2014_858c3f | not a functional equation (linear function and area) |
+| Slovenian Mathematical Olympiad for Technical Schools 2014, 4. letnik, 3. | https://mathnet.mit.edu/explorer.html?p=svn_2014_b9009d | not a functional equation (rational function graph) |
+| Slovenian Mathematical Olympiad for Technical Schools 2015, 3. | https://mathnet.mit.edu/explorer.html?p=svn_2015_1280ff | not a functional equation (linear function parameter) |
+| Slovenian Mathematical Olympiad for Technical Schools 2015, Naloge za 4. letnik, 2. | https://mathnet.mit.edu/explorer.html?p=svn_2015_b03a77 | not a functional equation (trigonometric function) |
+| Slovenian Mathematical Olympiad for Technical Schools 2015, Naloge za 3. letnik, 2. | https://mathnet.mit.edu/explorer.html?p=svn_2015_d7c096 | not a functional equation (quadratic function minimum) |
+| Slovenian Mathematical Olympiad for Technical Schools 2016, 4. letnik, A3 | https://mathnet.mit.edu/explorer.html?p=svn_2016_77a1c0 | not a functional equation (trigonometric function properties) |
+| Slovenian Mathematical Olympiad for Technical Schools 2016, 4. letnik, B2 | https://mathnet.mit.edu/explorer.html?p=svn_2016_abeca7 | not a functional equation (calculus: tangents) |
+| Slovenian Mathematical Olympiad for Technical Schools 2016, 3. letnik, B2 | https://mathnet.mit.edu/explorer.html?p=svn_2016_de2fd9 | not a functional equation (quadratic function parameter) |
+| Slovenian Mathematical Olympiad for Technical Schools 2016, 2. letnik, B2 | https://mathnet.mit.edu/explorer.html?p=svn_2016_f72339 | not a functional equation (piecewise function graph, inverse) |
+| Slovenian Mathematical Olympiad for Technical Schools 2017, Naloge za 3. letnik, B1. | https://mathnet.mit.edu/explorer.html?p=svn_2017_019d31 | not a functional equation (calculus: tangent) |
+| Slovenian Mathematical Olympiad for Technical Schools 2017, Naloge za 3. letnik, A1. | https://mathnet.mit.edu/explorer.html?p=svn_2017_4935a3 | not a functional equation (quadratic from table of values) |
+| Slovenian Mathematical Olympiad for Technical Schools 2017, Naloge za 2. letnik, A2. | https://mathnet.mit.edu/explorer.html?p=svn_2017_6bde85 | not a functional equation (linear function from values) |
+| Slovenian Mathematical Olympiad for Technical Schools 2017, Naloge za 4. letnik, A3. | https://mathnet.mit.edu/explorer.html?p=svn_2017_dee5db | not a functional equation (domain of a function) |
+| Slovenian Mathematical Olympiad for Technical Schools 2017, Naloge za 4. letnik, B2. | https://mathnet.mit.edu/explorer.html?p=svn_2017_fdd540 | not a functional equation (calculus: tangent) |
+| Slovenian Mathematical Olympiad for Technical Schools 2018, 3. letnik, A2 | https://mathnet.mit.edu/explorer.html?p=svn_2018_0ffd1e | not a functional equation (logarithmic function zero) |
+| Slovenian Mathematical Olympiad for Technical Schools 2018, 4. letnik, A3 | https://mathnet.mit.edu/explorer.html?p=svn_2018_1da2cb | not a functional equation (calculus: derivative) |
+| Slovenian Mathematical Olympiad for Technical Schools 2018, 4. letnik, 2. | https://mathnet.mit.edu/explorer.html?p=svn_2018_3d177d | not a functional equation (rational function graph) |
+| Slovenian Mathematical Olympiad for Technical Schools 2018, 4. letnik, A1 | https://mathnet.mit.edu/explorer.html?p=svn_2018_553ddf | not a functional equation (evaluate a given function) |
+| Slovenian Mathematical Olympiad for Technical Schools 2018, 3. letnik, 2. | https://mathnet.mit.edu/explorer.html?p=svn_2018_c1428a | not a functional equation (quadratic function parameter) |
+| Slovenian Mathematical Olympiad for Technical Schools 2019, Naloge za 4. letnik, A2. | https://mathnet.mit.edu/explorer.html?p=svn_2019_12ebfc | not a functional equation (range of a trigonometric function) |
+| Slovenian Mathematical Olympiad for Technical Schools 2019, 3. letnik, 2. | https://mathnet.mit.edu/explorer.html?p=svn_2019_8979e1 | not a functional equation (logarithmic functions) |
+| Slovenian Mathematical Olympiad for Technical Schools 2019, Naloge za 4. letnik, B3. | https://mathnet.mit.edu/explorer.html?p=svn_2019_cb1053 | not a functional equation (calculus: stationary points) |
+| Slovenian Mathematical Olympiad for Technical Schools 2021, Naloge za 3. letnik, A2. | https://mathnet.mit.edu/explorer.html?p=svn_2021_ac0bea | not a functional equation (domain of a logarithmic function) |
+| Slovenian Mathematical Olympiad for Technical Schools 2022, 4. letnik, B3 | https://mathnet.mit.edu/explorer.html?p=svn_2022_db745e | not a functional equation (calculus: curves and monotonicity) |
+| Slovenian Mathematical Olympiad for Technical Schools 2023, Naloge za 4. letnik, B1 | https://mathnet.mit.edu/explorer.html?p=svn_2023_9af862 | not a functional equation (polynomial graph intersections) |
+| Turkish Mathematical Olympiad 2000, First day (December 8, 2000), 3 | https://mathnet.mit.edu/explorer.html?p=tur_2000_31ba9e | not a functional equation (combinatorics) |
+| Turkish Mathematical Olympiad 2008, 4 | https://mathnet.mit.edu/explorer.html?p=tur_2008_cb6d61 | not a functional equation (recurrence / combinatorics) |
+| IMO TST 2010, 6 | https://mathnet.mit.edu/explorer.html?p=tur_2010_33fb1c | not a functional equation (combinatorics on lattice points) |
+| IMO TST 2011, for IMO 2012, 1 | https://mathnet.mit.edu/explorer.html?p=tur_2011_bc9c8e | not a functional equation (combinatorics: counting functions on subsets) |
+| IMO TST 2011, 3 | https://mathnet.mit.edu/explorer.html?p=tur_2011_cff8d2 | not a functional equation (combinatorics) |
+| IMO TST 2022, JBMO 2022, 6 | https://mathnet.mit.edu/explorer.html?p=tur_2022_6c14d1 | not a functional equation (quadratic inequality) |
+| IMO TST 2023, 7 | https://mathnet.mit.edu/explorer.html?p=tur_2023_70479d | not a functional equation (number theory: sequences) |
+| Taiwan IMO Team Selection Training Camp 2012, 獨立研究(二), 1 | https://mathnet.mit.edu/explorer.html?p=twn_2012_2863b3 | not a functional equation (combinatorics: counting permutations) |
+| Taiwan Mathematical Olympiad Training Camp 2015, 模擬競賽(二), 5 | https://mathnet.mit.edu/explorer.html?p=twn_2015_92d57f | not a functional equation (iterated piecewise map / sequences) |
+| Taiwan IMO Team Selection Training Camp 2018, 獨立研究(二), 2 | https://mathnet.mit.edu/explorer.html?p=twn_2018_0aed17 | not a functional equation (combinatorics: maps on a finite set) |
+| IMO TST 2020, Independent Study 1, 1 | https://mathnet.mit.edu/explorer.html?p=twn_2020_8cf0f7 | not a functional equation (number theory) |
+| Taiwan IMO Team Selection Training Camp 2021, 國際競賽實作(一), 1 | https://mathnet.mit.edu/explorer.html?p=twn_2021_530498 | domain not supported (f: positive integers -> non-negative integers); extra hypothesis: conditions (1) and (3) |
+| Taiwan IMO Team Selection Training Camp 2022, I-N. | https://mathnet.mit.edu/explorer.html?p=twn_2022_be06cf | not a functional equation (number theory: gcd expressions) |
+| Taiwan Mathematical Olympiad Training Camp 2022, 1. | https://mathnet.mit.edu/explorer.html?p=twn_2022_f963bb | not a functional equation (inequality) |
+| Taiwan IMO Team Selection Training Camp 2023, 獨立研究(二), II-C | https://mathnet.mit.edu/explorer.html?p=twn_2023_af7b8e | not a functional equation (combinatorics) |
+| Taiwan Mathematical Olympiad Training Camp 2023, 國際競賽實作(二), 4 | https://mathnet.mit.edu/explorer.html?p=twn_2023_b6c08d | not a functional equation (combinatorics: permutations) |
+| Ukrainian Mathematical Olympiad 2006, 11TH FORM, 1 | https://mathnet.mit.edu/explorer.html?p=ukr_2006_a03919 | not a functional equation (polynomial problem) |
+| Ukrainian Mathematical Olympiad 2009, Third Round, 11-th grade, 2 | https://mathnet.mit.edu/explorer.html?p=ukr_2009_afe4de | not a functional equation (trigonometry: periodicity) |
+| Ukrainian National Mathematical Olympiad 2011, First Tour, 10-th grade, 2 | https://mathnet.mit.edu/explorer.html?p=ukr_2011_60a333 | not a functional equation (quadratic polynomials) |
+| Ukrainian Mathematical Olympiad 2012, Regional round, First day, 2 | https://mathnet.mit.edu/explorer.html?p=ukr_2012_85bbcf | not a functional equation (solve equation for a given f) |
+| Ukrainian Mathematical Olympiad 2019, The Problems of Ukrainian Authors, 4 | https://mathnet.mit.edu/explorer.html?p=ukr_2019_76bed9 | not "find all f" (existence question; inequality condition, f: A -> (0, +inf)) |
+| Ukrainian National Mathematical Olympiad 2020, Third Round, Second Tour, Grade 8, 1 | https://mathnet.mit.edu/explorer.html?p=ukr_2020_e86009 | not a functional equation (polynomial divisibility) |
+| Harvard-MIT Mathematics Tournament (HMMT) 1999, Calculus Solutions, Problem C1 | https://mathnet.mit.edu/explorer.html?p=usa_1999_40610b | not a functional equation (calculus: differential equation with given values) |
+| Berkeley Math Circle 2000, Monthly Contest #2 - Solutions, 4. | https://mathnet.mit.edu/explorer.html?p=usa_2000_54b4cf | not a functional equation (combinatorics: counting functions on subsets) |
+| Berkeley Math Circle 2000, Take-Home Contest #7, 4. | https://mathnet.mit.edu/explorer.html?p=usa_2000_c579f2 | not a functional equation (minimize a given function) |
+| Berkeley Math Circle 2000, Monthly Contest #3, 4. | https://mathnet.mit.edu/explorer.html?p=usa_2000_f274f0 | not a functional equation (prove a statement about two functions with f < g) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2002, Individual Subject Test: Calculus, 9. | https://mathnet.mit.edu/explorer.html?p=usa_2002_7521be | not a functional equation (calculus: differential inequality) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2002, Individual Subject Test: Calculus, 3. | https://mathnet.mit.edu/explorer.html?p=usa_2002_91152d | not a functional equation (calculus: derivatives of products) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2002, Individual Subject Test: Calculus, 10. | https://mathnet.mit.edu/explorer.html?p=usa_2002_c047d3 | not "find all f" (asks for an integral value; also continuity hypothesis) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2003, Individual Round: Calculus Subject Test, 9. | https://mathnet.mit.edu/explorer.html?p=usa_2003_a50293 | not a functional equation (calculus: differential equation, two functions) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2004, Individual Round: Calculus Subject Test, 2. | https://mathnet.mit.edu/explorer.html?p=usa_2004_0a397e | not a functional equation (calculus: derivative value) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2005, Individual Round: Calculus Subject Test, 3. | https://mathnet.mit.edu/explorer.html?p=usa_2005_441aeb | not a functional equation (calculus: integrals) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2005, Individual Round: Calculus Subject Test, 4. | https://mathnet.mit.edu/explorer.html?p=usa_2005_b24dae | not a functional equation (calculus: differential equation) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2005, Individual Round: Calculus Subject Test, 10. | https://mathnet.mit.edu/explorer.html?p=usa_2005_bd7f52 | not a functional equation (calculus: functional-differential equation, asks f(1)) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2007, Individual Round: Calculus Test, 9. | https://mathnet.mit.edu/explorer.html?p=usa_2007_ecc0f5 | not a functional equation (calculus: differential equation) |
+| Berkeley Math Circle 2008, 4. | https://mathnet.mit.edu/explorer.html?p=usa_2008_9abdf9 | not a functional equation (iterates of a given function on a finite set; prove) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2009, General Test, 3. | https://mathnet.mit.edu/explorer.html?p=usa_2009_0d7926 | not a functional equation (period of a given function) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2009, Guts Round, 29. | https://mathnet.mit.edu/explorer.html?p=usa_2009_4771ab | not a functional equation (polynomial problem) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2009, Guts Round, 18. | https://mathnet.mit.edu/explorer.html?p=usa_2009_5e6aa7 | not "find all f" (counting determining values of f on integer triples; domain not supported) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2009, Individual Round: Combinatorics Test, 4. | https://mathnet.mit.edu/explorer.html?p=usa_2009_940966 | not a functional equation (combinatorics: counting functions on a finite set) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2009, Individual Round: General Test, Part 1, 9. | https://mathnet.mit.edu/explorer.html?p=usa_2009_cbf864 | not a functional equation (combinatorics: counting functions on a finite set) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2009, Individual Round: Calculus Test Solutions, 1. | https://mathnet.mit.edu/explorer.html?p=usa_2009_f1bf3e | not a functional equation (calculus: tangent lines, differential equation) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2010, Guts Round, 9. | https://mathnet.mit.edu/explorer.html?p=usa_2010_19eb3e | not a functional equation (combinatorics: counting functions on a finite set) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2010, Calculus Subject Test, 2. | https://mathnet.mit.edu/explorer.html?p=usa_2010_6c716f | not a functional equation (calculus: differential equation) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2010, Guts Round, 25. | https://mathnet.mit.edu/explorer.html?p=usa_2010_7a9517 | not a functional equation (combinatorics: counting functions on a finite set) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2010, Combinatorics Subject Test, 3. | https://mathnet.mit.edu/explorer.html?p=usa_2010_7f5cf7 | not a functional equation (combinatorics: counting function compositions) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2010, Calculus Subject Test, 5. | https://mathnet.mit.edu/explorer.html?p=usa_2010_afef21 | not a functional equation (calculus: derivatives) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2010, Linear? What's The Problem?, 10. | https://mathnet.mit.edu/explorer.html?p=usa_2010_cdeae5 | not a functional equation (multilinear interpolation, compute a value) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2010, Combinatorics Subject Test, 8. | https://mathnet.mit.edu/explorer.html?p=usa_2010_ee4111 | not a functional equation (combinatorics: counting increasing functions) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2011, Guts Round, 31. | https://mathnet.mit.edu/explorer.html?p=usa_2011_119699 | not a functional equation (combinatorics: counting permutations) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2011, Calculus & Geometry Individual Test, 14. | https://mathnet.mit.edu/explorer.html?p=usa_2011_3bc4da | not a functional equation (calculus: possible integral values; f on [0,1], continuous) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2011, Algebra & Calculus Individual Test, 16. | https://mathnet.mit.edu/explorer.html?p=usa_2011_738d72 | not a functional equation (sequence from iterating a quadratic) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2011, Algebra & Calculus Individual Test, 7. | https://mathnet.mit.edu/explorer.html?p=usa_2011_9b6c1c | not a functional equation (calculus: derivative of a given function) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2011, Calculus & Geometry Individual Test, 3. | https://mathnet.mit.edu/explorer.html?p=usa_2011_d145b9 | not a functional equation (calculus: range of integral values) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2011, Combinatorics & Geometry Individual Test, 14. | https://mathnet.mit.edu/explorer.html?p=usa_2011_ffb5af | not a functional equation (combinatorics: counting functions on a finite set) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2012, Team A, 2. | https://mathnet.mit.edu/explorer.html?p=usa_2012_1651e8 | not a functional equation (combinatorics: existence of functions on a finite set) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2012, Algebra Test, 1. | https://mathnet.mit.edu/explorer.html?p=usa_2012_25bf2a | not a functional equation (graph length of iterates of a given function) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2012, Team A, 8. | https://mathnet.mit.edu/explorer.html?p=usa_2012_7a7c30 | not a functional equation (combinatorics: bijective counting proof) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2012, Guts, 27. | https://mathnet.mit.edu/explorer.html?p=usa_2012_a9bf72 | not a functional equation (combinatorics: counting commuting permutations) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2013, 4. | https://mathnet.mit.edu/explorer.html?p=usa_2013_5e4d69 | not a functional equation (real analysis/topology proof) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2013, General Test, 10. | https://mathnet.mit.edu/explorer.html?p=usa_2013_84175d | not a functional equation (combinatorics: counting functions on a finite set) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2014, Guts Round, 32. | https://mathnet.mit.edu/explorer.html?p=usa_2014_b651c9 | not a functional equation (number theory: iterates of a given polynomial mod 89) |
+| IMO TST 2014, TSTST 2014 Problems, 8. | https://mathnet.mit.edu/explorer.html?p=usa_2014_f1b5d5 | not a functional equation (number theory: recursively defined sequence) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2015, Combinatorics, 6. | https://mathnet.mit.edu/explorer.html?p=usa_2015_13d503 | not a functional equation (combinatorics: counting colorings) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2015, Team, 7. | https://mathnet.mit.edu/explorer.html?p=usa_2015_1f3697 | not a functional equation (complex analysis: polynomial approximation) |
+| Berkeley Math Circle 2015, 6. | https://mathnet.mit.edu/explorer.html?p=usa_2015_50e1eb | not a functional equation (combinatorics: counting functions on a finite set) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2015, Guts, 3. | https://mathnet.mit.edu/explorer.html?p=usa_2015_7c1e58 | not a functional equation (set images under functions) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2015, Theme round, 7. | https://mathnet.mit.edu/explorer.html?p=usa_2015_9896b0 | not a functional equation (combinatorics: counting functions by cycle structure) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2016, Combinatorics, 8. | https://mathnet.mit.edu/explorer.html?p=usa_2016_63f338 | not a functional equation (combinatorics: counting functions on a finite set) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2016, Guts, 13. | https://mathnet.mit.edu/explorer.html?p=usa_2016_9cf8bc | not a functional equation (combinatorics: counting monotone Boolean functions) |
+| American Mathematics Competitions 10 (AMC 10) 2017, Guts, 33. | https://mathnet.mit.edu/explorer.html?p=usa_2017_48ebb4 | not a functional equation (collection of yes/no existence questions) |
+| American Mathematics Competitions 10 (AMC 10) 2017, Algebra and Number Theory, 10. | https://mathnet.mit.edu/explorer.html?p=usa_2017_b8fdc5 | not "find all f" (counting functions N -> {0,...,16} with congruences; domain not supported) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2017, 5. | https://mathnet.mit.edu/explorer.html?p=usa_2017_e92b83 | not a functional equation (combinatorics: approximate homomorphisms on {-1,1}^n, prove) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2018, Team Round, 7. | https://mathnet.mit.edu/explorer.html?p=usa_2018_382040 | not a functional equation (probability on random functions) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2018, Guts Round, 21. | https://mathnet.mit.edu/explorer.html?p=usa_2018_553354 | not a functional equation (combinatorics: counting functions on a finite set) |
+| Berkeley Math Circle 2018, Monthly Contest 4, 4. | https://mathnet.mit.edu/explorer.html?p=usa_2018_c3efca | not "find all f" (asks for an example; inequality, codomain [0,1]) |
+| IMO TST 2019, Solutions to Day 2, TST 4 | https://mathnet.mit.edu/explorer.html?p=usa_2019_272f92 | not "find all f" (prove; f on Z>=0 x Z>=0) |
+| IMO TST 2019, Solutions to Day 1, TST 2 | https://mathnet.mit.edu/explorer.html?p=usa_2019_377e55 | not a functional equation (number theory: bijections on Z/nZ) |
+| IMO TST 2019, Day 3, TSTST 7 | https://mathnet.mit.edu/explorer.html?p=usa_2019_412886 | not "find all f" (prove; gcd equation on integers) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2019, Algebra and Number Theory, 8. | https://mathnet.mit.edu/explorer.html?p=usa_2019_4f6b06 | not "find all f" (asks a value; divisor-sum equation on N) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2019, 5. | https://mathnet.mit.edu/explorer.html?p=usa_2019_af7053 | not "find all f" (counting functions Z -> F_p; domain not supported) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2019, Guts Round, 30. | https://mathnet.mit.edu/explorer.html?p=usa_2019_c6e3f2 | not "find all f" (inequality on Z, asks maximum value) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2020, Guts Round, 17. | https://mathnet.mit.edu/explorer.html?p=usa_2020_93dddf | not "find all f" (counts possible values; domain not supported: integers > 1) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2021, Combinatorics Round, 7. | https://mathnet.mit.edu/explorer.html?p=usa_2021_116c1e | not a functional equation (combinatorics: sum over functions on a finite set) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2021, Combinatorics Round, 4. | https://mathnet.mit.edu/explorer.html?p=usa_2021_56f25d | not a functional equation (combinatorics: counting permutations) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2021, 16. | https://mathnet.mit.edu/explorer.html?p=usa_2021_e04e2c | not a functional equation (recursively defined function, compute a value) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2021, Guts Round, 30. | https://mathnet.mit.edu/explorer.html?p=usa_2021_e73174 | not a functional equation (recursion on integer grid, compute a value) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2022, 5. | https://mathnet.mit.edu/explorer.html?p=usa_2022_1d0d9f | not a functional equation (counting functions over F_p^2) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2022, Algebra and Number Theory Round, 6. | https://mathnet.mit.edu/explorer.html?p=usa_2022_55d17a | not a functional equation (number theory: divisibility on a finite set) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2022, Guts Round, 22. | https://mathnet.mit.edu/explorer.html?p=usa_2022_9baa34 | not a functional equation (polynomial problem) |
+| IMO TST 2023, §1.3 USA TST 2023/3, USA TST 2023/3 | https://mathnet.mit.edu/explorer.html?p=usa_2023_4eb572 | not a functional equation (optimization with inequalities on nonnegative integers) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2023, Theme Round, 6. | https://mathnet.mit.edu/explorer.html?p=usa_2023_978a59 | not a functional equation (quadratic inequality optimization) |
+| IMO TST 2023, Solutions to Day 3, 9 | https://mathnet.mit.edu/explorer.html?p=usa_2023_cb6858 | not a functional equation (counting functions Z/aZ -> Z/p^eZ via finite differences) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2024, 4. | https://mathnet.mit.edu/explorer.html?p=usa_2024_1992ab | not a functional equation (combinatorics: bijective counting proof) |
+| American Mathematics Competitions 12 (AMC 12) 2024, 20 | https://mathnet.mit.edu/explorer.html?p=usa_2024_f8a0b9 | not a functional equation (geometry) |
+| American Invitational Mathematics Examination (AIME) 2025, 15 | https://mathnet.mit.edu/explorer.html?p=usa_2025_5e6994 | not a functional equation (calculus: minima of a given rational function) |
+| American Invitational Mathematics Examination (AIME) 2025, Problem 11 | https://mathnet.mit.edu/explorer.html?p=usa_2025_84eb2f | not a functional equation (intersection of a given periodic function with a parabola) |
+| Harvard-MIT Mathematics Tournament (HMMT) 2025, Guts Round, 28. | https://mathnet.mit.edu/explorer.html?p=usa_2025_a3a2c2 | not a functional equation (recursively defined function on integers, compute a sum) |
+| IMO TST 2025, Day I, 1 | https://mathnet.mit.edu/explorer.html?p=usa_2025_c87ac0 | not a functional equation (combinatorial game with periodic functions) |
+| IMO TST 2025, Solutions to Day 1, TST 1 | https://mathnet.mit.edu/explorer.html?p=usa_2025_d1cd24 | not a functional equation (combinatorial game with periodic functions) |
+| Berkeley Math Circle, Monthly Contest 6 Solutions, 5. | https://mathnet.mit.edu/explorer.html?p=usa_5c9efa | not "find all f" (existence question; number theory on positive integers) |
+| IMO TST 2003, 3 | https://mathnet.mit.edu/explorer.html?p=vnm_2003_23ab5b | not a functional equation (recursively defined function on N x Z, prove) |
+| Vietnamese Mathematical Olympiad 2003, Part 1: PROBLEMS, 6 | https://mathnet.mit.edu/explorer.html?p=vnm_2003_d83cc0 | not "find all f" (asks extrema of f(x)f(1-x); trigonometric expressions) |
+| Vietnamese Mathematical Olympiad 2006, Second day, Problem 4 | https://mathnet.mit.edu/explorer.html?p=vnm_2006_6a3ccf | not a functional equation (analysis of a given function, prove) |
+| Vietnamese Mathematical Olympiad 2013, IMO SELECTION FINAL TEST, Problem 3. | https://mathnet.mit.edu/explorer.html?p=vnm_2013_4017e2 | not a functional equation (combinatorics on words) |
+| Vietnamese Mathematical Olympiad 2019, Day 1, 1 | https://mathnet.mit.edu/explorer.html?p=vnm_2019_8cd945 | not a functional equation (real analysis: continuous function limits, prove) |
+| South African Mathematical Olympiad (SAMO) 2012, The Monthly Problem Sets, 10 | https://mathnet.mit.edu/explorer.html?p=zaf_2012_a2002b | not "find all f" (prove an inequality; trigonometric expressions) |
+| International Zhautykov Olympiad (IZhO) 2019, Second day, №5 | https://mathnet.mit.edu/explorer.html?p=zhk_2019_8141d2 | not a functional equation (number theory: periods of functions on integers, prove) |
+| EGMO 2012, Problem 3 | https://web.evanchen.cc/exams/EGMO-2012-notes.pdf | duplicate of egmo-2012-3 (European Girls' Mathematical Olympiad (EGMO) 2012, Problema 3), which is kept |
+| EGMO 2014, Problem 6 | https://web.evanchen.cc/exams/EGMO-2014-notes.pdf | duplicate of egmo-2014-6 (rule 1, MathNet record), which is kept with its official answer; the notes here do not state the final answer |
+| EGMO 2017, Problem 2 | https://web.evanchen.cc/exams/EGMO-2017-notes.pdf | not "find all f" (find smallest k; f: Z>0 -> Z>0, domain not supported) |
+| EGMO 2021, Problem 6 | https://web.evanchen.cc/exams/EGMO-2021-notes.pdf | not a functional equation (number theory with floor sums) |
+| ELMO 2014 (official solutions, problem list only) | https://web.evanchen.cc/exams/ELMO-2014-sols.pdf | problem list with no in-scope functional equation (Problem 1: triple of injective functions f, g, h with three equations; not a single equation in one function, extra hypothesis: injective) |
+| ELMO 2014 (problem list only) | https://web.evanchen.cc/exams/ELMO-2014.pdf | problem list with no in-scope functional equation (Problem 1: triple of injective functions f, g, h with three equations; not a single equation in one function, extra hypothesis: injective) |
+| ELMO 2020 (problem list only) | https://web.evanchen.cc/exams/ELMO-2020.pdf | problem list with no in-scope functional equation (Problem 1: f: N -> N with iterates, domain not supported) |
+| ELSMO 2020 (problem list only) | https://web.evanchen.cc/exams/ELSMO-2020.pdf | problem list with no in-scope functional equation (redacted copy of ELMO 2020; Problem 1: f: N -> N, domain not supported) |
+| IMO 1998, Problem 6 | https://web.evanchen.cc/exams/IMO-1998-notes.pdf | domain not supported (f: N -> N) |
+| IMO 2002, Problem 5 | https://web.evanchen.cc/exams/IMO-2002-notes.pdf | too many variables (x, y, z, t) |
+| IMO 2008, Problem 4 | https://web.evanchen.cc/exams/IMO-2008-notes.pdf | domain not supported (positive reals); equation holds only on restricted values (wx = yz); division |
+| IMO 2009, Problem 5 | https://web.evanchen.cc/exams/IMO-2009-notes.pdf | domain not supported (Z>0); not an equation (triangle condition) |
+| IMO 2010, Problem 1 | https://web.evanchen.cc/exams/IMO-2010-notes.pdf | floor function in equation; answer has restricted parameter (f = c, 1 <= c < 2) |
+| IMO 2010, Problem 3 | https://web.evanchen.cc/exams/IMO-2010-notes.pdf | domain not supported (Z>0); not an equation (perfect square condition) |
+| IMO 2011, Problem 3 | https://web.evanchen.cc/exams/IMO-2011-notes.pdf | not "find all f" (inequality; prove f(x) = 0 for x <= 0) |
+| IMO 2011, Problem 5 | https://web.evanchen.cc/exams/IMO-2011-notes.pdf | not "find all f" (prove; divisibility, f: Z -> Z>0) |
+| IMO 2012, Problem 4 | https://web.evanchen.cc/exams/IMO-2012-notes.pdf | domain not supported (Z); equation holds only on restricted values (a + b + c = 0) |
+| IMO 2013, Problem 5 | https://web.evanchen.cc/exams/IMO-2013-notes.pdf | not "find all f" satisfying an equation (inequalities, given value; f: Q>0 -> R) |
+| USA TST 2016 (problem list only) | https://web.evanchen.cc/exams/IMO-2016-TST.pdf | problem list with no in-scope functional equation (TST 5: W: {1,...,n}^2 -> R, domain not supported) |
+| USA TST 2018 (problem list only) | https://web.evanchen.cc/exams/IMO-2018-TST.pdf | problem list with no in-scope functional equation (TST 2: f: Z^2 -> [0,1], domain not supported) |
+| USA TST 2019 (problem list only) | https://web.evanchen.cc/exams/IMO-2019-TST.pdf | problem list with no in-scope functional equation (TST 4: f: Z>=0 x Z>=0 -> Z, not "find all f") |
+| IMO 2019, Problem 1 | https://web.evanchen.cc/exams/IMO-2019-notes.pdf | domain not supported (Z) |
+| USA TST 2021 (problem list only) | https://web.evanchen.cc/exams/IMO-2021-TST.pdf | problem list with no in-scope functional equation (TST 3: functional inequality, not "find all f" satisfying an equation) |
+| IMO 2021, Problem 2 | https://web.evanchen.cc/exams/IMO-2021-notes.pdf | not a functional equation (inequality) |
+| IMO 2022, Problem 2 | https://web.evanchen.cc/exams/IMO-2022-notes.pdf | domain not supported (R+); not an equation (inequality condition) |
+| IMO 2022, Problem 6 | https://web.evanchen.cc/exams/IMO-2022-notes.pdf | not a functional equation (combinatorics) |
+| USA TST 2023 (problem list only) | https://web.evanchen.cc/exams/IMO-2023-TST.pdf | problem list with no in-scope functional equation (TST 3: pair of functions on nonnegative integers with inequalities) |
+| USA TST 2024, Problem 6 | https://web.evanchen.cc/exams/IMO-2024-TST.pdf | USA TST 2024 problem list without solutions; its in-scope problem 6 is covered by the solutions file (usa-tst-2024-6), which is kept |
+| IMO 2024, Problem 6 | https://web.evanchen.cc/exams/IMO-2024-notes.pdf | not "find all f" (find smallest c; disjunctive condition on f: Q -> Q) |
+| USA TST 2025 (problem list only) | https://web.evanchen.cc/exams/IMO-2025-TST.pdf | problem list with no in-scope functional equation (Problem 1: game with periodic f: Z -> Z, not a functional equation) |
+| IMO 2025, Problem 3 | https://web.evanchen.cc/exams/IMO-2025-notes.pdf | domain not supported (f: N -> N); not an equation (divisibility) |
+| IMO 2026, Problem 5 | https://web.evanchen.cc/exams/IMO-2026-notes.pdf | domain not supported (R>0); not an equation (inequalities with square roots) |
+| USAJMO 2014, Problem 3 | https://web.evanchen.cc/exams/JMO-2014-notes.pdf | domain not supported (Z); division by a variable; equation holds only on restricted values (x != 0) |
+| USAJMO 2015, Problem 4 | https://web.evanchen.cc/exams/JMO-2015-notes.pdf | equation holds only on restricted values (x < y < z < t in arithmetic progression) |
+| USAJMO 2019, Problem 2 | https://web.evanchen.cc/exams/JMO-2019-notes.pdf | not a single equation in one function (f, g: Z -> Z, two equations; asks for pairs (a, b)) |
+| USAJMO 2021, Problem 1 | https://web.evanchen.cc/exams/JMO-2021-notes.pdf | domain not supported (f: N -> N); two equations |
+| USAJMO 2021, Problem 4 | https://web.evanchen.cc/exams/JMO-2021-notes.pdf | not a functional equation (combinatorics) |
+| USAJMO 2023, Problem 1 | https://web.evanchen.cc/exams/JMO-2023-notes.pdf | not a functional equation (Diophantine equation) |
+| USAJMO 2023, Problem 3 | https://web.evanchen.cc/exams/JMO-2023-notes.pdf | not a functional equation (combinatorics) |
+| USAJMO 2025, Problem 1 | https://web.evanchen.cc/exams/JMO-2025-notes.pdf | not "find all f" (prove; f: Z -> Z) |
+| USAJMO 2026, Problem 1 | https://web.evanchen.cc/exams/JMO-2026-notes.pdf | not a functional equation (number theory inequality) |
+| USA TST 2012 (problem list only) | https://web.evanchen.cc/exams/TST-IMO-2012.pdf | problem list with no in-scope functional equation (Problem 2: f(x + y^2) = f(x) + \|yf(y)\|, absolute value) |
+| USA TST 2013 (problem list only) | https://web.evanchen.cc/exams/TST-IMO-2013.pdf | problem list with no in-scope functional equation (Problem 4: f on positive integers, prove) |
+| USA TSTST 2011 (problem list only) | https://web.evanchen.cc/exams/TSTST-2011.pdf | problem list with no in-scope functional equation (Problem 1: f on pairs of reals with median condition) |
+| USA TSTST 2012 (problem list only) | https://web.evanchen.cc/exams/TSTST-2012.pdf | problem list with no in-scope functional equation (Problem 3: f: N -> N, prove) |
+| USA TSTST 2014 (problem list only) | https://web.evanchen.cc/exams/TSTST-2014.pdf | problem list with no in-scope functional equation (Problem 3: not a functional equation (polynomial problem), with square roots and \|x\| <= 1) |
+| USA TSTST 2018 (problem list only) | https://web.evanchen.cc/exams/TSTST-2018.pdf | problem list with no in-scope functional equation (theta: Z[x] -> Z, domain not supported) |
+| Taiwan TST 2014, Round 1 (problem list only) | https://web.evanchen.cc/exams/TaiwanTST-2014-1.pdf | problem list with no in-scope functional equation (Problem 1: f: N0 -> Z with given value f(2) = 7, domain not supported) |
+| USAMO 1996, Problem 6 | https://web.evanchen.cc/exams/USAMO-1996-notes.pdf | not a functional equation (existence of a subset of Z) |
+| USAMO 1998, Problem 6 | https://web.evanchen.cc/exams/USAMO-1998-notes.pdf | not a functional equation (geometry) |
+| USAMO 2000, Problem 1 | https://web.evanchen.cc/exams/USAMO-2000-notes.pdf | not "find all f" (prove nonexistence; inequality with absolute value) |
+| USAMO 2000, Problem 3 | https://web.evanchen.cc/exams/USAMO-2000-notes.pdf | not a functional equation (combinatorics) |
+| USAMO 2001, Problem 6 | https://web.evanchen.cc/exams/USAMO-2001-notes.pdf | not "find all f" (prove; function on points of the plane) |
+| USAMO 2002, Problem 4 | https://web.evanchen.cc/exams/USAMO-2002-notes.pdf | solver was run on this problem during development (issue #2), before the rule selected it |
+| USAMO 2012, Problem 4 | https://web.evanchen.cc/exams/USAMO-2012-notes.pdf | domain not supported (N); also divisibility condition |
+| USAMO 2014, Problem 2 | https://web.evanchen.cc/exams/USAMO-2014-notes.pdf | domain not supported (Z); also division by x, holds only for x != 0 |
+| USAMO 2016, Problem 4 | https://web.evanchen.cc/exams/USAMO-2016-notes.pdf | duplicate of usajmo-2016-6 (USAJMO 2016, Problem 6), which is kept |
+| USAMO 2017, Problem 2 | https://web.evanchen.cc/exams/USAMO-2017-notes.pdf | not a functional equation (combinatorics) |
+| USAMO 2018, Problem 2 | https://web.evanchen.cc/exams/USAMO-2018-notes.pdf | domain not supported (R+); also division by a variable |
+| USAMO 2019, Problem 1 | https://web.evanchen.cc/exams/USAMO-2019-notes.pdf | domain not supported (N); asks for values of f(1000) |
+| USAMO 2019, Problem 6 | https://web.evanchen.cc/exams/USAMO-2019-notes.pdf | not a functional equation (polynomial problem) |
+| USAMO 2022, Problem 3 | https://web.evanchen.cc/exams/USAMO-2022-notes.pdf | domain not supported (R+) |
+| USAMO 2022, Problem 5 | https://web.evanchen.cc/exams/USAMO-2022-notes.pdf | not a functional equation (combinatorics) |
+| USAMO 2023, Problem 2 | https://web.evanchen.cc/exams/USAMO-2023-notes.pdf | domain not supported (R+) |
+| USAMO 2023, Problem 3 | https://web.evanchen.cc/exams/USAMO-2023-notes.pdf | not a functional equation (combinatorics) |
+| USAMO 2024, Problem 6 | https://web.evanchen.cc/exams/USAMO-2024-notes.pdf | not a functional equation (inequality) |
+| USAMO 2026, Problem 1 | https://web.evanchen.cc/exams/USAMO-2026-notes.pdf | not a functional equation (floor-function sum) |
+| USEMO 2019 (problem list only) | https://web.evanchen.cc/exams/USEMO-2019.pdf | problem list with no in-scope functional equation (Problem 2: theta: Z[x] -> Z[x], domain not supported) |
+| USEMO 2022 (problem list only) | https://web.evanchen.cc/exams/USEMO-2022.pdf | problem list with no in-scope functional equation (Problems 2 and 6: f: Z -> Z, domain not supported; Problem 6 asks for k) |
+| USA TST 2015, Problem 4 | https://web.evanchen.cc/exams/sols-TST-IMO-2015.pdf | not "find all f" (decide whether a constant must exist; integrality condition) |
+| USA TST 2016, Problem 1 | https://web.evanchen.cc/exams/sols-TST-IMO-2016.pdf | not a functional equation (combinatorics of bijections) |
+| USA TST 2016, Problem 5 | https://web.evanchen.cc/exams/sols-TST-IMO-2016.pdf | domain not supported ({1,...,n}^2); sum condition over partitions |
+| USA TST 2018, Problem 2 | https://web.evanchen.cc/exams/sols-TST-IMO-2018.pdf | domain not supported (Z^2 -> [0,1]) |
+| USA TST 2018, Problem 4 | https://web.evanchen.cc/exams/sols-TST-IMO-2018.pdf | not a functional equation (combinatorics) |
+| USA TST 2019, Problem 2 | https://web.evanchen.cc/exams/sols-TST-IMO-2019.pdf | not "find all f" (find n; bijections on Z/nZ) |
+| USA TST 2019, Problem 4 | https://web.evanchen.cc/exams/sols-TST-IMO-2019.pdf | domain not supported (Z>=0 x Z>=0); not "find all f" |
+| USA TST 2021, Problem 3 | https://web.evanchen.cc/exams/sols-TST-IMO-2021.pdf | not "find all f satisfying an equation" (inequality) |
+| USA TST 2023, Problem 3 | https://web.evanchen.cc/exams/sols-TST-IMO-2023.pdf | not a functional equation (combinatorics/optimization) |
+| USA TST 2023, Problem 4 | https://web.evanchen.cc/exams/sols-TST-IMO-2023.pdf | not a functional equation (number theory, bitwise xor) |
+| USA TST 2023, Problem 6 | https://web.evanchen.cc/exams/sols-TST-IMO-2023.pdf | not "find all f" (prove); domain not supported (N) |
+| USA TST 2024, Problem 3 | https://web.evanchen.cc/exams/sols-TST-IMO-2024.pdf | not a functional equation (combinatorics) |
+| USA TST 2025, Problem 1 (Solution to TST 1, by Anthony Wang) | https://web.evanchen.cc/exams/sols-TST-IMO-2025.pdf | not a functional equation (combinatorial game) |
+| USA TSTST 2011, Problem 1 | https://web.evanchen.cc/exams/sols-TSTST-2011.pdf | domain not supported (function of pairs of reals); median condition, not an equation |
+| USA TSTST 2012, Problem 3 | https://web.evanchen.cc/exams/sols-TSTST-2012.pdf | not "find all f" (prove); domain not supported (N) |
+| USA TSTST 2013, Problem 6 | https://web.evanchen.cc/exams/sols-TSTST-2013.pdf | domain not supported (N) |
+| USA TSTST 2013, Problem 8 | https://web.evanchen.cc/exams/sols-TSTST-2013.pdf | not a functional equation (sequence, prove) |
+| USA TSTST 2014, Problem 3 | https://web.evanchen.cc/exams/sols-TSTST-2014.pdf | not a functional equation (polynomial problem) |
+| USA TSTST 2016, Problem 1 | https://web.evanchen.cc/exams/sols-TSTST-2016.pdf | not a functional equation (polynomial problem, prove) |
+| USA TSTST 2016, Problem 4 | https://web.evanchen.cc/exams/sols-TSTST-2016.pdf | not a functional equation (number theory, Euler phi) |
+| USA TSTST 2018, Problem 1 | https://web.evanchen.cc/exams/sols-TSTST-2018.pdf | domain not supported (Z[x] -> Z) |
+| USA TSTST 2018, Problem 6 | https://web.evanchen.cc/exams/sols-TSTST-2018.pdf | not a functional equation (combinatorics) |
+| USA TSTST 2019, Problem 1 | https://web.evanchen.cc/exams/sols-TSTST-2019.pdf | domain not supported (binary operation on R>0); extra hypothesis: inequality condition |
+| USA TSTST 2019, Problem 7 | https://web.evanchen.cc/exams/sols-TSTST-2019.pdf | not "find all f" (prove); domain not supported (Z) |
+| USA TSTST 2022, Problem 4 | https://web.evanchen.cc/exams/sols-TSTST-2022.pdf | not "find all f" (prove); domain not supported (N) |
+| USA TSTST 2022, Problem 8 | https://web.evanchen.cc/exams/sols-TSTST-2022.pdf | domain and codomain differ (N -> Z); floor function |
+| USA TSTST 2023, Problem 9 | https://web.evanchen.cc/exams/sols-TSTST-2023.pdf | not a functional equation (finite differences on Z/aZ) |
+| USA TSTST 2024, Problem 2 | https://web.evanchen.cc/exams/sols-TSTST-2024.pdf | not a functional equation (polynomial/number theory) |
+| USA TSTST 2024, Problem 5 | https://web.evanchen.cc/exams/sols-TSTST-2024.pdf | not a functional equation (inequality on binary digit sums) |
+| USA TSTST 2024, Problem 6 | https://web.evanchen.cc/exams/sols-TSTST-2024.pdf | not "find all f" (does there exist); domain not supported (Z>0) |
+| USA TST 2002, Problem 4 (problem list only) | https://web.evanchen.cc/exams/tse02.pdf | not a functional equation (combinatorics, prove) |
 
 # Counts
 
-* Problems covered by the rule: 1164
-* In scope (in `real.jsonl`): 128
-* Skipped: 1036
+| | covered | in scope | skipped |
+|---|---|---|---|
+| rule 1 (MathNet, tagged) | 1164 | 128 | 1036 |
+| rule 2a (MathNet, text search) | 441 | 0 | 441 |
+| rule 2b (Evan Chen's notes) | 107 | 7 | 100 |
+| **total** | 1712 | 135 | 1577 |
