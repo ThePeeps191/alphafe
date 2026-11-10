@@ -131,12 +131,15 @@ SEARCH_BUDGET = 128     # "network, small search budget"
 PROPOSALS = 8           # proposals requested per expanded state
 
 
-def run_policy(benches: list[BenchProblem], proposer, mode: str, budget: int, k: int = PROPOSALS) -> list[Row]:
+def run_policy(benches: list[BenchProblem], proposer, mode: str, budget: int, k: int = PROPOSALS,
+               value_weight: float = 0.0) -> list[Row]:
     """Run a proposer (network or uniform) over problems. mode: 'greedy' or 'search'."""
     from .search import BestFirstSearch, GreedySearch, run_searches
 
-    make = GreedySearch if mode == "greedy" else BestFirstSearch
-    searches = [make(b.problem, budget=budget) for b in benches]
+    if mode == "greedy":
+        searches = [GreedySearch(b.problem, budget=budget) for b in benches]
+    else:
+        searches = [BestFirstSearch(b.problem, budget=budget, value_weight=value_weight) for b in benches]
     began = time.time()
     run_searches(searches, proposer, k)
     elapsed = (time.time() - began) / max(1, len(benches))
@@ -161,8 +164,14 @@ def synthetic_heldout(seed: int, per_tier: int, limit: int) -> dict:
 
 
 def full_eval(checkpoint, tag: str, seed: int = 0, per_tier: int = 3000, heldout: int = 200,
-              baseline_budgets=(SEARCH_BUDGET, 2000), device: str = "auto", workers: int = 8) -> dict:
-    """The three-mode evaluation on every benchmark. Returns {suite: {solver label: rows}} and saves JSON."""
+              baseline_budgets=(SEARCH_BUDGET, 2000), device: str = "auto", workers: int = 8,
+              big_budget: int = 0, value_weight: float = 0.0) -> dict:
+    """The three-mode evaluation on every benchmark. Returns {suite: {solver label: rows}} and saves JSON.
+
+    ``big_budget`` > 0 adds a network search with that many checker calls on
+    the seed and real suites (to compare with brute force at the same budget).
+    ``value_weight`` > 0 makes the network searches rank states with the value head too.
+    """
     import random
 
     import torch
@@ -194,7 +203,11 @@ def full_eval(checkpoint, tag: str, seed: int = 0, per_tier: int = 3000, heldout
         )
         for name, make in policies:
             runs[f"{name}, no backtracking ({GREEDY_BUDGET} calls)"] = run_policy(benches, make(0.7), "greedy", GREEDY_BUDGET)
-            runs[f"{name}, search ({SEARCH_BUDGET} calls)"] = run_policy(benches, make(1.0), "search", SEARCH_BUDGET)
+            runs[f"{name}, search ({SEARCH_BUDGET} calls)"] = run_policy(
+                benches, make(1.0), "search", SEARCH_BUDGET, value_weight=value_weight if name == "network" else 0.0)
+            if big_budget and name == "network" and suite in ("seed", "real"):
+                runs[f"{name}, search ({big_budget} calls)"] = run_policy(
+                    benches, make(1.0), "search", big_budget, value_weight=value_weight)
         for budget in baseline_budgets:
             runs[f"brute force ({budget} calls)"] = run_baseline(benches, budget, 120.0, workers=workers)
         for label, rows in runs.items():
@@ -226,8 +239,13 @@ def main(argv=None) -> None:
     parser.add_argument("--tag", default="eval", help="prefix for the files written to results/")
     parser.add_argument("--heldout", type=int, default=200, help="held-out synthetic problems per tier")
     parser.add_argument("--device", default="auto")
+    parser.add_argument("--big-budget", type=int, default=0,
+                        help="also run the network search with this many checker calls on seed/real")
+    parser.add_argument("--value-weight", type=float, default=0.0,
+                        help="rank search states by policy log-probability plus this times log(value)")
     args = parser.parse_args(argv)
-    results = full_eval(args.checkpoint, args.tag, heldout=args.heldout, device=args.device)
+    results = full_eval(args.checkpoint, args.tag, heldout=args.heldout, device=args.device,
+                        big_budget=args.big_budget, value_weight=args.value_weight)
     text = report(results)
     RESULTS_DIR.mkdir(exist_ok=True)
     (RESULTS_DIR / f"{args.tag}.md").write_text(text)
