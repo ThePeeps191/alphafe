@@ -171,7 +171,7 @@ Each experiment lists what changed, the commit, and what happened. All numbers
 are on the same seed benchmark (46 problems) and the same held-out synthetic
 problems (200 per tier) as M5 unless stated.
 
-### E1. Language: lemmas over Q and unique roots (commit `3b1f0d6`... see `git log`)
+### E1. Language: lemmas over Q and unique roots (commit `49e942d`)
 
 Change: `cauchy` accepts a polynomial defect (`f(x+y) = f(x) + f(y) + 2xy`),
 new free move `quadratic` (`f(x+y) + f(x-y) = 2f(x) + 2f(y)`), and an
@@ -182,7 +182,7 @@ Brute force on seeds, before -> after: 200 calls 26 -> 28; 2,000 calls 33 -> 35;
 20,000 calls 37 -> 39 (`results/baseline_seed_*_lemmas.json`). s44 and s45
 are now solved by the free moves alone, for every solver.
 
-### E2. Proposal diversity, no retraining (v1 weights; `results/m6a_*`)
+### E2. Proposal diversity, no retraining (v1 weights; commits `827949f`, evaluated at `a7d21de`; `results/m6a_*`)
 
 Change: the eight proposals for a state are sampled at a spread of
 temperatures (0.6 to 3.0) instead of one, and ranked by the model's own
@@ -227,7 +227,7 @@ Failure groups, network search with 128 calls (14 unsolved): too deep 2
 s40, s41, s42, s43, s46). With 2,000 calls (9 unsolved): too deep 2; did not
 find 7 (s37, s38, s39, s40, s42, s43, s46).
 
-### E3. Commit when a case closes (search change, both solvers)
+### E3. Commit when a case closes (search change, both solvers; commit `dd619f7`)
 
 Change: when a move closes a case, both the network's best-first search and
 the brute force drop every other state on the frontier and continue from
