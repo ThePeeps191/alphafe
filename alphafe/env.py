@@ -2,8 +2,8 @@
 
 On top of the checker it adds one convenience: after every proposed move the
 *free moves* are applied until none applies. Free moves take no creative
-input: establish injectivity or surjectivity, cancel f, use Cauchy over Q, and
-conclude. This mirrors AlphaGeometry, where a symbolic engine runs all
+input: establish injectivity or surjectivity, cancel f, use the Cauchy and
+quadratic lemmas over Q, and conclude. This mirrors AlphaGeometry, where a symbolic engine runs all
 routine deductions and the network only proposes the constructions (here:
 substitutions, case splits, preimages).
 
@@ -17,10 +17,10 @@ from dataclasses import dataclass, field
 from typing import Optional
 
 from .checker import Problem, Reject, State, apply, check, initial_state
-from .moves import Cancel, Cauchy, Conclude, Inj, Move, Surj
+from .moves import Cancel, Cauchy, Conclude, Inj, Move, Quadratic, Surj
 from .solutions import SolutionSet
 
-FREE_MOVES: tuple = (Conclude(), Cauchy(), Inj(), Surj(), Cancel())
+FREE_MOVES: tuple = (Conclude(), Cauchy(), Quadratic(), Inj(), Surj(), Cancel())
 MAX_FREE_STEPS = 40
 
 

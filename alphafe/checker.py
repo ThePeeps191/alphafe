@@ -81,6 +81,7 @@ from .algebra import (
     poly_str,
     split_by_vars,
     to_poly,
+    unique_root,
     univariate_coeffs,
 )
 from .moves import (
@@ -93,6 +94,7 @@ from .moves import (
     Move,
     Onto,
     Pre,
+    Quadratic,
     Split,
     SplitNZ,
     Subst,
@@ -349,8 +351,16 @@ class Branch:
                 # One unknown quantity (a constant, or a value such as f(x))
                 # satisfying a polynomial equation with no root in the domain.
                 uni = univariate_coeffs(poly)
-                if uni is not None and has_no_root(uni[1], self.domain):
-                    raise _Closed(f"{equation_str(poly)} has no solution in {self.domain}")
+                if uni is not None:
+                    if has_no_root(uni[1], self.domain):
+                        raise _Closed(f"{equation_str(poly)} has no solution in {self.domain}")
+                    # ... or with exactly one root there: no choice, so it IS that root.
+                    # (Two roots would be the pointwise trap; nothing is deduced then.)
+                    if len(uni[1]) > 2:
+                        root = unique_root(uni[1], self.domain)
+                        if root is not None:
+                            queue.append(Poly.atom(uni[0]) - root)
+                            continue
                 names = poly.variables()
                 if names:
                     if not has_var_f(poly):
@@ -671,8 +681,19 @@ def cancel_results(branch: Branch, poly: Poly):
                     yield Poly.from_key(atom[1]) - Poly.from_key(other[1])
 
 
-def cauchy_constant(poly: Poly) -> Optional[Poly]:
-    """If ``poly = 0`` reads f(u + v) = f(u) + f(v) - C with C constant, return C."""
+def cauchy_form(poly: Poly) -> Optional[tuple]:
+    """Read ``poly = 0`` as  f(u + v) = f(u) + f(v) + q(u, v)  with q a polynomial.
+
+    Returns (p, q0) such that g = f - p satisfies g(u + v) = g(u) + g(v) + q0,
+    where p is a polynomial in x without constant or linear term and q0 is a
+    constant; or None if the identity does not have this shape.
+
+    How p is found: (u + v)^k - u^k - v^k contains the monomial k*u^(k-1)*v,
+    so the coefficient of u^(k-1)*v in q must be k times the coefficient of
+    x^k in p. Having built p from those coefficients, we check that
+    q - (p(u + v) - p(u) - p(v)) really is a constant. If it is not, q is not
+    of the required kind and we return None.
+    """
     names = sorted(poly.variables())
     if len(names) != 2:
         return None
@@ -682,8 +703,41 @@ def cauchy_constant(poly: Poly) -> Optional[Poly]:
     coef = poly.terms.get(mono)
     if not coef:
         return None
-    constant = poly.scale(1 / coef) - (lead - Poly.f(u) - Poly.f(v))
-    return None if constant.variables() else constant
+    defect = (lead - Poly.f(u) - Poly.f(v)) - poly.scale(1 / coef)   # f(u+v) - f(u) - f(v) = defect
+    if has_var_f(defect):
+        return None
+    p = ZERO
+    for var_mono, coefficient in split_by_vars(defect).items():
+        exps = {atom[1]: e for atom, e in var_mono}
+        if exps.get(names[1], 0) == 1 and exps.get(names[0], 0) >= 1:
+            k = exps[names[0]] + 1
+            p = p + coefficient * (X ** k).scale(Fraction(1, k))
+    rebuilt = p.subst({"x": u + v}) - p.subst({"x": u}) - p.subst({"x": v})
+    constant = defect - rebuilt
+    if constant.variables():
+        return None
+    return p, constant
+
+
+def cauchy_constant(poly: Poly) -> Optional[Poly]:
+    """If ``poly = 0`` reads f(u + v) = f(u) + f(v) - C with C constant, return C."""
+    form = cauchy_form(poly)
+    if form is None or not form[0].is_zero():
+        return None
+    return -form[1]
+
+
+def is_quadratic_equation(poly: Poly) -> bool:
+    """Is ``poly = 0`` the quadratic functional equation f(u+v) + f(u-v) = 2f(u) + 2f(v)?"""
+    names = sorted(poly.variables())
+    if len(names) != 2:
+        return False
+    target = monic(poly)
+    for first, second in (names, names[::-1]):
+        u, v = Poly.var(first), Poly.var(second)
+        if target == monic(Poly.f(u + v) + Poly.f(u - v) - Poly.f(u).scale(2) - Poly.f(v).scale(2)):
+            return True
+    return False
 
 
 def explicit_form(poly: Poly) -> Optional[Poly]:
@@ -979,31 +1033,60 @@ def _do_onto(state: State, branch: Branch, move: Onto) -> _Outcome:
 
 
 def _do_cauchy(state: State, branch: Branch, move: Cauchy) -> _Outcome:
-    """Additive functions on Q are linear.
+    """Cauchy's equation over Q, allowing a polynomial defect.
 
-    If f(u + v) = f(u) + f(v) - C for all rational u, v (C a constant), then
-    g = f - C is additive, so g(n) = n*g(1) for integers n and then
-    g(p/q) = (p/q)*g(1); hence f(x) = (f(1) - C)*x + C.
+    Suppose f(u + v) = f(u) + f(v) + q(u, v) for all rational u, v, where q is
+    a polynomial with constant coefficients. ``cauchy_form`` finds a
+    polynomial p and a constant q0 with g = f - p satisfying
+    g(u + v) = g(u) + g(v) + q0. Then h = g + q0 is additive, so h(n) = n*h(1)
+    for integers n and h(m/n) = (m/n)*h(1): h is linear on Q. Unwinding,
+
+        f(x) = p(x) + (f(1) - p(1) + q0)*x - q0.
+
+    (With q = 0 this is the usual "additive on Q implies linear".)
 
     Over R this is FALSE without extra hypotheses (there are wild additive
     functions), so the move is refused unless the domain is Q.
     """
     if branch.domain != "Q":
         raise Reject("over R, additive does not imply linear (only over Q)")
-    constant = ZERO if "additive" in branch.props and move.target is None else None
+    form = (ZERO, ZERO) if "additive" in branch.props and move.target is None else None
     source = None
-    if constant is None:
+    if form is None:
         for poly in _candidates(state, branch, move.target):
-            constant = cauchy_constant(poly)
-            if constant is not None:
+            form = cauchy_form(poly)
+            if form is not None:
                 source = poly
                 break
-    if constant is None:
-        raise Reject("no identity of the form f(x + y) = f(x) + f(y) + constant")
+    if form is None:
+        raise Reject("no identity of the form f(x + y) = f(x) + f(y) + polynomial")
+    p, constant = form
     one = Poly.f(Poly.const(1))
-    linear = Poly.f(X) - (one - constant) * X - constant
-    branch.add([linear])
-    return _Outcome(source=source, instance=linear)
+    explicit = Poly.f(X) - p - (one - p.subst({"x": Poly.const(1)}) + constant) * X + constant
+    branch.add([explicit])
+    return _Outcome(source=source, instance=explicit)
+
+
+def _do_quadratic(state: State, branch: Branch, move: Quadratic) -> _Outcome:
+    """The quadratic functional equation over Q.
+
+    If f(u + v) + f(u - v) = 2f(u) + 2f(v) for all rational u, v, then:
+    u = v = 0 gives f(0) = 0; u = 0 gives f(-v) = f(v); induction on n with
+    (u, v) = (n*t, t) gives f(n*t) = n^2 f(t); hence f(t) = n^2 f(t/n) and
+    f(m/n) = (m/n)^2 f(1). So f(x) = f(1)*x^2 on Q.
+
+    Over R there are other solutions (built from a Hamel basis), so the move
+    is refused unless the domain is Q.
+    """
+    if branch.domain != "Q":
+        raise Reject("over R, the quadratic equation has non-polynomial solutions (lemma only over Q)")
+    for poly in _candidates(state, branch, move.target):
+        if is_quadratic_equation(poly):
+            one = Poly.f(Poly.const(1))
+            explicit = Poly.f(X) - one * X * X
+            branch.add([explicit])
+            return _Outcome(source=poly, instance=explicit)
+    raise Reject("no identity of the form f(x + y) + f(x - y) = 2f(x) + 2f(y)")
 
 
 def _do_conclude(state: State, branch: Branch, move: Conclude) -> _Outcome:
@@ -1040,6 +1123,7 @@ _HANDLERS = {
     Pre: _do_pre,
     Onto: _do_onto,
     Cauchy: _do_cauchy,
+    Quadratic: _do_quadratic,
     Conclude: _do_conclude,
 }
 

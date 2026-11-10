@@ -49,7 +49,7 @@ def test_brute_force_solves_easy_problems_and_proofs_recheck():
 
 
 def test_brute_force_respects_its_budget():
-    problem = Problem.parse("f(x+y) + f(x-y) = 2f(x) + 2f(y)", "Q")
+    problem = Problem.parse("f(x-y) = f(x)f(y)", "R")
     result = brute_force(problem, max_calls=150, max_seconds=30)
     assert not result.solved and result.checker_calls <= 150 and result.proof == []
 

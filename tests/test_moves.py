@@ -2,7 +2,7 @@ import pytest
 
 from alphafe import terms as T
 from alphafe.moves import (
-    Cancel, Cauchy, Conclude, Divide, EqRef, Inj, Onto, Pre, Split, SplitNZ, Subst, Surj,
+    Cancel, Cauchy, Conclude, Divide, EqRef, Inj, Onto, Pre, Quadratic, Split, SplitNZ, Subst, Surj,
     parse_move, parse_proof, show_move,
 )
 
@@ -22,6 +22,7 @@ EXAMPLES = [
     ("pre 0", Pre(P("0"))),
     ("onto R2: y", Onto(1, "y")),
     ("cauchy", Cauchy()),
+    ("quadratic", Quadratic()),
     ("conclude", Conclude()),
 ]
 

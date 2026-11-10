@@ -644,6 +644,36 @@ def has_no_root(coeffs: list, domain: str) -> bool:
     return False
 
 
+def unique_root(coeffs: list, domain: str):
+    """The root of c0 + c1 t + ... if it provably has exactly one root in the domain, else None.
+
+    That is: exactly one distinct rational root, and what remains after
+    dividing it out (with multiplicity) has no root in the domain.
+    """
+    coeffs = list(coeffs)
+    while coeffs and coeffs[-1] == 0:
+        coeffs.pop()
+    if len(coeffs) < 2:
+        return None
+    try:
+        roots = rational_roots(coeffs)
+    except Unsupported:
+        return None
+    if len(roots) != 1:
+        return None
+    root = roots[0]
+    while len(coeffs) > 1 and sum(c * root**i for i, c in enumerate(coeffs)) == 0:
+        quotient = [Fraction(0)] * (len(coeffs) - 1)
+        carry = Fraction(0)
+        for i in range(len(coeffs) - 1, 0, -1):
+            carry = coeffs[i] + carry * root
+            quotient[i - 1] = carry
+        coeffs = quotient
+    if len(coeffs) > 1 and not has_no_root(coeffs, domain):
+        return None
+    return root
+
+
 def factor_hint(poly: Poly) -> list:
     """Try to factor ``poly`` into [(factor, multiplicity), ...].
 

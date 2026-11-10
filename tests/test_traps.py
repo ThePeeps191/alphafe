@@ -168,7 +168,9 @@ def test_cauchy_only_over_Q():
 
 def test_cauchy_needs_an_additive_identity():
     assert rejected(run("f(x + y) = f(x) + y", "Q", "cauchy"), "f(x + y) = f(x) + f(y)")
-    assert rejected(run("f(x + y) = f(x) + f(y) + xy", "Q", "cauchy"))
+    # a defect that is not of the form p(x + y) - p(x) - p(y) is refused
+    assert rejected(run("f(x + y) = f(x) + f(y) + x^2*y", "Q", "cauchy"))
+    assert rejected(run("f(x + y) = f(x) + f(y) + f(x)f(y)", "Q", "cauchy"))
 
 
 # --- Trap 6: case splits must be exhaustive and every case must close ---------

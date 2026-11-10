@@ -19,7 +19,8 @@ Text format, one move per line (``#`` starts a comment)::
     pre 0                       pick a with f(a) = 0 using surjectivity
     onto R2: y                  f is surjective and y only occurs as f(y):
                                 replace f(y) by y
-    cauchy                      additive over Q implies linear
+    cauchy                      additive (up to a polynomial) over Q implies polynomial
+    quadratic                   f(x+y) + f(x-y) = 2f(x) + 2f(y) over Q implies f(x) = f(1)x^2
     conclude                    read off f(x) = ... and pin down the constants
 
 Where a target (``P``, ``R2`` or ``[...]``) is optional and omitted, the
@@ -102,13 +103,18 @@ class Cauchy:
 
 
 @dataclass(frozen=True)
+class Quadratic:
+    target: Optional[Target] = None
+
+
+@dataclass(frozen=True)
 class Conclude:
     target: Optional[Target] = None
 
 
-Move = Union[Subst, Split, SplitNZ, Divide, Inj, Surj, Cancel, Pre, Onto, Cauchy, Conclude]
+Move = Union[Subst, Split, SplitNZ, Divide, Inj, Surj, Cancel, Pre, Onto, Cauchy, Quadratic, Conclude]
 
-_SIMPLE = {"inj": Inj, "surj": Surj, "cancel": Cancel, "cauchy": Cauchy, "conclude": Conclude}
+_SIMPLE = {"inj": Inj, "surj": Surj, "cancel": Cancel, "cauchy": Cauchy, "quadratic": Quadratic, "conclude": Conclude}
 _SIMPLE_NAMES = {cls: name for name, cls in _SIMPLE.items()}
 
 

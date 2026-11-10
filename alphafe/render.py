@@ -11,7 +11,7 @@ from . import terms as T
 from .algebra import Poly, equation_str, monic, poly_str
 from .checker import CheckResult, LogEntry, Problem, check
 from .solutions import make_family
-from .moves import Cancel, Cauchy, Conclude, Divide, Inj, Onto, Pre, Split, SplitNZ, Subst, Surj
+from .moves import Cancel, Cauchy, Conclude, Divide, Inj, Onto, Pre, Quadratic, Split, SplitNZ, Subst, Surj
 
 DOMAIN_WORD = {"R": "real", "Q": "rational"}
 PROPERTY_SENTENCE = {
@@ -132,10 +132,16 @@ def _describe(problem: Problem, entry: LogEntry) -> list[str]:
         lines.extend(_fact_line(entry, skip=entry.instance))
     elif isinstance(move, Cauchy):
         if entry.source is not None:
-            lines.append(f"The relation {_eq(entry.source)} says that f minus a constant is additive.")
+            lines.append(f"The relation {_eq(entry.source)} says that f, minus a suitable polynomial, is additive.")
         lines.append(
-            "An additive function on the rationals is linear (f(n) = n f(1) for integers n, then for fractions), "
+            "An additive function on the rationals is linear (g(n) = n g(1) for integers n, then for fractions), "
             f"so {_eq(entry.instance)}."
+        )
+    elif isinstance(move, Quadratic):
+        lines.append(
+            f"The relation {_eq(entry.source)} is the quadratic functional equation. On the rationals it forces "
+            "f(0) = 0, f even and f(nt) = n^2 f(t) for integers n (induction), hence "
+            f"{_eq(entry.instance)}."
         )
     elif isinstance(move, Conclude):
         lines.append(f"Hence f(x) = {poly_str(entry.candidate)} for all x.")
@@ -151,7 +157,7 @@ def _describe(problem: Problem, entry: LogEntry) -> list[str]:
     if entry.closed == "contradiction" and not isinstance(move, Subst):
         lines.append(f"This leads to {_absurd(entry.reason)}. So this case is impossible.")
         return lines
-    if isinstance(move, Cauchy):
+    if isinstance(move, (Cauchy, Quadratic)):
         lines.extend(_fact_line(entry, skip=entry.instance))
     elif not isinstance(move, (Subst, Divide, Cancel, Onto)):
         lines.extend(_fact_line(entry))

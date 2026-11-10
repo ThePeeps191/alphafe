@@ -33,7 +33,7 @@ def test_greedy_never_backtracks():
 
 
 def test_budget_is_respected_and_failure_is_reported():
-    search = solve(BestFirstSearch, "f(x+y) + f(x-y) = 2f(x) + 2f(y)", "Q", budget=40)
+    search = solve(BestFirstSearch, "f(x-y) = f(x)f(y)", "R", budget=40)
     result = search.result()
     assert not result.solved and result.checker_calls <= 40 and result.proof == [] and result.reason
 

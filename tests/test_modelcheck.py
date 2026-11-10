@@ -17,7 +17,7 @@ from alphafe import terms as T
 from alphafe.algebra import Poly, parse_poly
 from alphafe.checker import Reject, apply, initial_state
 from alphafe.modelcheck import Unsound, check_state
-from alphafe.moves import Cancel, Cauchy, Conclude, Divide, Inj, Onto, Pre, Split, SplitNZ, Subst, Surj
+from alphafe.moves import Cancel, Cauchy, Conclude, Divide, Inj, Onto, Pre, Quadratic, Split, SplitNZ, Subst, Surj
 from alphafe.solutions import parse_solution, verify
 
 from .seedlib import load_seeds, seed_problem
@@ -38,7 +38,7 @@ def random_move(rng, state):
         return Subst(target, tuple((n, rng.choice(POOL)) for n in names))
     options = [
         Split(target), SplitNZ(rng.choice(GROUND)), Inj(), Surj(), Cancel(), Pre(rng.choice(GROUND)),
-        Onto(target, rng.choice("xy")), Cauchy(), Conclude(), Divide(target, rng.choice(GROUND)),
+        Onto(target, rng.choice("xy")), Cauchy(), Quadratic(), Conclude(), Divide(target, rng.choice(GROUND)),
     ]
     return rng.choice(options)
 

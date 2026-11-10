@@ -30,7 +30,7 @@ def test_pool_split_is_disjoint_and_excludes_benchmarks():
 def test_harvest_builds_the_three_kinds_of_examples():
     rng = random.Random(0)
     solved = BestFirstSearch(Problem.parse("f(x+y) = f(x) + y"), budget=300)
-    failed = BestFirstSearch(Problem.parse("f(x+y) + f(x-y) = 2f(x) + 2f(y)", "Q"), budget=30)
+    failed = BestFirstSearch(Problem.parse("f(x-y) = f(x)f(y)", "R"), budget=30)
     run_searches([solved, failed], UniformProposer(rng), k=8)
     assert solved.solved_node is not None and failed.solved_node is None
     buffer = ReplayBuffer(1000)
