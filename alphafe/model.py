@@ -147,8 +147,18 @@ class NeuralProposer:
     def values(self, views: list) -> list:
         """Value-head probabilities for a list of states."""
         self.model.eval()
-        memory, pad = self.model.encode(pad_batch([v.tokens[:MAX_SRC] for v in views], self.device, SRC_BUCKET))
-        return torch.sigmoid(self.model.value(memory, pad)).tolist()
+        out: list = []
+        chunk = 256
+        for begin in range(0, len(views), chunk):
+            part = views[begin: begin + chunk]
+            # Pad the batch to a power of two (MPS compiles a graph per shape).
+            size = 16
+            while size < len(part):
+                size *= 2
+            padded = list(part) + [part[0]] * (size - len(part))
+            memory, pad = self.model.encode(pad_batch([v.tokens[:MAX_SRC] for v in padded], self.device, SRC_BUCKET))
+            out.extend(torch.sigmoid(self.model.value(memory, pad)).tolist()[: len(part)])
+        return out
 
     @torch.no_grad()
     def logprob(self, view, ids: list) -> float:

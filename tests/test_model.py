@@ -49,6 +49,8 @@ def test_proposals_are_well_formed_moves():
             decode_move(ids, view)          # must not raise
     values = proposer.values(views)
     assert len(values) == 3 and all(0 <= v <= 1 for v in values)
+    many = proposer.values(views * 7)                      # batches are padded internally; the answers are not
+    assert len(many) == 21 and all(abs(a - b) < 1e-5 for a, b in zip(many[:3], values))
 
 
 def test_untrained_network_can_drive_search():

@@ -258,6 +258,8 @@ def full_eval(checkpoint, tag: str, heldout: int = 200, baseline_budgets=(SEARCH
                                                  "solved_per_seed": spread.get(label)})
         out[suite] = runs
         spreads[suite] = spread
+        if dev.type == "mps":
+            torch.mps.empty_cache()
     return out, spreads
 
 
