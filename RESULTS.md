@@ -214,7 +214,7 @@ evaluated in M5 and E2).
   set was not used to design E1-E4, but it was used to compare runs: the
   decisions to leave E5 and E7 switched off, and the choice of which
   checkpoint to keep, looked at it. The real benchmark is the only untouched
-  one, apart from the 12 problems it flags as seen in development or in the
+  one, apart from the 13 problems it flags as seen in development or in the
   training pool.
 * *Noise.* Network rows up to and including E2 are a single sampling run, and
   each training configuration was run with one seed. On 200 problems a
