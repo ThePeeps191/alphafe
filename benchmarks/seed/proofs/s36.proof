@@ -1,0 +1,9 @@
+# This proof was found by the network (run v1, search with 128 checker calls),
+# not written by hand; it is kept here as a regression test.
+sub P: y:=x                 # f(0) = f(x)^2
+sub P: x:=0, y:=0           # f(0) = f(0)^2
+split [f(0)^2 = f(0)]
+conclude                    # case f(0) = 0: f(x)^2 = 0, so f = 0
+sub P: y:=-x                # case f(0) = 1: f(2x) = f(x)f(-x)
+sub P: x:=0                 # f(-y) = f(y): f is even, so f(2x) = f(x)^2 = 1
+conclude
