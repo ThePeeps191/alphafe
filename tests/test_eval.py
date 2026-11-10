@@ -92,3 +92,30 @@ def test_common_calls_compares_like_with_like():
     b = [row("p", True, 10), row("q", False, 50), row("r", True, 4)]
     assert common_calls(a, b) == (1, 2.0, 10.0)
     assert common_calls(a, [row("z", True, 1)]) is None
+
+
+def test_full_eval_runs_without_a_checkpoint(tmp_path, monkeypatch, capsys):
+    """A fresh clone has no checkpoint: evaluation must still run the references and the real benchmark."""
+    import json
+
+    from alphafe import bench
+    from alphafe import eval as eval_module
+
+    (tmp_path / "seed").mkdir()
+    (tmp_path / "real").mkdir()
+    (tmp_path / "synthetic").mkdir()
+    record = {"id": "r1", "equation": "f(x+y) = f(x) + y", "domain": "R", "solutions": ["f(x) = x + c"], "mohs": 0, "source": "t"}
+    (tmp_path / "seed" / "s.jsonl").write_text(json.dumps(record) + "\n")
+    (tmp_path / "real" / "mine.jsonl").write_text(json.dumps(dict(record, id="mine")) + "\n")
+    held = {"id": "h1", "equation": "f(xy) = x*f(y)", "domain": "R", "tier": 1, "planted": "f(x) = x", "key": "00", "source": "synthetic-tier1"}
+    (tmp_path / "synthetic" / "heldout.jsonl").write_text(json.dumps(held) + "\n")
+    monkeypatch.setattr(bench, "BENCH_DIR", tmp_path)
+    monkeypatch.setattr(eval_module, "RESULTS_DIR", tmp_path / "results")
+    results, spreads = eval_module.full_eval(tmp_path / "missing.pt", "t", baseline_budgets=(64,), device="cpu", workers=1)
+    assert "No checkpoint" in capsys.readouterr().out
+    assert set(results) == {"seed", "real", "synthetic-tier1"}
+    labels = set(results["real"])
+    assert not any(label.startswith("network") for label in labels)
+    assert "brute force (64 calls)" in labels and any(label.startswith("uniform") for label in labels)
+    assert results["real"]["brute force (64 calls)"][0].solved
+    assert "#### real (1 problems)" in eval_module.report(results, spreads)

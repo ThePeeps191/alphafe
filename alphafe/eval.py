@@ -207,14 +207,19 @@ def full_eval(checkpoint, tag: str, heldout: int = 200, baseline_budgets=(SEARCH
     import torch
 
     from .bench import load_real, load_seed
-    from .model import DIVERSE, NeuralProposer, PolicyValueNet, load_model, pick_device
+    from .model import DIVERSE, ModelConfig, NeuralProposer, PolicyValueNet, load_model, pick_device
     from .search import UniformProposer
 
     dev = pick_device(device)
     temperature = DIVERSE if diverse else 1.0
-    model, payload = load_model(checkpoint, dev)
+    model = None
+    if checkpoint is not None and pathlib.Path(checkpoint).exists():
+        model, _ = load_model(checkpoint, dev)
+    else:
+        print(f"No checkpoint at {checkpoint}: the trained-network rows are skipped. "
+              "(Train one with 'alphafe train' and copy it to checkpoints/best.pt.)")
     torch.manual_seed(0)
-    untrained = PolicyValueNet(model.config).to(dev)
+    untrained = PolicyValueNet(model.config if model is not None else ModelConfig()).to(dev)
     suites = {"seed": load_seed()}
     real = load_real()
     if real:
@@ -237,10 +242,11 @@ def full_eval(checkpoint, tag: str, heldout: int = 200, baseline_budgets=(SEARCH
                 if index == 0:
                     runs[label] = rows
 
-        network_rows(f"network, no backtracking ({GREEDY_BUDGET} calls)", "greedy", GREEDY_BUDGET, 0.0)
-        network_rows(f"network, search ({SEARCH_BUDGET} calls)", "search", SEARCH_BUDGET, value_weight)
-        if big_budget and suite in ("seed", "real"):
-            network_rows(f"network, search ({big_budget} calls)", "search", big_budget, value_weight)
+        if model is not None:
+            network_rows(f"network, no backtracking ({GREEDY_BUDGET} calls)", "greedy", GREEDY_BUDGET, 0.0)
+            network_rows(f"network, search ({SEARCH_BUDGET} calls)", "search", SEARCH_BUDGET, value_weight)
+            if big_budget and suite in ("seed", "real"):
+                network_rows(f"network, search ({big_budget} calls)", "search", big_budget, value_weight)
         torch.manual_seed(1000)
         references = (
             ("untrained network", lambda: NeuralProposer(untrained, dev, temperature=temperature)),
@@ -297,7 +303,10 @@ def report(results: dict, spreads: Optional[dict] = None) -> str:
 def main(argv=None) -> None:
     import argparse
 
-    parser = argparse.ArgumentParser(prog="alphafe eval", description="Three-mode evaluation on all benchmarks.")
+    parser = argparse.ArgumentParser(
+        prog="alphafe eval",
+        description="Three-mode evaluation on all benchmarks (seed, real, held-out synthetic). "
+                    "Without a checkpoint the trained-network rows are skipped and the references still run.")
     parser.add_argument("--checkpoint", default=str(ROOT / "checkpoints" / "best.pt"))
     parser.add_argument("--tag", default="eval", help="prefix for the files written to results/")
     parser.add_argument("--heldout", type=int, default=200, help="held-out synthetic problems per tier")
