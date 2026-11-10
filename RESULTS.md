@@ -395,3 +395,30 @@ slots it took from the network's own proposals seem to have cost a little on
 ordinary problems. With one training seed per run even the tier-2 gap could
 be run-to-run variation. Kept in the code as an option (`n_subterm`), off by
 default.
+
+### E6. Twice the training (v2 resumed for another 28 minutes): little change
+
+Change: `alphafe train --run v2 --resume --minutes 28`, nothing else. The run
+went from 90 to 164 iterations (56 minutes in total, about 40,000 solve
+examples in the buffer), staying on tier 4 with half of each batch of
+problems drawn from the lower tiers. Evaluated with three sampling seeds at
+commit `309879a`, which differs from E4's commit only in the ordering of an
+exploration list that evaluation does not use (`results/e6_v2b_*`).
+
+Number solved (ranges over three sampling seeds):
+
+| solver | seed (50) | tier 1 | tier 2 | tier 3 | tier 4 |
+|---|---|---|---|---|---|
+| v2 at 28 min, no backtracking (32 calls) | 32-35 | 179-180 | 155-159 | 79-81 | 46-51 |
+| v2 at 56 min, no backtracking (32 calls) | 33-34 | 178-179 | 160-167 | 78-79 | 49-52 |
+| v2 at 28 min, search (128 calls) | 35-38 | 185 | 168-172 | 84-89 | 56-58 |
+| v2 at 56 min, search (128 calls) | 36-40 | 186 | 170-176 | 88-91 | 53-57 |
+| v2 at 28 min, search (2,000 calls) | 43-44 | | | | |
+| v2 at 56 min, search (2,000 calls) | 41-45 | | | | |
+
+Reading: a small gain on tier 2 (clear only without backtracking), everything
+else inside the spread over sampling seeds. The held-out curve logged during
+training is flat from about minute 20 onward
+(`results/train_v2_log.json`). More of the same self-play is not what is
+holding the network back; with this generator, budget and model size it has
+roughly converged.
