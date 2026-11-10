@@ -42,8 +42,12 @@ def test_harvest_builds_the_three_kinds_of_examples():
     assert all(src[2] == TOKEN_ID["SOLVE"] for src, _ in buffer.solve)
     assert all(src[2] == TOKEN_ID["GOAL"] for src, _ in buffer.hindsight)
     config = TrainConfig(batch_size=16)
-    src, tgt_in, tgt_out, value, mask = make_batch(buffer, config, rng, torch.device("cpu"))
-    assert src.shape[0] == tgt_in.shape[0] == 16 and tgt_in.shape == tgt_out.shape
+    pieces = make_batch(buffer, config, rng, torch.device("cpu"))
+    assert sum(src.shape[0] for src, *_ in pieces) == 16
+    widths = [src.shape[1] for src, *_ in pieces]
+    assert widths == sorted(widths)                       # length-sorted pieces
+    for src, tgt_in, tgt_out, value, mask in pieces:
+        assert src.shape[0] == tgt_in.shape[0] == value.shape[0] and tgt_in.shape == tgt_out.shape
 
 
 def test_minimal_examples_drop_useless_moves():

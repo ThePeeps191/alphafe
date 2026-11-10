@@ -182,23 +182,46 @@ def harvest(searches: list, buffer: ReplayBuffer, rng: random.Random, max_hindsi
                 buffer.add("hindsight", (tuple(view.tokens), tuple(node.move_ids)))
 
 
-def make_batch(buffer: ReplayBuffer, config: TrainConfig, rng: random.Random, device):
-    """Sample a mixed batch. Returns (src, tgt_in, tgt_out, value_target, value_mask)."""
+MAX_TRAIN_SRC = 256      # training examples with longer states are skipped (about 1% of them)
+LENGTH_GROUPS = 3        # a batch is processed in this many length-sorted pieces
+
+
+def make_batch(buffer: ReplayBuffer, config: TrainConfig, rng: random.Random, device) -> list:
+    """Sample a mixed batch and return it as a few length-sorted pieces.
+
+    Each piece is (src, tgt_in, tgt_out, value_target, value_mask). Sorting by
+    state length before padding matters for speed: most states are short, and
+    padding a whole batch to its longest member would waste most of the work.
+    """
     n = config.batch_size
     n_hind = int(n * config.hindsight_fraction) if buffer.hindsight else 0
     n_neg = int(n * config.negative_fraction) if buffer.negative else 0
     n_solve = n - n_hind - n_neg if buffer.solve else 0
-    srcs, tgts, values, masks = [], [], [], []
-    for src, tgt in (rng.choice(buffer.solve) for _ in range(n_solve)):
-        srcs.append(src); tgts.append(tgt); values.append(1.0); masks.append(1.0)
-    for src, tgt in (rng.choice(buffer.hindsight) for _ in range(n_hind)):
-        srcs.append(src); tgts.append(tgt); values.append(0.0); masks.append(0.0)
-    for (src,) in (rng.choice(buffer.negative) for _ in range(n_neg)):
-        srcs.append(src); tgts.append(()); values.append(0.0); masks.append(1.0)
-    src = pad_batch([list(s) for s in srcs], device, SRC_BUCKET)
-    tgt_in = pad_batch([[BOS] + list(t)[:-1] if t else [BOS] for t in tgts], device, TGT_BUCKET)
-    tgt_out = pad_batch([list(t) if t else [PAD] for t in tgts], device, TGT_BUCKET)
-    return src, tgt_in, tgt_out, torch.tensor(values, device=device), torch.tensor(masks, device=device)
+
+    def draw(store, count):
+        out = []
+        while len(out) < count:
+            item = rng.choice(store)
+            if len(item[0]) <= MAX_TRAIN_SRC or rng.random() < 0.02:
+                out.append(item)
+        return out
+
+    rows = []    # (src, tgt, value target, value mask)
+    rows += [(src[:MAX_TRAIN_SRC], tgt, 1.0, 1.0) for src, tgt in draw(buffer.solve, n_solve)]
+    rows += [(src[:MAX_TRAIN_SRC], tgt, 0.0, 0.0) for src, tgt in draw(buffer.hindsight, n_hind)]
+    rows += [(src[:MAX_TRAIN_SRC], (), 0.0, 1.0) for (src,) in draw(buffer.negative, n_neg)]
+    rows.sort(key=lambda row: len(row[0]))
+    pieces = []
+    size = -(-len(rows) // LENGTH_GROUPS)
+    for begin in range(0, len(rows), size):
+        part = rows[begin: begin + size]
+        src = pad_batch([list(r[0]) for r in part], device, SRC_BUCKET)
+        tgt_in = pad_batch([[BOS] + list(r[1])[:-1] if r[1] else [BOS] for r in part], device, TGT_BUCKET)
+        tgt_out = pad_batch([list(r[1]) if r[1] else [PAD] for r in part], device, TGT_BUCKET)
+        values = torch.tensor([r[2] for r in part], device=device)
+        masks = torch.tensor([r[3] for r in part], device=device)
+        pieces.append((src, tgt_in, tgt_out, values, masks))
+    return pieces
 
 
 def train_steps(model, optimizer, buffer: ReplayBuffer, config: TrainConfig, rng, device, step: int) -> tuple[dict, int]:
@@ -209,18 +232,21 @@ def train_steps(model, optimizer, buffer: ReplayBuffer, config: TrainConfig, rng
         lr = config.lr * min(1.0, step / config.warmup)
         for group in optimizer.param_groups:
             group["lr"] = lr
-        src, tgt_in, tgt_out, value_target, value_mask = make_batch(buffer, config, rng, device)
-        logits, value_logit = model(src, tgt_in)
-        policy_loss = F.cross_entropy(logits.reshape(-1, logits.size(-1)), tgt_out.reshape(-1), ignore_index=PAD)
-        value_loss = (F.binary_cross_entropy_with_logits(value_logit, value_target, reduction="none") * value_mask).sum()
-        value_loss = value_loss / value_mask.sum().clamp(min=1)
-        loss = policy_loss + config.value_weight * value_loss
+        pieces = make_batch(buffer, config, rng, device)
+        n_tokens = sum(int((p[2] != PAD).sum()) for p in pieces)
+        n_values = sum(float(p[4].sum()) for p in pieces)
         optimizer.zero_grad()
-        loss.backward()
+        for src, tgt_in, tgt_out, value_target, value_mask in pieces:
+            logits, value_logit = model(src, tgt_in)
+            policy_loss = F.cross_entropy(logits.reshape(-1, logits.size(-1)), tgt_out.reshape(-1), ignore_index=PAD,
+                                          reduction="sum") / max(n_tokens, 1)
+            value_loss = (F.binary_cross_entropy_with_logits(value_logit, value_target, reduction="none")
+                          * value_mask).sum() / max(n_values, 1.0)
+            (policy_loss + config.value_weight * value_loss).backward()
+            totals["policy_loss"] += policy_loss.item()
+            totals["value_loss"] += value_loss.item()
         torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
         optimizer.step()
-        totals["policy_loss"] += policy_loss.item()
-        totals["value_loss"] += value_loss.item()
     return {k: round(v / config.steps_per_iter, 4) for k, v in totals.items()}, step
 
 
