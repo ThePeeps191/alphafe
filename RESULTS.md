@@ -137,7 +137,8 @@ brute force (128) 4.1 / 4.0 / 7.3 / 13.3; brute force (2,000) 36.5 / 45.2 / 80.8
 | brute force (128 calls) | 26/46 (56.5%) | 20/20 | 5/13 | 1/11 | 0/1 | 0/1 | 7.2 |
 | brute force (2,000 calls) | 33/46 (71.7%) | 20/20 | 10/13 | 3/11 | 0/1 | 0/1 | 154.4 |
 
-The real benchmark is empty (no problems have been added yet).
+The real benchmark did not exist when these runs were made. It now holds 135
+problems (`benchmarks/real/`), and no run on it has been made yet.
 
 Time per problem in seconds (M5 run):
 
@@ -212,8 +213,9 @@ evaluated in M5 and E2).
   to do; they are not an unbiased estimate of anything. The held-out synthetic
   set was not used to design E1-E4, but it was used to compare runs: the
   decisions to leave E5 and E7 switched off, and the choice of which
-  checkpoint to keep, looked at it. The real benchmark, once it is filled,
-  will be the only untouched one.
+  checkpoint to keep, looked at it. The real benchmark is the only untouched
+  one, apart from the 12 problems it flags as seen in development or in the
+  training pool.
 * *Noise.* Network rows up to and including E2 are a single sampling run, and
   each training configuration was run with one seed. On 200 problems a
   difference of fewer than about 14 problems (7 points) between two solvers is

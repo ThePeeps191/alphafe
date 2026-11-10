@@ -16,8 +16,11 @@ people actually set in competitions.
 This directory is that test: real competition problems, with their sources
 and known answers, that nothing in the project was tuned on. `alphafe eval`
 loads every `*.jsonl` file here and reports the results as a separate suite
-called `real`. The directory is empty until someone compiles it. That is your
-task.
+called `real`. The directory now holds 135 problems (`real.jsonl`) compiled
+under these rules, and `SKIPPED.md` records the selection rules that were
+used. If you are asked to extend the benchmark, add a new rule to
+`SKIPPED.md` first, in its own commit, and then apply it. Leave the existing
+records as they are.
 
 The result is only worth something if the problems are chosen without regard
 to whether the solver can do them. Most of the rules below exist to protect
@@ -235,6 +238,14 @@ benchmark existed. Their training pool could not exclude problems that were
 not here yet, so a very simple real problem may coincide with one they
 trained on. Such problems stay in the file, flagged, so that results can be
 reported with and without them.
+
+A second flag, `"seen_in_development": true`, marks a problem that the solver
+was run on, or that a change to the solver was designed around, before the
+problem entered this file. The rule is the same: a problem that is no longer
+unseen is kept and flagged. It is not removed, because the problems studied
+during development are mostly ones the solver failed on, and removing them
+would raise the score. If you know that a problem you are adding was used
+this way, set the flag and say where in `notes`.
 
 The validator proves less than it may seem to. It confirms that the listed
 functions satisfy the equation, and that no polynomial of degree at most 2 is
