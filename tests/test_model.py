@@ -67,3 +67,11 @@ def test_checkpoint_round_trip(tmp_path):
     assert payload["note"] == "hello" and loaded.config == TINY
     for a, b in zip(model.parameters(), loaded.parameters()):
         assert torch.equal(a, b)
+
+
+def test_value_guided_search_with_network():
+    torch.manual_seed(0)
+    proposer = NeuralProposer(PolicyValueNet(TINY), CPU)
+    search = BestFirstSearch(Problem.parse("f(x+y) = f(x) + y"), budget=120, value_weight=1.0)
+    run_searches([search], proposer, k=8)
+    assert search.done and search.calls <= 120 and len(search.nodes) > 1
