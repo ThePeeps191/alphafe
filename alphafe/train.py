@@ -37,8 +37,11 @@ from .generate import N_TIERS, benchmark_keys, generate
 from .model import (DIVERSE, SRC_BUCKET, TGT_BUCKET, ModelConfig, NeuralProposer, PolicyValueNet, pad_batch, pick_device,
                     save_checkpoint)
 from .search import BestFirstSearch, GreedySearch, UniformProposer, run_searches
-from .checker import Reject
+from . import terms as T
+from .algebra import Poly
+from .checker import Problem, Reject
 from .env import start, step
+from .moves import Onto, Split, Subst
 from .tokenizer import BOS, PAD, decode_move, encode_move, encode_state
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -66,6 +69,7 @@ class TrainConfig:
     weight_decay: float = 0.01
     value_weight: float = 0.5
     minimise: bool = True              # drop unneeded moves from found proofs before learning from them
+    mirror: bool = True                # also learn each proof with the names x and y exchanged
     hindsight_fraction: float = 0.25   # share of each batch
     negative_fraction: float = 0.15
     buffer_size: int = 120_000
@@ -116,6 +120,94 @@ class ReplayBuffer:
         return len(self.solve) + len(self.hindsight) + len(self.negative)
 
 
+_SWAP_NAME = {"x": "y", "y": "x"}
+
+
+def _swap_term(term: T.Term) -> T.Term:
+    """Rename x <-> y in a term."""
+    if isinstance(term, T.Var):
+        return T.Var(_SWAP_NAME.get(term.name, term.name))
+    if isinstance(term, (T.Add, T.Sub, T.Mul)):
+        return type(term)(_swap_term(term.left), _swap_term(term.right))
+    if isinstance(term, (T.Neg, T.App)):
+        return type(term)(_swap_term(term.arg))
+    if isinstance(term, T.Pow):
+        return T.Pow(_swap_term(term.base), term.exp)
+    return term
+
+
+def swapped_examples(problem: Problem, moves: list) -> list:
+    """The same proof for the same problem with the names x and y exchanged.
+
+    Exchanging the two variable names turns a problem into an equally valid
+    one, and a proof into a proof. Training on both stops the network from
+    learning habits such as "always substitute for y". The mirrored proof is
+    replayed through the checker, so the examples are real (state, move)
+    pairs; if anything fails to carry over, no examples are returned.
+    """
+    if set(problem.poly.variables()) != {"x", "y"}:
+        return []
+    swap = {"x": Poly.var("y"), "y": Poly.var("x")}
+    mirror = Problem(problem.equation + "  [x <-> y]", problem.domain, problem.poly.subst(swap), problem.name)
+    state, _ = start(problem)
+    mirrored, _ = start(mirror)
+    pairs = []
+    try:
+        for move in moves:
+            if state.solved or mirrored.solved:
+                return []
+
+            def row(index):
+                wanted = state.current.rows[index].subst(swap)
+                return mirrored.current.rows.index(wanted)      # ValueError if absent
+
+            if isinstance(move, Subst):
+                target = "P" if move.target == "P" else row(move.target)
+                new = Subst(target, tuple((_SWAP_NAME.get(n, n), _swap_term(t)) for n, t in move.bindings))
+            elif isinstance(move, Split):
+                new = Split(row(move.target))
+            elif isinstance(move, Onto):
+                new = Onto(row(move.target), _SWAP_NAME.get(move.var, move.var))
+            else:
+                new = move                                      # SplitNZ, Pre: no variables involved
+            view = encode_state(mirrored)
+            ids = encode_move(new, view)
+            if ids is None:
+                return []
+            pairs.append((tuple(view.tokens), tuple(ids)))
+            state, _ = step(state, move)
+            mirrored, _ = step(mirrored, new)
+    except (Reject, ValueError, IndexError):
+        return []
+    return pairs if mirrored.solved else []
+
+
+def minimal_moves(search) -> list:
+    """The creative moves of a successful search with useless ones removed (see ``minimal_examples``)."""
+    path = search.solution_path()
+    moves = [decode_move(node.move_ids, node.parent.view) for node in path[1:]]
+
+    def solves(sequence):
+        state, _ = start(search.problem)
+        try:
+            for move in sequence:
+                if state.solved:
+                    return False
+                state, _ = step(state, move)
+        except Reject:
+            return False
+        return state.solved
+
+    index = 0
+    while index < len(moves) and len(moves) > 1:
+        shorter = moves[:index] + moves[index + 1:]
+        if solves(shorter):
+            moves = shorter
+        else:
+            index += 1
+    return moves
+
+
 def minimal_examples(search) -> list:
     """Solve examples from a successful search, with useless moves removed.
 
@@ -159,7 +251,7 @@ def minimal_examples(search) -> list:
 
 
 def harvest(searches: list, buffer: ReplayBuffer, rng: random.Random, max_hindsight: int = 4,
-            minimise: bool = True) -> None:
+            minimise: bool = True, mirror: bool = False) -> None:
     """Turn finished self-play searches into training examples."""
     for search in searches:
         path = search.solution_path()
@@ -168,6 +260,8 @@ def harvest(searches: list, buffer: ReplayBuffer, rng: random.Random, max_hindsi
                 pairs = minimal_examples(search)
             else:
                 pairs = [(tuple(node.parent.view.tokens), tuple(node.move_ids)) for node in path[1:]]
+            if mirror:
+                pairs = pairs + swapped_examples(search.problem, minimal_moves(search))
             for pair in pairs:
                 buffer.add("solve", pair)
         if not path:
@@ -323,7 +417,7 @@ def train(config: TrainConfig, resume: bool = False) -> dict:
         selfplay_seconds = time.time() - tick
 
         # 3-4. learn
-        harvest(searches, buffer, rng, minimise=config.minimise)
+        harvest(searches, buffer, rng, minimise=config.minimise, mirror=config.mirror)
         losses = {}
         if buffer.solve:
             losses, state["step"] = train_steps(model, optimizer, buffer, config, rng, device, state["step"])

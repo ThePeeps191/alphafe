@@ -74,6 +74,34 @@ def test_minimal_examples_drop_useless_moves():
     assert src == tuple(search.root.view.tokens)
 
 
+def test_swapped_examples_mirror_a_proof():
+    from alphafe.env import start
+    from alphafe.moves import parse_move
+    from alphafe.tokenizer import decode_move, encode_state
+    from alphafe.train import swapped_examples
+
+    problem = Problem.parse("f(x+y) = f(x) + y")
+    pairs = swapped_examples(problem, [parse_move("sub P: x:=0")])
+    assert len(pairs) == 1
+    mirror = Problem.parse("f(x+y) = f(y) + x")
+    state, _ = start(mirror)
+    view = encode_state(state)
+    assert pairs[0][0] == tuple(view.tokens)                      # the mirrored problem's own start state
+    assert decode_move(list(pairs[0][1]), view) == parse_move("sub P: y:=0")
+    # a proof that does not solve the problem yields nothing
+    assert swapped_examples(problem, [parse_move("sub P: y:=1")]) == []
+
+
+def test_swapped_examples_follow_row_targets_and_splits():
+    from alphafe.moves import parse_move
+    from alphafe.train import swapped_examples
+
+    problem = Problem.parse("f(x)f(y) = f(xy) + x + y")
+    moves = [parse_move(t) for t in ["sub P: x:=0, y:=0", "split R1", "sub P: y:=0", "sub P: y:=0"]]
+    pairs = swapped_examples(problem, moves)
+    assert len(pairs) == 4
+
+
 @pytest.mark.slow
 def test_training_runs_checkpoints_and_resumes(tmp_path, monkeypatch):
     monkeypatch.setattr(train_module, "ROOT", tmp_path)
