@@ -1,0 +1,2 @@
+sub P: x:=(x+1)/2, y:=(x-1)/2     # f(x) - x f(1) = x^3 - x
+conclude

@@ -1,0 +1,6 @@
+sub P: x:=0, y:=0          # f(0)^2 = 2f(0)
+split [f(0)^2 = 2f(0)]
+sub P: y:=0                # case f(0) = 0
+conclude
+sub P: y:=0                # case f(0) = 2
+conclude

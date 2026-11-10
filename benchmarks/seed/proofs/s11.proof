@@ -1,0 +1,2 @@
+sub P: x:=0        # f(0) = f(0) + f(y)
+conclude

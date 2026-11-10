@@ -1,0 +1,5 @@
+sub P: y:=x                             # f(2x) + f(0) = 2f(x)
+sub [f(2x) + f(0) = 2f(x)]: x:=(x+y)/2  # f(x+y) + f(0) = 2f((x+y)/2)
+sub P: x:=(x+y)/2, y:=(x-y)/2           # f(x) + f(y) = 2f((x+y)/2)
+cauchy
+conclude

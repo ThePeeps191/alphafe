@@ -761,21 +761,33 @@ def _mono_term(mono: Mono, coef: Fraction) -> T.Term:
     """Term for |coef| * mono (the sign is handled by the caller)."""
     coef = abs(coef)
     factors: list[T.Term] = []
-    # variables first, then constants, then f-atoms: reads as 2xy f(x)
-    order = {"v": 0, "c": 1, "f": 2}
-    for atom, exp in sorted(mono, key=lambda pair: (order[pair[0][0]], pair[0])):
+    # constants first, then variables, then f of variables: reads as 2f(1)xyf(x)
+    def order(pair):
+        atom = pair[0]
+        if atom[0] == "v":
+            return (1, atom)
+        return (2 if atom_vars(atom) else 0, atom)
+
+    for atom, exp in sorted(mono, key=order):
         base = atom_term(atom)
         factors.append(base if exp == 1 else T.Pow(base, exp))
     if not factors:
         return T.Num(coef)
+    if coef != 1 and coef.numerator != 1:
+        factors.insert(0, T.Num(coef))  # 2f(1)x
     body = factors[0]
     for factor in factors[1:]:
         body = T.Mul(body, factor)
-    if coef == 1:
-        return body
-    if coef.numerator == 1:
+    if coef != 1 and coef.numerator == 1:
         return T.Mul(body, T.Num(coef))  # printed as body/n
-    return T.Mul(T.Num(coef), body)
+    return body
+
+
+def _display_rank(mono: Mono) -> tuple:
+    """Display order: f of variables first, then by degree in the variables
+    (x^2 before x before constants), then by size; ties alphabetical."""
+    var_degree = sum(exp for atom, exp in mono if atom[0] == "v")
+    return (-var_f_depth(mono), -var_degree, -mono_size(mono), mono)
 
 
 def poly_term(poly: Poly) -> T.Term:
@@ -783,7 +795,7 @@ def poly_term(poly: Poly) -> T.Term:
     if not poly.terms:
         return T.Num(Fraction(0))
     # Most complicated monomials first; ties in alphabetical order.
-    monos = sorted(poly.terms, key=lambda m: (-var_f_depth(m), -mono_size(m), m))
+    monos = sorted(poly.terms, key=_display_rank)
     # Lead with a positive monomial when there is one: "x - f(x)" not "-f(x) + x".
     first = next((m for m in monos if poly.terms[m] > 0), None)
     if first is not None:

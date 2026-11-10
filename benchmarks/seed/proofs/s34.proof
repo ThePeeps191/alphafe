@@ -1,0 +1,10 @@
+sub P: x:=0, y:=0
+split [f(0)^2 = -f(0)]
+sub P: y:=0
+conclude
+sub P: x:=1, y:=-1
+split [f(1)*f(-1) = 0]
+sub P: y:=-1
+conclude
+sub P: y:=1
+conclude

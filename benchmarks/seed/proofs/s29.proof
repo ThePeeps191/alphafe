@@ -1,0 +1,3 @@
+sub P: y:=0
+sub P: y:=1
+conclude

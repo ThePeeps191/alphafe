@@ -1,0 +1,6 @@
+sub P: y:=-f(x)             # f(0) = 2x + f(f(-f(x)) - x)
+surj
+pre 0                       # a with f(a) = 0
+sub P: x:=a                 # f(y) = 2a + f(f(y) - a)
+onto [f(y) = 2a + f(f(y) - a)]: y
+conclude

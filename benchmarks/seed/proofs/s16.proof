@@ -1,0 +1,2 @@
+sub P: y:=y-f(x)   # f(y) = y
+conclude

@@ -290,7 +290,7 @@ def show(term: Term) -> str:
     if isinstance(term, Sub):
         return f"{_wrap(term.left, 1)} - {_wrap(term.right, 2)}"
     if isinstance(term, Neg):
-        return f"-{_wrap(term.arg, 3)}"
+        return f"-{_wrap(term.arg, 2)}"
     if isinstance(term, Pow):
         return f"{_wrap(term.base, 5)}^{term.exp}"
     if isinstance(term, Mul):

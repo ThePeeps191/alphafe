@@ -1,0 +1,7 @@
+inj
+sub P: x:=0                 # f(f(0) + y) = f(y)
+cancel
+sub P: y:=0                 # f(f(x)) = x
+sub P: x:=f(x)              # additive
+cauchy
+conclude

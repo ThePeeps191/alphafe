@@ -1,0 +1,2 @@
+sub P: y:=0        # 2f(x) = 2, so f = 1, which fails the equation
+conclude

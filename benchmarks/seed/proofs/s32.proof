@@ -1,0 +1,4 @@
+sub P: x:=1                 # f(f(y)) = y
+sub P: y:=f(y)              # f(xy) = x f(y)
+sub [f(xy) = x*f(y)]: y:=1  # f(x) = x f(1)
+conclude

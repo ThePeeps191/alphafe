@@ -1,0 +1,5 @@
+inj
+sub P: x:=x+y, y:=0         # f(f(x+y) + f(0)) = x + y
+cancel                      # f(x) + f(y) = f(x+y) + f(0)
+cauchy
+conclude

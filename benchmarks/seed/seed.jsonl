@@ -1,0 +1,46 @@
+{"id": "s01", "equation": "f(x+y) = f(x) + y", "domain": "R", "solutions": ["f(x) = x + c"], "mohs": 0, "source": "seed"}
+{"id": "s02", "equation": "f(x+y) = x + f(y)", "domain": "R", "solutions": ["f(x) = x + c"], "mohs": 0, "source": "seed"}
+{"id": "s03", "equation": "f(x-y) = f(x) - y", "domain": "R", "solutions": ["f(x) = x + c"], "mohs": 0, "source": "seed"}
+{"id": "s04", "equation": "f(xy) = x*f(y)", "domain": "R", "solutions": ["f(x) = c*x"], "mohs": 0, "source": "seed"}
+{"id": "s05", "equation": "f(x) + y = f(y) + x", "domain": "R", "solutions": ["f(x) = x + c"], "mohs": 0, "source": "seed"}
+{"id": "s06", "equation": "f(x) + f(y) = x + y", "domain": "R", "solutions": ["f(x) = x"], "mohs": 0, "source": "seed"}
+{"id": "s07", "equation": "f(x+y) = f(x) + 2y", "domain": "R", "solutions": ["f(x) = 2x + c"], "mohs": 0, "source": "seed"}
+{"id": "s08", "equation": "f(2x+y) = f(x) + x + y", "domain": "R", "solutions": ["f(x) = x + c"], "mohs": 0, "source": "seed"}
+{"id": "s09", "equation": "x*f(y) = y*f(x)", "domain": "R", "solutions": ["f(x) = c*x"], "mohs": 0, "source": "seed"}
+{"id": "s10", "equation": "f(x+y) + f(x) = 2x + y", "domain": "R", "solutions": ["f(x) = x"], "mohs": 0, "source": "seed"}
+{"id": "s11", "equation": "f(xy) = f(x) + f(y)", "domain": "R", "solutions": ["f(x) = 0"], "mohs": 0, "source": "seed"}
+{"id": "s12", "equation": "f(x) + f(x+y) = y + 2", "domain": "R", "solutions": [], "mohs": 0, "source": "seed"}
+{"id": "s13", "equation": "f(x+y) + f(x-y) = 2x^2 + 2y^2", "domain": "R", "solutions": ["f(x) = x^2"], "mohs": 0, "source": "seed"}
+{"id": "s14", "equation": "f(x+y) - f(x-y) = 4xy", "domain": "R", "solutions": ["f(x) = x^2 + c"], "mohs": 0, "source": "seed"}
+{"id": "s15", "equation": "f(x + f(y)) = x + y", "domain": "R", "solutions": ["f(x) = x"], "mohs": 0, "source": "seed"}
+{"id": "s16", "equation": "f(f(x) + y) = f(x) + y", "domain": "R", "solutions": ["f(x) = x"], "mohs": 0, "source": "seed"}
+{"id": "s17", "equation": "f(x - f(y)) = 1 - x - y", "domain": "R", "solutions": ["f(x) = 1/2 - x"], "mohs": 5, "source": "seed"}
+{"id": "s18", "equation": "f(xy + x) = x*f(y) + f(x)", "domain": "R", "solutions": ["f(x) = c*x"], "mohs": 0, "source": "seed"}
+{"id": "s19", "equation": "f(x-y) = f(x) + f(y) - 2y", "domain": "R", "solutions": ["f(x) = x"], "mohs": 0, "source": "seed"}
+{"id": "s20", "equation": "f(x+y) = f(x) + y^2 + 2xy", "domain": "R", "solutions": ["f(x) = x^2 + c"], "mohs": 0, "source": "seed"}
+{"id": "s21", "equation": "f(xy) + f(x) = x*f(y) + x", "domain": "R", "solutions": ["f(x) = x"], "mohs": 0, "source": "seed"}
+{"id": "s22", "equation": "f(x)f(y) = f(xy) + x + y", "domain": "R", "solutions": ["f(x) = x + 1"], "mohs": 5, "source": "seed"}
+{"id": "s23", "equation": "f(x)f(y) = f(x) + f(y)", "domain": "R", "solutions": ["f(x) = 0", "f(x) = 2"], "mohs": 5, "source": "seed"}
+{"id": "s24", "equation": "f(x)f(y) = xy", "domain": "R", "solutions": ["f(x) = x", "f(x) = -x"], "mohs": 5, "source": "seed"}
+{"id": "s25", "equation": "f(x)f(y) = f(x) + f(y) + xy - 1", "domain": "R", "solutions": ["f(x) = 1 + x", "f(x) = 1 - x"], "mohs": 5, "source": "seed"}
+{"id": "s26", "equation": "f(x+y) = f(x) + f(y)", "domain": "Q", "solutions": ["f(x) = c*x"], "mohs": 5, "source": "seed"}
+{"id": "s27", "equation": "f(x+y) = f(x) + f(y) + 1", "domain": "Q", "solutions": ["f(x) = c*x - 1"], "mohs": 5, "source": "seed"}
+{"id": "s28", "equation": "f(x+y) + f(0) = f(x) + f(y)", "domain": "Q", "solutions": ["f(x) = c*x + d"], "mohs": 5, "source": "seed"}
+{"id": "s29", "equation": "f(x^2) - f(y^2) = (x+y)(f(x) - f(y))", "domain": "R", "solutions": ["f(x) = c*x + d"], "mohs": 5, "source": "seed"}
+{"id": "s30", "equation": "f(x^2 - y^2) = (x-y)(f(x) + f(y))", "domain": "R", "solutions": ["f(x) = c*x"], "mohs": 5, "source": "seed"}
+{"id": "s31", "equation": "(x-y)f(x+y) - (x+y)f(x-y) = 4xy(x^2 - y^2)", "domain": "R", "solutions": ["f(x) = x^3 + c*x"], "mohs": 10, "source": "seed"}
+{"id": "s32", "equation": "f(x*f(y)) = xy", "domain": "R", "solutions": ["f(x) = x", "f(x) = -x"], "mohs": 5, "source": "seed"}
+{"id": "s33", "equation": "f(x)f(y) = f(x+y) + xy", "domain": "R", "solutions": ["f(x) = 1 + x", "f(x) = 1 - x"], "mohs": 10, "source": "seed"}
+{"id": "s34", "equation": "f(x)f(y) + f(x+y) = xy", "domain": "R", "solutions": ["f(x) = x - 1", "f(x) = -x - 1"], "mohs": 10, "source": "seed"}
+{"id": "s35", "equation": "f(x+y) + 2f(x-y) = 3f(x) - y", "domain": "R", "solutions": ["f(x) = x + c"], "mohs": 5, "source": "seed"}
+{"id": "s36", "equation": "f(x-y) = f(x)f(y)", "domain": "R", "solutions": ["f(x) = 0", "f(x) = 1"], "mohs": 5, "source": "seed"}
+{"id": "s37", "equation": "f(x + f(y)) = f(x) + y", "domain": "Q", "solutions": ["f(x) = x", "f(x) = -x"], "mohs": 10, "source": "seed"}
+{"id": "s38", "equation": "f(f(x) + y) = x + f(y)", "domain": "Q", "solutions": ["f(x) = x", "f(x) = -x"], "mohs": 10, "source": "seed"}
+{"id": "s39", "equation": "f(f(x) + f(y)) = x + y", "domain": "Q", "solutions": ["f(x) = x", "f(x) = -x"], "mohs": 10, "source": "seed"}
+{"id": "s40", "equation": "f(x+y) + f(x-y) = 2f(x)", "domain": "Q", "solutions": ["f(x) = c*x + d"], "mohs": 10, "source": "seed"}
+{"id": "s41", "equation": "f(x) + f(y) = 2f((x+y)/2)", "domain": "Q", "solutions": ["f(x) = c*x + d"], "mohs": 10, "source": "seed"}
+{"id": "s42", "equation": "f(x - f(y)) = f(x) - y", "domain": "Q", "solutions": ["f(x) = x", "f(x) = -x"], "mohs": 10, "source": "seed"}
+{"id": "s43", "equation": "f(x*f(y)) = f(xy) + x", "domain": "R", "solutions": ["f(x) = x + 1"], "mohs": 10, "source": "seed"}
+{"id": "s44", "equation": "f(x+y) = f(x) + f(y) + 2xy", "domain": "Q", "solutions": ["f(x) = x^2 + c*x"], "mohs": 10, "source": "seed"}
+{"id": "s45", "equation": "f(x+y) + f(x-y) = 2f(x) + 2f(y)", "domain": "Q", "solutions": ["f(x) = c*x^2"], "mohs": 15, "source": "seed"}
+{"id": "s46", "equation": "f(f(x) + y) = 2x + f(f(y) - x)", "domain": "R", "solutions": ["f(x) = x + c"], "mohs": 20, "source": "seed"}

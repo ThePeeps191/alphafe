@@ -1,0 +1,6 @@
+sub P: x:=1, y:=1          # f(1)^2 = 1
+split [f(1)^2 = 1]
+sub P: y:=1
+conclude
+sub P: y:=1
+conclude

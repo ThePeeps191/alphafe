@@ -1,0 +1,2 @@
+sub P: y:=1        # f(x) = x f(1)
+conclude
