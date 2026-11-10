@@ -458,10 +458,11 @@ move (`x^2 - a^2 + b` was not recognised as `x^2 + c`); fixed before M3.
 **What works.**
 
 * 0M and 5M seed problems: the network with search solves all 37 given 2,000
-  checker calls, and 35-36 of them within 128.
-* The trained network needs roughly a third to a half of the checker calls
-  brute force needs on problems both solve, and at equal small budgets it
-  solves more held-out problems, clearly so on tiers 2 and 3.
+  checker calls, and 35-36 of them within 128 (first sampling seed of E4 and E6).
+* On problems both solve, the trained network needs fewer checker calls than
+  brute force: about a quarter to a half as many without backtracking, and
+  between half and nine tenths as many with search (E6). At equal small
+  budgets it also solves more held-out problems, clearly so on tiers 2 and 3.
 * Three seed problems (s36, s37, s38) have network proofs and no brute-force
   proof at 20,000 calls with the default search.
 
