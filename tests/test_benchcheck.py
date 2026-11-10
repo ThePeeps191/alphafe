@@ -125,7 +125,6 @@ def test_a_huge_exponent_skips_the_polynomial_search_instead_of_hanging(tmp_path
 
 def test_max_exponent_multiplies_nested_powers():
     from alphafe import terms as T
-    from alphafe.benchcheck import max_exponent
 
-    assert max_exponent(T.parse("f(x^3 + y)^2 + (x^2)^5")) == 10
-    assert max_exponent(T.parse("f(x + y)")) == 1
+    assert T.max_exponent(T.parse("f(x^3 + y)^2 + (x^2)^5")) == 10
+    assert T.max_exponent(T.parse("f(x + y)")) == 1

@@ -265,7 +265,7 @@ def harvest(searches: list, buffer: ReplayBuffer, rng: random.Random, max_hindsi
                 pairs = pairs + swapped_examples(search.problem, minimal_moves(search))
             for pair in pairs:
                 buffer.add("solve", pair)
-        if not path:
+        if not path and search.root is not None:      # None: the checker could not load the equation
             picks = [search.root] + rng.sample(search.nodes, min(2, len(search.nodes)))
             for node in picks:
                 if node.state.branches:

@@ -13,7 +13,7 @@ import pathlib
 import sys
 
 from .bench import ROOT
-from .checker import Problem, check
+from .checker import LOAD_REFUSED, Problem, check
 from .env import SearchResult, minimise
 from .moves import parse_proof, show_proof
 from .render import render
@@ -60,6 +60,10 @@ def cmd_solve(args) -> int:
               f"({fallback.checker_calls} checker calls, {fallback.seconds:.1f}s)")
         result = fallback
     if not result.solved:
+        if result.reason.startswith(LOAD_REFUSED):
+            print(f"\nNo proof found: {result.reason}. The equation is over the size limits that the checker")
+            print("applies to every identity, so no search was run.")
+            return 1
         print("\nNo proof found. The answer above is only a guess among polynomials of degree at most 2;")
         print("the problem may need moves outside the version-1 proof language.")
         return 1

@@ -452,6 +452,17 @@ def nesting_depth(term: Term) -> int:
     return 0
 
 
+def max_exponent(term: Term) -> int:
+    """The largest exponent in a term, nested powers multiplied: (x^2)^3 counts as 6."""
+    if isinstance(term, Pow):
+        return term.exp * max(1, max_exponent(term.base))
+    if isinstance(term, (Add, Sub, Mul)):
+        return max(max_exponent(term.left), max_exponent(term.right))
+    if isinstance(term, (Neg, App)):
+        return max_exponent(term.arg)
+    return 1
+
+
 def term_vars(term: Term) -> set[str]:
     return {t.name for t in subterms(term) if isinstance(t, Var)}
 

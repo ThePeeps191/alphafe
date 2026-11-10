@@ -13,7 +13,7 @@ from collections import deque
 from .. import terms as T
 from ..algebra import leading_mono
 from ..checker import Problem, Reject, State, _single_atom
-from ..env import SearchResult, confirm, start, step
+from ..env import SearchResult, confirm, step, try_start
 from ..moves import Move, Onto, Pre, Split, SplitNZ, Subst
 
 # Terms tried for a single variable, simplest first.
@@ -101,7 +101,9 @@ def brute_force(problem: Problem, max_calls: int = 20000, max_seconds: float = 3
     splits into a sequence of shallow searches.
     """
     began = time.time()
-    first_state, first_proof = start(problem)
+    first_state, first_proof, refused = try_start(problem)
+    if first_state is None:
+        return SearchResult(solved=False, seconds=time.time() - began, reason=refused, source="baseline")
     calls = 0
     nodes = 0
 

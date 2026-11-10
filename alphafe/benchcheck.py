@@ -20,7 +20,7 @@ import re
 from dataclasses import dataclass, field
 
 from . import terms as T
-from .baseline.guesser import guess
+from .baseline.guesser import MAX_EXPONENT, equation_exponent, guess
 from .bench import BENCH_DIR
 from .checker import Problem
 from .generate import canonical_key
@@ -32,9 +32,6 @@ REAL_FIELDS = ("id", "equation", "domain", "solutions", "mohs", "mohs_source", "
 BASIC_FIELDS = ("id", "equation", "domain")
 ID_PATTERN = re.compile(r"[a-z0-9]+(-[a-z0-9]+)*")
 MOHS_SOURCES = ("chen", "estimate")
-# Substituting a quadratic into an equation with an exponent n gives a polynomial of degree 2n whose
-# expansion takes seconds at n = 50 and does not finish at n = 2000, so above this the check is skipped.
-MAX_CHECK_EXPONENT = 40
 
 
 @dataclass
@@ -89,17 +86,6 @@ def other_benchmarks(skip=()) -> dict:
     return known
 
 
-def max_exponent(term: T.Term) -> int:
-    """The largest exponent in a term, nested powers multiplied: ((x^2)^3 counts as 6)."""
-    if isinstance(term, T.Pow):
-        return term.exp * max(1, max_exponent(term.base))
-    if isinstance(term, (T.Add, T.Sub, T.Mul)):
-        return max(max_exponent(term.left), max_exponent(term.right))
-    if isinstance(term, (T.Neg, T.App)):
-        return max_exponent(term.arg)
-    return 1
-
-
 def check_record(record: dict, strict: bool) -> tuple:
     """(errors, warnings, notes, canonical key or None) for one record on its own.
 
@@ -147,9 +133,9 @@ def check_record(record: dict, strict: bool) -> tuple:
         errors_before = len(errors)
         families = _check_solutions(record["solutions"], problem, errors, warnings)
         if families is not None and len(errors) == errors_before:
-            exponent = max(max_exponent(side) for side in T.parse_equation(record["equation"]))
-            if exponent > MAX_CHECK_EXPONENT:
-                notes.append(f"the equation has an exponent of {exponent} (above {MAX_CHECK_EXPONENT}), so the search "
+            exponent = equation_exponent(record["equation"])
+            if exponent > MAX_EXPONENT:
+                notes.append(f"the equation has an exponent of {exponent} (above {MAX_EXPONENT}), so the search "
                              "for polynomial solutions missing from the answer was skipped")
             else:
                 _check_against_polynomial_guess(problem, families, errors, notes)

@@ -23,7 +23,7 @@ from typing import Optional
 
 from . import terms as T
 from .checker import Problem, Reject, State
-from .env import SearchResult, confirm, start, step
+from .env import SearchResult, confirm, step, try_start
 from .tokenizer import StateView, decode_move, encode_state, sample_uniform
 
 
@@ -67,7 +67,13 @@ class _Search:
         self.reason = ""
         self.nodes: list[Node] = []
         self.rejected = 0
-        state, proof = start(problem)
+        state, proof, refused = try_start(problem)
+        if state is None:
+            # The checker cannot load the equation: finished before it began, with nothing to expand.
+            self.root = None
+            self.done, self.reason = True, refused
+            self.seen = set()
+            return
         self.root = Node(state, proof, None, None, 0.0, 0)
         self.nodes.append(self.root)
         self.seen = {state.key()}

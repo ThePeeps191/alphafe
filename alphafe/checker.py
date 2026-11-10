@@ -532,7 +532,18 @@ class State:
         return (tuple(b.signature() for b in self.branches), frozenset(self.solutions))
 
 
+LOAD_REFUSED = "the checker cannot load the equation"
+
+
 def initial_state(problem: Problem) -> State:
+    """The state holding only the problem's equation.
+
+    Raises ``Reject`` when the equation itself is over the size caps that
+    apply to every identity (``MAX_POLY_TERMS``, ``MAX_POLY_SIZE``). The caps
+    are not lifted for the original equation: substitutions into it would
+    produce identities of the same size. Callers that score problems treat
+    this as "not solved" (``check``, ``env.try_start``).
+    """
     branch = Branch(problem.domain, tuple(sorted(problem.poly.variables() | {"x", "y"})))
     try:
         branch.add([problem.poly])
@@ -1179,14 +1190,24 @@ class CheckResult:
     def __str__(self) -> str:
         if self.solved:
             return f"solved: {self.solutions}"
+        if not self.ok and self.step is None:
+            return f"not checked: {self.error}"
         if not self.ok:
             return f"rejected at move {self.step + 1}: {self.error}"
         return f"incomplete: {self.error}"
 
 
 def check(problem: Problem, proof) -> CheckResult:
-    """Replay a proof from the start. This is the definition of "solved"."""
-    state = initial_state(problem)
+    """Replay a proof from the start. This is the definition of "solved".
+
+    An equation over the size caps cannot be loaded (``initial_state`` raises
+    ``Reject``); that is reported as a verdict like any refused move, with no
+    move index and no state.
+    """
+    try:
+        state = initial_state(problem)
+    except Reject as reject:
+        return CheckResult(False, False, None, f"{LOAD_REFUSED}: {reject.reason}", None, None)
     for index, move in enumerate(proof):
         try:
             state = apply(state, move)

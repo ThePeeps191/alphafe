@@ -16,7 +16,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Optional
 
-from .checker import Problem, Reject, State, apply, check, initial_state
+from .checker import LOAD_REFUSED, Problem, Reject, State, apply, check, initial_state
 from .moves import Cancel, Cauchy, Conclude, Inj, Move, Quadratic, Surj
 from .solutions import SolutionSet
 
@@ -42,8 +42,21 @@ def close(state: State) -> tuple[State, list[Move]]:
 
 
 def start(problem: Problem) -> tuple[State, list[Move]]:
-    """Initial state with the free moves already applied."""
+    """Initial state with the free moves already applied.
+
+    Raises ``Reject`` if the checker cannot load the equation (it is over the
+    size caps). Searches use ``try_start`` and report that as "not solved".
+    """
     return close(initial_state(problem))
+
+
+def try_start(problem: Problem) -> tuple[Optional[State], list[Move], str]:
+    """``start`` for search code: (state, moves, "") or (None, [], why the equation cannot be loaded)."""
+    try:
+        state, moves = start(problem)
+    except Reject as reject:
+        return None, [], f"{LOAD_REFUSED}: {reject.reason}"
+    return state, moves, ""
 
 
 def step(state: State, move: Move) -> tuple[State, list[Move]]:
