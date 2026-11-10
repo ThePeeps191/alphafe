@@ -19,6 +19,39 @@ by two olympiad students and is not affiliated with DeepMind.
 * `DECISIONS.md`: design choices, one line each.
 * `PROGRESS.md`: what is done and what is next.
 
+## Where it stands
+
+Numbers from `RESULTS.md` (experiment E4; one training run of 28 minutes on a
+laptop GPU, three sampling seeds, ranges shown):
+
+| | network, no backtracking (32 checker calls) | network, search (128 calls) | brute force (128 calls) | brute force (2,000 calls) |
+|---|---|---|---|---|
+| held-out synthetic, tier 1 (200) | 179-180 | 185 | 173 | 177 |
+| held-out synthetic, tier 2 (200) | 155-159 | 168-172 | 132 | 144 |
+| held-out synthetic, tier 3 (200) | 79-81 | 84-89 | 60 | 81 |
+| held-out synthetic, tier 4 (200) | 46-51 | 56-58 | 46 | 52 |
+| seed benchmark (50) | 32-35 | 35-38 | 32 | 39 |
+
+With 2,000 calls the network solves 43-44 of the 50 seed problems; brute force
+solves 39 with 2,000 calls and 45 with 20,000.
+
+What this does and does not show:
+
+* The checker has accepted no wrong answer: every proof found for a problem
+  with a recorded answer produced exactly that answer.
+* The trained network is clearly better than the same network untrained and
+  than random proposals, and it finds proofs with far fewer checker calls than
+  brute force (about 2-4 against 4-14 on problems both solve).
+* Against brute force with a much larger budget the picture is mixed: the
+  network proves three seed problems brute force cannot (and one the authors
+  thought was out of reach), and misses five that brute force gets.
+* The first trained network was *worse* than an untrained one on the seed
+  set; `RESULTS.md` explains why and what fixed it.
+* 0M and 5M seed problems are essentially solved (37 of 37 with search and
+  2,000 calls); 10M is at 5 of 11; the single 20M problem is unsolved.
+* The seed set was used to choose fixes, so it is a development set. The real
+  benchmark is empty until the owners fill it.
+
 ## Setup
 
 Everything lives in a project virtual environment; nothing is installed globally.
