@@ -103,3 +103,17 @@ def test_modelcheck_detects_a_lost_solution():
     empty = State(problem, (), (), ())                # "solved, no solutions"
     with pytest.raises(Unsound):
         check_state(empty, parse_poly("x + 1"), random.Random(0))
+
+
+def test_random_moves_on_synthetic_problems_never_contradict_the_planted_solution():
+    """The generator plants a solution in every problem; the checker must never contradict it."""
+    from alphafe.generate import generate
+
+    rng = random.Random(11)
+    data = generate(seed=21, per_tier=12)
+    for items in data.values():
+        for item in items:
+            expr = parse_solution(item.planted)
+            problem = item.problem()
+            assert verify(problem.poly, expr)
+            walk(problem, expr, rng, steps=30)
