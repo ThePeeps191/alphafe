@@ -59,7 +59,7 @@ Everything lives in a project virtual environment; nothing is installed globally
 ```sh
 uv venv .venv --python 3.12
 uv pip install --python .venv/bin/python -e ".[dev]"
-.venv/bin/python -m pytest            # about a minute
+.venv/bin/python -m pytest            # about 400 tests, around ten seconds
 ```
 
 Dependencies: Python 3.11+, PyTorch; pytest, hypothesis and SymPy for tests.
