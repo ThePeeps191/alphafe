@@ -30,7 +30,10 @@ def known_proof_lengths() -> dict:
     for path in (BENCH_DIR / "seed" / "proofs").glob("*.proof"):
         best[path.stem] = creative(parse_proof(path.read_text()))
     for path in pathlib.Path("results").glob("*.json"):
-        for row in json.loads(path.read_text())["rows"]:
+        payload = json.loads(path.read_text())
+        if not isinstance(payload, dict) or "rows" not in payload:
+            continue
+        for row in payload["rows"]:
             if row["solved"] and row["id"].startswith("s") and row["proof"]:
                 n = creative(parse_proof(row["proof"]))
                 best[row["id"]] = min(best.get(row["id"], n), n)

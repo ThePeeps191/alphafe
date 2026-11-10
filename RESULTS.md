@@ -164,3 +164,77 @@ The real benchmark is empty (the owners have not added problems yet).
 The largest group is "the network did not find it", and six of those fifteen
 need a single substitution. That points at the proposal collapse, not at
 depth or expressiveness, so it is what M6 attacks first.
+
+## M6: experiments after the first failure analysis
+
+Each experiment lists what changed, the commit, and what happened. All numbers
+are on the same seed benchmark (46 problems) and the same held-out synthetic
+problems (200 per tier) as M5 unless stated.
+
+### E1. Language: lemmas over Q and unique roots (commit `3b1f0d6`... see `git log`)
+
+Change: `cauchy` accepts a polynomial defect (`f(x+y) = f(x) + f(y) + 2xy`),
+new free move `quadratic` (`f(x+y) + f(x-y) = 2f(x) + 2f(y)`), and an
+equation in one unknown quantity with exactly one root in the domain yields
+that root. This addresses the "language cannot express" group (s44, s45).
+
+Brute force on seeds, before -> after: 200 calls 26 -> 28; 2,000 calls 33 -> 35;
+20,000 calls 37 -> 39 (`results/baseline_seed_*_lemmas.json`). s44 and s45
+are now solved by the free moves alone, for every solver.
+
+### E2. Proposal diversity, no retraining (v1 weights; `results/m6a_*`)
+
+Change: the eight proposals for a state are sampled at a spread of
+temperatures (0.6 to 3.0) instead of one, and ranked by the model's own
+probability. Same weights as M5. (This evaluation also contains E1, which
+adds s44 and s45 to every solver's count.)
+
+Seed benchmark:
+
+| solver | M5 | E2 | 0M | 5M | 10M | 15M | 20M | mean calls when solved |
+|---|---|---|---|---|---|---|---|---|
+| network, no backtracking (32 calls) | 20/46 | **28/46** | 19/20 | 7/13 | 1/11 | 1/1 | 0/1 | 2.1 |
+| untrained network, no backtracking (32) | 24/46 | 22/46 | 14/20 | 6/13 | 1/11 | 1/1 | 0/1 | 5.4 |
+| uniform policy, no backtracking (32) | 15/46 | 18/46 | 11/20 | 5/13 | 1/11 | 1/1 | 0/1 | 7.6 |
+| network, search (128 calls) | 27/46 | **32/46** | 19/20 | 11/13 | 1/11 | 1/1 | 0/1 | 7.4 |
+| untrained network, search (128) | 27/46 | 28/46 | 19/20 | 7/13 | 1/11 | 1/1 | 0/1 | 15.7 |
+| uniform policy, search (128) | 26/46 | 28/46 | 18/20 | 7/13 | 2/11 | 1/1 | 0/1 | 19.0 |
+| brute force (128 calls) | 26/46 | 28/46 | 20/20 | 5/13 | 2/11 | 1/1 | 0/1 | 6.6 |
+| network, search (2,000 calls) | - | **37/46** | 20/20 | 13/13 | 3/11 | 1/1 | 0/1 | 80.0 |
+| brute force (2,000 calls) | 33/46 | 35/46 | 20/20 | 10/13 | 4/11 | 1/1 | 0/1 | 145.6 |
+
+Held-out synthetic problems (M5 value in brackets):
+
+| solver | tier 1 | tier 2 | tier 3 | tier 4 |
+|---|---|---|---|---|
+| network, no backtracking (32 calls) | 88.0% (85.5) | 78.5% (70.0) | 34.0% (31.5) | 21.5% (16.0) |
+| network, search (128 calls) | 91.0% (91.0) | 81.5% (80.5) | 38.5% (36.5) | 27.0% (25.5) |
+| untrained network, no backtracking (32) | 68.0% | 51.0% | 21.5% | 14.0% |
+| untrained network, search (128) | 83.0% | 65.5% | 32.5% | 19.0% |
+| brute force (128 calls) | 86.5% | 66.0% | 30.0% | 23.0% |
+| brute force (2,000 calls) | 88.5% | 72.0% | 40.5% | 26.0% |
+
+Reading: this helped a lot. The same weights now beat both references on
+the seed benchmark in both modes, and with 2,000 calls the network solves more
+seed problems than brute force with 2,000 (37 vs 35) using about half the
+calls. The untrained network did not benefit (24 -> 22 without backtracking),
+so the gain is the trained policy's knowledge finally being usable, not just
+extra randomness. Tier 3 at 2,000 brute-force calls is still ahead of the
+network at 128.
+
+Failure groups, network search with 128 calls (14 unsolved): too deep 2
+(s33, s34); network did not find it 12 (s18, s24, s25, s31, s37, s38, s39,
+s40, s41, s42, s43, s46). With 2,000 calls (9 unsolved): too deep 2; did not
+find 7 (s37, s38, s39, s40, s42, s43, s46).
+
+### E3. Commit when a case closes (search change, both solvers)
+
+Change: when a move closes a case, both the network's best-first search and
+the brute force drop every other state on the frontier and continue from
+there. The remaining cases are the same however the case was closed, so this
+loses nothing. It targets the "too deep" group (s33, s34: two nested splits).
+
+Brute force on seeds, before (E1) -> after: 128 calls 28 -> 28; 2,000 calls
+35 -> 35; 20,000 calls 39 -> 41 (s33 and s34 solved;
+`results/baseline_seed_*_commit.json`). Remaining at 20,000: s36, s37, s38,
+s42, s46. The effect on the network is measured in E4's evaluation.

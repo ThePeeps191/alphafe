@@ -4,7 +4,7 @@ from alphafe.baseline.guesser import guess
 from alphafe.baseline.search import brute_force, candidate_moves
 from alphafe.bench import AnswerMismatch, BenchProblem, canary, load_real, load_seed
 from alphafe.checker import Problem, check
-from alphafe.env import FREE_MOVES, confirm, start, step
+from alphafe.env import FREE_MOVES, confirm, minimise, start, step
 from alphafe.eval import by_mohs, run_baseline, score, summary
 from alphafe.moves import Conclude, parse_move
 from alphafe.solutions import parse_solution_set
@@ -91,3 +91,15 @@ def test_brute_force_commit_helps_on_nested_case_splits():
     with_commit = brute_force(problem, max_calls=20000, max_seconds=60)
     assert with_commit.solved and with_commit.solutions == parse_solution_set(["f(x) = 1 + x", "f(x) = 1 - x"])
     assert check(problem, with_commit.proof).solved
+
+
+def test_minimise_drops_dead_moves_and_keeps_the_proof_valid():
+    from alphafe.moves import parse_proof
+
+    problem = Problem.parse("f(x+y) = f(x) + y")
+    padded = parse_proof("surj\nsub P: y:=1\nsub P: x:=y\nsub P: x:=0\nconclude")
+    assert check(problem, padded).solved
+    short = minimise(problem, padded)
+    assert check(problem, short).solved and len(short) < len(padded)
+    assert parse_proof("sub P: x:=0")[0] in short
+    assert minimise(problem, short) == short

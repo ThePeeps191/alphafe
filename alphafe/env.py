@@ -75,3 +75,40 @@ def confirm(problem: Problem, proof: list) -> Optional[SolutionSet]:
     """
     result = check(problem, proof)
     return result.solutions if result.solved else None
+
+
+def minimise(problem: Problem, proof: list) -> list:
+    """Shorten a complete proof by dropping creative moves that are not needed.
+
+    Each creative (non-free) move is removed in turn; if replaying the rest
+    (with free moves re-applied) still solves the problem, the move was dead
+    weight. Later moves may refer to identities by position, so a removal that
+    shifts positions simply fails to replay and is not made. The result is
+    re-checked; if anything goes wrong the original proof is returned.
+    """
+    creative = [move for move in proof if move not in FREE_MOVES]
+
+    def replay(moves):
+        state, out = start(problem)
+        out = list(out)
+        try:
+            for move in moves:
+                if state.solved:
+                    return None
+                state, applied = step(state, move)
+                out += applied
+        except Reject:
+            return None
+        return out if state.solved else None
+
+    index = 0
+    while index < len(creative) and len(creative) > 1:
+        shorter = creative[:index] + creative[index + 1:]
+        if replay(shorter) is not None:
+            creative = shorter
+        else:
+            index += 1
+    best = replay(creative)
+    if best is None or confirm(problem, best) is None or len(best) > len(proof):
+        return proof
+    return best

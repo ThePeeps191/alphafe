@@ -14,7 +14,7 @@ import sys
 
 from .bench import ROOT
 from .checker import Problem, check
-from .env import SearchResult
+from .env import SearchResult, minimise
 from .moves import parse_proof, show_proof
 from .render import render
 
@@ -63,8 +63,11 @@ def cmd_solve(args) -> int:
         print("\nNo proof found. The answer above is only a guess among polynomials of degree at most 2;")
         print("the problem may need moves outside the version-1 proof language.")
         return 1
-    print(f"\nFound by: {result.source}. Proof moves:\n{show_proof(result.proof)}\n")
-    print(render(problem, result.proof))
+    proof = minimise(problem, result.proof)
+    dropped = len(result.proof) - len(proof)
+    note = f" ({dropped} unneeded move{'s' if dropped != 1 else ''} removed)" if dropped else ""
+    print(f"\nFound by: {result.source}{note}. Proof moves:\n{show_proof(proof)}\n")
+    print(render(problem, proof))
     return 0
 
 
