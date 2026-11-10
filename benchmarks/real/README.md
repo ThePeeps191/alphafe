@@ -3,10 +3,10 @@
 Real competition problems, used only for testing. Nothing here is used for
 training or for choosing between versions of the solver.
 
-* `real.jsonl`: 135 problems, each with its source, the statement as the
+* `real.jsonl`: 137 problems, each with its source, the statement as the
   source gives it, the published answer and a MOHS difficulty.
 * `SKIPPED.md`: the selection rules, written down before the problems they
-  cover were collected, and the other 1,577 problems the rules covered, each
+  cover were collected, and the other 1,575 problems the rules covered, each
   with the reason it was left out.
 * `INSTRUCTIONS.md`: the rules for adding to the benchmark, the file format
   and what `scripts/validate_bench.py` checks.
@@ -16,14 +16,14 @@ The problems come from two sources: every problem that
 mentions a function, and every function problem in
 [Evan Chen's solution notes](https://web.evanchen.cc/problems.html). A
 problem is in the file when it fits the solver's scope exactly as stated.
-Whether the solver can do it played no part, with three exceptions that
-`SKIPPED.md` records: USAMO 2002/4 was left out because the solver had
-already been run on it, and two problems with exponents above 2000 were left
-out because the validator cannot check them and the checker refuses to load
-them. All three are in scope and would count as unsolved.
+Whether the solver can do it played no part, with one exception that
+`SKIPPED.md` records: USAMO 2002/4 is in scope and was left out because the
+solver had already been run on it (issue #2). It will join the seed set, which
+is the development set. Two problems with exponents above 2000 are in the
+file although the checker refuses to load them; they count as unsolved.
 
 Three of the difficulty numbers are Evan Chen's published ratings
-(`"mohs_source": "chen"`). The other 132 are estimates made for this
+(`"mohs_source": "chen"`). The other 134 are estimates made for this
 benchmark, so treat a difficulty band as a rough grouping.
 
 Two flags mark problems that are not fully unseen. Results should be given

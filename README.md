@@ -196,7 +196,7 @@ a map of the modules.
 * `benchmarks/synthetic/heldout.jsonl`: 800 generated problems, 200 per
   curriculum tier, frozen in a file and excluded from training by a hash of
   the canonical equation.
-* `benchmarks/real/`: 135 real competition problems, used only for testing.
+* `benchmarks/real/`: 137 real competition problems, used only for testing.
   They were selected by rules fixed in advance from MathNet and Evan Chen's
   solution notes, and `benchmarks/real/SKIPPED.md` lists everything the rules
   covered and left out. The solver has not been evaluated on them yet, so the

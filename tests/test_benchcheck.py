@@ -55,8 +55,8 @@ def test_answer_syntax_errors(tmp_path):
     assert "written in the variable x" in errors_for(tmp_path, solutions=["f(x) = x + t"])
     assert "f(x) = ..." in errors_for(tmp_path, solutions=["f(y) = y + c"])
     # f(x) = c^2 x^2 solves f(x)f(y) = f(xy)... only for c^2 in {0, 1}; a nonlinear parameter that does verify:
-    errors, _, _ = check_record({**GOOD, "equation": "f(x + y) = f(x) + f(y)", "domain": "Q",
-                                 "solutions": ["f(x) = c^2*x"]}, strict=True)
+    errors, _, _, _ = check_record({**GOOD, "equation": "f(x + y) = f(x) + f(y)", "domain": "Q",
+                                    "solutions": ["f(x) = c^2*x"]}, strict=True)
     assert any("enter linearly" in e for e in errors)
 
 
@@ -86,3 +86,46 @@ def test_warnings_do_not_fail_the_check(tmp_path):
     record = {**GOOD, "equation": "f(u + 3v) = f(u) + 3v", "solutions": ["f(x) = x + c", "f(x) = x"]}
     report = validate([write(tmp_path, [record])])
     assert report.ok and len(report.warnings) == 2
+
+
+def notes_for(tmp_path, **changes):
+    report = validate([write(tmp_path, [{**GOOD, **changes}])])
+    return report, " | ".join(report.notes)
+
+
+def test_a_cubic_answer_missing_its_lower_terms_is_an_error(tmp_path):
+    """No quadratic satisfies these equations, so only a fit around the recorded cubic can see the gap."""
+    assert "incomplete" in errors_for(tmp_path, equation="f(x + y) = f(x) + f(y) + 3xy(x + y)", domain="Q",
+                                      solutions=["f(x) = x^3"])
+    assert "incomplete" in errors_for(tmp_path, equation="(x - y)f(x + y) - (x + y)f(x - y) = 8xy(x^2 - y^2)",
+                                      solutions=["f(x) = 2x^3"])
+    assert errors_for(tmp_path, equation="f(x + y) = f(x) + f(y) + 3xy(x + y)", domain="Q",
+                      solutions=["f(x) = x^3 + c*x"]) == ""
+
+
+def test_a_check_that_could_not_be_done_is_reported_in_a_note(tmp_path):
+    # f(f(x)) = 2x has the solutions sqrt(2)x and -sqrt(2)x: the linear system has no exact solution,
+    # so only constants were searched and the record must not pass silently.
+    report, notes = notes_for(tmp_path, equation="f(f(x)) = 2x", solutions=[])
+    assert report.ok and "among constant functions only" in notes
+    # A complete search leaves no note.
+    report, notes = notes_for(tmp_path)
+    assert report.ok and notes == ""
+
+
+def test_a_huge_exponent_skips_the_polynomial_search_instead_of_hanging(tmp_path):
+    """Substituting a quadratic into a 2015th power does not finish; the validator says it skipped the check."""
+    report, notes = notes_for(tmp_path, equation="f(x^2015 + f(y)^2015) = f(x)^2015 + y^2015",
+                              solutions=["f(x) = x", "f(x) = -x"])
+    assert report.ok and "exponent of 2015" in notes
+    # The listed functions are still verified by substitution.
+    assert "does not satisfy" in errors_for(tmp_path, equation="f(x^2015 + f(y)^2015) = f(x)^2015 + y^2015",
+                                            solutions=["f(x) = 2x"])
+
+
+def test_max_exponent_multiplies_nested_powers():
+    from alphafe import terms as T
+    from alphafe.benchcheck import max_exponent
+
+    assert max_exponent(T.parse("f(x^3 + y)^2 + (x^2)^5")) == 10
+    assert max_exponent(T.parse("f(x + y)")) == 1

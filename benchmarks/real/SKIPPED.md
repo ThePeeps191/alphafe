@@ -272,7 +272,6 @@ development (issue #2) before this rule existed, so it cannot count as unseen.
 | China Mathematical Olympiad (CMO) 2013, First Day, 3 | https://mathnet.mit.edu/explorer.html?p=chn_2013_260364 | not "find all f" (prove uniqueness, find f(2^m)); domain not supported (N) |
 | China TST 2021, Test II, Second Day, 4 | https://mathnet.mit.edu/explorer.html?p=chn_2021_0faf8c | domain not supported (N+); equation holds only on restricted values (m >= n); uses Euler phi |
 | China Mathematical Competition 2021, First Round, Test Paper A2, 6 | https://mathnet.mit.edu/explorer.html?p=chn_2021_978de9 | not "find all f" (asks for a value); extra hypothesis: f given on [0, 1) |
-| China TST 2021, Test III, Second Day, 5 | https://mathnet.mit.edu/explorer.html?p=chn_2021_b54346 | in scope (f(xf(y) + y^2021) = yf(x) + f(y)^2021, answer 0 and x), but validate_bench.py and the test suite do not finish on it: the degree <= 2 polynomial check expands a 2021st power. Restore it once that check has a limit |
 | China Mathematical Competition 2021, First Round, Test Paper A, 3 | https://mathnet.mit.edu/explorer.html?p=chn_2021_d67357 | not "find all f" (asks for a minimum); division by a variable; domain R \ {0} |
 | China TST 2022, Test 4 Day 1, 3 | https://mathnet.mit.edu/explorer.html?p=chn_2022_514503 | not a single equation (multiset equality of two pairs) |
 | China TST 2023, Test Four Day 2, 4 | https://mathnet.mit.edu/explorer.html?p=chn_2023_2f8df9 | domain not supported (Z) |
@@ -545,7 +544,6 @@ development (issue #2) before this rule existed, so it cannot count as unseen.
 | Korean Mathematical Olympiad (KMO) 2007, Second Day, 6 | https://mathnet.mit.edu/explorer.html?p=kor_2007_5b3a67 | not "find all f" (prove) |
 | Korean Mathematical Olympiad (KMO) 2008, The First Day, March 22, 2008, 3 | https://mathnet.mit.edu/explorer.html?p=kor_2008_f70401 | domain and codomain differ (R+ -> R); extra hypothesis: f(1) = 2008 and bound; division by variable |
 | Korean Mathematical Olympiad (KMO) 2013, The First Day, March 23, 2013, 2 | https://mathnet.mit.edu/explorer.html?p=kor_2013_c1caf4 | domain and codomain differ (R -> [0, inf)); equation holds only on restricted values (ab + bc + cd = 0) |
-| Korean Mathematical Olympiad (KMO) 2015, March 21, 2015 (Day 1), 1 | https://mathnet.mit.edu/explorer.html?p=kor_2015_4c6641 | in scope (f(x^2015 + f(y)^2015) = f(x)^2015 + y^2015, answer x and -x), but validate_bench.py and the test suite do not finish on it: the degree <= 2 polynomial check expands a 2015th power. Restore it once that check has a limit |
 | Korean Mathematical Olympiad (KMO) 2023, March 25, 2023 (Day 1), 2 | https://mathnet.mit.edu/explorer.html?p=kor_2023_5952ef | not "find all f" (prove) |
 | Moldova Mathematical Olympiad 2017, Clasa a XI-a, prima zi, 11.2. | https://mathnet.mit.edu/explorer.html?p=mda_2017_a580f8 | extra hypothesis: continuity |
 | Moldova Mathematical Olympiad 2017, Clasa a X-a, ziua întâi, Problema 10.2 | https://mathnet.mit.edu/explorer.html?p=mda_2017_fb5096 | not a functional equation (inequality; given strictly monotone f, find g) |
@@ -1636,7 +1634,15 @@ development (issue #2) before this rule existed, so it cannot count as unseen.
 
 | | covered | in scope | skipped |
 |---|---|---|---|
-| rule 1 (MathNet, tagged) | 1164 | 128 | 1036 |
+| rule 1 (MathNet, tagged) | 1164 | 130 | 1034 |
 | rule 2a (MathNet, text search) | 441 | 0 | 441 |
 | rule 2b (Evan Chen's notes) | 107 | 7 | 100 |
-| **total** | 1712 | 135 | 1577 |
+| **total** | 1712 | 137 | 1575 |
+
+Two rule 1 problems, China TST 2021 Test III problem 5 and Korean MO 2015
+problem 1, were first listed above as skipped. They are in scope, and were
+left out only because `scripts/validate_bench.py` did not finish on their
+exponents (2021 and 2015). They were moved to `real.jsonl` once the validator
+gained an exponent limit. No search had been run on the benchmark at that
+point. The checker refuses to load either equation ("identity too large"),
+so both count as unsolved for version 1.

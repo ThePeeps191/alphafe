@@ -25,6 +25,7 @@ TEMPLATES = (
 class Guess:
     solutions: Optional[SolutionSet]   # None if no template could be solved exactly
     template: str = ""                 # the richest template that was solved
+    skipped: tuple = ()                # richer templates whose coefficient system could not be solved exactly
 
     def __str__(self) -> str:
         if self.solutions is None:
@@ -39,10 +40,12 @@ def guess(problem: Problem) -> Guess:
     tried first; the smaller templates are fallbacks for when its coefficient
     system is too hard for the exact solver.
     """
+    skipped = []
     for name, text in TEMPLATES:
         try:
             fits = fit_candidate(problem.poly, parse_poly(text), problem.domain)
         except Unsupported:
+            skipped.append(name)
             continue
-        return Guess(make_solution_set(fits), name)
-    return Guess(None)
+        return Guess(make_solution_set(fits), name, tuple(skipped))
+    return Guess(None, "", tuple(skipped))

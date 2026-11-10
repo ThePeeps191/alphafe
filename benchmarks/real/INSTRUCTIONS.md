@@ -16,7 +16,7 @@ people actually set in competitions.
 This directory is that test: real competition problems, with their sources
 and known answers, that nothing in the project was tuned on. `alphafe eval`
 loads every `*.jsonl` file here and reports the results as a separate suite
-called `real`. The directory now holds 135 problems (`real.jsonl`) compiled
+called `real`. The directory now holds 137 problems (`real.jsonl`) compiled
 under these rules, and `SKIPPED.md` records the selection rules that were
 used. If you are asked to extend the benchmark, add a new rule to
 `SKIPPED.md` first, in its own commit, and then apply it. Leave the existing
@@ -226,16 +226,18 @@ have a reason not to.
 | `missing fields` | add them; all nine are required |
 | `equation or domain not accepted` | fix the syntax; if the problem cannot be written in the syntax it is out of scope |
 | `solution ... does not satisfy the equation` | the answer or the equation is transcribed wrongly; go back to the source |
-| `the answer is incomplete: ... also satisfies the equation` | the script found a polynomial solution of degree at most 2 that your answer does not list; go back to the source |
+| `the answer is incomplete: ... also satisfies the equation` | the script found a polynomial solution that your answer does not list: one of degree at most 2, or a listed family of higher degree with an extra term of degree at most 2; go back to the source |
 | `parameters must enter linearly` | the family cannot be recorded; the problem is out of scope |
 | `same equation as seed problem` or `held-out synthetic problem` | move the problem to `SKIPPED.md` as a duplicate |
 | `same equation as seed problem ..., over Q there` (warning) | the seed set has this equation on the other domain; keep the problem |
 | `id already used` | choose another id |
 | `note: ... also produced by the synthetic training generator` | keep the problem and add `"in_training_pool": true` to its record |
+| `note: ... searched for among linear functions only` (or `constant`) | nothing to fix; the search for missing solutions was weaker for this record, so check its answer against the source once more. If the equation has solutions with irrational coefficients it is out of scope |
+| `note: ... exponent of N ... was skipped` | nothing to fix; the search for missing solutions was not run for this record, so say in `notes` that the answer rests on the source |
 
-The last message is about the network weights published before this
-benchmark existed. Their training pool could not exclude problems that were
-not here yet, so a very simple real problem may coincide with one they
+The training-generator message is about the network weights published before
+this benchmark existed. Their training pool could not exclude problems that
+were not here yet, so a very simple real problem may coincide with one they
 trained on. Such problems stay in the file, flagged, so that results can be
 reported with and without them.
 

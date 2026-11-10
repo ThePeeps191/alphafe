@@ -28,6 +28,8 @@ if __name__ == "__main__":
         sys.exit(0)
 
     report = validate(paths, strict=strict)
+    for message in report.notes:
+        print("note:   ", message)
     for message in report.warnings:
         print("warning:", message)
     for message in report.errors:

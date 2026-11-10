@@ -137,7 +137,7 @@ brute force (128) 4.1 / 4.0 / 7.3 / 13.3; brute force (2,000) 36.5 / 45.2 / 80.8
 | brute force (128 calls) | 26/46 (56.5%) | 20/20 | 5/13 | 1/11 | 0/1 | 0/1 | 7.2 |
 | brute force (2,000 calls) | 33/46 (71.7%) | 20/20 | 10/13 | 3/11 | 0/1 | 0/1 | 154.4 |
 
-The real benchmark did not exist when these runs were made. It now holds 135
+The real benchmark did not exist when these runs were made. It now holds 137
 problems (`benchmarks/real/`), and no run on it has been made yet.
 
 Time per problem in seconds (M5 run):
