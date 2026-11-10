@@ -177,6 +177,7 @@ class BestFirstSearch(_Search):
         self._current: Optional[Node] = None
         self.unvalued: list = []              # new states waiting for a value estimate
         self._bonus: dict = {}
+        self.commits = 0                      # how many times a closed case let us drop the rest of the frontier
         if not self.done:
             self._push(self.root)
 
@@ -212,6 +213,19 @@ class BestFirstSearch(_Search):
             if self.done:
                 return
             if child is not None and child.depth < self.max_depth:
+                if len(child.state.branches) < len(node.state.branches):
+                    # A case has been closed. The remaining cases are the same
+                    # whichever way this one was closed (cases do not share
+                    # facts), so every other state on the frontier is now
+                    # redundant: commit to this one.
+                    self.frontier = []
+                    self.unvalued = []
+                    self.commits += 1
+                    child.depth = 0
+                    self._push(child)
+                    if self.calls >= self.budget:
+                        self.done, self.reason = True, "budget exhausted"
+                    return
                 if self.value_weight > 0:
                     self.unvalued.append(child)
                 else:

@@ -83,3 +83,11 @@ def test_eval_scoring():
     s = summary(rows)
     assert s["solved"] == 4 and s["rate"] == 1.0
     assert by_mohs(rows) == {"0M": [4, 4]}
+
+
+def test_brute_force_commit_helps_on_nested_case_splits():
+    """f(x)f(y) = f(x+y) + xy needs two case splits; committing after each closed case makes it reachable."""
+    problem = Problem.parse("f(x)f(y) = f(x+y) + xy")
+    with_commit = brute_force(problem, max_calls=20000, max_seconds=60)
+    assert with_commit.solved and with_commit.solutions == parse_solution_set(["f(x) = 1 + x", "f(x) = 1 - x"])
+    assert check(problem, with_commit.proof).solved

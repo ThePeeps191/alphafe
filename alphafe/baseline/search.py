@@ -88,13 +88,17 @@ def candidate_moves(state: State, n_single: int = len(SINGLE_POOL), n_pair: int 
 
 
 def brute_force(problem: Problem, max_calls: int = 20000, max_seconds: float = 30.0,
-                widening: bool = True) -> SearchResult:
+                widening: bool = True, commit: bool = True) -> SearchResult:
     """Breadth-first search for a complete proof within a budget of checker calls and time.
 
     With ``widening`` the search runs the ``LADDER``: first a deep search with
     a tiny pool of substitution terms, then shallower searches with larger
     pools; each rung gets a share of the budget and the last rung gets
     whatever is left. Without it, one breadth-first search over the full pool.
+
+    With ``commit`` the search restarts from any state in which a case has
+    just been closed (see the comment below); this turns a proof with case
+    splits into a sequence of shallow searches.
     """
     began = time.time()
     first_state, first_proof = start(problem)
@@ -114,11 +118,15 @@ def brute_force(problem: Problem, max_calls: int = 20000, max_seconds: float = 3
         return finish(first_proof, "")
     ladder = LADDER if widening else (LADDER[-1],)
     reason = "search space exhausted"
+    # ``base`` is where every rung starts. It moves forward whenever a case is
+    # closed: the remaining cases do not depend on how that one was closed, so
+    # nothing is lost by committing to it.
+    base_state, base_proof = first_state, first_proof
     for rung, (n_single, n_pair, max_depth) in enumerate(ladder):
         last = rung == len(ladder) - 1
         rung_limit = max_calls if last else calls + (max_calls - calls) // 3
-        seen = {first_state.key()}
-        queue = deque([(first_state, first_proof, 0)])
+        seen = {base_state.key()}
+        queue = deque([(base_state, base_proof, 0)])
         stopped = False
         while queue and not stopped:
             state, proof, depth = queue.popleft()
@@ -138,6 +146,12 @@ def brute_force(problem: Problem, max_calls: int = 20000, max_seconds: float = 3
                 new_proof = proof + applied
                 if new_state.solved:
                     return finish(new_proof, "")
+                if commit and len(new_state.branches) < len(state.branches):
+                    base_state, base_proof = new_state, new_proof
+                    seen = {new_state.key()}
+                    queue = deque([(new_state, new_proof, 0)])
+                    nodes += 1
+                    break
                 key = new_state.key()
                 if key in seen:
                     continue

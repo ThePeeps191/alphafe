@@ -54,3 +54,11 @@ def test_value_guided_search_still_solves():
     search = BestFirstSearch(Problem.parse("f(x+y) = f(x) + y"), budget=300, value_weight=1.0)
     run_searches([search], UniformProposer(random.Random(0)), k=8)
     assert search.result().solved and not search.unvalued
+
+
+def test_search_commits_when_a_case_closes():
+    """After a case split, closing a case discards the rest of the frontier."""
+    search = BestFirstSearch(Problem.parse("f(x)f(y) = f(xy) + x + y"), budget=3000)
+    run_searches([search], UniformProposer(random.Random(3)), k=8)
+    assert search.result().solved and search.commits >= 1
+    assert search.result().solutions == parse_solution_set(["f(x) = x + 1"])
