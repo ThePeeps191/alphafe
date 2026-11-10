@@ -149,6 +149,27 @@ class NeuralProposer:
         return torch.sigmoid(self.model.value(memory, pad)).tolist()
 
     @torch.no_grad()
+    def logprob(self, view, ids: list) -> float:
+        """The model's log-probability of writing exactly this move in this state
+        (under the grammar mask). Raises ValueError if the grammar cannot produce it."""
+        self.model.eval()
+        memory, pad = self.model.encode(pad_batch([view.tokens[:MAX_SRC]], self.device, SRC_BUCKET))
+        grammar = MoveGrammar(view)
+        tgt = [BOS]
+        total = 0.0
+        for token in ids:
+            allowed = grammar.allowed()
+            if token not in allowed:
+                raise ValueError("the move grammar cannot produce this move")
+            logits = self.model.decode(memory, pad, torch.tensor([tgt], device=self.device))[0, -1]
+            mask = torch.full_like(logits, float("-inf"))
+            mask[allowed] = 0.0
+            total += F.log_softmax(logits + mask, dim=-1)[token].item()
+            grammar.advance(token)
+            tgt.append(token)
+        return total
+
+    @torch.no_grad()
     def propose(self, views: list, k: int) -> list:
         self.model.eval()
         k_net = max(k - self.n_uniform, 0)

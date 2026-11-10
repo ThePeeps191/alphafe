@@ -79,7 +79,7 @@ def _describe(problem: Problem, entry: LogEntry) -> list[str]:
     move = entry.move
     lines: list[str] = []
     if isinstance(move, Subst):
-        if move.target == "P":
+        if move.target == "P" or entry.source == problem.poly:
             lead = _assertion_name(problem, move)
         else:
             bindings = ", ".join(f"{name} = {T.show(term)}" for name, term in move.bindings)

@@ -11,7 +11,11 @@ SEED_DIR = pathlib.Path(__file__).resolve().parent.parent / "benchmarks" / "seed
 
 
 def load_seeds():
-    return [json.loads(line) for line in (SEED_DIR / "seed.jsonl").read_text().splitlines() if line.strip()]
+    """Every record of every *.jsonl file in benchmarks/seed."""
+    out = []
+    for path in sorted(SEED_DIR.glob("*.jsonl")):
+        out.extend(json.loads(line) for line in path.read_text().splitlines() if line.strip())
+    return out
 
 
 def seed_problem(record) -> Problem:

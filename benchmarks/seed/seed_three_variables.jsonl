@@ -1,0 +1,4 @@
+{"id": "s47", "equation": "f(x + y + z) = f(x) + y + z", "domain": "R", "solutions": ["f(x) = x + c"], "mohs": 0, "source": "seed"}
+{"id": "s48", "equation": "f(x + f(y) + z) = x + y + f(z)", "domain": "R", "solutions": ["f(x) = x"], "mohs": 5, "source": "seed"}
+{"id": "s49", "equation": "f(x + y) + f(y + z) + f(z + x) = 2x + 2y + 2z", "domain": "R", "solutions": ["f(x) = x"], "mohs": 0, "source": "seed"}
+{"id": "s50", "equation": "f(x) + f(y) + f(z) = f(x + y + z) + 2f(0)", "domain": "Q", "solutions": ["f(x) = c*x + d"], "mohs": 5, "source": "seed"}

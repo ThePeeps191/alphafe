@@ -151,22 +151,47 @@ def run_policy(benches: list[BenchProblem], proposer, mode: str, budget: int, k:
     return rows
 
 
-def synthetic_heldout(seed: int, per_tier: int, limit: int) -> dict:
-    """Held-out synthetic test problems by tier, as BenchProblems (answers unknown)."""
-    from .train import ProblemPool
-
-    pool = ProblemPool(seed, per_tier)
-    out = {}
-    for tier, items in pool.test.items():
-        out[tier] = [BenchProblem(g.key[:10], g.problem(), None, None, f"synthetic-tier{tier}", {"planted": g.planted})
-                     for g in items[:limit]]
-    return out
+HELDOUT_FILE = "heldout.jsonl"
 
 
-def full_eval(checkpoint, tag: str, seed: int = 0, per_tier: int = 3000, heldout: int = 200,
-              baseline_budgets=(SEARCH_BUDGET, 2000), device: str = "auto", workers: int = 8,
-              big_budget: int = 0, value_weight: float = 0.0, diverse: bool = True) -> dict:
-    """The three-mode evaluation on every benchmark. Returns {suite: {solver label: rows}} and saves JSON.
+def synthetic_heldout(limit: int = 200) -> dict:
+    """Held-out synthetic test problems by tier, from the frozen file
+    benchmarks/synthetic/heldout.jsonl (written once by scripts/freeze_heldout.py).
+    Their answers are unknown, so "solved" means a checked proof was found."""
+    from .bench import BENCH_DIR
+    from .checker import Problem
+
+    out: dict = {}
+    for line in (BENCH_DIR / "synthetic" / HELDOUT_FILE).read_text().splitlines():
+        rec = json.loads(line)
+        bucket = out.setdefault(rec["tier"], [])
+        if len(bucket) < limit:
+            problem = Problem.parse(rec["equation"], rec["domain"], rec["id"])
+            bucket.append(BenchProblem(rec["id"], problem, None, None, rec["source"], rec))
+    return dict(sorted(out.items()))
+
+
+def common_calls(first: list[Row], second: list[Row]) -> Optional[tuple]:
+    """Mean checker calls of two solvers on the problems BOTH solved: (n, mean first, mean second).
+
+    Comparing each solver's mean over its own solved set is misleading (the
+    solver that cracks harder problems looks more expensive)."""
+    other = {r.id: r for r in second if r.solved}
+    pairs = [(r.checker_calls, other[r.id].checker_calls) for r in first if r.solved and r.id in other]
+    if not pairs:
+        return None
+    return len(pairs), round(sum(a for a, _ in pairs) / len(pairs), 1), round(sum(b for _, b in pairs) / len(pairs), 1)
+
+
+def full_eval(checkpoint, tag: str, heldout: int = 200, baseline_budgets=(SEARCH_BUDGET, 2000),
+              device: str = "auto", workers: int = 8, big_budget: int = 0, value_weight: float = 0.0,
+              diverse: bool = True, seeds: int = 1) -> tuple[dict, dict]:
+    """The three-mode evaluation on every benchmark.
+
+    Returns (results, spreads): ``results[suite][solver label]`` is the list of
+    rows from the first sampling seed, and ``spreads[suite][label]`` the
+    number solved for each sampling seed (network rows only; the other
+    solvers are run once). Everything is also saved under results/.
 
     ``big_budget`` > 0 adds a network search with that many checker calls on
     the seed and real suites (to compare with brute force at the same budget).
@@ -174,6 +199,8 @@ def full_eval(checkpoint, tag: str, seed: int = 0, per_tier: int = 3000, heldout
     ``diverse`` samples each state's proposals at a spread of temperatures
     (``model.DIVERSE``); False uses temperature 1 for every sample (the first
     evaluation, M5, used 0.7 without backtracking and 1.0 in search).
+    ``seeds`` repeats every trained-network row with that many sampling seeds:
+    one sampling run is noisy, and the range says how noisy.
     """
     import random
 
@@ -192,42 +219,72 @@ def full_eval(checkpoint, tag: str, seed: int = 0, per_tier: int = 3000, heldout
     real = load_real()
     if real:
         suites["real"] = real
-    pool_seed = payload.get("train_config", {}).get("seed", seed)
-    pool_per_tier = payload.get("train_config", {}).get("per_tier", per_tier)
-    for tier, benches in synthetic_heldout(pool_seed, pool_per_tier, heldout).items():
+    for tier, benches in synthetic_heldout(heldout).items():
         suites[f"synthetic-tier{tier}"] = benches
 
     out: dict = {}
+    spreads: dict = {}
     for suite, benches in suites.items():
         runs: dict = {}
-        policies = (
-            ("network", lambda: NeuralProposer(model, dev, temperature=temperature)),
+        spread: dict = {}
+
+        def network_rows(label, mode, budget, weight):
+            for index in range(seeds):
+                torch.manual_seed(1000 + index)
+                rows = run_policy(benches, NeuralProposer(model, dev, temperature=temperature), mode, budget,
+                                  value_weight=weight)
+                spread.setdefault(label, []).append(sum(r.solved for r in rows))
+                if index == 0:
+                    runs[label] = rows
+
+        network_rows(f"network, no backtracking ({GREEDY_BUDGET} calls)", "greedy", GREEDY_BUDGET, 0.0)
+        network_rows(f"network, search ({SEARCH_BUDGET} calls)", "search", SEARCH_BUDGET, value_weight)
+        if big_budget and suite in ("seed", "real"):
+            network_rows(f"network, search ({big_budget} calls)", "search", big_budget, value_weight)
+        torch.manual_seed(1000)
+        references = (
             ("untrained network", lambda: NeuralProposer(untrained, dev, temperature=temperature)),
             ("uniform policy", lambda: UniformProposer(random.Random(0))),
         )
-        for name, make in policies:
+        for name, make in references:
             runs[f"{name}, no backtracking ({GREEDY_BUDGET} calls)"] = run_policy(benches, make(), "greedy", GREEDY_BUDGET)
-            runs[f"{name}, search ({SEARCH_BUDGET} calls)"] = run_policy(
-                benches, make(), "search", SEARCH_BUDGET, value_weight=value_weight if name == "network" else 0.0)
-            if big_budget and name == "network" and suite in ("seed", "real"):
-                runs[f"{name}, search ({big_budget} calls)"] = run_policy(
-                    benches, make(), "search", big_budget, value_weight=value_weight)
-        for budget in baseline_budgets:
+            runs[f"{name}, search ({SEARCH_BUDGET} calls)"] = run_policy(benches, make(), "search", SEARCH_BUDGET)
+        budgets = list(baseline_budgets) + ([big_budget] if big_budget and big_budget not in baseline_budgets else [])
+        for budget in budgets:
             runs[f"brute force ({budget} calls)"] = run_baseline(benches, budget, 120.0, workers=workers)
         for label, rows in runs.items():
             slug = label.replace(",", "").replace("(", "").replace(")", "").replace(" ", "_")
-            save(f"{tag}_{suite}_{slug}", rows, {"suite": suite, "solver": label, "checkpoint": str(checkpoint)})
+            save(f"{tag}_{suite}_{slug}", rows, {"suite": suite, "solver": label, "checkpoint": str(checkpoint),
+                                                 "solved_per_seed": spread.get(label)})
         out[suite] = runs
-    return out
+        spreads[suite] = spread
+    return out, spreads
 
 
-def report(results: dict) -> str:
+def report(results: dict, spreads: Optional[dict] = None) -> str:
     """Markdown tables for a ``full_eval`` result."""
     parts = []
     for suite, runs in results.items():
         n = len(next(iter(runs.values())))
         parts.append(f"#### {suite} ({n} problems)\n")
         parts.append(markdown_summary(runs))
+        spread = (spreads or {}).get(suite, {})
+        multi = {label: counts for label, counts in spread.items() if len(counts) > 1}
+        if multi:
+            parts.append("")
+            parts.append("Solved per sampling seed: " + "; ".join(f"{label}: {counts}" for label, counts in multi.items()))
+        pairs = []
+        for label, rows in runs.items():
+            if not label.startswith("network"):
+                continue
+            budget = label[label.index("(") + 1: label.index(" calls")]
+            rival = runs.get(f"brute force ({budget} calls)") or runs.get(f"brute force ({SEARCH_BUDGET} calls)")
+            both = common_calls(rows, rival) if rival else None
+            if both:
+                pairs.append(f"{label}: {both[1]} calls vs brute force {both[2]} on the {both[0]} problems both solve")
+        if pairs:
+            parts.append("")
+            parts.append("Mean checker calls on commonly solved problems: " + "; ".join(pairs) + ".")
         if suite in ("seed", "real"):
             parts.append("")
             parts.append(markdown_by_mohs(runs))
@@ -249,11 +306,12 @@ def main(argv=None) -> None:
                         help="rank search states by policy log-probability plus this times log(value)")
     parser.add_argument("--single-temperature", action="store_true",
                         help="sample all proposals at temperature 1 instead of a spread")
+    parser.add_argument("--seeds", type=int, default=1, help="sampling seeds for the trained-network rows")
     args = parser.parse_args(argv)
-    results = full_eval(args.checkpoint, args.tag, heldout=args.heldout, device=args.device,
-                        big_budget=args.big_budget, value_weight=args.value_weight,
-                        diverse=not args.single_temperature)
-    text = report(results)
+    results, spreads = full_eval(args.checkpoint, args.tag, heldout=args.heldout, device=args.device,
+                                 big_budget=args.big_budget, value_weight=args.value_weight,
+                                 diverse=not args.single_temperature, seeds=args.seeds)
+    text = report(results, spreads)
     RESULTS_DIR.mkdir(exist_ok=True)
     (RESULTS_DIR / f"{args.tag}.md").write_text(text)
     print(text)
