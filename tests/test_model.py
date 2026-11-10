@@ -1,3 +1,4 @@
+import pathlib
 import random
 
 import pytest
@@ -5,7 +6,8 @@ import torch
 
 from alphafe.checker import Problem
 from alphafe.env import start
-from alphafe.model import ModelConfig, NeuralProposer, PolicyValueNet, load_model, pad_batch, save_checkpoint
+from alphafe.model import (ModelConfig, NeuralProposer, PolicyValueNet, export_checkpoint, load_model, pad_batch,
+                           save_checkpoint)
 from alphafe.search import BestFirstSearch, run_searches
 from alphafe.tokenizer import BOS, EOS, PAD, decode_move, encode_state
 
@@ -69,6 +71,35 @@ def test_checkpoint_round_trip(tmp_path):
     assert payload["note"] == "hello" and loaded.config == TINY
     for a, b in zip(model.parameters(), loaded.parameters()):
         assert torch.equal(a, b)
+
+
+def test_exported_checkpoint_keeps_the_weights_and_drops_the_training_state(tmp_path):
+    torch.manual_seed(0)
+    model = PolicyValueNet(TINY)
+    optimizer = torch.optim.AdamW(model.parameters())
+    full, slim = tmp_path / "full.pt", tmp_path / "slim.pt"
+    save_checkpoint(full, model, {"optimizer": optimizer.state_dict(), "rng": random.Random(0).getstate(),
+                                  "state": {"iteration": 3}, "train_config": {"run": "t"}})
+    export_checkpoint(full, slim)
+    raw = torch.load(slim, map_location="cpu", weights_only=True)
+    assert set(raw) == {"config", "model", "state", "train_config"}
+    loaded, payload = load_model(slim, CPU)
+    assert payload["state"] == {"iteration": 3}
+    for name, tensor in model.state_dict().items():
+        assert torch.equal(tensor, loaded.state_dict()[name])
+
+
+def test_loading_a_checkpoint_never_runs_code_from_the_file(tmp_path):
+    # A pickle can ask for any function to be called on load. load_model must refuse.
+    class Payload:
+        def __reduce__(self):
+            return (pathlib.Path.touch, (tmp_path / "ran",))
+
+    path = tmp_path / "evil.pt"
+    torch.save({"config": {}, "model": {}, "extra": Payload()}, path)
+    with pytest.raises(Exception):
+        load_model(path, CPU)
+    assert not (tmp_path / "ran").exists()
 
 
 def test_value_guided_search_with_network():

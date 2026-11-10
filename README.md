@@ -88,8 +88,29 @@ cp checkpoints/myrun/last.pt checkpoints/best.pt
 ```
 
 `alphafe solve` uses the network if `checkpoints/best.pt` exists and falls back
-to the brute-force baseline otherwise (checkpoints are not committed). It says
-which one found the proof. Input syntax: `+ - *`, powers `x^2`, juxtaposition
+to the brute-force baseline otherwise. It says which one found the proof.
+
+Checkpoints are not in the repository. To skip training, download the trained
+network (10 MB) from the
+[v0.1.0 release](https://github.com/ThePeeps191/alphafe/releases/tag/v0.1.0):
+
+```sh
+mkdir -p checkpoints
+curl -L -o checkpoints/best.pt \
+  https://github.com/ThePeeps191/alphafe/releases/download/v0.1.0/alphafe-v2-56min.pt
+shasum -a 256 checkpoints/best.pt
+# 8f52cc591dd8a470d2b84966d471050b639d689765b895026e2f8f15b639bee3
+```
+
+That file is run `v2` after 56 minutes of training (experiment E6 in
+`RESULTS.md`). The table above was measured on the same run at 28 minutes,
+which is `alphafe-v2-28min.pt` in the same release; the two perform about the
+same. Results will not match to the last problem on other hardware, because
+proposals are sampled. The weights fit the tokenizer and model of the tagged
+commit; changing either means retraining. Loading a checkpoint reads tensors
+and plain values only and cannot run code from the file.
+
+Input syntax: `+ - *`, powers `x^2`, juxtaposition
 (`2x`, `xf(y)`), division by integer literals only (`x/2`).
 
 Example output:

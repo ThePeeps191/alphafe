@@ -217,7 +217,7 @@ def full_eval(checkpoint, tag: str, heldout: int = 200, baseline_budgets=(SEARCH
         model, _ = load_model(checkpoint, dev)
     else:
         print(f"No checkpoint at {checkpoint}: the trained-network rows are skipped. "
-              "(Train one with 'alphafe train' and copy it to checkpoints/best.pt.)")
+              "(Train one with 'alphafe train' and copy it to checkpoints/best.pt, or download one: see README.)")
     torch.manual_seed(0)
     untrained = PolicyValueNet(model.config if model is not None else ModelConfig()).to(dev)
     suites = {"seed": load_seed()}

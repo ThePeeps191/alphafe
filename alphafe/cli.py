@@ -53,7 +53,7 @@ def cmd_solve(args) -> int:
             print(f"Network search: {'solved' if result.solved else 'not solved'} "
                   f"({result.checker_calls} checker calls, {result.seconds:.1f}s)")
         else:
-            print(f"No checkpoint at {checkpoint}; using the brute-force baseline. (Train one with 'alphafe train'.)")
+            print(f"No checkpoint at {checkpoint}; using the brute-force baseline. (Train one with 'alphafe train', or download one: see README.)")
     if result is None or not result.solved:
         fallback = brute_force(problem, max_calls=args.baseline_budget, max_seconds=args.seconds)
         print(f"Brute-force baseline: {'solved' if fallback.solved else 'not solved'} "

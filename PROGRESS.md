@@ -75,7 +75,7 @@ most promising first:
 
 - `checkpoints/v1/m5.pt` (M5), `checkpoints/v2/e4.pt` (28 min), `checkpoints/v2/e6.pt`
   (56 min, also copied to `checkpoints/best.pt`, which `alphafe solve` loads),
-  `checkpoints/v3/e5.pt` (subterm exploration). None are in git; retrain with
+  `checkpoints/v3/e5.pt` (subterm exploration). None are in git; weights-only copies of the two v2 files are on the v0.1.0 GitHub release. Otherwise retrain with
   `alphafe train` if they are gone.
 - `logs/` has the raw training logs; compact copies are in `results/train_*_log.json`.
 

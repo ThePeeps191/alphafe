@@ -277,7 +277,24 @@ def save_checkpoint(path, model: PolicyValueNet, extra: dict) -> None:
 
 
 def load_model(path, device) -> tuple[PolicyValueNet, dict]:
-    payload = torch.load(path, map_location="cpu", weights_only=False)
+    # weights_only=True: a checkpoint is tensors and plain values, never code,
+    # so a file downloaded from someone else cannot run anything when loaded.
+    payload = torch.load(path, map_location="cpu", weights_only=True)
     model = PolicyValueNet(ModelConfig(**payload["config"]))
     model.load_state_dict(payload["model"])
     return model.to(device), payload
+
+
+# What a published checkpoint keeps: the weights and how they were trained.
+# The optimiser state and the random-number state (two thirds of a training
+# checkpoint) are only needed to resume training.
+EXPORT_KEYS = ("config", "model", "state", "train_config")
+
+
+def export_checkpoint(source, target) -> dict:
+    """Write a weights-only copy of a training checkpoint, for sharing."""
+    payload = torch.load(source, map_location="cpu", weights_only=True)
+    slim = {key: payload[key] for key in EXPORT_KEYS if key in payload}
+    slim["model"] = {name: tensor.detach().cpu().contiguous() for name, tensor in slim["model"].items()}
+    torch.save(slim, target)
+    return slim
