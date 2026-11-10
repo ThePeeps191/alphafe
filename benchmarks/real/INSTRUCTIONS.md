@@ -269,19 +269,27 @@ Running the solver is a separate step and may not be part of your task. If
 you are asked to do it:
 
 ```sh
-.venv/bin/alphafe eval --checkpoint checkpoints/best.pt --tag real --seeds 3 --big-budget 2000
+.venv/bin/alphafe eval --suite real --checkpoint checkpoints/best.pt --seeds 3 --big-budget 2000
 ```
 
-This evaluates all benchmarks and writes tables to `results/`. Without a
-checkpoint it still runs brute force.
+This evaluates the real benchmark only and writes `results/real_*.json` and
+`results/real.md`. Without `--checkpoint` it uses `checkpoints/best.pt` if
+that exists and otherwise runs the reference solvers and brute force only.
+The command refuses to start while tracked files have uncommitted changes,
+so that every result file names the commit that produced it. Commit the
+result files in a commit of their own, after `real.jsonl` and `SKIPPED.md`.
 
-If evaluation stops with `AnswerMismatch`, the checker accepted a proof whose
-answer differs from the one recorded. Either the recorded answer is wrong or
-the checker is unsound, and the second would be a serious bug. Do not edit
-the answer to match. Re-read the source. If the source confirms the recorded
-answer, stop and report the problem id, the equation and both answers. If you
-mis-transcribed, fix the record, say so in the commit message, and run the
-evaluation again.
+Problems flagged `in_training_pool` or `seen_in_development` are scored like
+the others, and every table is printed a second time without them.
+
+If a checked proof gives an answer that differs from the one recorded, the
+run finishes, the row is not counted as solved, and the command exits with
+status 2 after printing the problem, both answers and the accepted proof
+(also saved as `results/*_MISMATCH_*.json`). Either the recorded answer is
+wrong or the checker is unsound, and the second would be a serious bug. Do
+not edit the answer to match. Re-read the source. If the source confirms the
+recorded answer, stop and report the mismatch file. If you mis-transcribed,
+fix the record, say so in the commit message, and run the evaluation again.
 
 Report the results for every problem in the file. Unsolved problems stay.
 

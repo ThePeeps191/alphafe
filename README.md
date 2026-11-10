@@ -89,8 +89,10 @@ after a change to either, retrain.
 .venv/bin/alphafe train --run myrun --minutes 28 --resume
 cp checkpoints/myrun/last.pt checkpoints/best.pt
 
-# Compare the network, an untrained network and brute force on all benchmarks.
+# Compare the network, an untrained network and brute force on all benchmarks,
+# or on one of them (--suite seed, real or synthetic).
 .venv/bin/alphafe eval --checkpoint checkpoints/best.pt
+.venv/bin/alphafe eval --checkpoint checkpoints/best.pt --suite real
 ```
 
 Equations use `+ - *`, powers such as `x^2`, juxtaposition for products

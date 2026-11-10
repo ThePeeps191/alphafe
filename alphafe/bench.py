@@ -68,9 +68,17 @@ class AnswerMismatch(AssertionError):
     """
 
 
-def canary(bench: BenchProblem, solutions: SolutionSet) -> None:
+def canary(bench: BenchProblem, solutions: SolutionSet, proof: str = "", solver: str = "") -> None:
+    """Raise ``AnswerMismatch`` if a checked proof's answer differs from the recorded one.
+
+    ``proof`` (the accepted moves, as text) and ``solver`` go into the message:
+    if the cause is an unsound move, the proof is the one thing needed to find it.
+    """
     if bench.expected is not None and solutions != bench.expected:
-        raise AnswerMismatch(
-            f"{bench.id}: {bench.problem.equation}: the checker accepted a proof giving [{solutions}] "
-            f"but the recorded answer is [{bench.expected}]"
-        )
+        text = (f"{bench.id}: {bench.problem.equation}: the checker accepted a proof giving [{solutions}] "
+                f"but the recorded answer is [{bench.expected}]")
+        if solver:
+            text += f"\nsolver: {solver}"
+        if proof:
+            text += f"\naccepted proof:\n{proof}"
+        raise AnswerMismatch(text)

@@ -55,8 +55,9 @@ Things that are easy to get wrong:
   every recorded answer by substitution and every stored proof.
 * Real problems: follow `benchmarks/real/INSTRUCTIONS.md`. `alphafe eval`
   picks up every `.jsonl` file there. If a checked proof ever disagrees with
-  a recorded answer, evaluation stops with `AnswerMismatch`: one of the two is
-  wrong, and it is worth finding out which.
+  a recorded answer, the row is not scored, the accepted proof is saved to
+  `results/*_MISMATCH_*.json` and the command exits with status 2: one of
+  the two is wrong, and it is worth finding out which.
 * Never train on either. The generator excludes them by canonical hash.
 
 ## Running an experiment
@@ -64,6 +65,10 @@ Things that are easy to get wrong:
 1. Change one thing. Commit it.
 2. Train: `alphafe train --run NAME --minutes 28` (add `--resume` to continue).
 3. Evaluate at a fixed commit: `alphafe eval --checkpoint checkpoints/NAME/last.pt --tag NAME --seeds 3`.
+   The command refuses to run with uncommitted changes to tracked files, and
+   each result file records the commit, the hash of the weights, the device
+   and the settings. Add `--suite seed` (or `real`, `synthetic`) to run part
+   of it.
    Do not edit `alphafe/` while it runs: the brute-force rows run in worker
    processes that import the code afresh for each benchmark suite, so an edit
    made halfway through ends up in part of the results (this happened once,
