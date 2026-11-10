@@ -36,8 +36,9 @@ a 15-term pool, then the full pool.
 | brute force, plain BFS | 50,000 | 35/46 (76.1%) | 20/20 | 8/13 | 7/11 | 0/1 | 0/1 | 2531.9 |
 
 Time per problem: 0.02 s at 200 calls, 0.16 s at 2,000, 1.3 s at 20,000
-(widening); plain BFS 1.9 s at 20,000 and 4.0 s at 50,000. The checker handles
-roughly 5,000 to 15,000 proposed moves per second on one core.
+(widening); plain BFS 1.9 s at 20,000 and 4.0 s at 50,000. On problems that
+exhaust their budget the checker handles a few thousand proposed moves per
+second on one core (about 5,000 on the seed problems).
 
 Unsolved by widening brute force at 20,000 calls: s33, s34 (two nested case
 splits), s36, s37, s38, s42, s44, s45, s46.
@@ -152,8 +153,8 @@ Time per problem in seconds (M5 run):
 | brute force (2,000 calls) | 0.159 | 0.055 | 0.189 | 0.526 | 0.754 |
 
 In wall-clock time the network is *not* cheaper than brute force at the same
-number of checker calls: a checker call costs about 0.1 ms and a batch of
-network proposals costs far more. The network saves checker calls, not
+number of checker calls: a checker call costs a fraction of a millisecond and
+a batch of network proposals costs far more. The network saves checker calls, not
 seconds, at this problem size.
 
 ### Plain reading

@@ -46,8 +46,8 @@ What this does and does not show:
   network proves three seed problems that the default brute force does not
   find within 20,000 calls (one of which the authors had thought was out of
   reach of the move language), and misses five that brute force gets.
-* The network saves checker calls, not wall-clock time: a checker call is
-  about 0.1 ms, a batch of network proposals costs far more.
+* The network saves checker calls, not wall-clock time: a checker call takes
+  a fraction of a millisecond, a batch of network proposals far longer.
 * The first trained network was *worse* than an untrained one on the seed
   set; `RESULTS.md` explains why and what fixed it.
 * 0M and 5M seed problems are essentially solved (37 of 37 with search and
