@@ -73,7 +73,7 @@ No external LLM or API is called anywhere.
 ```sh
 # Solve: prints a polynomial guess, the answer, the proof moves and a write-up.
 .venv/bin/alphafe solve "f(x+y) = f(x) + y" --domain R
-.venv/bin/alphafe solve "f(x + f(y)) = f(x) + y" --domain Q
+.venv/bin/alphafe solve "f(x-y) = f(x)f(y)" --domain R
 
 # Check a proof you wrote yourself (format below).
 .venv/bin/alphafe check "f(x+y) = f(x) + y" --domain R --proof my.proof
