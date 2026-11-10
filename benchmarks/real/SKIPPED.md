@@ -23,6 +23,33 @@ exactly as its source states it. Two decisions were fixed before collecting:
 * When the same problem (same equation and domain) appears more than once,
   the earliest record is kept, and the others are skipped as duplicates.
 
+## Rule 2
+
+Rule 2 was added after rule 1 was compiled, and written down before any
+problem it covers was classified. Rule 1 depends on MathNet's topic tags, and
+MathNet covers the US contests and the IMO before 2006 only thinly, so rule 2
+adds two sources:
+
+* **(a)** Every other MathNet problem (same data version) whose statement
+  contains a word for "function" in its language, together with function
+  notation such as `f(` or `f:`. The words are function, fonction, función,
+  função, Funktion, functie, funcție, funkcija, funkcja, funkce, функция,
+  συνάρτηση, 函數 / 函数, 関数, 함수, ฟังก์ชัน, fonksiyon, függvény, hàm số,
+  تابع and دالة. This gives 441 problems.
+* **(b)** Every problem in Evan Chen's solution notes listed at
+  https://web.evanchen.cc/problems.html whose statement mentions a function.
+  The notes cover IMO, USAMO, USAJMO, USA TST, USA TSTST, USEMO, ELMO, ELSMO,
+  EGMO and Taiwan TST: 184 files, excluding the statistics and reports pages.
+  This gives 107 problems. The statement and the answer come from the notes,
+  and the `url` is the notes PDF.
+
+The scope rules, the two decisions above, and the duplicate rule apply as in
+rule 1. Problems already covered by rule 1 are therefore skipped as
+duplicates. On equal years the rule 1 record is kept.
+
+One problem is excluded: **USAMO 2002 P4**. The solver was run on it during
+development (issue #2) before this rule existed, so it cannot count as unseen.
+
 # Skipped
 
 | problem | url | reason |
