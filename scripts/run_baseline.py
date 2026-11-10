@@ -11,6 +11,8 @@ if __name__ == "__main__":
     max_seconds = float(sys.argv[2]) if len(sys.argv) > 2 else 60.0
     widening = (sys.argv[3] if len(sys.argv) > 3 else "widening") == "widening"
     tag = "" if widening else "_plainbfs"
+    if len(sys.argv) > 4:
+        tag += "_" + sys.argv[4]      # label for a later code version, so earlier records are kept
     for name, benches in (("seed", load_seed()), ("real", load_real())):
         if not benches:
             print(f"{name}: no problems")
