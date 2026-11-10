@@ -291,6 +291,7 @@ exactly as its source states it. Two decisions were fixed before collecting:
 | None, Problema 11 | https://mathnet.mit.edu/explorer.html?p=esp_6e62f6 | not "find all f" (existence question for f: Z -> Z, iterate) |
 | Spanish Mathematical Olympiad, Problema 1.6 | https://mathnet.mit.edu/explorer.html?p=esp_ac958b | domain not supported (f: N -> N*); extra hypothesis: increasing |
 | None, D1.- | https://mathnet.mit.edu/explorer.html?p=esp_bf187e | domain not supported (f: R+ -> R+); extra hypothesis: continuous; division by a variable |
+| Spanish Mathematical Olympiad, Problema 3 | https://mathnet.mit.edu/explorer.html?p=esp_d2fb0a | non-polynomial solutions exist: at x = (1 ± sqrt 5)/2 the equation and its x -> 1 - x swap coincide, so f takes a free value there; the official answer f(x) = 1 - x^2 is incomplete |
 | None, Problema 4. | https://mathnet.mit.edu/explorer.html?p=esp_f4bc8e | not "find all f" (values of f(2004)); domain not supported (N) |
 | IMO TST 2011, TS-3 | https://mathnet.mit.edu/explorer.html?p=est_2011_b751e7 | not a functional equation (existence of a binary operation on Z) |
 | Estonian Open Contests 2015, IMO Team Selection Contest I, S3 | https://mathnet.mit.edu/explorer.html?p=est_2015_012e27 | equation uses exponential 2^x, 2^y (not a polynomial expression) |
@@ -315,6 +316,7 @@ exactly as its source states it. Two decisions were fixed before collecting:
 | French Mathematical Olympiad 2014, Test d'entrainement (envoi 6), Exercice 7. | https://mathnet.mit.edu/explorer.html?p=fra_2014_b9613b | not a functional equation (logic/combinatorics) |
 | French Mathematical Olympiad 2014, Exercice 4 | https://mathnet.mit.edu/explorer.html?p=fra_2014_bb2f5f | domain not supported (N*); divisibility condition, not an equation |
 | French Mathematical Olympiad 2014, Exercices du groupe A, Exercice 7 | https://mathnet.mit.edu/explorer.html?p=fra_2014_bf50a3 | domain not supported (N); perfect-square condition, not an equation |
+| French Mathematical Olympiad 2017, Exercices communs, Exercice 5. | https://mathnet.mit.edu/explorer.html?p=fra_2017_ee42b4 | two-part problem: part a) has f: R -> Z (out of scope); part b) alone would be in scope, but the problem as stated is not |
 | French Mathematical Olympiad Preparation 2018, Groupe A, Exercice 8. | https://mathnet.mit.edu/explorer.html?p=fra_2018_42556b | extra hypothesis: f bounded above |
 | French Mathematical Olympiad Preparation 2018, TEST DU 20 FEVRIER, Exercice 3 | https://mathnet.mit.edu/explorer.html?p=fra_2018_8f0367 | not "find all f" (values of f(2018)); domain and codomain differ (Q -> R+) |
 | French Mathematical Olympiad Preparation 2019, Test du 27 Novembre 2019 - Groupe Senior, Exercice 3 | https://mathnet.mit.edu/explorer.html?p=fra_2019_5d1f15 | not a functional equation (polynomial problem, prove) |
@@ -1065,5 +1067,5 @@ exactly as its source states it. Two decisions were fixed before collecting:
 # Counts
 
 * Problems covered by the rule: 1164
-* In scope (in `real.jsonl`): 130
-* Skipped: 1034
+* In scope (in `real.jsonl`): 128
+* Skipped: 1036
