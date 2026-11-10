@@ -69,7 +69,7 @@ def test_candidate_moves_only_use_available_symbols():
 def test_benchmark_loading_and_canary():
     seeds = load_seed()
     assert len(seeds) >= 40 and all(b.expected is not None and b.source == "seed" for b in seeds)
-    assert load_real() == []                                 # owners add these later
+    assert all(b.source != "seed" for b in load_real())      # may be empty; checked in test_benchcheck.py
     bench = seeds[0]
     canary(bench, bench.expected)
     with pytest.raises(AnswerMismatch):

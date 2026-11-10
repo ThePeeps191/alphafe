@@ -53,8 +53,8 @@ Things that are easy to get wrong:
 * Seed problems: a line in `benchmarks/seed/*.jsonl` and, if you can, a proof
   in `benchmarks/seed/proofs/<id>.proof`. `tests/test_checker.py` verifies
   every recorded answer by substitution and every stored proof.
-* Real problems: drop a `.jsonl` file into `benchmarks/real/` (format in its
-  README). `alphafe eval` picks it up. If a checked proof ever disagrees with
+* Real problems: follow `benchmarks/real/INSTRUCTIONS.md`. `alphafe eval`
+  picks up every `.jsonl` file there. If a checked proof ever disagrees with
   a recorded answer, evaluation stops with `AnswerMismatch`: one of the two is
   wrong, and it is worth finding out which.
 * Never train on either. The generator excludes them by canonical hash.
@@ -79,6 +79,6 @@ Useful scripts: `scripts/show_log.py` (training curve),
 
 ## Where the limits are
 
-See "Honest limitations" in the README and the last section of `RESULTS.md`.
+See "Known limits" in the README, `docs/DESIGN.md` and the last section of `RESULTS.md`.
 The checker rejects anything it cannot justify, so most limits show up as
 "not solved" rather than as wrong answers; that is by design.

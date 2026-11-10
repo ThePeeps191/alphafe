@@ -22,7 +22,7 @@ def test_run_policy_scores_with_the_canary_and_formats_tables():
 
 
 def test_real_benchmark_files_are_picked_up(tmp_path, monkeypatch):
-    """Whatever the owners drop into benchmarks/real/ is loaded, scored and tabulated,
+    """Whatever is put into benchmarks/real/ is loaded, scored and tabulated,
     including records without a recorded answer or MOHS estimate."""
     import json
 

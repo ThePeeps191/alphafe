@@ -1,97 +1,58 @@
 # AlphaFE
 
-A solver for easy olympiad **functional equations**, for example
+AlphaFE solves easy olympiad functional equations. Give it an equation and it
+finds every function that satisfies it, with a proof that an exact symbolic
+checker has accepted step by step.
 
-> Find all f: R -> R with f(x + y) = f(x) + y for all real x, y.
+```
+$ alphafe solve "f(x-y) = f(x)f(y)" --domain R
 
-AlphaFE outputs the full solution set together with a proof that the listed
-functions work and nothing else does, and every step of that proof has been
-accepted by an exact symbolic checker.
+Problem. Find all functions f: R -> R such that f(x-y) = f(x)f(y) for all real x, y.
+
+Answer. f(x) = 0; f(x) = 1.
+
+Solution. Let P(x, y) denote the assertion f(x-y) = f(x)f(y).
+P(0, y) gives f(-y) = f(0)f(y).
+P(y, y) gives f(y)^2 = f(0).
+P(-y, y) gives f(0)f(y)^2 = f(-2y).
+Putting x = 0 in f(x)^2 = f(0) gives f(0)^2 = f(0).
+Since f(0)^2 = f(0), we have f(0) = 0 or f(0) = 1.
+
+Case f(0) = 0.
+Hence f(x) = 0 for all x.
+Substituting this into the original equation and comparing coefficients, it holds exactly for: f(x) = 0.
+
+Case f(0) = 1.
+Hence f(x) = 1 for all x.
+Substituting this into the original equation and comparing coefficients, it holds exactly for: f(x) = 1.
+
+All cases are closed. Every function listed in the answer was substituted into the original equation and satisfies it exactly, and the argument above shows there are no others.
+```
 
 The design follows [AlphaGeometry](https://www.nature.com/articles/s41586-023-06747-5)
-(Trinh et al., *Nature* 2024): an exact symbolic engine defines the legal proof
-moves and does the routine deductions, and a small neural network, trained
-from scratch on its own attempts, proposes the creative moves. AlphaGeometry
-is the inspiration for this project. AlphaFE is an independent hobby project
-by two olympiad students and is not affiliated with DeepMind.
+(Trinh et al., *Nature* 2024). A symbolic engine defines the legal proof moves
+and makes the routine deductions. A small neural network, trained from random
+weights on its own attempts, proposes the moves that need an idea:
+substitutions, case splits and preimages. AlphaFE is not affiliated with
+Google DeepMind.
 
-* `RESULTS.md`: every measurement, including the ones that did not help.
-* `DECISIONS.md`: design choices, one line each.
-* `PROGRESS.md`: what is done and what is next.
+When AlphaFE cannot find a proof it says so. All it prints then is a guess
+among polynomials of degree at most 2, labelled as a guess.
 
-## Where it stands
+## Quick start
 
-Numbers from `RESULTS.md` (experiment E4; one training run of 28 minutes on a
-laptop GPU, three sampling seeds, ranges shown):
-
-| | network, no backtracking (32 checker calls) | network, search (128 calls) | brute force (128 calls) | brute force (2,000 calls) |
-|---|---|---|---|---|
-| held-out synthetic, tier 1 (200) | 179-180 | 185 | 173 | 177 |
-| held-out synthetic, tier 2 (200) | 155-159 | 168-172 | 132 | 144 |
-| held-out synthetic, tier 3 (200) | 79-81 | 84-89 | 60 | 81 |
-| held-out synthetic, tier 4 (200) | 46-51 | 56-58 | 46 | 52 |
-| seed benchmark (50) | 32-35 | 35-38 | 32 | 39 |
-
-With 2,000 calls the network solves 43-44 of the 50 seed problems; brute force
-solves 39 with 2,000 calls and 45 with 20,000.
-
-What this does and does not show:
-
-* The checker has accepted no wrong answer: every proof found for a problem
-  with a recorded answer produced exactly that answer.
-* The trained network is clearly better than the same network untrained and
-  than random proposals, and it finds proofs with far fewer checker calls than
-  brute force (about 2-4 against 4-14 on problems both solve).
-* Against brute force with a much larger budget the picture is mixed: the
-  network proves three seed problems that the default brute force does not
-  find within 20,000 calls (one of which the authors had thought was out of
-  reach of the move language), and misses five that brute force gets.
-* The network saves checker calls, not wall-clock time: a checker call takes
-  a fraction of a millisecond, a batch of network proposals far longer.
-* The first trained network was *worse* than an untrained one on the seed
-  set; `RESULTS.md` explains why and what fixed it.
-* 0M and 5M seed problems are essentially solved (37 of 37 with search and
-  2,000 calls); 10M is at 5 of 11; the single 20M problem is unsolved.
-* The seed set was used to choose fixes, so it is a development set. The real
-  benchmark is empty until the owners fill it.
-
-## Setup
-
-Everything lives in a project virtual environment; nothing is installed globally.
+You need Python 3.11 or newer (tested on 3.12) and [uv](https://docs.astral.sh/uv/).
+Everything installs into a project virtual environment.
 
 ```sh
+git clone https://github.com/ThePeeps191/alphafe.git
+cd alphafe
 uv venv .venv --python 3.12
 uv pip install --python .venv/bin/python -e ".[dev]"
 .venv/bin/python -m pytest            # about 400 tests, around ten seconds
 ```
 
-Dependencies: Python 3.11+, PyTorch; pytest, hypothesis and SymPy for tests.
-No external LLM or API is called anywhere.
-
-## Using it
-
-```sh
-# Solve: prints a polynomial guess, the answer, the proof moves and a write-up.
-.venv/bin/alphafe solve "f(x+y) = f(x) + y" --domain R
-.venv/bin/alphafe solve "f(x-y) = f(x)f(y)" --domain R
-
-# Check a proof you wrote yourself (format below).
-.venv/bin/alphafe check "f(x+y) = f(x) + y" --domain R --proof my.proof
-
-# Train the network by self-play (resumable; about 28 minutes per invocation).
-.venv/bin/alphafe train --run myrun --minutes 28
-.venv/bin/alphafe train --run myrun --minutes 28 --resume
-cp checkpoints/myrun/last.pt checkpoints/best.pt
-
-# Evaluate network vs untrained network vs brute force on all benchmarks.
-.venv/bin/alphafe eval --checkpoint checkpoints/best.pt
-```
-
-`alphafe solve` uses the network if `checkpoints/best.pt` exists and falls back
-to the brute-force baseline otherwise. It says which one found the proof.
-
-Checkpoints are not in the repository. To skip training, download the trained
-network (10 MB) from the
+Download the trained network (10 MB) from the
 [v0.1.0 release](https://github.com/ThePeeps191/alphafe/releases/tag/v0.1.0):
 
 ```sh
@@ -102,166 +63,161 @@ shasum -a 256 checkpoints/best.pt
 # 8f52cc591dd8a470d2b84966d471050b639d689765b895026e2f8f15b639bee3
 ```
 
-That file is run `v2` after 56 minutes of training (experiment E6 in
-`RESULTS.md`). The table above was measured on the same run at 28 minutes,
-which is `alphafe-v2-28min.pt` in the same release; the two perform about the
-same. Results will not match to the last problem on other hardware, because
-proposals are sampled. The weights fit the tokenizer and model of the tagged
-commit; changing either means retraining. Loading a checkpoint reads tensors
-and plain values only and cannot run code from the file.
+Then solve something:
 
-Input syntax: `+ - *`, powers `x^2`, juxtaposition
-(`2x`, `xf(y)`), division by integer literals only (`x/2`).
-
-Example output:
-
-```
-Problem. Find all functions f: R -> R such that f(x)f(y) = f(x+y) + xy for all real x, y.
-
-Answer. f(x) = 1 - x; f(x) = x + 1.
-
-Solution. Let P(x, y) denote the assertion f(x)f(y) = f(x+y) + xy.
-P(0, 0) gives f(0)^2 = f(0).
-Since f(0)^2 = f(0), we have f(0) = 0 or f(0) = 1.
-
-Case f(0) = 0.
-P(x, 0) gives f(x) = 0.
-Hence f(x) = 0 for all x.
-Substituting this into the original equation, no choice of the constants works, so this case gives no solutions.
-
-Case f(0) = 1.
-P(1, -1) gives f(-1)f(1) = 0.
-...
+```sh
+.venv/bin/alphafe solve "f(x+y) = f(x) + y" --domain R
+.venv/bin/alphafe solve "f(x-y) = f(x)f(y)" --domain R
 ```
 
-## Scope of version 1
+Without `checkpoints/best.pt`, `solve` uses brute-force search and says so.
+Proposals are sampled, so the proof and the number of checker calls vary from
+run to run. The weights match the tokenizer and model at the `v0.1.0` tag;
+after a change to either, retrain.
 
-* One unknown function f, with domain and codomain both R or both Q.
-* Equations holding for all values of 2 or 3 variables, built from variables,
-  rational constants, `+`, `-`, `*` and f applied to such expressions.
-* Task: find **all** f.
-* Answers are polynomial families with rational coefficients (`f(x) = cx + d`).
-  A problem whose answer needs `sqrt(2)`, or has non-polynomial solutions
-  (Cauchy's equation over R), is reported as unsolved, never answered wrongly.
+## Commands
 
-Difficulty is measured on Evan Chen's MOHS scale (0M to 50M; 30M is a
-medium-hard IMO problem). The target is 0-10M; 15-20M is a stretch goal.
+```sh
+# Find all solutions and print the proof.
+.venv/bin/alphafe solve "f(x)f(y) = f(x+y) + xy" --domain R
 
-### Future work (deliberately not built yet)
+# Check a proof you wrote yourself (format in docs/DESIGN.md).
+.venv/bin/alphafe check "f(x+y) = f(x) + y" --domain R --proof my.proof
 
-Positive-real domains, inequalities, integer or natural-number domains,
-division, several unknown functions, continuity or monotonicity hypotheses.
+# Train by self-play. Each invocation runs for the given time and can be resumed.
+.venv/bin/alphafe train --run myrun --minutes 28
+.venv/bin/alphafe train --run myrun --minutes 28 --resume
+cp checkpoints/myrun/last.pt checkpoints/best.pt
+
+# Compare the network, an untrained network and brute force on all benchmarks.
+.venv/bin/alphafe eval --checkpoint checkpoints/best.pt
+```
+
+Equations use `+ - *`, powers such as `x^2`, juxtaposition for products
+(`2x`, `xf(y)`) and division by integer literals only (`x/2`). The domain is
+`R` or `Q`.
+
+## What it can solve
+
+Version 1 handles one unknown function f from R to R or from Q to Q, in an
+equation that holds for all values of up to three variables and is built from
+variables, rational constants, `+`, `-`, `*` and f. The task is always to find
+all such f, and the answer must be a set of polynomial families with rational
+coefficients, such as `f(x) = cx + d`.
+
+A problem whose answer needs `sqrt(2)`, or that has non-polynomial solutions
+(Cauchy's equation over R), comes back as unsolved. Positive-real or integer
+domains, inequalities, division by variables, several unknown functions, and
+hypotheses such as continuity or monotonicity are not supported.
+
+Difficulty is measured on Evan Chen's MOHS scale, which runs from 0M to 50M;
+30M is a medium-hard IMO problem. The target range is 0M to 10M.
+
+## Results
+
+Problems solved, out of 200 per held-out tier and 50 on the seed benchmark.
+The network was trained once, for 28 minutes on a laptop GPU, and evaluated
+with three sampling seeds; a range is the minimum and maximum over those
+seeds. A "call" is one move sent to the checker.
+
+| | network, no backtracking (32 calls) | network, search (128 calls) | brute force (128 calls) | brute force (2,000 calls) |
+|---|---|---|---|---|
+| held-out synthetic, tier 1 | 179-180 | 185 | 173 | 177 |
+| held-out synthetic, tier 2 | 155-159 | 168-172 | 132 | 144 |
+| held-out synthetic, tier 3 | 79-81 | 84-89 | 60 | 81 |
+| held-out synthetic, tier 4 | 46-51 | 56-58 | 46 | 52 |
+| seed benchmark | 32-35 | 35-38 | 32 | 39 |
+
+At an equal small budget the trained network solves more than brute force,
+most clearly on tiers 2 and 3. On problems both solve, the network without
+backtracking needs a quarter to a half as many checker calls. Brute force
+with 20,000 calls still solves more held-out problems than the network does
+with 128 (188, 178, 97 and 63 on the four tiers). A network proposal also
+costs far more time than a checker call, so the network saves checker calls
+and does not save seconds.
+
+On the seed benchmark with 2,000 calls the network solves 43-44 of 50, against
+39 for brute force at 2,000 calls and 45 at 20,000. That covers all 37 problems
+rated 0M or 5M and 5 of the 11 rated 10M (first sampling seed). The single 20M
+problem has not been solved by anything. Three seed problems had a network
+proof and no brute-force proof at 20,000 calls, and five went the other way.
+
+No proof accepted by the checker has produced an answer different from a
+recorded one.
+
+The network in the quick start is the same training run after 56 minutes. It
+scores about the same (experiment E6 in `RESULTS.md`), and the 28-minute
+weights are in the release as `alphafe-v2-28min.pt`.
+
+The seed benchmark was used to choose fixes during development, so its
+numbers are optimistic. Each configuration was trained with a single seed, so
+small differences between runs may be noise. `RESULTS.md` has every
+measurement, including the first trained network, which did worse than an
+untrained one on the seed benchmark, and three experiments that made no
+difference.
 
 ## How it works
 
-```
-terms.py      expression trees, parser, printers            ┐
-algebra.py    canonical polynomials with exact rationals    │ trusted core
-solutions.py  solution families, exact parameter solving    │ (no floats,
-checker.py    proof states, the moves, check(problem, proof)┘  no network)
-moves.py      move data + text format
-render.py     checked proof -> olympiad-style write-up
-env.py        search environment (applies the routine "free" moves)
-baseline/     answer guesser and brute-force search (the control experiment)
-generate.py   synthetic problem generator and curriculum tiers
-tokenizer.py  states and moves as tokens; grammar for constrained decoding
-model.py      2.5M-parameter encoder-decoder transformer, policy + value heads
-search.py     network-guided search: no backtracking / best-first
-train.py      self-play training with hindsight examples and a curriculum
-eval.py       three-mode evaluation, results tables
-```
+A proof is a list of moves applied to the original equation: substitute
+values for variables, split into cases on a fact about constants, cancel f
+after proving injectivity, and so on. The checker applies each move with
+exact rational arithmetic and rejects any step it cannot justify. It also
+makes the routine deductions (combining identities, rewriting, using proven
+properties such as oddness) without being asked, so a move is needed only
+where a person would need an idea.
 
-### The rule that cannot bend: soundness
+The checker is the only trusted component. The standard mistakes are blocked
+by rule: case splits are allowed only on facts without variables,
+cancellation only after injectivity is proved, division only by constants
+proved nonzero, and "additive implies linear" only over Q. Every claimed
+solution is substituted back into the original equation.
 
-The checker is exact code and the only trusted part. The network proposes,
-the checker decides, and "solved" means the checker accepted every step of a
-proof that was replayed from scratch. Arithmetic is exact (`fractions.Fraction`).
-The classic traps are encoded and tested (`tests/test_traps.py`):
+The network is a 2.5M-parameter encoder-decoder transformer. It reads the
+current proof state and writes the next move token by token under a grammar
+that permits only well-formed moves. Search either follows its best accepted
+proposal without backtracking or keeps a frontier and expands the most likely
+state first.
 
-| trap | what the checker does |
-|---|---|
-| pointwise trap: "for every x, f(x) = 0 or f(x) = x" is not "f = 0 or f = x" | case splits only on facts without variables |
-| cancelling f from f(A) = f(B) | only after injectivity has been established |
-| choosing a with f(a) = t | only after surjectivity has been established, and only for constant t |
-| dividing | only by constants proven nonzero; common factors need a case split |
-| additive implies linear | only over Q, refused over R |
-| case splits | factors are re-multiplied (exhaustive), and every case must close |
-| claimed solutions | substituted back into the original equation exactly |
+Training is self-play on synthetic problems. Proofs the checker accepts
+become training examples, and so do the identities derived in failed
+attempts, each as an example of how to reach that identity. No external model
+or API is called anywhere, and the brute-force baseline is never used to
+produce training data.
 
-On top of that, a model-check fuzzer (`tests/test_modelcheck.py`,
-`scripts/fuzz.py`) fires random moves at the checker and tests every accepted
-state against known solutions of the benchmark problems.
-
-### Proof state and moves
-
-A proof state is a set of open *cases*. Each case holds identities (true for
-all values of their variables), facts about constants, constants proven
-nonzero, and proven properties (injective, surjective, odd, even, additive,
-involution). The checker keeps the identities in a reduced form: adding,
-subtracting and scaling identities, rewriting with known identities, and
-applying proven properties all happen automatically, because each is a valid
-deduction and none needs creativity (compare AlphaGeometry's deduction engine).
-
-The moves, in the text format used by `alphafe check`:
-
-```
-sub P: x:=0, y:=f(y)       substitute into the original equation P
-sub R2: x:=y               ... or into the 2nd current identity
-sub [f(f(x)) = x]: x:=y+1  ... or into a quoted identity (must be known)
-split [f(0)^2 = f(0)]      case split on a factorised fact about constants
-splitnz f(0)               case split: f(0) = 0 or f(0) != 0
-inj / surj                 establish injectivity / surjectivity
-cancel                     f(A) = f(B) gives A = B (needs injectivity)
-pre 0                      pick a with f(a) = 0 (needs surjectivity)
-onto R2: y                 y occurs only as f(y) and f is surjective: replace f(y) by y
-cauchy                     additive (up to a polynomial term) over Q implies polynomial
-quadratic                  f(x+y) + f(x-y) = 2f(x) + 2f(y) over Q implies f(x) = f(1)x^2
-conclude                   read off f(x) = ..., pin down constants by substituting back
-div R3 by f(0)             divide by a proven-nonzero constant
-```
-
-A proof is a flat list of moves acting on the first open case. See
-`benchmarks/seed/proofs/` for 48 worked examples (47 written by hand, one found by the network), and
-`scripts/play.py` to step through a proof and see the state after each move.
-
-### The network
-
-The search environment applies the moves that need no creative input
-(`conclude`, `cauchy`, `quadratic`, `inj`, `surj`, `cancel`) automatically. The network
-chooses the rest: substitutions (writing the substituted term token by token,
-there is no fixed pool), case splits, preimages. It reads the tokenised case
-and writes a move under a grammar that only permits well-formed moves; a
-value head estimates whether the state is solvable.
-
-Training is self-play on synthetic problems, starting from random weights:
-attempt problems, keep the proofs the checker accepts, and also learn from
-failed attempts through hindsight (any identity that was derived is a correct
-example of how to derive that identity). The curriculum moves to structurally
-larger problems as the solve rate rises. The brute-force baseline is never
-used to produce, label or filter training data.
+`docs/DESIGN.md` has the move reference, the full list of soundness rules and
+a map of the modules.
 
 ## Benchmarks
 
-* `benchmarks/seed/*.jsonl`: 50 classic easy problems written for this
-  project (four of them in three variables), with expected answers (all
-  verified) and estimated MOHS. It has been used to choose fixes, so treat it
-  as a development set.
-* `benchmarks/synthetic/heldout.jsonl`: 800 frozen held-out synthetic problems
-  (200 per curriculum tier), never trained on.
-* `benchmarks/real/`: empty; the owners add hand-picked problems there (format
-  in its README) and `alphafe eval` picks them up automatically.
-* The held-out split is about 10% of generated problems, chosen by a hash of
-  the canonical equation. Training never sees it, the seed set or the real set.
+* `benchmarks/seed/`: 50 classic easy problems written for this project, four
+  of them in three variables, with verified answers, estimated MOHS ratings
+  and 48 checked proofs. Two pairs are the same equation with x and y
+  exchanged, so 48 are distinct. Treat it as a development set.
+* `benchmarks/synthetic/heldout.jsonl`: 800 generated problems, 200 per
+  curriculum tier, frozen in a file and excluded from training by a hash of
+  the canonical equation.
+* `benchmarks/real/`: real competition problems, used only for testing. It is
+  empty at the moment. `benchmarks/real/INSTRUCTIONS.md` explains how to
+  compile it, and `alphafe eval` scores whatever is there.
 
-## Honest limitations
+## Known limits
 
-* The checker's injectivity and surjectivity tests are syntactic patterns.
-  A human can prove these properties in more ways than the checker recognises.
-* There is no move for multiplying an identity by an expression, and products
-  of f-values are only eliminated when they match exactly.
-* The synthetic generator only produces two-variable problems. Three-variable
-  problems are supported and tested (four seed problems), but the network has
-  never trained on one.
-* The network is small and each training run is about half an hour on a
-  laptop GPU. See `RESULTS.md` for what is and is not solved, by which method,
-  and how much of each comparison is within noise.
+* The checker recognises injectivity and surjectivity by syntactic patterns,
+  which cover fewer arguments than a person can make.
+* No move multiplies an identity by an expression.
+* The generator produces two-variable problems only, so the network has never
+  trained on a three-variable problem, though the four in the seed benchmark
+  are solved.
+* Most seed problems the network misses hinge on one substitution to which it
+  gives almost no probability (`scripts/diagnose.py` shows which). Two others
+  need two nested case splits.
+
+## More
+
+* `RESULTS.md`: every measurement, including the ones that did not help.
+* `DECISIONS.md`: design choices, one line each.
+* `PROGRESS.md`: what is done and what to try next.
+* `docs/DESIGN.md`: moves, soundness rules, modules.
+* `docs/EXTENDING.md`: adding a move, running an experiment.
+
+MIT licence.

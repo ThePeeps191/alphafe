@@ -2,7 +2,7 @@
 
 A benchmark file is JSON Lines; each line has ``id``, ``equation``, ``domain``
 and optionally ``solutions`` (the full expected answer), ``mohs`` and
-``source``. See benchmarks/real/README.md.
+``source``. See benchmarks/real/INSTRUCTIONS.md.
 """
 
 from __future__ import annotations
@@ -55,7 +55,7 @@ def load_seed() -> list[BenchProblem]:
 
 
 def load_real() -> list[BenchProblem]:
-    """Problems added by the project owners (empty until they add some)."""
+    """Real competition problems (see benchmarks/real/INSTRUCTIONS.md); may be empty."""
     return load_dir("real")
 
 

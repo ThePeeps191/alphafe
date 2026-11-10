@@ -83,5 +83,6 @@ most promising first:
 
 - MPS (Apple GPU) memory grows if tensor shapes are not bucketed; see DECISIONS.md.
 - Training runs are capped at about 28 minutes per invocation; use `--resume` to continue.
+- Seed problems s02 and s38 are s01 and s37 with x and y exchanged (found by `scripts/validate_bench.py --seed`), so the seed set has 48 distinct problems. They are kept so that earlier results stay comparable.
 - Checkpoints, logs and `.worktrees/` are not committed. `checkpoints/best.pt` is what
   `alphafe solve` loads; copy a run's `last.pt` there.
