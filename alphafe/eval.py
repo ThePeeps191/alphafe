@@ -120,3 +120,119 @@ def markdown_by_mohs(runs: dict) -> str:
         cells = [f"{table[k][0]}/{table[k][1]}" if k in table else "-" for k in keys]
         lines.append(f"| {label} | " + " | ".join(cells) + " |")
     return "\n".join(lines)
+
+
+# ---------------------------------------------------------------------------
+# Network modes and the full three-mode evaluation
+# ---------------------------------------------------------------------------
+
+GREEDY_BUDGET = 32      # "network, no backtracking": checker calls allowed
+SEARCH_BUDGET = 128     # "network, small search budget"
+PROPOSALS = 8           # proposals requested per expanded state
+
+
+def run_policy(benches: list[BenchProblem], proposer, mode: str, budget: int, k: int = PROPOSALS) -> list[Row]:
+    """Run a proposer (network or uniform) over problems. mode: 'greedy' or 'search'."""
+    from .search import BestFirstSearch, GreedySearch, run_searches
+
+    make = GreedySearch if mode == "greedy" else BestFirstSearch
+    searches = [make(b.problem, budget=budget) for b in benches]
+    began = time.time()
+    run_searches(searches, proposer, k)
+    elapsed = (time.time() - began) / max(1, len(benches))
+    rows = []
+    for bench, search in zip(benches, searches):
+        result = search.result()
+        result.seconds = elapsed      # searches run interleaved; report the average share
+        rows.append(score(bench, result))
+    return rows
+
+
+def synthetic_heldout(seed: int, per_tier: int, limit: int) -> dict:
+    """Held-out synthetic test problems by tier, as BenchProblems (answers unknown)."""
+    from .train import ProblemPool
+
+    pool = ProblemPool(seed, per_tier)
+    out = {}
+    for tier, items in pool.test.items():
+        out[tier] = [BenchProblem(g.key[:10], g.problem(), None, None, f"synthetic-tier{tier}", {"planted": g.planted})
+                     for g in items[:limit]]
+    return out
+
+
+def full_eval(checkpoint, tag: str, seed: int = 0, per_tier: int = 3000, heldout: int = 200,
+              baseline_budgets=(SEARCH_BUDGET, 2000), device: str = "auto", workers: int = 8) -> dict:
+    """The three-mode evaluation on every benchmark. Returns {suite: {solver label: rows}} and saves JSON."""
+    import random
+
+    import torch
+
+    from .bench import load_real, load_seed
+    from .model import NeuralProposer, PolicyValueNet, load_model, pick_device
+    from .search import UniformProposer
+
+    dev = pick_device(device)
+    model, payload = load_model(checkpoint, dev)
+    torch.manual_seed(0)
+    untrained = PolicyValueNet(model.config).to(dev)
+    suites = {"seed": load_seed()}
+    real = load_real()
+    if real:
+        suites["real"] = real
+    pool_seed = payload.get("train_config", {}).get("seed", seed)
+    pool_per_tier = payload.get("train_config", {}).get("per_tier", per_tier)
+    for tier, benches in synthetic_heldout(pool_seed, pool_per_tier, heldout).items():
+        suites[f"synthetic-tier{tier}"] = benches
+
+    out: dict = {}
+    for suite, benches in suites.items():
+        runs: dict = {}
+        policies = (
+            ("network", lambda temp: NeuralProposer(model, dev, temperature=temp)),
+            ("untrained network", lambda temp: NeuralProposer(untrained, dev, temperature=temp)),
+            ("uniform policy", lambda temp: UniformProposer(random.Random(0))),
+        )
+        for name, make in policies:
+            runs[f"{name}, no backtracking ({GREEDY_BUDGET} calls)"] = run_policy(benches, make(0.7), "greedy", GREEDY_BUDGET)
+            runs[f"{name}, search ({SEARCH_BUDGET} calls)"] = run_policy(benches, make(1.0), "search", SEARCH_BUDGET)
+        for budget in baseline_budgets:
+            runs[f"brute force ({budget} calls)"] = run_baseline(benches, budget, 120.0, workers=workers)
+        for label, rows in runs.items():
+            slug = label.replace(",", "").replace("(", "").replace(")", "").replace(" ", "_")
+            save(f"{tag}_{suite}_{slug}", rows, {"suite": suite, "solver": label, "checkpoint": str(checkpoint)})
+        out[suite] = runs
+    return out
+
+
+def report(results: dict) -> str:
+    """Markdown tables for a ``full_eval`` result."""
+    parts = []
+    for suite, runs in results.items():
+        n = len(next(iter(runs.values())))
+        parts.append(f"#### {suite} ({n} problems)\n")
+        parts.append(markdown_summary(runs))
+        if suite in ("seed", "real"):
+            parts.append("")
+            parts.append(markdown_by_mohs(runs))
+        parts.append("")
+    return "\n".join(parts)
+
+
+def main(argv=None) -> None:
+    import argparse
+
+    parser = argparse.ArgumentParser(prog="alphafe eval", description="Three-mode evaluation on all benchmarks.")
+    parser.add_argument("--checkpoint", default=str(ROOT / "checkpoints" / "best.pt"))
+    parser.add_argument("--tag", default="eval", help="prefix for the files written to results/")
+    parser.add_argument("--heldout", type=int, default=200, help="held-out synthetic problems per tier")
+    parser.add_argument("--device", default="auto")
+    args = parser.parse_args(argv)
+    results = full_eval(args.checkpoint, args.tag, heldout=args.heldout, device=args.device)
+    text = report(results)
+    RESULTS_DIR.mkdir(exist_ok=True)
+    (RESULTS_DIR / f"{args.tag}.md").write_text(text)
+    print(text)
+
+
+if __name__ == "__main__":
+    main()

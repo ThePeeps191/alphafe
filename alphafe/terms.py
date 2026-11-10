@@ -286,7 +286,8 @@ def show(term: Term) -> str:
     if isinstance(term, App):
         return f"f({show(term.arg)})"
     if isinstance(term, Add):
-        return f"{_wrap(term.left, 1)} + {_wrap(term.right, 2)}"
+        # a + (b - c) may drop the brackets: addition is associative
+        return f"{_wrap(term.left, 1)} + {_wrap(term.right, 1)}"
     if isinstance(term, Sub):
         return f"{_wrap(term.left, 1)} - {_wrap(term.right, 2)}"
     if isinstance(term, Neg):
@@ -301,7 +302,10 @@ def show(term: Term) -> str:
         ls = _wrap(left, 2)
         if isinstance(left, Num) and left.value.denominator != 1 and left.value > 0:
             ls = f"({ls})"
-        rs = _wrap(right, 4)
+        # x(yz) may drop the brackets: multiplication is associative
+        rs = _wrap(right, 2 if isinstance(right, Mul) else 4)
+        if rs.startswith("-"):
+            rs = f"({rs})"  # x(-2y), never x-2y
         # Juxtapose (2x, xf(y), f(x)f(y)) unless the right factor starts with a
         # digit, in which case juxtaposition would glue two numbers together.
         if rs[0].isdigit():

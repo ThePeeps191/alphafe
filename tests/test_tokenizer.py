@@ -1,0 +1,138 @@
+import random
+
+import pytest
+
+from alphafe import terms as T
+from alphafe.checker import Problem, Reject, apply, initial_state
+from alphafe.env import start, step
+from alphafe.generate import generate
+from alphafe.moves import Onto, Pre, Split, SplitNZ, Subst, parse_move
+from alphafe.tokenizer import (
+    EOS, MAX_MOVE_TOKENS, MAX_STATE_TOKENS, TOKEN_ID, VOCAB, MoveGrammar, decode_move, encode_move, encode_state,
+    sample_uniform,
+)
+
+
+def state_of(equation, domain="R", moves=()):
+    state = initial_state(Problem.parse(equation, domain))
+    for text in moves:
+        state = apply(state, parse_move(text))
+    return state
+
+
+def words(view):
+    return [VOCAB[i] for i in view.tokens]
+
+
+def test_vocabulary_is_consistent():
+    assert len(set(VOCAB)) == len(VOCAB)
+    assert all(VOCAB[i] == tok for tok, i in TOKEN_ID.items())
+
+
+def test_state_encoding_shows_the_right_things():
+    state = state_of("f(x + f(y)) = f(x) + y", "Q", ["inj", "sub P: x:=0"])
+    toks = words(encode_state(state))
+    assert toks[:3] == ["<bos>", "DOM_Q", "SOLVE"]
+    assert "INJ" in toks and "P" in toks and "R1" in toks
+    # f(f(y)) = y + f(0) exists for x and for y, but is shown once
+    view = encode_state(state)
+    assert len(view.row_index) < len(state.current.rows)
+
+
+def test_goal_conditioned_encoding():
+    state = state_of("f(x+y) = f(x) + y")
+    goal = state.current.rows[0]
+    toks = words(encode_state(state, goal=goal))
+    assert toks[2] == "GOAL" and "SOLVE" not in toks
+
+
+def test_state_encoding_is_bounded():
+    for item in generate(1, 30)[4]:
+        state, _ = start(item.problem())
+        view = encode_state(state)
+        assert len(view.tokens) <= MAX_STATE_TOKENS + 120
+        assert all(0 <= i < len(VOCAB) for i in view.tokens)
+
+
+MOVES = [
+    "sub P: x:=0", "sub P: x:=0, y:=f(y)", "sub P: y:=x - f(x)", "sub P: x:=(x + y)/2, y:=-1", "sub R1: y:=x^2",
+    "splitnz f(0)", "splitnz f(1) - 1",
+]
+
+
+@pytest.mark.parametrize("text", MOVES)
+def test_move_round_trip(text):
+    state = state_of("f(x + f(y)) = f(x) + y", "Q", ["sub P: x:=0"])
+    view = encode_state(state)
+    move = parse_move(text)
+    ids = encode_move(move, view)
+    assert ids is not None and ids[-1] == EOS
+    back = decode_move(ids, view)
+    assert encode_move(back, view) == ids
+
+
+def test_split_pre_onto_round_trip():
+    state = state_of("f(x)f(y) = f(x+y) + xy", "R", ["sub P: x:=0, y:=0"])
+    view = encode_state(state)
+    assert view.splittable == ["R1"]
+    assert decode_move(encode_move(Split(0), view), view) == Split(0)
+    state = state_of("f(x + f(y)) = f(x) + y", "R", ["sub P: x:=0", "surj"])
+    view = encode_state(state)
+    assert decode_move(encode_move(Pre(T.num(0)), view), view) == Pre(T.num(0))
+    assert decode_move(encode_move(Onto(0, "y"), view), view) == Onto(0, "y")
+
+
+def test_unencodable_moves_return_none():
+    view = encode_state(state_of("f(x+y) = f(x) + y"))
+    assert encode_move(parse_move("conclude"), view) is None             # free move
+    assert encode_move(parse_move("sub [f(x) = x]: x:=0"), view) is None  # quoted target
+    assert encode_move(parse_move("sub R9: x:=0"), view) is None          # no such row
+    assert encode_move(parse_move("sub P: x:=1000"), view) is None        # number outside the vocabulary
+
+
+def test_grammar_offers_only_what_exists():
+    plain = MoveGrammar(encode_state(state_of("f(x+y) = f(x) + f(y)")))
+    assert set(plain.allowed_tokens()) == {"SUB", "SPLITNZ"}              # nothing to split, not surjective
+    split = MoveGrammar(encode_state(state_of("f(x)f(y) = f(x+y) + xy", "R", ["sub P: x:=0, y:=0"])))
+    assert "SPLIT" in split.allowed_tokens()
+    surj = MoveGrammar(encode_state(state_of("f(x + f(y)) = f(x) + y", "R", ["surj"])))
+    assert {"PRE", "ONTO"} <= set(surj.allowed_tokens())
+
+
+def test_grammar_rejects_disallowed_tokens():
+    grammar = MoveGrammar(encode_state(state_of("f(x+y) = f(x) + y")))
+    with pytest.raises(ValueError):
+        grammar.advance(TOKEN_ID["PRE"])
+    grammar.advance(TOKEN_ID["SUB"])
+    assert grammar.allowed_tokens() == ["P", "R1"]
+    grammar.advance(TOKEN_ID["P"])
+    assert grammar.allowed_tokens() == ["x", "y"]                         # must bind something before <eos>
+    grammar.advance(TOKEN_ID["y"])
+    grammar.advance(TOKEN_ID["0"])
+    assert grammar.allowed_tokens() == ["<eos>"]                          # y was the last variable
+    grammar.advance(EOS)
+    assert grammar.done
+
+
+def test_every_grammar_sample_is_a_well_formed_move():
+    """Property: whatever the uniform policy writes, it decodes, re-encodes and is bounded in length."""
+    rng = random.Random(0)
+    states = [
+        state_of("f(x+y) = f(x) + y"),
+        state_of("f(x)f(y) = f(x+y) + xy", "R", ["sub P: x:=0, y:=0"]),
+        state_of("f(x + f(y)) = f(x) + y", "R", ["sub P: x:=0", "surj", "pre 0"]),
+    ]
+    accepted = 0
+    for state in states:
+        view = encode_state(state)
+        for _ in range(400):
+            ids, logp = sample_uniform(view, rng)
+            assert ids[-1] == EOS and len(ids) <= MAX_MOVE_TOKENS and logp < 0
+            move = decode_move(ids, view)
+            assert isinstance(move, (Subst, Split, SplitNZ, Pre, Onto))
+            try:
+                step(state, move)
+                accepted += 1
+            except Reject:
+                pass
+    assert accepted > 100          # and a fair share of them are legal moves
