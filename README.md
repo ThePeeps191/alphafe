@@ -43,8 +43,11 @@ What this does and does not show:
   than random proposals, and it finds proofs with far fewer checker calls than
   brute force (about 2-4 against 4-14 on problems both solve).
 * Against brute force with a much larger budget the picture is mixed: the
-  network proves three seed problems brute force cannot (and one the authors
-  thought was out of reach), and misses five that brute force gets.
+  network proves three seed problems that the default brute force does not
+  find within 20,000 calls (one of which the authors had thought was out of
+  reach of the move language), and misses five that brute force gets.
+* The network saves checker calls, not wall-clock time: a checker call is
+  about 0.1 ms, a batch of network proposals costs far more.
 * The first trained network was *worse* than an untrained one on the seed
   set; `RESULTS.md` explains why and what fixed it.
 * 0M and 5M seed problems are essentially solved (37 of 37 with search and

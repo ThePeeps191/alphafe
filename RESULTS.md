@@ -9,7 +9,12 @@ from scratch by `checker.check`; if a recorded answer exists, the proof's
 solution set must equal it (a mismatch aborts the run instead of being
 scored). "Checker calls" counts proposed moves sent to the checker, accepted
 or not; the free moves applied automatically after each proposal (conclude,
-cauchy, inj, surj, cancel) are not counted.
+cauchy, inj, surj, cancel) are not counted. "Time" is wall-clock seconds per
+problem, solved or not. Brute force runs 8 problems in parallel on CPU
+cores; the network modes run all problems of a suite together in one process
+with batched GPU calls, and their time is the suite's total divided by the
+number of problems. Other jobs often shared the machine, so read times as
+rough.
 
 ## M3: baselines on the seed benchmark (46 problems)
 
@@ -29,6 +34,10 @@ a 15-term pool, then the full pool.
 | brute force, widening | 20,000 | 37/46 (80.4%) | 20/20 | 12/13 | 5/11 | 0/1 | 0/1 | 1100.0 |
 | brute force, plain BFS | 20,000 | 33/46 (71.7%) | 20/20 | 8/13 | 5/11 | 0/1 | 0/1 | 718.4 |
 | brute force, plain BFS | 50,000 | 35/46 (76.1%) | 20/20 | 8/13 | 7/11 | 0/1 | 0/1 | 2531.9 |
+
+Time per problem: 0.02 s at 200 calls, 0.16 s at 2,000, 1.3 s at 20,000
+(widening); plain BFS 1.9 s at 20,000 and 4.0 s at 50,000. The checker handles
+roughly 5,000 to 15,000 proposed moves per second on one core.
 
 Unsolved by widening brute force at 20,000 calls: s33, s34 (two nested case
 splits), s36, s37, s38, s42, s44, s45, s46.
@@ -129,6 +138,24 @@ brute force (128) 4.1 / 4.0 / 7.3 / 13.3; brute force (2,000) 36.5 / 45.2 / 80.8
 
 The real benchmark is empty (the owners have not added problems yet).
 
+Time per problem in seconds (M5 run):
+
+| solver | seed | tier 1 | tier 2 | tier 3 | tier 4 |
+|---|---|---|---|---|---|
+| network, no backtracking (32 calls) | 0.013 | 0.010 | 0.021 | 0.024 | 0.036 |
+| network, search (128 calls) | 0.084 | 0.027 | 0.098 | 0.242 | 0.400 |
+| untrained network, no backtracking (32) | 0.076 | 0.041 | 0.111 | 0.182 | 0.211 |
+| untrained network, search (128) | 0.095 | 0.047 | 0.125 | 0.207 | 0.262 |
+| uniform policy, no backtracking (32) | 0.004 | 0.002 | 0.004 | 0.006 | 0.008 |
+| uniform policy, search (128) | 0.009 | 0.005 | 0.010 | 0.021 | 0.028 |
+| brute force (128 calls) | 0.014 | 0.005 | 0.014 | 0.036 | 0.047 |
+| brute force (2,000 calls) | 0.159 | 0.055 | 0.189 | 0.526 | 0.754 |
+
+In wall-clock time the network is *not* cheaper than brute force at the same
+number of checker calls: a checker call costs about 0.1 ms and a batch of
+network proposals costs far more. The network saves checker calls, not
+seconds, at this problem size.
+
 ### Plain reading
 
 1. **On problems like its training data, the network learned something real.**
@@ -182,8 +209,10 @@ evaluated in M5 and E2).
   temperature spread and the case commit were all chosen by looking at seed
   failures. Seed numbers from here on show whether a fix did what it was meant
   to do; they are not an unbiased estimate of anything. The held-out synthetic
-  set was not used to choose fixes, and the real benchmark, once the owners
-  fill it, will be the only untouched one.
+  set was not used to design E1-E4, but it was used to compare runs: the
+  decisions to leave E5 and E7 switched off, and the choice of which
+  checkpoint to keep, looked at it. The real benchmark, once the owners fill
+  it, will be the only untouched one.
 * *Noise.* Network rows up to and including E2 are a single sampling run, and
   each training configuration was run with one seed. On 200 problems a
   difference of fewer than about 14 problems (7 points) between two solvers is
@@ -233,6 +262,13 @@ Held-out synthetic problems (M5 value in brackets):
 | brute force (128 calls) | 86.5% | 66.0% | 30.0% | 23.0% |
 | brute force (2,000 calls) | 88.5% | 72.0% | 40.5% | 26.0% |
 
+Provenance note: this evaluation was started at commit `a7d21de`, and the case
+commit of E3 was written to disk while it was running. The brute-force rows
+are computed in worker processes that import the code when each suite
+starts, so the brute-force rows for the synthetic tiers very likely already
+include the E3 change (their numbers equal E4's). The network rows and the
+seed rows do not. No conclusion depends on this.
+
 Reading: this helped. The same weights now solve more seed problems than
 both references in both modes (28 vs 22 and 18 without backtracking; 32 vs 28
 and 28 with search), where in M5 they did not. The untrained network did not
@@ -271,8 +307,10 @@ budget as `v1`, plus a *bundle* of training changes: proposals sampled at a
 spread of temperatures during self-play, mirror augmentation (each proof also
 learned with x and y exchanged), minimised proofs as training examples, and
 length-sorted batches (which made iterations faster: 90 in 28 minutes instead
-of 76). Because these changed together, a difference between v1 and v2
-cannot be attributed to any single one of them. One training seed each.
+of 76). v2 was also *trained* in the environment that already had the E1
+lemmas, the unique-root deduction and the E3 case commit, which v1's training
+did not have. Because all of these changed together, a difference between
+v1 and v2 cannot be attributed to any single one of them. One training seed each.
 
 Both checkpoints were evaluated at commit `ae1b3a3` (so both use the lemmas
 and the case commit), with **three sampling seeds** for the trained-network
@@ -324,6 +362,20 @@ Checker calls on the problems both solvers solve (v2, first sampling seed):
 
 On the seed set, v2 search with 2,000 calls uses 70.1 calls against 107.9 for
 brute force with 2,000 on the 38 problems both solve.
+
+Time per problem in seconds (v2, first sampling seed):
+
+| solver | seed | tier 1 | tier 2 | tier 3 | tier 4 |
+|---|---|---|---|---|---|
+| network, no backtracking (32 calls) | 0.044 | 0.018 | 0.046 | 0.088 | 0.153 |
+| network, search (128 calls) | 0.085 | 0.027 | 0.081 | 0.172 | 0.370 |
+| network, search (2,000 calls) | 0.915 | | | | |
+| brute force (128 calls) | 0.015 | 0.006 | 0.017 | 0.040 | 0.051 |
+| brute force (2,000 calls) | 0.155 | 0.065 | 0.218 | 0.580 | 0.800 |
+
+So v2 with 128 calls takes about half the time brute force takes with 2,000
+calls for comparable or better solve counts, but several times longer than
+brute force with the same 128 calls.
 
 **Reading.**
 

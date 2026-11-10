@@ -64,7 +64,10 @@ Things that are easy to get wrong:
 1. Change one thing. Commit it.
 2. Train: `alphafe train --run NAME --minutes 28` (add `--resume` to continue).
 3. Evaluate at a fixed commit: `alphafe eval --checkpoint checkpoints/NAME/last.pt --tag NAME --seeds 3`.
-   Do not edit `alphafe/` while it runs.
+   Do not edit `alphafe/` while it runs: the brute-force rows run in worker
+   processes that import the code afresh for each benchmark suite, so an edit
+   made halfway through ends up in part of the results (this happened once,
+   see the provenance note under E2 in `RESULTS.md`).
 4. Compare against another checkpoint evaluated at the *same* commit.
 5. Write it up in `RESULTS.md`: what changed, the commit, the numbers, and
    whether the difference is larger than the spread over sampling seeds.
