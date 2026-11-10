@@ -2,7 +2,8 @@ import pathlib
 import random
 
 import pytest
-import torch
+
+torch = pytest.importorskip("torch")      # the network tests need torch; the rest of the suite does not
 
 from alphafe.checker import Problem
 from alphafe.env import start

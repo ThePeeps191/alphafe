@@ -3,7 +3,8 @@ import random
 import shutil
 
 import pytest
-import torch
+
+torch = pytest.importorskip("torch")      # the network tests need torch; the rest of the suite does not
 
 from alphafe import train as train_module
 from alphafe.checker import Problem

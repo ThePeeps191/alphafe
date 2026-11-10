@@ -64,6 +64,9 @@ def test_real_benchmark_answers_are_checked_by_the_canary(tmp_path, monkeypatch)
 
 
 def test_frozen_heldout_set_is_disjoint_from_any_training_pool():
+    import pytest
+
+    pytest.importorskip("torch")       # the training pool lives in alphafe.train, which imports torch
     from alphafe.eval import common_calls, synthetic_heldout
     from alphafe.generate import benchmark_keys, canonical_key
     from alphafe.train import ProblemPool
@@ -98,9 +101,12 @@ def test_full_eval_runs_without_a_checkpoint(tmp_path, monkeypatch, capsys):
     """A fresh clone has no checkpoint: evaluation must still run the references and the real benchmark."""
     import json
 
+    import pytest
+
     from alphafe import bench
     from alphafe import eval as eval_module
 
+    pytest.importorskip("torch")       # full_eval always runs the untrained-network reference rows
     (tmp_path / "seed").mkdir()
     (tmp_path / "real").mkdir()
     (tmp_path / "synthetic").mkdir()

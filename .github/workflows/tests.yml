@@ -1,0 +1,45 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Checker, algebra, traps, baseline, validator, renderer, tokenizer and the
+  # search with the uniform policy. None of this needs torch.
+  core:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10.3.3
+      - run: uv venv .venv --python ${{ matrix.python }}
+      - run: uv pip install --python .venv/bin/python pytest hypothesis sympy
+      - run: uv pip install --python .venv/bin/python --no-deps -e .
+      - run: .venv/bin/python -m compileall -q alphafe tests scripts
+      - run: .venv/bin/python -m pytest
+      - run: .venv/bin/python scripts/check_seed_proofs.py
+      - run: .venv/bin/python scripts/validate_bench.py --seed
+      - run: .venv/bin/python scripts/validate_bench.py
+
+  # Everything, including the network and training tests, with CPU-only torch.
+  full:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10.3.3
+      - run: uv venv .venv --python 3.12
+      - run: uv pip install --python .venv/bin/python torch --index-url https://download.pytorch.org/whl/cpu
+      - run: uv pip install --python .venv/bin/python -e ".[dev]"
+      - run: .venv/bin/python -m pytest

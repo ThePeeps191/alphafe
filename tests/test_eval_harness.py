@@ -29,6 +29,7 @@ def tree(tmp_path, monkeypatch):
 
 
 def run(tree, **kwargs):
+    pytest.importorskip("torch")       # full_eval always runs the untrained-network reference rows
     options = dict(baseline_budgets=(64,), device="cpu", workers=1)
     options.update(kwargs)
     return ev.full_eval(tree / "missing.pt", options.pop("tag", "t"), **options)
@@ -126,6 +127,7 @@ def test_without_a_collector_the_mismatch_is_raised_after_saving(tree):
 
 
 def test_the_command_line_exits_nonzero_on_a_mismatch(tree, monkeypatch, capsys):
+    pytest.importorskip("torch")
     wrong_answer(tree)
     monkeypatch.setattr(ev, "tree_is_dirty", lambda: False)
     monkeypatch.setattr(ev, "ROOT", tree)                   # so that no default checkpoint is found
@@ -165,8 +167,7 @@ def test_command_line_refuses_a_missing_checkpoint_and_a_dirty_tree(tree, monkey
 
 def test_network_rows_keep_every_sampling_seed(tree, monkeypatch):
     """With a checkpoint: every sampling seed's outcome is saved, and the file names the weights by hash."""
-    import torch
-
+    torch = pytest.importorskip("torch")
     from alphafe.model import ModelConfig, PolicyValueNet
 
     torch.manual_seed(0)
