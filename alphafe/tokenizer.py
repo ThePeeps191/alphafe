@@ -66,6 +66,7 @@ class StateView:
     witnesses: list
     surjective: bool
     label_of: dict = field(default_factory=dict)   # row index -> label
+    subterms: list = field(default_factory=list)   # expressions occurring in the state (for exploration)
 
 
 def _hidden_renaming(row: Poly, rows: set) -> bool:
@@ -121,11 +122,35 @@ def encode_state(state: State, goal: Optional[Poly] = None) -> StateView:
         row_vars[label] = names
         if not names and _single_atom(leading_mono(row)) is None:
             splittable.append(label)
+    shown_rows = [branch.rows[i] for i in label_of]
     return StateView(
         tokens=[TOKEN_ID[t] for t in out], row_index=row_index, row_vars=row_vars, splittable=splittable,
         p_vars=sorted(state.problem.poly.variables()), witnesses=list(branch.witnesses),
         surjective="surjective" in branch.props, label_of=label_of,
+        subterms=_subterms([state.problem.poly] + shown_rows),
     )
+
+
+def _subterms(polys: list) -> list:
+    """Expressions that occur in the given identities: every f(...) and every argument of f.
+
+    Used only to suggest substitution terms during self-play exploration
+    ("try substituting something that is already on the page").
+    """
+    seen: dict = {}
+    for poly in polys:
+        for atom in poly.all_atoms():
+            if atom[0] != "f":
+                continue
+            arg = Poly.from_key(atom[1])
+            for candidate in (arg, Poly.atom(atom)):
+                if candidate.const_value() is None and candidate not in seen:
+                    seen[candidate] = poly_term(candidate)
+    out = []
+    for term in seen.values():
+        if len(T.to_prefix(term)) <= MAX_TERM_TOKENS - 3:
+            out.append(term)
+    return out
 
 
 # ---------------------------------------------------------------------------
@@ -361,6 +386,45 @@ class MoveGrammar:
                 self.mode = self._after_term
         elif mode == "eos":
             self.done = True
+
+
+def sample_subterm_move(view: StateView, rng) -> Optional[tuple]:
+    """A random substitution whose term is built from an expression already in the state.
+
+    Picks a target and one of its variables, and substitutes t, -t, v + t or
+    v - t for it, where t occurs in the state (an f(...) or an argument of f)
+    and v is the variable itself. Occasionally a second variable is set to 0.
+    Returns (token ids, a nominal log-probability) or None if nothing applies.
+    This is an exploration heuristic for self-play only; it is not used in evaluation.
+    """
+    import math
+
+    targets = (["P"] if view.p_vars else []) + [label for label, names in view.row_vars.items() if names]
+    if not targets or not view.subterms:
+        return None
+    target = rng.choice(targets)
+    names = view.p_vars if target == "P" else view.row_vars[target]
+    name = rng.choice(names)
+    base = rng.choice(view.subterms)
+    shape = rng.choice(["t", "-t", "v+t", "v-t"])
+    var = T.Var(name)
+    term = {"t": base, "-t": T.Neg(base), "v+t": T.Add(var, base), "v-t": T.Sub(var, base)}[shape]
+    bindings = [(name, term)]
+    others = [n for n in names if n != name]
+    if others and rng.random() < 0.25:
+        bindings.append((rng.choice(others), T.num(0)))
+    target_value = "P" if target == "P" else view.row_index[target]
+    ids = encode_move(Subst(target_value, tuple(sorted(bindings, key=lambda b: b[0]))), view)
+    if ids is None:
+        return None
+    grammar = MoveGrammar(view)
+    try:
+        for token in ids:
+            grammar.advance(token)
+    except ValueError:
+        return None          # e.g. the term is longer than the grammar allows
+    logp = -math.log(len(targets) * len(names) * len(view.subterms) * 4)
+    return ids, logp
 
 
 def sample_uniform(view: StateView, rng) -> tuple[list, float]:

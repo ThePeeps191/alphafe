@@ -9,7 +9,7 @@ from alphafe.generate import generate
 from alphafe.moves import Onto, Pre, Split, SplitNZ, Subst, parse_move
 from alphafe.tokenizer import (
     EOS, MAX_MOVE_TOKENS, MAX_STATE_TOKENS, TOKEN_ID, VOCAB, MoveGrammar, decode_move, encode_move, encode_state,
-    sample_uniform,
+    sample_subterm_move, sample_uniform,
 )
 
 
@@ -136,3 +136,24 @@ def test_every_grammar_sample_is_a_well_formed_move():
             except Reject:
                 pass
     assert accepted > 100          # and a fair share of them are legal moves
+
+
+def test_subterm_exploration_proposes_expressions_from_the_state():
+    """Self-play exploration can suggest 'substitute something already on the page', e.g. y := f(y)."""
+    from alphafe import terms as T
+    from alphafe.moves import show_move
+
+    state = state_of("f(x + f(y)) = f(x) + y", "Q")
+    view = encode_state(state)
+    shown = {T.show(t) for t in view.subterms}
+    assert {"f(y)", "f(x)", "f(y) + x"} <= shown
+    rng = random.Random(0)
+    moves = set()
+    for _ in range(300):
+        sample = sample_subterm_move(view, rng)
+        assert sample is not None
+        ids, logp = sample
+        assert ids[-1] == EOS and logp < 0
+        moves.add(show_move(decode_move(ids, view)))
+    assert "sub P: y:=f(y)" in moves and "sub P: x:=-f(y)" in moves
+    assert all(m.startswith("sub ") for m in moves)

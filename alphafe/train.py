@@ -60,6 +60,7 @@ class TrainConfig:
     budget: int = 48                # checker calls per self-play attempt
     k: int = 8                      # proposals per expanded state ...
     n_uniform: int = 2              # ... of which this many are uniform-random (exploration)
+    n_subterm: int = 0              # ... and this many substitute an expression already in the state
     temperature: float = 1.0
     diverse: bool = True            # sample proposals at a spread of temperatures (model.DIVERSE)
     steps_per_iter: int = 60
@@ -408,7 +409,8 @@ def train(config: TrainConfig, resume: bool = False) -> dict:
         # 1-2. self-play
         items = pool.sample_train(rng, tier, config.problems_per_iter)
         searches = [BestFirstSearch(item.problem(), budget=config.budget) for item in items]
-        proposer = NeuralProposer(model, device, DIVERSE if config.diverse else config.temperature, config.n_uniform, rng)
+        proposer = NeuralProposer(model, device, DIVERSE if config.diverse else config.temperature, config.n_uniform, rng,
+                                  n_subterm=config.n_subterm)
         run_searches(searches, proposer, config.k)
         on_tier = [s for s, item in zip(searches, items) if item.tier == tier]
         rate = sum(s.solved_node is not None for s in on_tier) / max(1, len(on_tier))

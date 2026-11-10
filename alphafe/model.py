@@ -21,7 +21,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from .tokenizer import BOS, EOS, MAX_MOVE_TOKENS, MAX_STATE_TOKENS, PAD, VOCAB_SIZE, MoveGrammar, sample_uniform
+from .tokenizer import (BOS, EOS, MAX_MOVE_TOKENS, MAX_STATE_TOKENS, PAD, VOCAB_SIZE, MoveGrammar,
+                        sample_subterm_move, sample_uniform)
 
 
 SRC_BUCKET = 64     # state token sequences are padded to a multiple of this
@@ -133,9 +134,10 @@ class NeuralProposer:
     """
 
     def __init__(self, model: PolicyValueNet, device, temperature=1.0, n_uniform: int = 0, rng=None,
-                 max_batch: int = 2048):
+                 max_batch: int = 2048, n_subterm: int = 0):
         self.model = model
         self.device = device
+        self.n_subterm = n_subterm        # exploration proposals built from expressions in the state
         self.temperature = temperature
         self.n_uniform = n_uniform
         self.rng = rng
@@ -172,7 +174,7 @@ class NeuralProposer:
     @torch.no_grad()
     def propose(self, views: list, k: int) -> list:
         self.model.eval()
-        k_net = max(k - self.n_uniform, 0)
+        k_net = max(k - self.n_uniform - self.n_subterm, 0)
         out: list = [dict() for _ in views]
         if k_net:
             chunk = max(1, self.max_batch // k_net)
@@ -184,11 +186,15 @@ class NeuralProposer:
                         key = tuple(ids)
                         if key not in bucket or logp > bucket[key]:
                             bucket[key] = logp
-        if self.n_uniform:
+        if self.n_uniform or self.n_subterm:
             for view, bucket in zip(views, out):
                 for _ in range(self.n_uniform):
                     ids, logp = sample_uniform(view, self.rng)
                     bucket.setdefault(tuple(ids), logp)
+                for _ in range(self.n_subterm):
+                    sample = sample_subterm_move(view, self.rng)
+                    if sample is not None:
+                        bucket.setdefault(tuple(sample[0]), sample[1])
         return [[(list(ids), logp) for ids, logp in bucket.items()] for bucket in out]
 
     def _sample(self, views: list, k: int) -> list:
