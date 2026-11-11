@@ -133,17 +133,63 @@ need an idea, case splits and preimages. It reads the
 tokenised case and writes the move token by token, so a substituted term can
 be any expression and is not picked from a fixed list. A grammar restricts
 the output to well-formed moves. A value head estimates whether the state is
-solvable.
+solvable. Sampling decodes one position at a time from cached attention keys
+and values (`model.StepDecoder`).
+
+A search with backtracking asks for eight proposals per state. Six are
+sampled from the network. Two are built from the page
+(`tokenizer.sample_subterm_move`): a substitution whose term is an expression
+that already occurs in the state, as it is, negated, or added to the
+variable. A trained policy gives whole kinds of move almost no probability
+(`x := f(x)` is the usual example), and sampling it more often does not find
+them; these two proposals do. The brute-force pool is not involved.
 
 Training is self-play on synthetic problems from random weights. The network
 attempts problems, and the proofs the checker accepts become training
 examples. Failed attempts are used too: any identity derived along the way is
-a correct example of how to derive that identity (hindsight). The curriculum
-moves to structurally larger problems as the solve rate rises.
+a correct example of how to derive that identity (hindsight).
+
+Which problems are attempted next is decided by a curriculum. `tiers` moves
+to structurally larger problems as the solve rate rises. `adaptive` has no
+ladder: every problem can be drawn from the start, with a weight from its own
+history (untried 1, unsolved 1 / (1 + failures), solved 0.5 / sqrt(1 + times
+solved)), so the order of difficulty is found and not assumed.
+
+With `workers=N` self-play runs in N processes, each with the current weights
+on one CPU core, while the gradient steps run on the GPU. The checker is the
+slow part of self-play and the network is small enough to propose moves on a
+CPU core.
 
 The brute-force baseline is the control experiment. It is never used to
 produce, label or filter training data, and `tests/test_isolation.py` checks
 that the training modules do not import it.
+
+## Size limits
+
+The checker refuses work it would have to refuse the result of anyway. None
+of these is a soundness rule; each turns "too large" into a refused move.
+
+| limit | value | what it bounds |
+|---|---|---|
+| `MAX_POLY_TERMS`, `MAX_POLY_SIZE` | 80, 400 | monomials and structural size of one identity |
+| `MAX_ROWS` | 40 | identities in one case |
+| `MAX_TERM_SIZE` | 40 | nodes of a term written in a move |
+| `WORK_TERMS` | 1,000 | term pairs in one multiplication, and terms held, while a substitution is expanded |
+| `env.INSTANCE_WORK` | 200 | the same, for the environment's routine instances |
+| `env.MAX_ROUTINE` | 10 | routine substitutions applied after one proposed move |
+
+## Speed
+
+The search inner loop is the checker, so three things are cached. All three
+are exact: the same proofs come out with and without them.
+
+* An atom `f(p)` is an `algebra.FAtom`: a tuple that stores its hash, shared
+  between equal atoms, and that keeps its argument as a polynomial.
+* A polynomial remembers its leading monomial, its variables and its
+  top-level atoms.
+* The environment keeps the normal form of each routine instance together
+  with what it depended on: the properties in force and, for every atom that
+  was looked up, the rule it had. It is reused only while all of that holds.
 
 ## Limits of the checker and generator
 
