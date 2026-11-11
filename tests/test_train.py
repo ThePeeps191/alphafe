@@ -164,6 +164,14 @@ def test_adaptive_curriculum_runs_and_resumes_with_its_progress(tmp_path, monkey
 
 
 @pytest.mark.slow
+def test_self_play_can_run_in_worker_processes(tmp_path, monkeypatch):
+    config = tiny_run(tmp_path, monkeypatch, workers=2, curriculum="adaptive", iterations=2)
+    record = train(config)
+    assert record["iteration"] == 2 and sum(record["buffer"]) > 0
+    assert (tmp_path / "checkpoints" / "t" / "actor.pt").exists()
+
+
+@pytest.mark.slow
 def test_resume_restores_the_replay_buffer_and_the_random_stream(tmp_path, monkeypatch, capsys):
     config = tiny_run(tmp_path, monkeypatch)
     train(config)

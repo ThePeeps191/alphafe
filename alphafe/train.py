@@ -59,6 +59,7 @@ class TrainConfig:
     minutes: float = 28.0           # wall-clock limit for one run
     problems_per_iter: int = 192
     budget: int = 48                # checker calls per self-play attempt
+    workers: int = 0                # self-play processes (each on one CPU core); 0: in this process, on ``device``
     k: int = 8                      # proposals per expanded state ...
     n_uniform: int = 2              # ... of which this many are uniform-random (exploration)
     n_subterm: int = 0              # ... and this many substitute an expression already in the state
@@ -411,6 +412,43 @@ def train_steps(model, optimizer, buffer: ReplayBuffer, config: TrainConfig, rng
     return {k: round(v / config.steps_per_iter, 4) for k, v in totals.items()}, step
 
 
+def play(model, device, items: list, config: TrainConfig, rng: random.Random) -> list:
+    """One self-play attempt at every problem with the current network. Returns the finished searches."""
+    searches = [BestFirstSearch(item.problem(), budget=config.budget) for item in items]
+    proposer = NeuralProposer(model, device, DIVERSE if config.diverse else config.temperature, config.n_uniform, rng,
+                              n_subterm=config.n_subterm)
+    run_searches(searches, proposer, config.k)
+    return searches
+
+
+_ACTOR: dict = {}       # in a self-play worker process: the network object, built once
+
+
+def _actor(job: tuple) -> dict:
+    """One worker's share of a self-play iteration. Runs in its own process, on one CPU core.
+
+    The checker is the slow part of self-play and runs on one core, and the
+    network is small enough that a CPU core proposes moves about as fast as
+    the GPU does. So self-play scales with the number of processes. A worker
+    gets the current weights as a file, plays its problems and sends back
+    the outcomes and the training examples, which are plain tuples of ints.
+    """
+    weights, config_dict, items, seed = job
+    torch.set_num_threads(1)
+    config = TrainConfig(**config_dict)
+    model = _ACTOR.get("model")
+    if model is None:
+        model = _ACTOR["model"] = PolicyValueNet(ModelConfig(**config.model))
+    model.load_state_dict(torch.load(weights, map_location="cpu", weights_only=True))
+    rng = random.Random(seed)
+    torch.manual_seed(seed)
+    searches = play(model, torch.device("cpu"), items, config, rng)
+    examples = ReplayBuffer(10 ** 9)
+    harvest(searches, examples, rng, minimise=config.minimise, mirror=config.mirror)
+    return {"solved": [s.solved_node is not None for s in searches], "calls": [s.calls for s in searches],
+            "solve": examples.solve, "hindsight": examples.hindsight, "negative": examples.negative}
+
+
 def evaluate(problems: list, proposer, mode: str, budget: int, k: int = 8) -> dict:
     """Solve rate of a proposer on a list of ``Problem``s. mode: 'greedy' or 'search'."""
     make = GreedySearch if mode == "greedy" else BestFirstSearch
@@ -484,6 +522,26 @@ def train(config: TrainConfig, resume: bool = False) -> dict:
           f"train problems per tier {[len(v) for v in pool.train.values()]}, held out {[len(v) for v in pool.test.values()]}")
     uniform = UniformProposer(random.Random(config.seed + 1))
     record: dict = {}
+    actors = None
+    if config.workers > 0:
+        import multiprocessing
+
+        actors = multiprocessing.get_context("spawn").Pool(config.workers)
+    try:
+        record = _train_loop(config, began, device, ckpt_dir, log_path, last, pool, progress, adaptive, model, optimizer,
+                             buffer, state, rng, uniform, actors)
+    finally:
+        if actors is not None:
+            actors.terminate()
+            actors.join()
+    _save_buffer(ckpt_dir, buffer)
+    return record
+
+
+def _train_loop(config, began, device, ckpt_dir, log_path, last, pool, progress, adaptive, model, optimizer, buffer, state,
+                rng, uniform, actors) -> dict:
+    """The iterations of ``train`` (split off so that the self-play workers are always shut down)."""
+    record: dict = {}
     while state["iteration"] < config.iterations and time.time() - began < config.minutes * 60:
         tick = time.time()
         state["iteration"] += 1
@@ -496,23 +554,39 @@ def train(config: TrainConfig, resume: bool = False) -> dict:
             items = [progress.items[index] for index in picks]
         else:
             items = pool.sample_train(rng, tier, config.problems_per_iter)
-        searches = [BestFirstSearch(item.problem(), budget=config.budget) for item in items]
-        proposer = NeuralProposer(model, device, DIVERSE if config.diverse else config.temperature, config.n_uniform, rng,
-                                  n_subterm=config.n_subterm)
-        run_searches(searches, proposer, config.k)
-        on_tier = [s for s, item in zip(searches, items) if item.tier == tier]
-        rate = sum(s.solved_node is not None for s in on_tier) / max(1, len(on_tier))
-        overall = sum(s.solved_node is not None for s in searches) / len(searches)
+        if actors is not None:
+            weights = ckpt_dir / "actor.pt"
+            torch.save({name: tensor.detach().cpu() for name, tensor in model.state_dict().items()}, weights)
+            size = -(-len(items) // config.workers)
+            jobs = [(str(weights), asdict(config), items[begin: begin + size],
+                     (config.seed * 1_000_003 + state["iteration"]) * 1009 + begin)
+                    for begin in range(0, len(items), size)]
+            shares = actors.map(_actor, jobs)
+            solved = [flag for share in shares for flag in share["solved"]]
+            calls = [count for share in shares for count in share["calls"]]
+        else:
+            searches = play(model, device, items, config, rng)
+            solved = [s.solved_node is not None for s in searches]
+            calls = [s.calls for s in searches]
+        on_tier = [flag for flag, item in zip(solved, items) if item.tier == tier]
+        rate = sum(on_tier) / max(1, len(on_tier))
+        overall = sum(solved) / len(solved)
         state["ema"] = rate if state["tier_iters"] == 1 else 0.6 * state["ema"] + 0.4 * rate
         selfplay_seconds = time.time() - tick
         first_solves = 0
         if adaptive:
-            for index, search in zip(picks, searches):
-                first_solves += progress.record(index, search.solved_node is not None)
+            for index, flag in zip(picks, solved):
+                first_solves += progress.record(index, flag)
             state["fails"], state["solved"] = progress.fails, progress.solved
 
         # 3-4. learn
-        harvest(searches, buffer, rng, minimise=config.minimise, mirror=config.mirror)
+        if actors is not None:
+            for share in shares:
+                for kind in ("solve", "hindsight", "negative"):
+                    for example in share[kind]:
+                        buffer.add(kind, example)
+        else:
+            harvest(searches, buffer, rng, minimise=config.minimise, mirror=config.mirror)
         losses = {}
         if buffer.solve:
             losses, state["step"] = train_steps(model, optimizer, buffer, config, rng, device, state["step"])
@@ -520,7 +594,7 @@ def train(config: TrainConfig, resume: bool = False) -> dict:
         record = {
             "iteration": state["iteration"], "tier": tier, "selfplay_rate_tier": round(rate, 4),
             "selfplay_rate_all": round(overall, 4), "ema": round(state["ema"], 4),
-            "mean_calls": round(sum(s.calls for s in searches) / len(searches), 1),
+            "mean_calls": round(sum(calls) / len(calls), 1),
             "buffer": [len(buffer.solve), len(buffer.hindsight), len(buffer.negative)], **losses,
             "selfplay_s": round(selfplay_seconds, 1), "iter_s": round(time.time() - tick, 1),
         }
@@ -554,7 +628,6 @@ def train(config: TrainConfig, resume: bool = False) -> dict:
                                       "train_config": asdict(config)})
         if state["iteration"] % 5 == 0:
             _save_buffer(ckpt_dir, buffer)
-    _save_buffer(ckpt_dir, buffer)
     return record
 
 
