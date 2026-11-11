@@ -241,8 +241,11 @@ def parse_move(text: str) -> Move:
 def parse_proof(text: str) -> list[Move]:
     """Parse a whole proof: one move per line, blank lines and # comments ignored."""
     moves = []
-    for line in text.splitlines():
-        line = line.split("#", 1)[0].strip()
+    for number, raw in enumerate(text.splitlines(), 1):
+        line = raw.split("#", 1)[0].strip()
         if line:
-            moves.append(parse_move(line))
+            try:
+                moves.append(parse_move(line))
+            except T.ParseError as err:
+                raise T.ParseError(f"line {number}: {line!r}: {err}") from None
     return moves

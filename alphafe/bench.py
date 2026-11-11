@@ -36,7 +36,8 @@ def load_file(path) -> list[BenchProblem]:
         if not line or line.startswith("#"):
             continue
         rec = json.loads(line)
-        problem = Problem.parse(rec["equation"], rec.get("domain", "R"), rec["id"])
+        # Problems are evaluated with the variables x, y, z (the only ones the network can read).
+        problem, _ = Problem.parse(rec["equation"], rec.get("domain", "R"), rec["id"]).standard_names()
         expected = parse_solution_set(rec["solutions"]) if "solutions" in rec else None
         out.append(BenchProblem(rec["id"], problem, expected, rec.get("mohs"), rec.get("source", ""), rec))
     return out

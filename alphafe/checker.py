@@ -150,14 +150,38 @@ class Problem:
         if domain not in ("R", "Q"):
             raise ValueError("domain must be 'R' or 'Q'")
         lhs, rhs = T.parse_equation(equation)
-        if T.term_syms(lhs) | T.term_syms(rhs):
-            raise ValueError("the equation may only use variables, numbers and f")
+        symbols = sorted(T.term_syms(lhs) | T.term_syms(rhs))
+        if symbols:
+            raise ValueError(f"the equation may only use the variables {', '.join(T.VAR_NAMES)}, numbers and f; "
+                             f"it also uses {', '.join(symbols)} (f is the only function: g(x) is read as g times x)")
         poly = to_poly(lhs) - to_poly(rhs)
-        if not 1 <= len(poly.variables()) <= 3:
-            raise ValueError("the equation must have between 1 and 3 variables")
+        if poly.is_zero():
+            raise ValueError("the equation holds for every function: both sides are equal")
+        if not poly.variables():
+            raise ValueError("the equation needs at least one variable")
+        if len(poly.variables()) > 3:
+            raise ValueError(f"the equation has {len(poly.variables())} variables; at most 3 are supported")
         if not any(a[0] == "f" for a in poly.top_atoms()):
-            raise ValueError("the equation does not involve f (or is trivially true)")
+            raise ValueError("the equation does not involve f")
         return Problem(equation.strip(), domain, poly, name)
+
+    def standard_names(self) -> tuple["Problem", dict]:
+        """The same problem written with the variables x, y, z, and the renaming used ({old: new}).
+
+        The checker accepts the letters x y z t u v w. The network's
+        vocabulary has only x, y and z, so problems are renamed before a
+        network search. Letters that are already x, y or z keep their name;
+        the others take the unused ones in order. Returns ``(self, {})`` when
+        there is nothing to rename.
+        """
+        mine = sorted(self.poly.variables())
+        free = [name for name in "xyz" if name not in mine]
+        names = {old: free.pop(0) for old in mine if old not in "xyz"}
+        if not names:
+            return self, {}
+        lhs, rhs = T.parse_equation(self.equation)
+        text = T.show_equation(T.rename_vars(lhs, names), T.rename_vars(rhs, names))
+        return Problem.parse(text, self.domain, self.name), names
 
     def __str__(self) -> str:
         return f"f: {self.domain} -> {self.domain}, {self.equation}"

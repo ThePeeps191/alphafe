@@ -234,10 +234,12 @@ def run_policy(benches: list[BenchProblem], proposer, mode: str, budget: int, k:
     """Run a proposer (network or uniform) over problems. mode: 'greedy' or 'search'."""
     from .search import BestFirstSearch, GreedySearch, run_searches
 
+    # The network reads only the variables x, y, z; a problem written in other letters is renamed for the search.
+    problems = [b.problem.standard_names()[0] for b in benches]
     if mode == "greedy":
-        searches = [GreedySearch(b.problem, budget=budget) for b in benches]
+        searches = [GreedySearch(p, budget=budget) for p in problems]
     else:
-        searches = [BestFirstSearch(b.problem, budget=budget, value_weight=value_weight) for b in benches]
+        searches = [BestFirstSearch(p, budget=budget, value_weight=value_weight) for p in problems]
     began = time.time()
     run_searches(searches, proposer, k)
     elapsed = (time.time() - began) / max(1, len(benches))

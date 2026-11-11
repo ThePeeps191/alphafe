@@ -10,8 +10,10 @@ from __future__ import annotations
 
 import argparse
 import pathlib
+import pickle
 import sys
 
+from . import terms as T
 from .bench import ROOT
 from .checker import LOAD_REFUSED, Problem, check
 from .env import SearchResult, minimise
@@ -19,14 +21,25 @@ from .moves import parse_proof, show_proof
 from .render import render
 
 DEFAULT_CHECKPOINT = ROOT / "checkpoints" / "best.pt"
+# What loading a file that is not a checkpoint of this project can raise: torch reports most problems as
+# pickle.UnpicklingError or RuntimeError, a truncated file gives EOFError, a foreign one KeyError or TypeError.
+CHECKPOINT_ERRORS = (pickle.UnpicklingError, EOFError, KeyError, TypeError, RuntimeError)
+EXIT_BAD_INPUT = 2      # distinct from 1, which means "no proof found" (solve) or "proof not accepted" (check)
 
 
-def _solve_with_network(problem: Problem, checkpoint, budget: int, device: str) -> SearchResult:
-    from .model import DIVERSE, NeuralProposer, load_model, pick_device
-    from .search import BestFirstSearch, GreedySearch, run_searches
+def _load_network(checkpoint, device: str):
+    """(model, device). Raises one of ``CHECKPOINT_ERRORS`` if the file is not a usable checkpoint."""
+    from .model import load_model, pick_device
 
     dev = pick_device(device)
     model, _ = load_model(checkpoint, dev)
+    return model, dev
+
+
+def _solve_with_network(problem: Problem, model, dev, budget: int) -> SearchResult:
+    from .model import DIVERSE, NeuralProposer
+    from .search import BestFirstSearch, GreedySearch, run_searches
+
     greedy = GreedySearch(problem, budget=min(32, budget))
     run_searches([greedy], NeuralProposer(model, dev, temperature=DIVERSE), k=8)
     if greedy.solved_node is not None:
@@ -42,16 +55,24 @@ def cmd_solve(args) -> int:
     from .baseline.guesser import guess
     from .baseline.search import brute_force
 
-    problem = Problem.parse(args.equation, args.domain)
+    problem, renamed = Problem.parse(args.equation, args.domain).standard_names()
+    if renamed:
+        print("Variables renamed to x, y, z: " + ", ".join(f"{old} -> {new}" for old, new in renamed.items()) + ".")
     print(f"Problem: find all f: {problem.domain} -> {problem.domain} with {problem.equation}")
     print(f"Polynomial guess (not a proof): {guess(problem)}")
     result = None
     checkpoint = pathlib.Path(args.checkpoint)
     if not args.baseline:
         if checkpoint.exists():
-            result = _solve_with_network(problem, checkpoint, args.budget, args.device)
-            print(f"Network search: {'solved' if result.solved else 'not solved'} "
-                  f"({result.checker_calls} checker calls, {result.seconds:.1f}s)")
+            try:
+                model, dev = _load_network(checkpoint, args.device)
+            except CHECKPOINT_ERRORS as err:
+                reason = str(err).strip().splitlines()[0][:200] if str(err).strip() else type(err).__name__
+                print(f"Could not load {checkpoint} ({reason}); using the brute-force baseline.")
+            else:
+                result = _solve_with_network(problem, model, dev, args.budget)
+                print(f"Network search: {'solved' if result.solved else 'not solved'} "
+                      f"({result.checker_calls} checker calls, {result.seconds:.1f}s)")
         else:
             print(f"No checkpoint at {checkpoint}; using the brute-force baseline. (Train one with 'alphafe train', or download one: see README.)")
     if result is None or not result.solved:
@@ -111,7 +132,7 @@ def main(argv=None) -> int:
     solve.add_argument("--baseline", action="store_true", help="skip the network, use brute force only")
     solve.add_argument("--baseline-budget", type=int, default=20000)
     solve.add_argument("--seconds", type=float, default=60.0)
-    solve.add_argument("--device", default="auto")
+    solve.add_argument("--device", default="auto", choices=["auto", "cpu", "mps", "cuda"])
     solve.set_defaults(func=cmd_solve)
 
     chk = sub.add_parser("check", help="check a proof written in the move format")
@@ -125,7 +146,11 @@ def main(argv=None) -> int:
     sub.add_parser("train", help="self-play training (see 'alphafe train --help')")
 
     args = parser.parse_args(argv)
-    return args.func(args)
+    try:
+        return args.func(args)
+    except (T.ParseError, ValueError, OSError) as err:      # malformed equation or proof, unreadable file
+        print(f"alphafe: error: {err}", file=sys.stderr)
+        return EXIT_BAD_INPUT
 
 
 if __name__ == "__main__":

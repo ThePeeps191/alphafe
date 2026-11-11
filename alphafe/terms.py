@@ -452,6 +452,19 @@ def nesting_depth(term: Term) -> int:
     return 0
 
 
+def rename_vars(term: Term, names: dict) -> Term:
+    """The term with each variable renamed according to ``names`` (variables not listed are kept)."""
+    if isinstance(term, Var):
+        return Var(names.get(term.name, term.name))
+    if isinstance(term, (Add, Sub, Mul)):
+        return type(term)(rename_vars(term.left, names), rename_vars(term.right, names))
+    if isinstance(term, (Neg, App)):
+        return type(term)(rename_vars(term.arg, names))
+    if isinstance(term, Pow):
+        return Pow(rename_vars(term.base, names), term.exp)
+    return term
+
+
 def max_exponent(term: Term) -> int:
     """The largest exponent in a term, nested powers multiplied: (x^2)^3 counts as 6."""
     if isinstance(term, Pow):

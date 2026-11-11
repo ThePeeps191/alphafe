@@ -123,6 +123,10 @@ def encode_state(state: State, goal: Optional[Poly] = None) -> StateView:
         if not names and _single_atom(leading_mono(row)) is None:
             splittable.append(label)
     shown_rows = [branch.rows[i] for i in label_of]
+    unknown = sorted({t for t in out if t not in TOKEN_ID})
+    if unknown:
+        raise ValueError(f"the network cannot read {', '.join(unknown)}: it knows the variables x, y, z only "
+                         "(rename the problem's variables with Problem.standard_names)")
     return StateView(
         tokens=[TOKEN_ID[t] for t in out], row_index=row_index, row_vars=row_vars, splittable=splittable,
         p_vars=sorted(state.problem.poly.variables()), witnesses=list(branch.witnesses),

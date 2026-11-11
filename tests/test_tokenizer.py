@@ -158,3 +158,29 @@ def test_subterm_exploration_proposes_expressions_from_the_state():
     assert "sub P: y:=f(y)" in moves and "sub P: x:=-f(y)" in moves
     assert view.subterms == encode_state(state).subterms          # same order every time
     assert all(m.startswith("sub ") for m in moves)
+
+
+def test_problems_in_other_letters_are_renamed_for_the_network():
+    """The checker accepts x y z t u v w; the network vocabulary has x, y, z. (This used to raise KeyError.)"""
+    import random
+
+    import pytest
+
+    from alphafe.bench import BenchProblem
+    from alphafe.eval import run_policy
+    from alphafe.search import UniformProposer
+
+    problem = Problem.parse("f(x+w) = f(x) + w")
+    with pytest.raises(ValueError, match="x, y, z only"):
+        encode_state(start(problem)[0])
+    renamed, names = problem.standard_names()
+    assert names == {"w": "y"} and renamed.equation == "f(x + y) = f(x) + y"       # x keeps its name
+    assert encode_state(start(renamed)[0]).tokens
+    three, names = Problem.parse("f(t+u+v) = f(t) + u + v").standard_names()
+    assert names == {"t": "x", "u": "y", "v": "z"} and sorted(three.poly.variables()) == ["x", "y", "z"]
+    same, names = Problem.parse("f(x+y) = f(x) + y").standard_names()
+    assert names == {} and same.equation == "f(x+y) = f(x) + y"
+    # The policy searches rename by themselves, so a benchmark row in u, v is scored and not a crash.
+    bench = BenchProblem("uv", Problem.parse("f(u + v) = f(u) + v"), None)
+    rows = run_policy([bench], UniformProposer(random.Random(0)), "search", 64)
+    assert rows[0].solved and rows[0].equation == "f(u + v) = f(u) + v"

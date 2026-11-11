@@ -99,7 +99,10 @@ cp checkpoints/myrun/last.pt checkpoints/best.pt
 
 Equations use `+ - *`, powers such as `x^2`, juxtaposition for products
 (`2x`, `xf(y)`) and division by integer literals only (`x/2`). The domain is
-`R` or `Q`.
+`R` or `Q`. Variables may be any of `x y z t u v w`; `solve` renames other
+letters to `x`, `y`, `z` and says so. A malformed equation or proof file
+gives a one-line error and exit status 2. Status 1 means no proof was found
+(`solve`) or the proof was not accepted (`check`).
 
 ## What it can solve
 
