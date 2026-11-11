@@ -95,10 +95,10 @@ s39, s42 and s46; brute force misses s33, s34 and s46.
 
 ## State of the local (uncommitted) artefacts
 
-- `checkpoints/v1/m5.pt` (M5), `checkpoints/v2/e4.pt` (28 min), `checkpoints/v2/e6.pt`
-  (56 min, also copied to `checkpoints/best.pt`, which `alphafe solve` loads),
-  `checkpoints/v3/e5.pt` (subterm exploration). None are in git; weights-only copies of the two v2 files are on the v0.1.0 GitHub release. Otherwise retrain with
-  `alphafe train` if they are gone.
+- `checkpoints/alphafe-m1-56min.pt` (M8, release v0.2.0; also copied to `checkpoints/best.pt`, which
+  `alphafe solve` loads) and the full training state in `checkpoints/m1/`. Older: `checkpoints/v1/m5.pt` (M5),
+  `checkpoints/v2/e4.pt` and `e6.pt` (version 1, on the v0.1.0 release), `checkpoints/v3/e5.pt`. None are in
+  git. Retrain with `alphafe train` if they are gone.
 - `logs/` has the raw training logs; compact copies are in `results/train_*_log.json`.
 
 ## Known problems
