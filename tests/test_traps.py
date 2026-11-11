@@ -63,6 +63,19 @@ def test_cancel_requires_injectivity():
     assert good.solved and good.solutions == parse_solution_set(["f(x) = c"])
 
 
+def test_cancel_compares_constant_arguments_only_for_an_injective_f():
+    """f(a) = 0 and f(-a) = 0 give a = -a when f is injective (IMO 1992/2), and nothing when it is not."""
+    opening = "sub P: x:=0\ninj\nsurj\nsub P: x:=-x\npre 0\nsub [f(-x)^2 = f(x)^2]: x:=a\n"
+    result = run("f(x^2 + f(y)) = y + f(x)^2", "R", opening + "cancel")
+    assert result.ok
+    from alphafe.algebra import parse_poly
+    assert result.state.current.known_zero(parse_poly("a"))
+    # f(x)^2 = x^2 has the solution |x|, for which f(1) = f(-1): no injectivity, so no cancelling.
+    assert rejected(run("f(x)^2 = x^2", "R", "sub P: x:=1\nsub P: x:=-1\ncancel"), "injectivity has not been proven")
+    # ... and the constant functions solve f(x + y) = f(x), where f(0) = f(1).
+    assert rejected(run(CONSTANT, "R", "sub P: x:=0, y:=1\ncancel"), "injectivity")
+
+
 def test_injectivity_is_not_granted_by_wishful_identities():
     assert rejected(run("f(f(x)) + y = x^2 + y", "R", "inj"), "injective")
     assert rejected(run("f(x + f(x)) + y = x + y", "R", "inj"), "injective")

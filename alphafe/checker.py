@@ -782,6 +782,9 @@ def cancel_results(branch: Branch, poly: Poly, index: Optional[dict] = None):
     * f(A) = V together with another current identity f(B) = V (the same V)
       gives A = B.
 
+    A and B may be any expressions, constants included: f(a) = 0 and
+    f(-a) = 0 give a = -a.
+
     ``index`` is ``value_index(branch)``; it is built here when not given.
     """
     for result, _ in cancel_steps(branch, poly, index):
@@ -801,11 +804,10 @@ def cancel_steps(branch: Branch, poly: Poly, index: Optional[dict] = None):
         if a1 is not None and a2 is not None and a1[0] == "f" and a2[0] == "f" and c1 + c2 == 0:
             yield atom_arg(a1) - atom_arg(a2), None
     for atom, value in _f_values(poly):
-        if not atom_vars(atom):
-            continue
+        # The arguments may be constants as well: f(a) = 0 and f(b) = 0 give a = b like any other pair.
         if not value.variables():
             for known, image in branch._rules.items():
-                if known[0] == "f" and not atom_vars(known) and image == value:
+                if known[0] == "f" and known != atom and not atom_vars(known) and image == value:
                     yield atom_arg(atom) - atom_arg(known), Poly.atom(known) - value
         if index is None:
             index = value_index(branch)
