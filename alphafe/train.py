@@ -73,6 +73,7 @@ class TrainConfig:
     temperature: float = 1.0
     diverse: bool = True            # sample proposals at a spread of temperatures (model.DIVERSE)
     steps_per_iter: int = 60
+    max_steps_per_iter: int = 240      # with workers: the most gradient steps taken while one self-play round is out
     batch_size: int = 128
     lr: float = 3e-4
     warmup: int = 200
@@ -648,8 +649,15 @@ def _train_loop(config, began, device, ckpt_dir, log_path, last, pool, progress,
             # The workers play on CPU cores and the gradient steps run on ``device``, so the two
             # overlap: learn from the examples already in the buffer until this round is in.
             if buffer.solve:
-                losses, state["step"] = train_steps(model, optimizer, buffer, config, rng, device, state["step"],
-                                                    more=lambda: not playing.ready() and time.time() < give_up)
+                # ... but not without limit: a slow round must not turn into thousands of steps on the
+                # same examples, which is how a policy becomes certain of one move per state.
+                budget = {"left": config.max_steps_per_iter - config.steps_per_iter}
+
+                def more() -> bool:
+                    budget["left"] -= 1
+                    return budget["left"] >= 0 and not playing.ready() and time.time() < give_up
+
+                losses, state["step"] = train_steps(model, optimizer, buffer, config, rng, device, state["step"], more=more)
             try:
                 shares = playing.get(timeout=max(1.0, give_up - time.time()))
             except multiprocessing.TimeoutError:
