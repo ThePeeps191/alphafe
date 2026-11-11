@@ -1,0 +1,3920 @@
+{
+ "name": "v1_real_network_search_128_calls",
+ "config": {
+  "suite": "real",
+  "solver": "network, search (128 calls)",
+  "checkpoint": "checkpoints/alphafe-v2-56min.pt",
+  "solved_per_seed": [
+   14,
+   13,
+   13
+  ]
+ },
+ "provenance": {
+  "commit": "a82d8696491105fd87367ffe4032a0ce8d3a12c1",
+  "dirty": false,
+  "time_utc": "2026-11-10T23:23:27Z",
+  "python": "3.12.15",
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "torch": "2.15.0",
+  "device": "mps",
+  "checkpoint": "checkpoints/alphafe-v2-56min.pt",
+  "checkpoint_sha256": "8f52cc591dd8a470d2b84966d471050b639d689765b895026e2f8f15b639bee3",
+  "settings": {
+   "suites": [
+    "real"
+   ],
+   "heldout_per_tier": 200,
+   "sampling_seeds": [
+    1000,
+    1001,
+    1002
+   ],
+   "proposals_per_state": 8,
+   "temperature": [
+    0.6,
+    0.8,
+    1.0,
+    1.0,
+    1.3,
+    1.6,
+    2.0,
+    3.0
+   ],
+   "value_weight": 0.0,
+   "greedy_budget": 32,
+   "search_budget": 128,
+   "big_budget": 2000,
+   "baseline_budgets": [
+    128,
+    2000
+   ],
+   "baseline_seconds": 120.0,
+   "baseline_workers": 8
+  }
+ },
+ "summary": {
+  "problems": 137,
+  "solved": 14,
+  "rate": 0.1022,
+  "mean_calls_solved": 18.6,
+  "median_calls_solved": 6,
+  "mean_seconds": 0.331
+ },
+ "by_mohs": {
+  "0M": [
+   4,
+   4
+  ],
+  "5M": [
+   9,
+   18
+  ],
+  "10M": [
+   1,
+   47
+  ],
+  "15M": [
+   0,
+   33
+  ],
+  "20M": [
+   0,
+   19
+  ],
+  "25M": [
+   0,
+   6
+  ],
+  "30M": [
+   0,
+   5
+  ],
+  "35M": [
+   0,
+   2
+  ],
+  "40M": [
+   0,
+   2
+  ],
+  "45M": [
+   0,
+   1
+  ]
+ },
+ "summary_unflagged": {
+  "problems": 124,
+  "solved": 10,
+  "rate": 0.0806,
+  "mean_calls_solved": 22.4,
+  "median_calls_solved": 6,
+  "mean_seconds": 0.331
+ },
+ "by_mohs_unflagged": {
+  "0M": [
+   2,
+   2
+  ],
+  "5M": [
+   7,
+   15
+  ],
+  "10M": [
+   1,
+   43
+  ],
+  "15M": [
+   0,
+   32
+  ],
+  "20M": [
+   0,
+   19
+  ],
+  "25M": [
+   0,
+   6
+  ],
+  "30M": [
+   0,
+   5
+  ],
+  "40M": [
+   0,
+   1
+  ],
+  "45M": [
+   0,
+   1
+  ]
+ },
+ "per_seed": [
+  {
+   "apmo-2010-5": [
+    0,
+    128
+   ],
+   "apmo-2019-5": [
+    0,
+    128
+   ],
+   "balticway-2010-ger2": [
+    1,
+    105
+   ],
+   "balticway-2014-a9": [
+    0,
+    128
+   ],
+   "balticway-2019-a5": [
+    0,
+    128
+   ],
+   "balticway-2019-a8": [
+    0,
+    128
+   ],
+   "balticway-sl-2011-a2": [
+    0,
+    128
+   ],
+   "balticway-sl-2011-a6": [
+    0,
+    128
+   ],
+   "balticway-sl-2018-a7": [
+    0,
+    128
+   ],
+   "belarus-2019-final-7": [
+    0,
+    128
+   ],
+   "belarus-tst-2012-t1-3": [
+    0,
+    128
+   ],
+   "bmc-2000-2": [
+    1,
+    4
+   ],
+   "bmc-a1bc91-6": [
+    0,
+    128
+   ],
+   "bmo-shortlist-2023-a1": [
+    0,
+    128
+   ],
+   "bmo-shortlist-2023-a3": [
+    0,
+    128
+   ],
+   "bmo-shortlist-2025-a5": [
+    0,
+    128
+   ],
+   "bulgaria-bmotst-2024-6-3": [
+    0,
+    128
+   ],
+   "bulgaria-tst-2003-2": [
+    0,
+    128
+   ],
+   "china-tst-2021-t3-5": [
+    0,
+    0
+   ],
+   "cmo-2008-2": [
+    0,
+    128
+   ],
+   "cps-2012-2": [
+    0,
+    128
+   ],
+   "cps-2018-1": [
+    0,
+    128
+   ],
+   "croatia-2011-4-2": [
+    0,
+    128
+   ],
+   "croatia-2017-national-4-2": [
+    1,
+    1
+   ],
+   "croatia-2018-a2": [
+    0,
+    128
+   ],
+   "croatia-tst-2012-a3": [
+    0,
+    128
+   ],
+   "croatia-tst-2012-a4": [
+    0,
+    128
+   ],
+   "czech-slovak-2017-final-3": [
+    0,
+    128
+   ],
+   "egmo-2012-3": [
+    0,
+    128
+   ],
+   "egmo-2014-6": [
+    0,
+    128
+   ],
+   "egmo-2021-2": [
+    0,
+    128
+   ],
+   "estonia-2015-o9": [
+    1,
+    1
+   ],
+   "estonia-2018-o12": [
+    0,
+    128
+   ],
+   "estonia-2020-o21": [
+    0,
+    128
+   ],
+   "estonia-2025-o11": [
+    0,
+    128
+   ],
+   "estonia-tst-2018-s3": [
+    1,
+    58
+   ],
+   "france-04525b-ex14": [
+    0,
+    128
+   ],
+   "france-2015-ex4": [
+    0,
+    128
+   ],
+   "france-2016-jan-ex4": [
+    0,
+    128
+   ],
+   "france-2019-senior-ex2": [
+    0,
+    128
+   ],
+   "france-2020-senior-ex6": [
+    0,
+    128
+   ],
+   "france-2024-senior-ex13": [
+    0,
+    128
+   ],
+   "france-2024-senior-ex16": [
+    0,
+    128
+   ],
+   "france-663df7-ex5": [
+    0,
+    128
+   ],
+   "france-89adb0-ex3": [
+    1,
+    35
+   ],
+   "hkmo-1999-4": [
+    0,
+    128
+   ],
+   "hmmt-2013-2": [
+    0,
+    128
+   ],
+   "hongkong-tst-2020-t2-4": [
+    0,
+    128
+   ],
+   "imo-1999-6": [
+    0,
+    128
+   ],
+   "imo-2015-5": [
+    0,
+    128
+   ],
+   "imo-2017-2": [
+    0,
+    128
+   ],
+   "india-tst-2013-1": [
+    0,
+    128
+   ],
+   "india-tst-2016-1": [
+    0,
+    128
+   ],
+   "india-tst-2016-7": [
+    0,
+    128
+   ],
+   "inmo-2001-6": [
+    0,
+    128
+   ],
+   "inmo-2005-6": [
+    0,
+    128
+   ],
+   "inmo-2007-12": [
+    0,
+    128
+   ],
+   "inmo-2011-5": [
+    0,
+    128
+   ],
+   "inmo-2015-3": [
+    0,
+    128
+   ],
+   "iran-2019-r2-4": [
+    0,
+    128
+   ],
+   "iran-2021-r3-a1": [
+    0,
+    128
+   ],
+   "iran-2024-tst1-4": [
+    0,
+    128
+   ],
+   "ireland-2018-2": [
+    1,
+    1
+   ],
+   "isl-2009-a7": [
+    0,
+    128
+   ],
+   "isl-2021-a8": [
+    0,
+    128
+   ],
+   "izho-2015-3": [
+    0,
+    128
+   ],
+   "japan-2006-3": [
+    0,
+    128
+   ],
+   "japan-2011-final-4": [
+    0,
+    128
+   ],
+   "japan-2012-final-2": [
+    0,
+    128
+   ],
+   "korea-2015-1": [
+    0,
+    0
+   ],
+   "macedonia-2023-1": [
+    0,
+    128
+   ],
+   "macedonia-bmo-2011-4": [
+    0,
+    128
+   ],
+   "memo-2011-t1": [
+    0,
+    128
+   ],
+   "memo-2013-t1": [
+    0,
+    128
+   ],
+   "memo-2016-t2": [
+    0,
+    128
+   ],
+   "memo-2017-i1": [
+    0,
+    128
+   ],
+   "memo-51ffd8-i1": [
+    0,
+    128
+   ],
+   "mongolia-2013-x-b2": [
+    0,
+    128
+   ],
+   "mongolia-2017-12-1": [
+    0,
+    128
+   ],
+   "netherlands-tst-2011-2": [
+    0,
+    128
+   ],
+   "netherlands-tst-2013-4": [
+    0,
+    128
+   ],
+   "netherlands-tst-2021-3": [
+    0,
+    128
+   ],
+   "nmc-31d877-3": [
+    0,
+    128
+   ],
+   "pmo-2023-national-6": [
+    0,
+    128
+   ],
+   "romania-2014-district-4": [
+    0,
+    128
+   ],
+   "romania-2023-g10-p4": [
+    0,
+    128
+   ],
+   "romania-shortlist-2023-seniors-2": [
+    0,
+    128
+   ],
+   "saudi-2012-imo-tst1-p3": [
+    0,
+    128
+   ],
+   "saudi-2013-bmo-tst-day2-p2": [
+    0,
+    128
+   ],
+   "saudi-2015-preselection-day2-p2": [
+    0,
+    128
+   ],
+   "saudi-2016-imo-tst-l4-day2-p3": [
+    0,
+    128
+   ],
+   "saudi-2017-imo-tst-day1-p2": [
+    0,
+    128
+   ],
+   "saudi-2022-november-camp-test2-p8": [
+    0,
+    128
+   ],
+   "saudi-2023-test3-p1": [
+    0,
+    128
+   ],
+   "silkroad-2006-1": [
+    0,
+    128
+   ],
+   "singapore-2012-open-r2-p2": [
+    0,
+    128
+   ],
+   "singapore-2014-open-r2-p2": [
+    0,
+    128
+   ],
+   "singapore-2015-open-r2-p3": [
+    0,
+    128
+   ],
+   "slovenia-2008-r1-g4-4": [
+    1,
+    2
+   ],
+   "slovenia-2014-r1-b2": [
+    1,
+    6
+   ],
+   "slovenia-tst-2010-3": [
+    0,
+    128
+   ],
+   "slovenia-tst-2012-3": [
+    0,
+    128
+   ],
+   "spain-2018-3": [
+    1,
+    3
+   ],
+   "spain-2021-4": [
+    0,
+    128
+   ],
+   "swiss-mo-2006-1": [
+    1,
+    4
+   ],
+   "swiss-tst-2000-7": [
+    0,
+    128
+   ],
+   "swiss-tst-2006-6": [
+    0,
+    128
+   ],
+   "switzerland-2010-6": [
+    1,
+    6
+   ],
+   "switzerland-2015-3": [
+    0,
+    128
+   ],
+   "switzerland-tst-2009-8": [
+    0,
+    128
+   ],
+   "switzerland-tst-2010-8": [
+    0,
+    128
+   ],
+   "switzerland-tst-2016-9": [
+    0,
+    128
+   ],
+   "switzerland-tst-570013-3": [
+    1,
+    25
+   ],
+   "taiwan-mo-2024-3": [
+    1,
+    9
+   ],
+   "taiwan-tc-2018-is3-1": [
+    0,
+    128
+   ],
+   "taiwan-tc-2019-is3-1": [
+    0,
+    128
+   ],
+   "taiwan-tst-2013-mock1-3": [
+    0,
+    128
+   ],
+   "taiwan-tst-2020-is2-1": [
+    0,
+    128
+   ],
+   "taiwan-tst-2020-mock1-2": [
+    0,
+    128
+   ],
+   "taiwan-tst-2023-is1-1a": [
+    0,
+    128
+   ],
+   "thailand-2014-2": [
+    0,
+    128
+   ],
+   "thailand-2016-3": [
+    0,
+    128
+   ],
+   "turkey-tst-2014-2": [
+    0,
+    128
+   ],
+   "turkey-tst-2024-2": [
+    0,
+    128
+   ],
+   "ukraine-2006-g10-2": [
+    0,
+    128
+   ],
+   "ukraine-2006-g11-6": [
+    0,
+    128
+   ],
+   "ukraine-2008-11-2": [
+    0,
+    128
+   ],
+   "ukraine-2009-10-4": [
+    0,
+    128
+   ],
+   "ukraine-2021-5": [
+    0,
+    128
+   ],
+   "ukraine-2023-11-4": [
+    0,
+    128
+   ],
+   "ukraine-2023-4": [
+    0,
+    128
+   ],
+   "usa-tst-2024-6": [
+    0,
+    128
+   ],
+   "usajmo-2016-6": [
+    0,
+    128
+   ],
+   "usajmo-2024-5": [
+    0,
+    128
+   ],
+   "vietnam-2005-4": [
+    0,
+    128
+   ],
+   "vietnam-2017-5": [
+    0,
+    128
+   ],
+   "vietnam-2021-2": [
+    0,
+    128
+   ]
+  },
+  {
+   "apmo-2010-5": [
+    0,
+    128
+   ],
+   "apmo-2019-5": [
+    0,
+    128
+   ],
+   "balticway-2010-ger2": [
+    0,
+    128
+   ],
+   "balticway-2014-a9": [
+    0,
+    128
+   ],
+   "balticway-2019-a5": [
+    0,
+    128
+   ],
+   "balticway-2019-a8": [
+    0,
+    128
+   ],
+   "balticway-sl-2011-a2": [
+    0,
+    128
+   ],
+   "balticway-sl-2011-a6": [
+    0,
+    128
+   ],
+   "balticway-sl-2018-a7": [
+    0,
+    128
+   ],
+   "belarus-2019-final-7": [
+    0,
+    128
+   ],
+   "belarus-tst-2012-t1-3": [
+    0,
+    128
+   ],
+   "bmc-2000-2": [
+    1,
+    4
+   ],
+   "bmc-a1bc91-6": [
+    0,
+    128
+   ],
+   "bmo-shortlist-2023-a1": [
+    0,
+    128
+   ],
+   "bmo-shortlist-2023-a3": [
+    0,
+    128
+   ],
+   "bmo-shortlist-2025-a5": [
+    0,
+    128
+   ],
+   "bulgaria-bmotst-2024-6-3": [
+    0,
+    128
+   ],
+   "bulgaria-tst-2003-2": [
+    0,
+    128
+   ],
+   "china-tst-2021-t3-5": [
+    0,
+    0
+   ],
+   "cmo-2008-2": [
+    0,
+    128
+   ],
+   "cps-2012-2": [
+    0,
+    128
+   ],
+   "cps-2018-1": [
+    0,
+    128
+   ],
+   "croatia-2011-4-2": [
+    0,
+    128
+   ],
+   "croatia-2017-national-4-2": [
+    1,
+    1
+   ],
+   "croatia-2018-a2": [
+    0,
+    128
+   ],
+   "croatia-tst-2012-a3": [
+    0,
+    128
+   ],
+   "croatia-tst-2012-a4": [
+    0,
+    128
+   ],
+   "czech-slovak-2017-final-3": [
+    0,
+    128
+   ],
+   "egmo-2012-3": [
+    0,
+    128
+   ],
+   "egmo-2014-6": [
+    0,
+    128
+   ],
+   "egmo-2021-2": [
+    0,
+    128
+   ],
+   "estonia-2015-o9": [
+    1,
+    1
+   ],
+   "estonia-2018-o12": [
+    0,
+    128
+   ],
+   "estonia-2020-o21": [
+    0,
+    128
+   ],
+   "estonia-2025-o11": [
+    0,
+    128
+   ],
+   "estonia-tst-2018-s3": [
+    1,
+    88
+   ],
+   "france-04525b-ex14": [
+    0,
+    128
+   ],
+   "france-2015-ex4": [
+    0,
+    128
+   ],
+   "france-2016-jan-ex4": [
+    0,
+    128
+   ],
+   "france-2019-senior-ex2": [
+    0,
+    128
+   ],
+   "france-2020-senior-ex6": [
+    0,
+    128
+   ],
+   "france-2024-senior-ex13": [
+    0,
+    128
+   ],
+   "france-2024-senior-ex16": [
+    0,
+    128
+   ],
+   "france-663df7-ex5": [
+    0,
+    128
+   ],
+   "france-89adb0-ex3": [
+    1,
+    37
+   ],
+   "hkmo-1999-4": [
+    0,
+    128
+   ],
+   "hmmt-2013-2": [
+    0,
+    128
+   ],
+   "hongkong-tst-2020-t2-4": [
+    0,
+    128
+   ],
+   "imo-1999-6": [
+    0,
+    128
+   ],
+   "imo-2015-5": [
+    0,
+    128
+   ],
+   "imo-2017-2": [
+    0,
+    128
+   ],
+   "india-tst-2013-1": [
+    0,
+    128
+   ],
+   "india-tst-2016-1": [
+    0,
+    128
+   ],
+   "india-tst-2016-7": [
+    0,
+    128
+   ],
+   "inmo-2001-6": [
+    0,
+    128
+   ],
+   "inmo-2005-6": [
+    0,
+    128
+   ],
+   "inmo-2007-12": [
+    0,
+    128
+   ],
+   "inmo-2011-5": [
+    0,
+    128
+   ],
+   "inmo-2015-3": [
+    0,
+    128
+   ],
+   "iran-2019-r2-4": [
+    0,
+    128
+   ],
+   "iran-2021-r3-a1": [
+    0,
+    128
+   ],
+   "iran-2024-tst1-4": [
+    0,
+    128
+   ],
+   "ireland-2018-2": [
+    1,
+    1
+   ],
+   "isl-2009-a7": [
+    0,
+    128
+   ],
+   "isl-2021-a8": [
+    0,
+    128
+   ],
+   "izho-2015-3": [
+    0,
+    128
+   ],
+   "japan-2006-3": [
+    0,
+    128
+   ],
+   "japan-2011-final-4": [
+    0,
+    128
+   ],
+   "japan-2012-final-2": [
+    0,
+    128
+   ],
+   "korea-2015-1": [
+    0,
+    0
+   ],
+   "macedonia-2023-1": [
+    0,
+    128
+   ],
+   "macedonia-bmo-2011-4": [
+    0,
+    128
+   ],
+   "memo-2011-t1": [
+    0,
+    128
+   ],
+   "memo-2013-t1": [
+    0,
+    128
+   ],
+   "memo-2016-t2": [
+    0,
+    128
+   ],
+   "memo-2017-i1": [
+    0,
+    128
+   ],
+   "memo-51ffd8-i1": [
+    0,
+    128
+   ],
+   "mongolia-2013-x-b2": [
+    0,
+    128
+   ],
+   "mongolia-2017-12-1": [
+    0,
+    128
+   ],
+   "netherlands-tst-2011-2": [
+    0,
+    128
+   ],
+   "netherlands-tst-2013-4": [
+    0,
+    128
+   ],
+   "netherlands-tst-2021-3": [
+    0,
+    128
+   ],
+   "nmc-31d877-3": [
+    0,
+    128
+   ],
+   "pmo-2023-national-6": [
+    0,
+    128
+   ],
+   "romania-2014-district-4": [
+    0,
+    128
+   ],
+   "romania-2023-g10-p4": [
+    0,
+    128
+   ],
+   "romania-shortlist-2023-seniors-2": [
+    0,
+    128
+   ],
+   "saudi-2012-imo-tst1-p3": [
+    0,
+    128
+   ],
+   "saudi-2013-bmo-tst-day2-p2": [
+    0,
+    128
+   ],
+   "saudi-2015-preselection-day2-p2": [
+    0,
+    128
+   ],
+   "saudi-2016-imo-tst-l4-day2-p3": [
+    0,
+    128
+   ],
+   "saudi-2017-imo-tst-day1-p2": [
+    0,
+    128
+   ],
+   "saudi-2022-november-camp-test2-p8": [
+    0,
+    128
+   ],
+   "saudi-2023-test3-p1": [
+    0,
+    128
+   ],
+   "silkroad-2006-1": [
+    0,
+    128
+   ],
+   "singapore-2012-open-r2-p2": [
+    0,
+    128
+   ],
+   "singapore-2014-open-r2-p2": [
+    0,
+    128
+   ],
+   "singapore-2015-open-r2-p3": [
+    0,
+    128
+   ],
+   "slovenia-2008-r1-g4-4": [
+    1,
+    2
+   ],
+   "slovenia-2014-r1-b2": [
+    1,
+    3
+   ],
+   "slovenia-tst-2010-3": [
+    0,
+    128
+   ],
+   "slovenia-tst-2012-3": [
+    0,
+    128
+   ],
+   "spain-2018-3": [
+    1,
+    3
+   ],
+   "spain-2021-4": [
+    0,
+    128
+   ],
+   "swiss-mo-2006-1": [
+    1,
+    4
+   ],
+   "swiss-tst-2000-7": [
+    0,
+    128
+   ],
+   "swiss-tst-2006-6": [
+    0,
+    128
+   ],
+   "switzerland-2010-6": [
+    1,
+    5
+   ],
+   "switzerland-2015-3": [
+    0,
+    128
+   ],
+   "switzerland-tst-2009-8": [
+    0,
+    128
+   ],
+   "switzerland-tst-2010-8": [
+    0,
+    128
+   ],
+   "switzerland-tst-2016-9": [
+    0,
+    128
+   ],
+   "switzerland-tst-570013-3": [
+    1,
+    13
+   ],
+   "taiwan-mo-2024-3": [
+    1,
+    11
+   ],
+   "taiwan-tc-2018-is3-1": [
+    0,
+    128
+   ],
+   "taiwan-tc-2019-is3-1": [
+    0,
+    128
+   ],
+   "taiwan-tst-2013-mock1-3": [
+    0,
+    128
+   ],
+   "taiwan-tst-2020-is2-1": [
+    0,
+    128
+   ],
+   "taiwan-tst-2020-mock1-2": [
+    0,
+    128
+   ],
+   "taiwan-tst-2023-is1-1a": [
+    0,
+    128
+   ],
+   "thailand-2014-2": [
+    0,
+    128
+   ],
+   "thailand-2016-3": [
+    0,
+    128
+   ],
+   "turkey-tst-2014-2": [
+    0,
+    128
+   ],
+   "turkey-tst-2024-2": [
+    0,
+    128
+   ],
+   "ukraine-2006-g10-2": [
+    0,
+    128
+   ],
+   "ukraine-2006-g11-6": [
+    0,
+    128
+   ],
+   "ukraine-2008-11-2": [
+    0,
+    128
+   ],
+   "ukraine-2009-10-4": [
+    0,
+    128
+   ],
+   "ukraine-2021-5": [
+    0,
+    128
+   ],
+   "ukraine-2023-11-4": [
+    0,
+    128
+   ],
+   "ukraine-2023-4": [
+    0,
+    128
+   ],
+   "usa-tst-2024-6": [
+    0,
+    128
+   ],
+   "usajmo-2016-6": [
+    0,
+    128
+   ],
+   "usajmo-2024-5": [
+    0,
+    128
+   ],
+   "vietnam-2005-4": [
+    0,
+    128
+   ],
+   "vietnam-2017-5": [
+    0,
+    128
+   ],
+   "vietnam-2021-2": [
+    0,
+    128
+   ]
+  },
+  {
+   "apmo-2010-5": [
+    0,
+    128
+   ],
+   "apmo-2019-5": [
+    0,
+    128
+   ],
+   "balticway-2010-ger2": [
+    0,
+    128
+   ],
+   "balticway-2014-a9": [
+    0,
+    128
+   ],
+   "balticway-2019-a5": [
+    0,
+    128
+   ],
+   "balticway-2019-a8": [
+    0,
+    128
+   ],
+   "balticway-sl-2011-a2": [
+    0,
+    128
+   ],
+   "balticway-sl-2011-a6": [
+    0,
+    128
+   ],
+   "balticway-sl-2018-a7": [
+    0,
+    128
+   ],
+   "belarus-2019-final-7": [
+    0,
+    128
+   ],
+   "belarus-tst-2012-t1-3": [
+    0,
+    128
+   ],
+   "bmc-2000-2": [
+    1,
+    5
+   ],
+   "bmc-a1bc91-6": [
+    0,
+    128
+   ],
+   "bmo-shortlist-2023-a1": [
+    0,
+    128
+   ],
+   "bmo-shortlist-2023-a3": [
+    0,
+    128
+   ],
+   "bmo-shortlist-2025-a5": [
+    0,
+    128
+   ],
+   "bulgaria-bmotst-2024-6-3": [
+    0,
+    128
+   ],
+   "bulgaria-tst-2003-2": [
+    0,
+    128
+   ],
+   "china-tst-2021-t3-5": [
+    0,
+    0
+   ],
+   "cmo-2008-2": [
+    0,
+    128
+   ],
+   "cps-2012-2": [
+    0,
+    128
+   ],
+   "cps-2018-1": [
+    0,
+    128
+   ],
+   "croatia-2011-4-2": [
+    0,
+    128
+   ],
+   "croatia-2017-national-4-2": [
+    1,
+    1
+   ],
+   "croatia-2018-a2": [
+    0,
+    128
+   ],
+   "croatia-tst-2012-a3": [
+    0,
+    128
+   ],
+   "croatia-tst-2012-a4": [
+    0,
+    128
+   ],
+   "czech-slovak-2017-final-3": [
+    0,
+    128
+   ],
+   "egmo-2012-3": [
+    0,
+    128
+   ],
+   "egmo-2014-6": [
+    0,
+    128
+   ],
+   "egmo-2021-2": [
+    0,
+    128
+   ],
+   "estonia-2015-o9": [
+    1,
+    1
+   ],
+   "estonia-2018-o12": [
+    0,
+    128
+   ],
+   "estonia-2020-o21": [
+    0,
+    128
+   ],
+   "estonia-2025-o11": [
+    0,
+    128
+   ],
+   "estonia-tst-2018-s3": [
+    1,
+    55
+   ],
+   "france-04525b-ex14": [
+    0,
+    128
+   ],
+   "france-2015-ex4": [
+    0,
+    128
+   ],
+   "france-2016-jan-ex4": [
+    0,
+    128
+   ],
+   "france-2019-senior-ex2": [
+    0,
+    128
+   ],
+   "france-2020-senior-ex6": [
+    0,
+    128
+   ],
+   "france-2024-senior-ex13": [
+    0,
+    128
+   ],
+   "france-2024-senior-ex16": [
+    0,
+    128
+   ],
+   "france-663df7-ex5": [
+    0,
+    128
+   ],
+   "france-89adb0-ex3": [
+    1,
+    39
+   ],
+   "hkmo-1999-4": [
+    0,
+    128
+   ],
+   "hmmt-2013-2": [
+    0,
+    128
+   ],
+   "hongkong-tst-2020-t2-4": [
+    0,
+    128
+   ],
+   "imo-1999-6": [
+    0,
+    128
+   ],
+   "imo-2015-5": [
+    0,
+    128
+   ],
+   "imo-2017-2": [
+    0,
+    128
+   ],
+   "india-tst-2013-1": [
+    0,
+    128
+   ],
+   "india-tst-2016-1": [
+    0,
+    128
+   ],
+   "india-tst-2016-7": [
+    0,
+    128
+   ],
+   "inmo-2001-6": [
+    0,
+    128
+   ],
+   "inmo-2005-6": [
+    0,
+    128
+   ],
+   "inmo-2007-12": [
+    0,
+    128
+   ],
+   "inmo-2011-5": [
+    0,
+    128
+   ],
+   "inmo-2015-3": [
+    0,
+    128
+   ],
+   "iran-2019-r2-4": [
+    0,
+    128
+   ],
+   "iran-2021-r3-a1": [
+    0,
+    128
+   ],
+   "iran-2024-tst1-4": [
+    0,
+    128
+   ],
+   "ireland-2018-2": [
+    1,
+    1
+   ],
+   "isl-2009-a7": [
+    0,
+    128
+   ],
+   "isl-2021-a8": [
+    0,
+    128
+   ],
+   "izho-2015-3": [
+    0,
+    128
+   ],
+   "japan-2006-3": [
+    0,
+    128
+   ],
+   "japan-2011-final-4": [
+    0,
+    128
+   ],
+   "japan-2012-final-2": [
+    0,
+    128
+   ],
+   "korea-2015-1": [
+    0,
+    0
+   ],
+   "macedonia-2023-1": [
+    0,
+    128
+   ],
+   "macedonia-bmo-2011-4": [
+    0,
+    128
+   ],
+   "memo-2011-t1": [
+    0,
+    128
+   ],
+   "memo-2013-t1": [
+    0,
+    128
+   ],
+   "memo-2016-t2": [
+    0,
+    128
+   ],
+   "memo-2017-i1": [
+    0,
+    128
+   ],
+   "memo-51ffd8-i1": [
+    0,
+    128
+   ],
+   "mongolia-2013-x-b2": [
+    0,
+    128
+   ],
+   "mongolia-2017-12-1": [
+    0,
+    128
+   ],
+   "netherlands-tst-2011-2": [
+    0,
+    128
+   ],
+   "netherlands-tst-2013-4": [
+    0,
+    128
+   ],
+   "netherlands-tst-2021-3": [
+    0,
+    128
+   ],
+   "nmc-31d877-3": [
+    0,
+    128
+   ],
+   "pmo-2023-national-6": [
+    0,
+    128
+   ],
+   "romania-2014-district-4": [
+    0,
+    128
+   ],
+   "romania-2023-g10-p4": [
+    0,
+    128
+   ],
+   "romania-shortlist-2023-seniors-2": [
+    0,
+    128
+   ],
+   "saudi-2012-imo-tst1-p3": [
+    0,
+    128
+   ],
+   "saudi-2013-bmo-tst-day2-p2": [
+    0,
+    128
+   ],
+   "saudi-2015-preselection-day2-p2": [
+    0,
+    128
+   ],
+   "saudi-2016-imo-tst-l4-day2-p3": [
+    0,
+    128
+   ],
+   "saudi-2017-imo-tst-day1-p2": [
+    0,
+    128
+   ],
+   "saudi-2022-november-camp-test2-p8": [
+    0,
+    128
+   ],
+   "saudi-2023-test3-p1": [
+    0,
+    128
+   ],
+   "silkroad-2006-1": [
+    0,
+    128
+   ],
+   "singapore-2012-open-r2-p2": [
+    0,
+    128
+   ],
+   "singapore-2014-open-r2-p2": [
+    0,
+    128
+   ],
+   "singapore-2015-open-r2-p3": [
+    0,
+    128
+   ],
+   "slovenia-2008-r1-g4-4": [
+    1,
+    2
+   ],
+   "slovenia-2014-r1-b2": [
+    1,
+    10
+   ],
+   "slovenia-tst-2010-3": [
+    0,
+    128
+   ],
+   "slovenia-tst-2012-3": [
+    0,
+    128
+   ],
+   "spain-2018-3": [
+    1,
+    3
+   ],
+   "spain-2021-4": [
+    0,
+    128
+   ],
+   "swiss-mo-2006-1": [
+    1,
+    6
+   ],
+   "swiss-tst-2000-7": [
+    0,
+    128
+   ],
+   "swiss-tst-2006-6": [
+    0,
+    128
+   ],
+   "switzerland-2010-6": [
+    1,
+    5
+   ],
+   "switzerland-2015-3": [
+    0,
+    128
+   ],
+   "switzerland-tst-2009-8": [
+    0,
+    128
+   ],
+   "switzerland-tst-2010-8": [
+    0,
+    128
+   ],
+   "switzerland-tst-2016-9": [
+    0,
+    128
+   ],
+   "switzerland-tst-570013-3": [
+    1,
+    111
+   ],
+   "taiwan-mo-2024-3": [
+    1,
+    10
+   ],
+   "taiwan-tc-2018-is3-1": [
+    0,
+    128
+   ],
+   "taiwan-tc-2019-is3-1": [
+    0,
+    128
+   ],
+   "taiwan-tst-2013-mock1-3": [
+    0,
+    128
+   ],
+   "taiwan-tst-2020-is2-1": [
+    0,
+    128
+   ],
+   "taiwan-tst-2020-mock1-2": [
+    0,
+    128
+   ],
+   "taiwan-tst-2023-is1-1a": [
+    0,
+    128
+   ],
+   "thailand-2014-2": [
+    0,
+    128
+   ],
+   "thailand-2016-3": [
+    0,
+    128
+   ],
+   "turkey-tst-2014-2": [
+    0,
+    128
+   ],
+   "turkey-tst-2024-2": [
+    0,
+    128
+   ],
+   "ukraine-2006-g10-2": [
+    0,
+    128
+   ],
+   "ukraine-2006-g11-6": [
+    0,
+    128
+   ],
+   "ukraine-2008-11-2": [
+    0,
+    128
+   ],
+   "ukraine-2009-10-4": [
+    0,
+    128
+   ],
+   "ukraine-2021-5": [
+    0,
+    128
+   ],
+   "ukraine-2023-11-4": [
+    0,
+    128
+   ],
+   "ukraine-2023-4": [
+    0,
+    128
+   ],
+   "usa-tst-2024-6": [
+    0,
+    128
+   ],
+   "usajmo-2016-6": [
+    0,
+    128
+   ],
+   "usajmo-2024-5": [
+    0,
+    128
+   ],
+   "vietnam-2005-4": [
+    0,
+    128
+   ],
+   "vietnam-2017-5": [
+    0,
+    128
+   ],
+   "vietnam-2021-2": [
+    0,
+    128
+   ]
+  }
+ ],
+ "rows": [
+  {
+   "id": "apmo-2010-5",
+   "equation": "f(f(x) + f(y) + f(z)) = f(f(x) - f(y)) + f(2xy + f(z)) + 2f(xz - yz)",
+   "domain": "R",
+   "mohs": 30,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "apmo-2019-5",
+   "equation": "f(x^2 + f(y)) = f(f(x)) + f(y^2) + 2f(xy)",
+   "domain": "R",
+   "mohs": 30,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "balticway-2010-ger2",
+   "equation": "f(f(x + y)) = f(x^2 - y^2) + 4xy f(x + y)",
+   "domain": "R",
+   "mohs": 5,
+   "solved": true,
+   "checker_calls": 105,
+   "seconds": 0.331,
+   "proof_len": 4,
+   "answer": "f(x) = 0; f(x) = -x^2; f(x) = x^2",
+   "reason": "",
+   "proof": "sub P: x:=0\nsub R1: x:=0\nsub R4: y:=-x - 4^2\nconclude",
+   "solutions": [
+    "f(x) = 0",
+    "f(x) = -x^2",
+    "f(x) = x^2"
+   ],
+   "flags": []
+  },
+  {
+   "id": "balticway-2014-a9",
+   "equation": "f(f(y)) + f(x - y) = f(x f(y) - x)",
+   "domain": "R",
+   "mohs": 5,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "balticway-2019-a5",
+   "equation": "f(x^3 + y^3) = f(x^3) + 3x^3 f(x) f(y) + 3 f(x) f(y)^2 + y^6 f(y)",
+   "domain": "R",
+   "mohs": 10,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "balticway-2019-a8",
+   "equation": "f(x f(y) - y^2) = (y + 1) f(x - y)",
+   "domain": "R",
+   "mohs": 10,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "balticway-sl-2011-a2",
+   "equation": "f(x + f(y)) - f(x) = (x + f(y))^3 - x^3",
+   "domain": "R",
+   "mohs": 15,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "balticway-sl-2011-a6",
+   "equation": "x f(f(y)) + y f(y - x) = f(f(x + y) - x) f(y)",
+   "domain": "R",
+   "mohs": 20,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "balticway-sl-2018-a7",
+   "equation": "f(y^2 - f(x)) = y f(x)^2 + f(x^2 y + y)",
+   "domain": "R",
+   "mohs": 10,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "belarus-2019-final-7",
+   "equation": "f(f(x) + f(y)) = (x + y)f(x + y)",
+   "domain": "R",
+   "mohs": 20,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "belarus-tst-2012-t1-3",
+   "equation": "f(x + f(y + f(z))) = y + f(x + z)",
+   "domain": "Q",
+   "mohs": 10,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "bmc-2000-2",
+   "equation": "f(xy + 1) = xf(y) + 2",
+   "domain": "R",
+   "mohs": 5,
+   "solved": true,
+   "checker_calls": 4,
+   "seconds": 0.331,
+   "proof_len": 2,
+   "answer": "f(x) = 2x",
+   "reason": "",
+   "proof": "sub R1: y:=5\nconclude",
+   "solutions": [
+    "f(x) = 2x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "bmc-a1bc91-6",
+   "equation": "f(xy + z) = f(x)f(y) + f(z)",
+   "domain": "R",
+   "mohs": 10,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "bmo-shortlist-2023-a1",
+   "equation": "x f(x + f(y)) = (y - x) f(f(x))",
+   "domain": "R",
+   "mohs": 15,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "bmo-shortlist-2023-a3",
+   "equation": "f(xy + f(x^2)) = x f(x + y)",
+   "domain": "R",
+   "mohs": 20,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "bmo-shortlist-2025-a5",
+   "equation": "f(x + y f(x)) + y = xy + f(x + y)",
+   "domain": "R",
+   "mohs": 20,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "bulgaria-bmotst-2024-6-3",
+   "equation": "f(f(x) + xf(y)) = xf(y + 1)",
+   "domain": "R",
+   "mohs": 10,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "bulgaria-tst-2003-2",
+   "equation": "f(x^2 + y + f(y)) = 2y + f(x)^2",
+   "domain": "R",
+   "mohs": 15,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "china-tst-2021-t3-5",
+   "equation": "f(xf(y) + y^2021) = yf(x) + f(y)^2021",
+   "domain": "R",
+   "mohs": 30,
+   "solved": false,
+   "checker_calls": 0,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "the checker cannot load the equation: identity too large",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "cmo-2008-2",
+   "equation": "f(2f(x) + f(y)) = 2x + y",
+   "domain": "Q",
+   "mohs": 10,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "cps-2012-2",
+   "equation": "f(x + f(y)) - f(x) = (x + f(y))^4 - x^4",
+   "domain": "R",
+   "mohs": 15,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "cps-2018-1",
+   "equation": "f(x^2 + xy) = f(x)f(y) + yf(x) + xf(x + y)",
+   "domain": "R",
+   "mohs": 10,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "croatia-2011-4-2",
+   "equation": "f(x^2 + f(y)) = y - x^2",
+   "domain": "R",
+   "mohs": 5,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "croatia-2017-national-4-2",
+   "equation": "f(x + f(y)) = f(f(y)) + 2xf(y) + x^2",
+   "domain": "R",
+   "mohs": 5,
+   "solved": true,
+   "checker_calls": 1,
+   "seconds": 0.331,
+   "proof_len": 2,
+   "answer": "f(x) = x^2 + c for any constant c",
+   "reason": "",
+   "proof": "sub R1: y:=0\nconclude",
+   "solutions": [
+    "f(x) = x^2 + c"
+   ],
+   "flags": []
+  },
+  {
+   "id": "croatia-2018-a2",
+   "equation": "f(xf(y)) = (1 - y)f(xy) + x^2y^2f(y)",
+   "domain": "R",
+   "mohs": 20,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "croatia-tst-2012-a3",
+   "equation": "f(y + f(x)) - f(x + f(y)) = f(x - y)(f(x + y) - 1)",
+   "domain": "R",
+   "mohs": 10,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "croatia-tst-2012-a4",
+   "equation": "f(x^2 + f(y)) = (f(x) + y^2)^2",
+   "domain": "R",
+   "mohs": 20,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "czech-slovak-2017-final-3",
+   "equation": "f(y - xy) = f(x)y + (x - 1)^2 f(y)",
+   "domain": "R",
+   "mohs": 10,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "egmo-2012-3",
+   "equation": "f(yf(x + y) + f(x)) = 4x + 2yf(x + y)",
+   "domain": "R",
+   "mohs": 10,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": [
+    "seen_in_development"
+   ]
+  },
+  {
+   "id": "egmo-2014-6",
+   "equation": "f(y^2 + 2xf(y) + f(x)^2) = (y + f(x))(x + f(y))",
+   "domain": "R",
+   "mohs": 30,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "egmo-2021-2",
+   "equation": "f(xf(x) + y) = f(y) + x^2",
+   "domain": "Q",
+   "mohs": 15,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "estonia-2015-o9",
+   "equation": "f(f(x) + f(y)) = f(x) + y",
+   "domain": "R",
+   "mohs": 0,
+   "solved": true,
+   "checker_calls": 1,
+   "seconds": 0.331,
+   "proof_len": 5,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "inj\nsurj\nsub R1: y:=0\ncancel\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": [
+    "in_training_pool"
+   ]
+  },
+  {
+   "id": "estonia-2018-o12",
+   "equation": "f(x + y)^2 = xf(x) + 2f(xy) + f(y)^2",
+   "domain": "R",
+   "mohs": 10,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "estonia-2020-o21",
+   "equation": "f(xf(y) + y) = f(x^2 + y^2) + f(y)",
+   "domain": "R",
+   "mohs": 5,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "estonia-2025-o11",
+   "equation": "f(y^2f(x) - f(xy)) = f(y^2) + 2(x^2 - f(x))(f(y) - 1) + 1",
+   "domain": "R",
+   "mohs": 10,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "estonia-tst-2018-s3",
+   "equation": "f(xy + f(xy)) = 2xf(y)",
+   "domain": "R",
+   "mohs": 5,
+   "solved": true,
+   "checker_calls": 58,
+   "seconds": 0.331,
+   "proof_len": 4,
+   "answer": "f(x) = 0; f(x) = x",
+   "reason": "",
+   "proof": "sub R1: x:=0\nsub P: x:=5\nsub R3: y:=5*1\nconclude",
+   "solutions": [
+    "f(x) = 0",
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "france-04525b-ex14",
+   "equation": "f(xf(x) + f(y)) = f(x)^2 + y",
+   "domain": "R",
+   "mohs": 10,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": [
+    "seen_in_development"
+   ]
+  },
+  {
+   "id": "france-2015-ex4",
+   "equation": "f(f(x) + 3y) = 12x + f(f(y) - x)",
+   "domain": "R",
+   "mohs": 15,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "france-2016-jan-ex4",
+   "equation": "f(x + y) = f(x - y) + f(f(1 - xy))",
+   "domain": "R",
+   "mohs": 10,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "france-2019-senior-ex2",
+   "equation": "f(x^2 + x + f(y)) = y + f(x) + f(x)^2",
+   "domain": "R",
+   "mohs": 15,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "france-2020-senior-ex6",
+   "equation": "f(x + f(y)) + x = f(f(2x) + y)",
+   "domain": "R",
+   "mohs": 15,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "france-2024-senior-ex13",
+   "equation": "f(x)f(y)f(x - y) = x^2f(y) - y^2f(x)",
+   "domain": "R",
+   "mohs": 10,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "france-2024-senior-ex16",
+   "equation": "f(x^2 + xy + f(y^2)) = xf(y) + f(x^2) + y^2",
+   "domain": "R",
+   "mohs": 10,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "france-663df7-ex5",
+   "equation": "f(x + y)^2 - f(2x^2) = f(y + x)f(y - x) + 2xf(y)",
+   "domain": "R",
+   "mohs": 10,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "france-89adb0-ex3",
+   "equation": "f(xf(y)) + x = f(x)f(y + 1)",
+   "domain": "R",
+   "mohs": 5,
+   "solved": true,
+   "checker_calls": 35,
+   "seconds": 0.331,
+   "proof_len": 12,
+   "answer": "f(x) = -x; f(x) = x",
+   "reason": "",
+   "proof": "sub R1: y:=0\nsub R1: x:=0\nsub R2: x:=1\nsplit R1\ninj\nsplit R2\nconclude\nconclude\nsub P: y:=1\ninj\nsub R3: x:=1\nconclude",
+   "solutions": [
+    "f(x) = -x",
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "hkmo-1999-4",
+   "equation": "f(x + yf(x)) = f(x) + xf(y)",
+   "domain": "R",
+   "mohs": 15,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "hmmt-2013-2",
+   "equation": "(x - y)(f(x) - f(y)) = f(x - f(y))f(f(x) - y)",
+   "domain": "R",
+   "mohs": 15,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "hongkong-tst-2020-t2-4",
+   "equation": "f(f(x) + y) + f(x + f(y)) = 2f(xf(y))",
+   "domain": "R",
+   "mohs": 15,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "imo-1999-6",
+   "equation": "f(x - f(y)) = f(f(y)) + xf(y) + f(x) - 1",
+   "domain": "R",
+   "mohs": 35,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": [
+    "seen_in_development"
+   ]
+  },
+  {
+   "id": "imo-2015-5",
+   "equation": "f(x + f(x + y)) + f(xy) = x + f(x + y) + yf(x)",
+   "domain": "R",
+   "mohs": 35,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": [
+    "seen_in_development"
+   ]
+  },
+  {
+   "id": "imo-2017-2",
+   "equation": "f(f(x)f(y)) + f(x + y) = f(xy)",
+   "domain": "R",
+   "mohs": 40,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": [
+    "seen_in_development"
+   ]
+  },
+  {
+   "id": "india-tst-2013-1",
+   "equation": "f(x(1 + y)) = f(x)(1 + f(y))",
+   "domain": "R",
+   "mohs": 15,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "india-tst-2016-1",
+   "equation": "f(x^2 + xf(y)) = xf(x + y)",
+   "domain": "R",
+   "mohs": 15,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "india-tst-2016-7",
+   "equation": "f(x^3 + f(y)) = x^2f(x) + y",
+   "domain": "R",
+   "mohs": 15,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "inmo-2001-6",
+   "equation": "f(x + y) = f(x)f(y)f(xy)",
+   "domain": "R",
+   "mohs": 10,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "inmo-2005-6",
+   "equation": "f(x^2 + yf(z)) = xf(x) + zf(y)",
+   "domain": "R",
+   "mohs": 10,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "inmo-2007-12",
+   "equation": "f(x + y) + f(x)f(y) = (1 + y)f(x) + (1 + x)f(y) + f(xy)",
+   "domain": "R",
+   "mohs": 15,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "inmo-2011-5",
+   "equation": "f(x + y)f(x - y) = (f(x) + f(y))^2 - 4x^2f(y)",
+   "domain": "R",
+   "mohs": 10,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": [
+    "seen_in_development"
+   ]
+  },
+  {
+   "id": "inmo-2015-3",
+   "equation": "f(x^2 + yf(x)) = xf(x + y)",
+   "domain": "R",
+   "mohs": 10,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "iran-2019-r2-4",
+   "equation": "f(x + y)f(x^2 - xy + y^2) = x^3 + y^3",
+   "domain": "R",
+   "mohs": 10,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "iran-2021-r3-a1",
+   "equation": "f(y - f(x)) = f(x) - 2x + f(f(y))",
+   "domain": "R",
+   "mohs": 10,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "iran-2024-tst1-4",
+   "equation": "f(yf(x) + f(x)f(y)) = xf(y) + f(xy)",
+   "domain": "R",
+   "mohs": 25,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "ireland-2018-2",
+   "equation": "f(2x + f(y)) + f(f(y)) = 4x + 8y",
+   "domain": "R",
+   "mohs": 5,
+   "solved": true,
+   "checker_calls": 1,
+   "seconds": 0.331,
+   "proof_len": 4,
+   "answer": "f(x) = 2x",
+   "reason": "",
+   "proof": "inj\nsurj\nsub R1: y:=0\nconclude",
+   "solutions": [
+    "f(x) = 2x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "isl-2009-a7",
+   "equation": "f(xf(x + y)) = f(yf(x)) + x^2",
+   "domain": "R",
+   "mohs": 40,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "isl-2021-a8",
+   "equation": "(f(x) - f(y))(f(y) - f(z))(f(z) - f(x)) = f(xy^2 + yz^2 + zx^2) - f(x^2y + y^2z + z^2x)",
+   "domain": "R",
+   "mohs": 45,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "izho-2015-3",
+   "equation": "f(x^3 + y^3 + xy) = x^2f(x) + y^2f(y) + f(xy)",
+   "domain": "R",
+   "mohs": 20,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "japan-2006-3",
+   "equation": "f(x)^2 + 2yf(x) + f(y) = f(y + f(x))",
+   "domain": "R",
+   "mohs": 15,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "japan-2011-final-4",
+   "equation": "f(f(x) - f(y)) = f(f(x)) - 2x^2f(y) + f(y^2)",
+   "domain": "R",
+   "mohs": 20,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "japan-2012-final-2",
+   "equation": "f(f(x + y)f(x - y)) = x^2 - yf(y)",
+   "domain": "R",
+   "mohs": 5,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "korea-2015-1",
+   "equation": "f(x^2015 + f(y)^2015) = f(x)^2015 + y^2015",
+   "domain": "R",
+   "mohs": 25,
+   "solved": false,
+   "checker_calls": 0,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "the checker cannot load the equation: identity too large",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "macedonia-2023-1",
+   "equation": "xf(x + y) + yf(y - x) = f(x^2 + y^2)",
+   "domain": "R",
+   "mohs": 10,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "macedonia-bmo-2011-4",
+   "equation": "f(x + yf(x)) = f(f(x)) + xf(y)",
+   "domain": "R",
+   "mohs": 15,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "memo-2011-t1",
+   "equation": "y^2f(x) + x^2f(y) + xy = xyf(x + y) + x^2 + y^2",
+   "domain": "R",
+   "mohs": 10,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "memo-2013-t1",
+   "equation": "f(xf(x) + 2y) = f(x^2) + f(y) + x + y - 1",
+   "domain": "R",
+   "mohs": 10,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "memo-2016-t2",
+   "equation": "f(x)f(y) = xf(f(y - x)) + xf(2x) + f(x^2)",
+   "domain": "R",
+   "mohs": 20,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "memo-2017-i1",
+   "equation": "f(x^2 + f(x)f(y)) = xf(x + y)",
+   "domain": "R",
+   "mohs": 15,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "memo-51ffd8-i1",
+   "equation": "f(xf(y) + 2y) = f(xy) + xf(y) + f(f(y))",
+   "domain": "R",
+   "mohs": 15,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "mongolia-2013-x-b2",
+   "equation": "f(x + f(y)) = f(x) + (1/8)*x*f(4y) + f(f(y))",
+   "domain": "R",
+   "mohs": 20,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "mongolia-2017-12-1",
+   "equation": "(x - y)f(x + y) + (y - z)f(y + z) + (z - x)f(z + x) = 0",
+   "domain": "R",
+   "mohs": 5,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "netherlands-tst-2011-2",
+   "equation": "xf(x + xy) = xf(x) + f(x^2)f(y)",
+   "domain": "R",
+   "mohs": 10,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "netherlands-tst-2013-4",
+   "equation": "f(x + yf(x)) = f(xf(y)) - x + f(y + f(x))",
+   "domain": "R",
+   "mohs": 5,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "netherlands-tst-2021-3",
+   "equation": "f(x + yf(x + y)) = y^2 + f(x)f(y)",
+   "domain": "R",
+   "mohs": 15,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "nmc-31d877-3",
+   "equation": "f(f(x)f(y) + y) = f(x)y + f(y - x + 1)",
+   "domain": "R",
+   "mohs": 10,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "pmo-2023-national-6",
+   "equation": "f(2f(x)) = f(x - f(y)) + f(x) + y",
+   "domain": "R",
+   "mohs": 10,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "romania-2014-district-4",
+   "equation": "f(x + 3f(y)) = f(x) + f(y) + 2y",
+   "domain": "Q",
+   "mohs": 10,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "romania-2023-g10-p4",
+   "equation": "f(xf(x) + f(y)) = f(f(x^2)) + y",
+   "domain": "R",
+   "mohs": 10,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "romania-shortlist-2023-seniors-2",
+   "equation": "f(1 - xy) = (1 - f(x))(1 - f(y))",
+   "domain": "Q",
+   "mohs": 15,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "saudi-2012-imo-tst1-p3",
+   "equation": "f(f(x) + xf(y)) = x + f(x)y",
+   "domain": "Q",
+   "mohs": 15,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "saudi-2013-bmo-tst-day2-p2",
+   "equation": "f(f(f(x) + y) + y) = x + y + f(y)",
+   "domain": "R",
+   "mohs": 10,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "saudi-2015-preselection-day2-p2",
+   "equation": "f(x + y^2 - f(y)) = f(x)",
+   "domain": "R",
+   "mohs": 10,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "saudi-2016-imo-tst-l4-day2-p3",
+   "equation": "x(f(x + y) - f(x - y)) = 4yf(x)",
+   "domain": "R",
+   "mohs": 10,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "saudi-2017-imo-tst-day1-p2",
+   "equation": "f(xf(y) - y) + f(xy - x) + f(x + y) = 2xy",
+   "domain": "R",
+   "mohs": 10,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "saudi-2022-november-camp-test2-p8",
+   "equation": "2f(x)f(x + y) - f(x^2) = (x/2)(f(2x) + 4f(f(y)))",
+   "domain": "R",
+   "mohs": 20,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "saudi-2023-test3-p1",
+   "equation": "2(y + 1)f(x)f(y - 1) = 2yf(xy) - f(2x)",
+   "domain": "R",
+   "mohs": 15,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "silkroad-2006-1",
+   "equation": "f(x^2 + xy + f(y)) = f(x)^2 + xf(y) + y",
+   "domain": "R",
+   "mohs": 10,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "singapore-2012-open-r2-p2",
+   "equation": "(x + y)(f(x) - f(y)) = (x - y)f(x + y)",
+   "domain": "R",
+   "mohs": 10,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "singapore-2014-open-r2-p2",
+   "equation": "f(xf(y) + x) = xy + f(x)",
+   "domain": "R",
+   "mohs": 5,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": [
+    "seen_in_development"
+   ]
+  },
+  {
+   "id": "singapore-2015-open-r2-p3",
+   "equation": "f(x)f(yf(x) - 1) = x^2f(y) - f(x)",
+   "domain": "R",
+   "mohs": 10,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "slovenia-2008-r1-g4-4",
+   "equation": "x + f(xf(y)) = f(y) + yf(x)",
+   "domain": "R",
+   "mohs": 0,
+   "solved": true,
+   "checker_calls": 2,
+   "seconds": 0.331,
+   "proof_len": 2,
+   "answer": "f(x) = x - 1",
+   "reason": "",
+   "proof": "sub R1: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x - 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "slovenia-2014-r1-b2",
+   "equation": "f(xy) = xf(y) + 3f(x) + 3",
+   "domain": "R",
+   "mohs": 0,
+   "solved": true,
+   "checker_calls": 6,
+   "seconds": 0.331,
+   "proof_len": 2,
+   "answer": "f(x) = x/2 - 3/2",
+   "reason": "",
+   "proof": "sub R1: y:=(6*0*1)^3\nconclude",
+   "solutions": [
+    "f(x) = x/2 - 3/2"
+   ],
+   "flags": []
+  },
+  {
+   "id": "slovenia-tst-2010-3",
+   "equation": "(x - 2)f(y) + f(y + 2f(x)) = f(x + yf(x))",
+   "domain": "R",
+   "mohs": 15,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "slovenia-tst-2012-3",
+   "equation": "(x + f(x)^2)f(y) = f(yf(x)) + xyf(x)",
+   "domain": "R",
+   "mohs": 15,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "spain-2018-3",
+   "equation": "f(x + f(x + y)) = f(2x) + y",
+   "domain": "R",
+   "mohs": 5,
+   "solved": true,
+   "checker_calls": 3,
+   "seconds": 0.331,
+   "proof_len": 6,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "surj\nsub R1: x:=0\ninj\nsub P: y:=0\ncancel\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "spain-2021-4",
+   "equation": "f(xf(y) + y) = f(xy) + f(y)",
+   "domain": "R",
+   "mohs": 10,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "swiss-mo-2006-1",
+   "equation": "y f(2x) - x f(2y) = 8xy(x^2 - y^2)",
+   "domain": "R",
+   "mohs": 0,
+   "solved": true,
+   "checker_calls": 4,
+   "seconds": 0.331,
+   "proof_len": 2,
+   "answer": "f(x) = x^3 + cx for any constant c",
+   "reason": "",
+   "proof": "sub P: y:=5\nconclude",
+   "solutions": [
+    "f(x) = x^3 + cx"
+   ],
+   "flags": [
+    "seen_in_development"
+   ]
+  },
+  {
+   "id": "swiss-tst-2000-7",
+   "equation": "f(f(x) + y) = f(x^2 - y) + 4y f(x)",
+   "domain": "R",
+   "mohs": 10,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": [
+    "seen_in_development"
+   ]
+  },
+  {
+   "id": "swiss-tst-2006-6",
+   "equation": "f(f(x) - y^2) = f(x)^2 - 2f(x) y^2 + f(f(y))",
+   "domain": "R",
+   "mohs": 20,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "switzerland-2010-6",
+   "equation": "f(f(x)) + f(f(y)) = 2y + f(x - y)",
+   "domain": "R",
+   "mohs": 5,
+   "solved": true,
+   "checker_calls": 6,
+   "seconds": 0.331,
+   "proof_len": 5,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: y:=x\ninj\nsurj\nsub P: y:=1\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": [
+    "seen_in_development"
+   ]
+  },
+  {
+   "id": "switzerland-2015-3",
+   "equation": "(y + 1)f(x) + f(xf(y) + f(x + y)) = y",
+   "domain": "R",
+   "mohs": 15,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "switzerland-tst-2009-8",
+   "equation": "f(f(x) - f(y)) = (x - y)^2 f(x + y)",
+   "domain": "R",
+   "mohs": 15,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "switzerland-tst-2010-8",
+   "equation": "f(x^4 + y^4) = x f(x^3) + y^2 f(y^2)",
+   "domain": "R",
+   "mohs": 10,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "switzerland-tst-2016-9",
+   "equation": "(f(x) + y)(f(x - y) + 1) = f(f(xf(x + 1)) - yf(y - 1))",
+   "domain": "R",
+   "mohs": 25,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "switzerland-tst-570013-3",
+   "equation": "f((x - y)^2) = x^2 - 2y f(x) + f(y)^2",
+   "domain": "R",
+   "mohs": 5,
+   "solved": true,
+   "checker_calls": 25,
+   "seconds": 0.331,
+   "proof_len": 8,
+   "answer": "f(x) = x + 1; f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y\nsub P: x:=0\nsub R3: x:=0\nsplit R1\nsub P: y:=0\nconclude\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = x + 1",
+    "f(x) = x"
+   ],
+   "flags": [
+    "seen_in_development"
+   ]
+  },
+  {
+   "id": "taiwan-mo-2024-3",
+   "equation": "2f((x + y)^2) = f(x + y) + f(x)^2 + (4y - 1)f(x) - 2y + 4y^2",
+   "domain": "R",
+   "mohs": 10,
+   "solved": true,
+   "checker_calls": 9,
+   "seconds": 0.331,
+   "proof_len": 4,
+   "answer": "f(x) = 2x",
+   "reason": "",
+   "proof": "sub P: y:=0\nsub R3: x:=0\nsub R5: x:=-y\nconclude",
+   "solutions": [
+    "f(x) = 2x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "taiwan-tc-2018-is3-1",
+   "equation": "f(f(x) + y) = f(x^2 - y) + 4(y - 2)(f(x) + 2)",
+   "domain": "R",
+   "mohs": 15,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "taiwan-tc-2019-is3-1",
+   "equation": "f(xf(y) - f(x) - y) = yf(x) - f(y) - x",
+   "domain": "R",
+   "mohs": 20,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "taiwan-tst-2013-mock1-3",
+   "equation": "(4x + f(x)^2)f(y) = 4f(yf(x)/2) + 4xyf(x)",
+   "domain": "R",
+   "mohs": 15,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "taiwan-tst-2020-is2-1",
+   "equation": "f(xy + xf(x)) = f(x)(f(x) + f(y))",
+   "domain": "R",
+   "mohs": 15,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "taiwan-tst-2020-mock1-2",
+   "equation": "f(x + f(y)) + f(xy) = yf(x) + f(y) + f(f(x))",
+   "domain": "R",
+   "mohs": 20,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "taiwan-tst-2023-is1-1a",
+   "equation": "f(xy + f(y))f(x) = x^2f(y) + f(xy)",
+   "domain": "R",
+   "mohs": 25,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "thailand-2014-2",
+   "equation": "f(xy - 1) + f(x)f(y) = 2xy - 1",
+   "domain": "R",
+   "mohs": 10,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "thailand-2016-3",
+   "equation": "f(f(x)f(y) + f(y)f(z) + f(z)f(x)) = f(x) + f(y) + f(z)",
+   "domain": "R",
+   "mohs": 10,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "turkey-tst-2014-2",
+   "equation": "f(f(y) + x^2 + 1) + 2x = y + f(x + 1)^2",
+   "domain": "R",
+   "mohs": 20,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "turkey-tst-2024-2",
+   "equation": "f(x + y)^3 = (x + 2y)f(x^2) + f(f(y))(x^2 + 3xy + y^2)",
+   "domain": "R",
+   "mohs": 10,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "ukraine-2006-g10-2",
+   "equation": "f(f(x) - y^2) = (x - y)^2 f(x + y)",
+   "domain": "R",
+   "mohs": 5,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "ukraine-2006-g11-6",
+   "equation": "f(x^3 + y^3) = x^2 f(x) + y f(y^2)",
+   "domain": "R",
+   "mohs": 10,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "ukraine-2008-11-2",
+   "equation": "f(f(y) + 2 + x) + f(f(y) - x) = y f(y)(x + 1)",
+   "domain": "R",
+   "mohs": 5,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "ukraine-2009-10-4",
+   "equation": "f(x + xy + f(y)) = (f(x) + 1/2)(f(y) + 1/2)",
+   "domain": "R",
+   "mohs": 15,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "ukraine-2021-5",
+   "equation": "f(x + y)^2 = f(x)^2 + 2f(xy) + f(y)^2",
+   "domain": "R",
+   "mohs": 20,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "ukraine-2023-11-4",
+   "equation": "f(x + yf(x + y)) = f(y^2) + xf(y) + f(x)",
+   "domain": "R",
+   "mohs": 20,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "ukraine-2023-4",
+   "equation": "xf(x) + yf(xy) = xf(x + yf(y))",
+   "domain": "R",
+   "mohs": 25,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "usa-tst-2024-6",
+   "equation": "f(xf(y)) + f(y) = f(x + y) + f(xy)",
+   "domain": "R",
+   "mohs": 30,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "usajmo-2016-6",
+   "equation": "(f(x) + xy)f(x - 3y) + (f(y) + xy)f(3x - y) = f(x + y)^2",
+   "domain": "R",
+   "mohs": 25,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "usajmo-2024-5",
+   "equation": "f(x^2 - y) + 2yf(x) = f(f(x)) + f(y)",
+   "domain": "R",
+   "mohs": 20,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "vietnam-2005-4",
+   "equation": "f(f(x - y)) = f(x)f(y) - f(x) + f(y) - xy",
+   "domain": "R",
+   "mohs": 15,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": [
+    "seen_in_development"
+   ]
+  },
+  {
+   "id": "vietnam-2017-5",
+   "equation": "f(xf(y) - f(x)) = 2f(x) + xy",
+   "domain": "R",
+   "mohs": 20,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "vietnam-2021-2",
+   "equation": "f(x)f(y) = f(xy - 1) + xf(y) + yf(x)",
+   "domain": "R",
+   "mohs": 15,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.331,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  }
+ ]
+}

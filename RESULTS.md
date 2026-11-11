@@ -138,7 +138,7 @@ brute force (128) 4.1 / 4.0 / 7.3 / 13.3; brute force (2,000) 36.5 / 45.2 / 80.8
 | brute force (2,000 calls) | 33/46 (71.7%) | 20/20 | 10/13 | 3/11 | 0/1 | 0/1 | 154.4 |
 
 The real benchmark did not exist when these runs were made. It now holds 137
-problems (`benchmarks/real/`), and no run on it has been made yet.
+problems (`benchmarks/real/`); the first run on it is M7 below.
 
 Time per problem in seconds (M5 run):
 
@@ -595,3 +595,79 @@ problems before anything is changed in response.
   record is re-read against its source, and if the record is right it is a
   soundness bug that outranks all other work. If a harness bug forces a
   second run, both runs are reported.
+
+### Result
+
+Run at commit `a82d869`, clean tree, Apple GPU, 42 minutes for the network
+and reference rows and 3 minutes for brute force at 20,000 calls. Files:
+`results/v1_real_*.json`, `results/v1.md`, `results/baseline_real_20000_v1.json`.
+No checked proof gave an answer different from the recorded one.
+
+Solved, of the 124 problems that carry no flag (the headline) and of all 137:
+
+| solver | 124 unflagged | all 137 | per sampling seed (137) |
+|---|---|---|---|
+| network, no backtracking (32 calls) | 6 (4.8%) | 10 (7.3%) | 10, 12, 11 |
+| network, search (128 calls) | 10 (8.1%) | 14 (10.2%) | 14, 13, 13 |
+| network, search (2,000 calls) | 13 (10.5%) | 17 (12.4%) | 17, 17, 17 |
+| untrained network, no backtracking (32) | 5 (4.0%) | 8 (5.8%) | |
+| untrained network, search (128) | 5 (4.0%) | 8 (5.8%) | |
+| uniform policy, no backtracking (32) | 4 (3.2%) | 7 (5.1%) | |
+| uniform policy, search (128) | 6 (4.8%) | 9 (6.6%) | |
+| brute force (128 calls) | 5 (4.0%) | 8 (5.8%) | |
+| brute force (2,000 calls) | 8 (6.5%) | 12 (8.8%) | |
+| brute force (20,000 calls) | 12 (9.7%) | 16 (11.7%) | |
+
+The network rows show the first sampling seed. The three seeds do not solve
+quite the same problems: at 2,000 calls 19 of the 137 are solved by at least
+one seed.
+
+By MOHS value, on the 124 unflagged problems (132 of the 137 values are
+estimates):
+
+| solver | 0M | 5M | 10M | 15M | 20M | 25M and up |
+|---|---|---|---|---|---|---|
+| network, search (128 calls) | 2/2 | 7/15 | 1/43 | 0/32 | 0/19 | 0/13 |
+| network, search (2,000 calls) | 2/2 | 7/15 | 4/43 | 0/32 | 0/19 | 0/13 |
+| brute force (2,000 calls) | 2/2 | 5/15 | 1/43 | 0/32 | 0/19 | 0/13 |
+| brute force (20,000 calls) | 2/2 | 6/15 | 4/43 | 0/32 | 0/19 | 0/13 |
+
+### Plain reading
+
+* **Version 1 solves about one real problem in ten.** The seed benchmark,
+  which was written for the project and used to choose fixes, gave 41 to 45
+  of 50 for the same weights and budget. The real benchmark gives 13 of 124.
+  The seed numbers were never an estimate of this, and RESULTS says so
+  above, but the size of the gap is the main finding of this run.
+* **Nothing rated 15M or above is solved by any solver**, and only 4 of 43
+  problems at 10M. The stated target of version 1 was 0M to 10M: on the 60
+  unflagged problems in that range the best row (network search, 2,000 calls)
+  solves 13, or 22%. Counting any solver at any budget in this run, 18 of
+  the 124 are solved (22 of 137).
+* **The ordering of the solvers is the same as on the other benchmarks.** At
+  equal checker calls the trained network solves more than brute force (10
+  against 5 at 128 calls, 13 against 8 at 2,000) and the untrained network
+  and the uniform policy solve the fewest. With 137 problems and counts this
+  small the differences are a handful of problems each; no significance
+  test was run, and none of these gaps should be read as established.
+* **More budget helps little.** From 128 to 2,000 calls the network gains 3
+  problems. Brute force at ten times the network's largest budget (20,000
+  calls) reaches 12, one fewer than the network at 2,000. Each solves
+  problems the other does not: taking every sampling seed, the network at
+  2,000 calls has 6 that brute force at 20,000 lacks, and brute force has 3
+  the other way round. Every unsolved row stopped on its budget; no
+  brute-force row reached the 120 second limit (the slowest took 37 s).
+* **The flagged problems are easier for the solver than the rest**, not
+  harder as the protocol expected: 4 of the 13 are solved (the one in the
+  training pool, the one that is a seed problem after a change of variables,
+  and two of the 11 from the design study, both of which that study had
+  already found to be solvable). Leaving them out lowers the rate from 12.4%
+  to 10.5%.
+* **Two problems cannot be loaded** (exponents 2021 and 2015) and count as
+  unsolved in every row.
+* **What the run does not show.** Why each problem fails. The design study
+  behind issue #99 found, on a different and hand-picked set, that most
+  failures were missing routine deductions and search depth and a minority
+  were gaps in the move language. That is the working hypothesis for the
+  next milestone. It was not checked on this benchmark, and the unsolved
+  real problems have not been inspected, so that nothing is tuned on them.

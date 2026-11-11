@@ -37,7 +37,9 @@ substitutions, case splits and preimages. AlphaFE is not affiliated with
 Google DeepMind.
 
 When AlphaFE cannot find a proof it says so. All it prints then is a guess
-among polynomials of degree at most 2, labelled as a guess.
+among polynomials of degree at most 2, labelled as a guess. That is the usual
+outcome on competition problems today: on a benchmark of 137 real ones,
+version 1 finds a proof for about one in ten (see [Results](#results)).
 
 ## Quick start
 
@@ -116,6 +118,29 @@ Difficulty is measured on Evan Chen's MOHS scale, which runs from 0M to 50M;
 30M is a medium-hard IMO problem. The target range is 0M to 10M.
 
 ## Results
+
+### Real competition problems
+
+On real problems the solver is weak. The real benchmark is 137 competition
+problems that fit the scope above, selected by rules fixed in advance and not
+looked at during development. Version 1 was run on it once, before anything
+was changed in response.
+
+| | network, search (128 calls) | network, search (2,000 calls) | brute force (2,000 calls) | brute force (20,000 calls) |
+|---|---|---|---|---|
+| 124 problems never seen in development | 10 | 13 | 8 | 12 |
+| all 137 | 14 | 17 | 12 | 16 |
+
+That is about one problem in ten. The solved ones are rated 0M to 10M, and
+nothing rated 15M or above is solved by any solver. In the target range of
+0M to 10M the best row solves 13 of 60. The counts are small, so the gaps
+between solvers are a few problems each. `RESULTS.md` (M7) has the protocol,
+which was committed before the run, and the full tables.
+
+### Synthetic and seed problems
+
+These are the problems the solver was developed on, and they are much easier
+than the real ones.
 
 Problems solved, out of 200 per held-out tier and 50 on the seed benchmark.
 The network was trained once, for 28 minutes on a laptop GPU, and evaluated
@@ -201,8 +226,8 @@ a map of the modules.
 * `benchmarks/real/`: 137 real competition problems, used only for testing.
   They were selected by rules fixed in advance from MathNet and Evan Chen's
   solution notes, and `benchmarks/real/SKIPPED.md` lists everything the rules
-  covered and left out. The solver has not been evaluated on them yet, so the
-  results below do not include this set.
+  covered and left out. Thirteen are flagged as not fully unseen, and results
+  are given with and without them.
 
 ## Known limits
 
