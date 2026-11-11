@@ -681,3 +681,111 @@ estimates):
   were gaps in the move language. That is the working hypothesis for the
   next milestone. It was not checked on this benchmark, and the unsolved
   real problems have not been inspected, so that nothing is tuned on them.
+
+## M8: routine moves, square lemmas and a network retrained for them
+
+M7 showed version 1 solving one real problem in ten. The design study behind
+issue #99 had pointed at missing routine deductions as the main cause. This
+milestone makes those deductions free, adds two lemma moves, and retrains
+the network. Every choice below was made on the seed and held-out sets. The
+real benchmark is run once, at the end, under a protocol written first.
+
+### What changed
+
+* **Routine substitutions are free** (commit `2b18a68`). After each proposed
+  move the environment applies, through the checker, the opening
+  substitutions into the original equation, the swap, closed instances of
+  one-variable identities, and named witnesses. `docs/DESIGN.md` describes
+  them.
+* **Search depth** is 16 proposed moves per case and restarts when a case
+  closes (it was 10 and did not restart for a move that closed a case).
+* **Two lemma moves** (`f31afa0`): `sqadd` (additivity from an identity
+  about squares) and `sqlin` (over R, additive with f(x^2) = f(x)^2 is
+  linear). They were written for USAMO 2002/4, which joins the seed set as
+  s51; the seed set has 51 problems from here on.
+* **Checker fixes**: `conclude` without a target tries every explicit
+  identity (`84d7970`); a product of proven-nonzero constants is nonzero
+  (`ff2c22f`).
+* **Training pool**: no benchmark problem or sign-flipped twin of one, and no
+  problem the environment solves by itself.
+
+### Brute force: what the routine moves are worth
+
+Seed set (50 problems at that commit) and the frozen held-out set, brute
+force, `results/m8_ablation_*.json`, `scripts/ablate_routine.py`:
+
+| environment | calls | seed | tier 1 | tier 2 | tier 3 | tier 4 | CPU seconds |
+|---|---|---|---|---|---|---|---|
+| before | 2,000 | 39 | 177 | 144 | 81 | 52 | 321 |
+| swap and instances | 2,000 | 44 | 186 | 175 | 104 | 69 | |
+| plus opening substitutions | 2,000 | 47 | 190 | 192 | 126 | 97 | |
+| plus witnesses and preimage targets | 2,000 | 47 | 190 | 192 | 130 | 99 | 2,067 |
+| before | 20,000 | 45 | 188 | 178 | 97 | 63 | 3,321 |
+
+The routine moves cost time: a proposed move is several times slower to
+process. The last two rows show the gain is not bought with time. The new
+environment at 2,000 calls solves more on every suite than the old one at
+20,000 calls, and uses less CPU.
+
+With no search at all, the routine moves and free moves solve 30 of the 50
+seed problems and 175, 154, 83 and 52 of the held-out tiers. Much of what
+the earlier tables measured was the ability to do the opening substitutions.
+
+### The network in the new environment
+
+Evaluated at commit `ff2c22f` with three sampling seeds; a range is the
+minimum and maximum over them. `results/m8_m1_*` and `results/m8_v2_*`.
+
+| solver | seed (51) | tier 1 | tier 2 | tier 3 | tier 4 |
+|---|---|---|---|---|---|
+| retrained network, no backtracking (32 calls) | 41-42 | 185-186 | 186-190 | 123-126 | 81-82 |
+| retrained network, search (128 calls) | 43-45 | 187-188 | 191-194 | 129-131 | 87-89 |
+| retrained network, search (2,000 calls) | 46 | | | | |
+| version 1 network, search (128 calls) | 39-42 | 187-188 | 182-184 | 113-115 | 76-77 |
+| version 1 network, search (2,000 calls) | 45-46 | | | | |
+| untrained network, search (128 calls) | 41 | 183 | 186 | 112 | 77 |
+| uniform policy, search (128 calls) | 40 | 186 | 186 | 113 | 76 |
+| brute force (128 calls) | 42 | 188 | 185 | 114 | 79 |
+| brute force (2,000 calls) | 48 | 190 | 192 | 130 | 99 |
+
+* **The version 1 network is worth nothing in the new environment.** At 128
+  calls it is level with brute force, with an untrained network and with the
+  uniform policy on every suite. What it had learned was mostly the opening
+  substitutions, which are now free.
+* **The retrained network is worth something again.** It was trained from
+  random weights for 56 minutes in the new environment (run `m1`, 57
+  iterations, weights `alphafe-m1-56min.pt`, sha256 `d4fa2341...57eaed`). At
+  128 calls it solves more than brute force at 128 on tiers 2, 3 and 4 (by
+  6-9, 15-17 and 8-10 problems) and about as many as brute force at 2,000
+  calls on tiers 2 and 3. On tier 1 and on the seed set the solvers are
+  within a few problems of each other.
+* **Brute force with a large budget is still ahead where it counts most**:
+  99 against 87-89 on tier 4, and 48 against 46 on the seed set at 2,000
+  calls each.
+* The run never reached tier 4 in training. Its self-play solve rate on
+  tier 1 stayed near 0.5 to 0.6, so it moved up only when the iteration
+  limit per tier was reached (issue #103). One training run, one seed.
+
+### Protocol for the real benchmark (written and committed before the run)
+
+* **Second look.** The real benchmark has been run once before (M7). Nothing
+  in this milestone was chosen using it: the configuration was fixed on the
+  seed and held-out sets above. The 12 problems flagged as seen in
+  development were used during development of this milestone (brute force
+  in the new environment was run on them), which is what the flag is for;
+  the 124 unflagged problems were not run or inspected.
+* **Solver.** The code at the commit of this protocol, clean tree.
+* **Weights.** `alphafe-m1-56min.pt`, chosen over the version 1 weights
+  because it solves more of held-out tiers 3 and 4 at 128 calls (216 to 220
+  against 189 to 192 over the sampling seeds).
+* **Command.** `alphafe eval --suite real --tag m8 --checkpoint
+  checkpoints/alphafe-m1-56min.pt --seeds 3 --big-budget 2000`, then `python
+  scripts/run_baseline.py 20000 120 widening m8 --suite real`. The same rows
+  and tables as M7.
+* **Comparison.** With M7, row by row, on the 124 unflagged problems and on
+  all 137. Also reported: how many solved problems have a proof that uses
+  `sqadd` or `sqlin`, since those lemmas were designed on one problem and
+  their reach is unknown.
+* **If something goes wrong.** As in M7: an answer mismatch stops everything
+  else, and a rerun forced by a harness bug is reported together with the
+  first run.

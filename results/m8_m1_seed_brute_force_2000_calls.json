@@ -1,0 +1,963 @@
+{
+ "name": "m8_m1_seed_brute_force_2000_calls",
+ "config": {
+  "suite": "seed",
+  "solver": "brute force (2000 calls)",
+  "checkpoint": null,
+  "solved_per_seed": null
+ },
+ "provenance": {
+  "commit": "ff2c22fb11e1558784e0dc1c7fd2b3ef78adc268",
+  "dirty": false,
+  "time_utc": "2026-11-11T02:03:23Z",
+  "python": "3.12.15",
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "torch": "2.15.0",
+  "device": "mps",
+  "checkpoint": "checkpoints/alphafe-m1-56min.pt",
+  "checkpoint_sha256": "d4fa23410759e994abfe8a71032c049e38dbcb62d85a9e776b3ce5bb2957eaed",
+  "settings": {
+   "suites": [
+    "seed",
+    "synthetic-tier1",
+    "synthetic-tier2",
+    "synthetic-tier3",
+    "synthetic-tier4"
+   ],
+   "heldout_per_tier": 200,
+   "sampling_seeds": [
+    1000,
+    1001,
+    1002
+   ],
+   "proposals_per_state": 8,
+   "temperature": [
+    0.6,
+    0.8,
+    1.0,
+    1.0,
+    1.3,
+    1.6,
+    2.0,
+    3.0
+   ],
+   "value_weight": 0.0,
+   "greedy_budget": 32,
+   "search_budget": 128,
+   "big_budget": 2000,
+   "baseline_budgets": [
+    128,
+    2000
+   ],
+   "baseline_seconds": 120.0,
+   "baseline_workers": 8,
+   "max_depth": 16,
+   "routine_moves": {
+    "opening": true,
+    "swap": true,
+    "instances": true,
+    "witness": true
+   }
+  }
+ },
+ "summary": {
+  "problems": 51,
+  "solved": 48,
+  "rate": 0.9412,
+  "mean_calls_solved": 112.4,
+  "median_calls_solved": 0,
+  "mean_seconds": 0.366
+ },
+ "by_mohs": {
+  "0M": [
+   22,
+   22
+  ],
+  "5M": [
+   15,
+   15
+  ],
+  "10M": [
+   10,
+   12
+  ],
+  "15M": [
+   1,
+   1
+  ],
+  "20M": [
+   0,
+   1
+  ]
+ },
+ "rows": [
+  {
+   "id": "s01",
+   "equation": "f(x+y) = f(x) + y",
+   "domain": "R",
+   "mohs": 0,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.002,
+   "proof_len": 5,
+   "answer": "f(x) = x + c for any constant c",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\ninj\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x + c"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s02",
+   "equation": "f(x+y) = x + f(y)",
+   "domain": "R",
+   "mohs": 0,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.001,
+   "proof_len": 5,
+   "answer": "f(x) = x + c for any constant c",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\ninj\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = x + c"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s03",
+   "equation": "f(x-y) = f(x) - y",
+   "domain": "R",
+   "mohs": 0,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.001,
+   "proof_len": 4,
+   "answer": "f(x) = x + c for any constant c",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x + c"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s04",
+   "equation": "f(xy) = x*f(y)",
+   "domain": "R",
+   "mohs": 0,
+   "solved": true,
+   "checker_calls": 6,
+   "seconds": 0.004,
+   "proof_len": 7,
+   "answer": "f(x) = cx for any constant c",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: y:=x\nsub P: y:=-x\nsub R3: x:=-x\nsub P: y:=1\nconclude",
+   "solutions": [
+    "f(x) = cx"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s05",
+   "equation": "f(x) + y = f(y) + x",
+   "domain": "R",
+   "mohs": 0,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.001,
+   "proof_len": 4,
+   "answer": "f(x) = x + c for any constant c",
+   "reason": "",
+   "proof": "inj\nsurj\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x + c"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s06",
+   "equation": "f(x) + f(y) = x + y",
+   "domain": "R",
+   "mohs": 0,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.001,
+   "proof_len": 5,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "inj\nsurj\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s07",
+   "equation": "f(x+y) = f(x) + 2y",
+   "domain": "R",
+   "mohs": 0,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.001,
+   "proof_len": 5,
+   "answer": "f(x) = 2x + c for any constant c",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\ninj\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = 2x + c"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s08",
+   "equation": "f(2x+y) = f(x) + x + y",
+   "domain": "R",
+   "mohs": 0,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.001,
+   "proof_len": 4,
+   "answer": "f(x) = x + c for any constant c",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x + c"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s09",
+   "equation": "x*f(y) = y*f(x)",
+   "domain": "R",
+   "mohs": 0,
+   "solved": true,
+   "checker_calls": 2,
+   "seconds": 0.001,
+   "proof_len": 4,
+   "answer": "f(x) = cx for any constant c",
+   "reason": "",
+   "proof": "sub P: x:=0\nsub P: y:=-x\nsub P: x:=1\nconclude",
+   "solutions": [
+    "f(x) = cx"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s10",
+   "equation": "f(x+y) + f(x) = 2x + y",
+   "domain": "R",
+   "mohs": 0,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.001,
+   "proof_len": 6,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\ninj\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s11",
+   "equation": "f(xy) = f(x) + f(y)",
+   "domain": "R",
+   "mohs": 0,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.001,
+   "proof_len": 3,
+   "answer": "f(x) = 0",
+   "reason": "",
+   "proof": "sub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = 0"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s12",
+   "equation": "f(x) + f(x+y) = y + 2",
+   "domain": "R",
+   "mohs": 0,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.001,
+   "proof_len": 5,
+   "answer": "no solutions",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\ninj\nsub P: x:=0, y:=0\nsub P: x:=0",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "s13",
+   "equation": "f(x+y) + f(x-y) = 2x^2 + 2y^2",
+   "domain": "R",
+   "mohs": 0,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.003,
+   "proof_len": 6,
+   "answer": "f(x) = x^2",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub R2: x:=y - x\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = x^2"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s14",
+   "equation": "f(x+y) - f(x-y) = 4xy",
+   "domain": "R",
+   "mohs": 0,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.002,
+   "proof_len": 4,
+   "answer": "f(x) = x^2 + c for any constant c",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0\nsub P: y:=x\nconclude",
+   "solutions": [
+    "f(x) = x^2 + c"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s15",
+   "equation": "f(x + f(y)) = x + y",
+   "domain": "R",
+   "mohs": 0,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.005,
+   "proof_len": 8,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "inj\nsurj\nsub P: x:=y, y:=x\ncancel\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s16",
+   "equation": "f(f(x) + y) = f(x) + y",
+   "domain": "R",
+   "mohs": 0,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.003,
+   "proof_len": 5,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s17",
+   "equation": "f(x - f(y)) = 1 - x - y",
+   "domain": "R",
+   "mohs": 5,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.002,
+   "proof_len": 8,
+   "answer": "f(x) = 1/2 - x",
+   "reason": "",
+   "proof": "inj\nsurj\nsub P: x:=y, y:=x\ncancel\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = 1/2 - x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s18",
+   "equation": "f(xy + x) = x*f(y) + f(x)",
+   "domain": "R",
+   "mohs": 0,
+   "solved": true,
+   "checker_calls": 3,
+   "seconds": 0.012,
+   "proof_len": 7,
+   "answer": "f(x) = cx for any constant c",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: y:=0\nsub P: y:=x\nsub P: y:=-x\nsub P: x:=-1\nsub R3: x:=-x - 1\nconclude",
+   "solutions": [
+    "f(x) = cx"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s19",
+   "equation": "f(x-y) = f(x) + f(y) - 2y",
+   "domain": "R",
+   "mohs": 0,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.002,
+   "proof_len": 5,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=x\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s20",
+   "equation": "f(x+y) = f(x) + y^2 + 2xy",
+   "domain": "R",
+   "mohs": 0,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.001,
+   "proof_len": 3,
+   "answer": "f(x) = x^2 + c for any constant c",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x^2 + c"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s21",
+   "equation": "f(xy) + f(x) = x*f(y) + x",
+   "domain": "R",
+   "mohs": 0,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.001,
+   "proof_len": 4,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s22",
+   "equation": "f(x)f(y) = f(xy) + x + y",
+   "domain": "R",
+   "mohs": 5,
+   "solved": true,
+   "checker_calls": 1,
+   "seconds": 0.015,
+   "proof_len": 12,
+   "answer": "f(x) = x + 1",
+   "reason": "",
+   "proof": "sub P: x:=0, y:=0\nsub P: x:=0\ninj\nsub R2: x:=xy\nsub P: y:=x\nsub R2: x:=x^2\nsub P: y:=-x\nsub R2: x:=-x\nsub R2: x:=-x^2\nsub R10: x:=-x\nsplit R1\nconclude",
+   "solutions": [
+    "f(x) = x + 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s23",
+   "equation": "f(x)f(y) = f(x) + f(y)",
+   "domain": "R",
+   "mohs": 5,
+   "solved": true,
+   "checker_calls": 1,
+   "seconds": 0.008,
+   "proof_len": 9,
+   "answer": "f(x) = 0; f(x) = 2",
+   "reason": "",
+   "proof": "sub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=x\nsub P: y:=-x\nsub R2: x:=-x\nsub R7: x:=-x\nsplit R1\nconclude\nconclude",
+   "solutions": [
+    "f(x) = 0",
+    "f(x) = 2"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s24",
+   "equation": "f(x)f(y) = xy",
+   "domain": "R",
+   "mohs": 5,
+   "solved": true,
+   "checker_calls": 57,
+   "seconds": 0.065,
+   "proof_len": 11,
+   "answer": "f(x) = -x; f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=0, y:=0\nsub P: y:=x\nsub P: y:=-x\nsub R3: x:=-x\nsub P: x:=1\ninj\nsub R2: x:=1\nsub R3: x:=-x\nsplit R2\nconclude\nconclude",
+   "solutions": [
+    "f(x) = -x",
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s25",
+   "equation": "f(x)f(y) = f(x) + f(y) + xy - 1",
+   "domain": "R",
+   "mohs": 5,
+   "solved": true,
+   "checker_calls": 57,
+   "seconds": 0.089,
+   "proof_len": 11,
+   "answer": "f(x) = 1 - x; f(x) = x + 1",
+   "reason": "",
+   "proof": "sub P: x:=0, y:=0\nsub P: y:=x\nsub P: y:=-x\nsub R3: x:=-x\nsub P: x:=1\ninj\nsub R2: x:=1\nsub R3: x:=-x\nsplit R2\nconclude\nconclude",
+   "solutions": [
+    "f(x) = 1 - x",
+    "f(x) = x + 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s26",
+   "equation": "f(x+y) = f(x) + f(y)",
+   "domain": "Q",
+   "mohs": 5,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.001,
+   "proof_len": 2,
+   "answer": "f(x) = cx for any constant c",
+   "reason": "",
+   "proof": "cauchy\nconclude",
+   "solutions": [
+    "f(x) = cx"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s27",
+   "equation": "f(x+y) = f(x) + f(y) + 1",
+   "domain": "Q",
+   "mohs": 5,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.001,
+   "proof_len": 2,
+   "answer": "f(x) = cx - 1 for any constant c",
+   "reason": "",
+   "proof": "cauchy\nconclude",
+   "solutions": [
+    "f(x) = cx - 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s28",
+   "equation": "f(x+y) + f(0) = f(x) + f(y)",
+   "domain": "Q",
+   "mohs": 5,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.001,
+   "proof_len": 2,
+   "answer": "f(x) = cx + d for any constants c, d",
+   "reason": "",
+   "proof": "cauchy\nconclude",
+   "solutions": [
+    "f(x) = cx + d"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s29",
+   "equation": "f(x^2) - f(y^2) = (x+y)(f(x) - f(y))",
+   "domain": "R",
+   "mohs": 5,
+   "solved": true,
+   "checker_calls": 2,
+   "seconds": 0.005,
+   "proof_len": 3,
+   "answer": "f(x) = cx + d for any constants c, d",
+   "reason": "",
+   "proof": "sub P: x:=0\nsub P: x:=1\nconclude",
+   "solutions": [
+    "f(x) = cx + d"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s30",
+   "equation": "f(x^2 - y^2) = (x-y)(f(x) + f(y))",
+   "domain": "R",
+   "mohs": 5,
+   "solved": true,
+   "checker_calls": 47,
+   "seconds": 0.023,
+   "proof_len": 8,
+   "answer": "f(x) = cx for any constant c",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsub P: y:=-x\nsub P: x:=1\nsub P: x:=-1\nconclude",
+   "solutions": [
+    "f(x) = cx"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s31",
+   "equation": "(x-y)f(x+y) - (x+y)f(x-y) = 4xy(x^2 - y^2)",
+   "domain": "R",
+   "mohs": 10,
+   "solved": true,
+   "checker_calls": 662,
+   "seconds": 0.297,
+   "proof_len": 7,
+   "answer": "f(x) = x^3 + cx for any constant c",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0\nsub R1: x:=y - x\nsub P: y:=x\nsub P: x:=x + y\nsub R2: x:=1\nconclude",
+   "solutions": [
+    "f(x) = x^3 + cx"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s32",
+   "equation": "f(x*f(y)) = xy",
+   "domain": "R",
+   "mohs": 5,
+   "solved": true,
+   "checker_calls": 79,
+   "seconds": 0.061,
+   "proof_len": 8,
+   "answer": "f(x) = -x; f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: y:=x\nsub P: y:=-x\nsub P: x:=1\ncancel\nsub R2: x:=1\nconclude",
+   "solutions": [
+    "f(x) = -x",
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s33",
+   "equation": "f(x)f(y) = f(x+y) + xy",
+   "domain": "R",
+   "mohs": 10,
+   "solved": false,
+   "checker_calls": 2000,
+   "seconds": 4.352,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "checker-call budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "s34",
+   "equation": "f(x)f(y) + f(x+y) = xy",
+   "domain": "R",
+   "mohs": 10,
+   "solved": false,
+   "checker_calls": 2000,
+   "seconds": 3.945,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "checker-call budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "s35",
+   "equation": "f(x+y) + 2f(x-y) = 3f(x) - y",
+   "domain": "R",
+   "mohs": 5,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.003,
+   "proof_len": 4,
+   "answer": "f(x) = x + c for any constant c",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0\nsub R1: x:=-x\nconclude",
+   "solutions": [
+    "f(x) = x + c"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s36",
+   "equation": "f(x-y) = f(x)f(y)",
+   "domain": "R",
+   "mohs": 5,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.028,
+   "proof_len": 21,
+   "answer": "f(x) = 0; f(x) = 1",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub R2: x:=-x\nsub R2: x:=y - x\nsub R4: x:=0\nsub R5: x:=-x\nsub R5: x:=y - x\nsub R10: x:=0\nsub R11: x:=-x\nsub R11: x:=y - x\nsub R14: x:=0\nsub R15: x:=-x\nsub P: y:=0\nsub R14: x:=x - y\nsub R17: x:=0\nsub R18: x:=x - y\nsub P: y:=x\nsub R10: x:=x - y\nsub P: y:=-x\nconclude",
+   "solutions": [
+    "f(x) = 0",
+    "f(x) = 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s37",
+   "equation": "f(x + f(y)) = f(x) + y",
+   "domain": "Q",
+   "mohs": 10,
+   "solved": true,
+   "checker_calls": 691,
+   "seconds": 0.664,
+   "proof_len": 11,
+   "answer": "f(x) = -x; f(x) = x",
+   "reason": "",
+   "proof": "inj\nsurj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\ncancel\nsub P: x:=0\nsub P: y:=x\nsub P: y:=-x\nsub P: y:=f(y)\ncauchy\nconclude",
+   "solutions": [
+    "f(x) = -x",
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s38",
+   "equation": "f(f(x) + y) = x + f(y)",
+   "domain": "Q",
+   "mohs": 10,
+   "solved": true,
+   "checker_calls": 676,
+   "seconds": 0.702,
+   "proof_len": 11,
+   "answer": "f(x) = -x; f(x) = x",
+   "reason": "",
+   "proof": "inj\nsurj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\ncancel\nsub P: y:=0\nsub P: y:=x\nsub P: y:=-x\nsub P: x:=f(x)\ncauchy\nconclude",
+   "solutions": [
+    "f(x) = -x",
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s39",
+   "equation": "f(f(x) + f(y)) = x + y",
+   "domain": "Q",
+   "mohs": 10,
+   "solved": true,
+   "checker_calls": 1388,
+   "seconds": 0.757,
+   "proof_len": 11,
+   "answer": "f(x) = -x; f(x) = x",
+   "reason": "",
+   "proof": "inj\nsurj\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=x\nsub R4: x:=2f(0)\nsub P: y:=-x\ncancel\nsub P: x:=f(x), y:=f(y)\ncauchy\nconclude",
+   "solutions": [
+    "f(x) = -x",
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s40",
+   "equation": "f(x+y) + f(x-y) = 2f(x)",
+   "domain": "Q",
+   "mohs": 10,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.005,
+   "proof_len": 5,
+   "answer": "f(x) = cx + d for any constants c, d",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0\nsub R1: x:=y - x\ncauchy\nconclude",
+   "solutions": [
+    "f(x) = cx + d"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s41",
+   "equation": "f(x) + f(y) = 2f((x+y)/2)",
+   "domain": "Q",
+   "mohs": 10,
+   "solved": true,
+   "checker_calls": 673,
+   "seconds": 0.358,
+   "proof_len": 6,
+   "answer": "f(x) = cx + d for any constants c, d",
+   "reason": "",
+   "proof": "sub P: x:=0\nsub P: y:=-x\nsub P: x:=x + y\nsub R2: x:=x + y\ncauchy\nconclude",
+   "solutions": [
+    "f(x) = cx + d"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s42",
+   "equation": "f(x - f(y)) = f(x) - y",
+   "domain": "Q",
+   "mohs": 10,
+   "solved": true,
+   "checker_calls": 693,
+   "seconds": 0.826,
+   "proof_len": 11,
+   "answer": "f(x) = -x; f(x) = x",
+   "reason": "",
+   "proof": "inj\nsurj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\ncancel\nsub P: x:=0\nsub P: y:=x\nsub P: y:=-x\nsub P: y:=-f(y)\ncauchy\nconclude",
+   "solutions": [
+    "f(x) = -x",
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s43",
+   "equation": "f(x*f(y)) = f(xy) + x",
+   "domain": "R",
+   "mohs": 10,
+   "solved": true,
+   "checker_calls": 138,
+   "seconds": 0.208,
+   "proof_len": 13,
+   "answer": "f(x) = x + 1",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: y:=0\nsurj\nsub P: y:=x\nsub P: y:=-x\nsub P: x:=1\nsub R3: x:=0\npre 0\nsub P: x:=a\nsub P: y:=a\ninj\nsub R3: x:=f(x)\nconclude",
+   "solutions": [
+    "f(x) = x + 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s44",
+   "equation": "f(x+y) = f(x) + f(y) + 2xy",
+   "domain": "Q",
+   "mohs": 10,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.001,
+   "proof_len": 2,
+   "answer": "f(x) = x^2 + cx for any constant c",
+   "reason": "",
+   "proof": "cauchy\nconclude",
+   "solutions": [
+    "f(x) = x^2 + cx"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s45",
+   "equation": "f(x+y) + f(x-y) = 2f(x) + 2f(y)",
+   "domain": "Q",
+   "mohs": 15,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.001,
+   "proof_len": 2,
+   "answer": "f(x) = cx^2 for any constant c",
+   "reason": "",
+   "proof": "quadratic\nconclude",
+   "solutions": [
+    "f(x) = cx^2"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s46",
+   "equation": "f(f(x) + y) = 2x + f(f(y) - x)",
+   "domain": "R",
+   "mohs": 20,
+   "solved": false,
+   "checker_calls": 2000,
+   "seconds": 6.083,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "checker-call budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "s51",
+   "equation": "f(x^2 - y^2) = xf(x) - yf(y)",
+   "domain": "R",
+   "mohs": 10,
+   "solved": true,
+   "checker_calls": 220,
+   "seconds": 0.088,
+   "proof_len": 8,
+   "answer": "f(x) = cx for any constant c",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsqadd\nsub P: x:=x + y\nsub R2: x:=1\nconclude",
+   "solutions": [
+    "f(x) = cx"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s47",
+   "equation": "f(x + y + z) = f(x) + y + z",
+   "domain": "R",
+   "mohs": 0,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.001,
+   "proof_len": 3,
+   "answer": "f(x) = x + c for any constant c",
+   "reason": "",
+   "proof": "surj\nsub P: x:=0, y:=0\nconclude",
+   "solutions": [
+    "f(x) = x + c"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s48",
+   "equation": "f(x + f(y) + z) = x + y + f(z)",
+   "domain": "R",
+   "mohs": 5,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.005,
+   "proof_len": 10,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "inj\nsurj\nsub P: x:=0, y:=0\ncancel\nsub P: x:=0\nsub P: y:=0\nsub P: y:=x\nsub P: y:=-x\ncancel\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s49",
+   "equation": "f(x + y) + f(y + z) + f(z + x) = 2x + 2y + 2z",
+   "domain": "R",
+   "mohs": 0,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.001,
+   "proof_len": 2,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=0, y:=0\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s50",
+   "equation": "f(x) + f(y) + f(z) = f(x + y + z) + 2f(0)",
+   "domain": "Q",
+   "mohs": 5,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.003,
+   "proof_len": 3,
+   "answer": "f(x) = cx + d for any constants c, d",
+   "reason": "",
+   "proof": "sub P: x:=0\ncauchy\nconclude",
+   "solutions": [
+    "f(x) = cx + d"
+   ],
+   "flags": []
+  }
+ ]
+}

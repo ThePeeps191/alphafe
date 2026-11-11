@@ -1,0 +1,3456 @@
+{
+ "name": "m8_m1_synthetic-tier2_untrained_network_search_128_calls",
+ "config": {
+  "suite": "synthetic-tier2",
+  "solver": "untrained network, search (128 calls)",
+  "checkpoint": null,
+  "solved_per_seed": null
+ },
+ "provenance": {
+  "commit": "ff2c22fb11e1558784e0dc1c7fd2b3ef78adc268",
+  "dirty": false,
+  "time_utc": "2026-11-11T02:03:23Z",
+  "python": "3.12.15",
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "torch": "2.15.0",
+  "device": "mps",
+  "checkpoint": "checkpoints/alphafe-m1-56min.pt",
+  "checkpoint_sha256": "d4fa23410759e994abfe8a71032c049e38dbcb62d85a9e776b3ce5bb2957eaed",
+  "settings": {
+   "suites": [
+    "seed",
+    "synthetic-tier1",
+    "synthetic-tier2",
+    "synthetic-tier3",
+    "synthetic-tier4"
+   ],
+   "heldout_per_tier": 200,
+   "sampling_seeds": [
+    1000,
+    1001,
+    1002
+   ],
+   "proposals_per_state": 8,
+   "temperature": [
+    0.6,
+    0.8,
+    1.0,
+    1.0,
+    1.3,
+    1.6,
+    2.0,
+    3.0
+   ],
+   "value_weight": 0.0,
+   "greedy_budget": 32,
+   "search_budget": 128,
+   "big_budget": 2000,
+   "baseline_budgets": [
+    128,
+    2000
+   ],
+   "baseline_seconds": 120.0,
+   "baseline_workers": 8,
+   "max_depth": 16,
+   "routine_moves": {
+    "opening": true,
+    "swap": true,
+    "instances": true,
+    "witness": true
+   }
+  }
+ },
+ "summary": {
+  "problems": 200,
+  "solved": 186,
+  "rate": 0.93,
+  "mean_calls_solved": 3.1,
+  "median_calls_solved": 0,
+  "mean_seconds": 0.066
+ },
+ "by_mohs": {
+  "?": [
+   186,
+   200
+  ]
+ },
+ "rows": [
+  {
+   "id": "0434bc7ebe",
+   "equation": "f(x + y) + f(x) = 2xy + 2x^2 + y^2 + 2",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 4,
+   "answer": "f(x) = x^2 + 1",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x^2 + 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "9121375c48",
+   "equation": "2f(x^2) + f(x) + f(x + y) = 2x^2 + 2x + y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 5,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "2cd83c1ebb",
+   "equation": "f(x + y) + f(x) + 2f(xy) = -2xy - 2x - y - 4",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 6,
+   "answer": "f(x) = -x - 1",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\ninj\nsurj\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = -x - 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "23f895e43f",
+   "equation": "f(2y)f(x - y) = f(y^2) + 2xy - 3y^2 + x + y",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 12,
+   "answer": "f(x) = x + 1",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\ninj\nsub R2: x:=-x\nsub R2: x:=y - x\nsub R2: x:=x - y\nsub R2: x:=2x\nsub R2: x:=x^2\nsub P: y:=x\nconclude",
+   "solutions": [
+    "f(x) = x + 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "2cbec9dc84",
+   "equation": "2f(x - y) + f(-y) = 2x - 3y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 5,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "bae31d1c1d",
+   "equation": "f(2y) = f(x^2 - y^2) + y^2 - x^2 + 2y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 5,
+   "answer": "f(x) = x + c for any constant c",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0\nsub P: y:=0\nsub P: y:=x\nconclude",
+   "solutions": [
+    "f(x) = x + c"
+   ],
+   "flags": []
+  },
+  {
+   "id": "c962e764bc",
+   "equation": "2f(0) + 2f(2x + y) = -4x - 2y",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 5,
+   "answer": "f(x) = -x",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = -x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "e69d5d14b6",
+   "equation": "f(x^2) = f(x + y) + f(y) + 3x^2 - 3x - 6y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 4,
+   "answer": "f(x) = 3x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = 3x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "f2c558b2fe",
+   "equation": "f(y - x) + 2f(2x) = -3x - y - 3",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 5,
+   "answer": "f(x) = -x - 1",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = -x - 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "a2cc6c6a5d",
+   "equation": "f(x + y) + f(x^2 + y) = 2 - x^2 - x - 2y",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 4,
+   "answer": "f(x) = 1 - x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = 1 - x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "8cf98e22cc",
+   "equation": "2f(-x) = f(-y) + 2x^2 - y^2 + 1",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 2,
+   "answer": "f(x) = x^2 + 1",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nconclude",
+   "solutions": [
+    "f(x) = x^2 + 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "f6228d0443",
+   "equation": "2f(0) + (x + y)f(x) = x^2y + x^3 + x + y + 2",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 4,
+   "answer": "f(x) = x^2 + 1",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = x^2 + 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "e1e611bc16",
+   "equation": "f(y^2)f(x - y) + f(x - y) = 2f(xy) + xy^2 - y^3 + 2xy - x + y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 13,
+   "answer": "f(x) = -x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\ninj\nsub R2: x:=-x\nsub R2: x:=y - x\nsub R2: x:=x - y\nsub R2: x:=xy\nsub R2: x:=x^2\nsub R11: x:=-x\nsub P: y:=x\nconclude",
+   "solutions": [
+    "f(x) = -x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "fdac0eceac",
+   "equation": "f(x^2 + y) + f(xy) + f(y) = xy + x^2 + 2y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 4,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "2e604e647e",
+   "equation": "f(xy + x) + 2f(x + y) = -2xy - 6x - 4y",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 4,
+   "answer": "f(x) = -2x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = -2x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "0fd034c89b",
+   "equation": "2f(2x) + f(xy + x) + 2f(x + y) = -xy - 7x - 2y - 5",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 4,
+   "answer": "f(x) = -x - 1",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = -x - 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "7dac882a15",
+   "equation": "2f(0) = f(xy)f(x) + f(x + y) + -4x^2y - 2x - 2y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 4,
+   "answer": "f(x) = 2x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = 2x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "92e79dc4a8",
+   "equation": "f(y)f(x + 1) = f(x)f(x + y + 1) + y - x^2 - x",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 42,
+   "seconds": 0.066,
+   "proof_len": 19,
+   "answer": "f(x) = -x; f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0\nsub P: y:=0\nsub P: y:=x\nsub P: y:=-x\nsub R1: x:=2\nsub R2: x:=1\nsub R5: x:=1\nsub R6: x:=2\nsub R12: x:=1\nsplit R1\ninj\nsub R6: x:=x + 1\nsub R6: x:=x + y + 1\nsub R6: x:=2x + 1\nsub R6: x:=-x\nsplit R2\nconclude\nconclude",
+   "solutions": [
+    "f(x) = -x",
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "710b59029d",
+   "equation": "f(y^2)f(y) + f(y)f(xy) = xy^2 + y^3",
+   "domain": "Q",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.066,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "61426ab0fd",
+   "equation": "2f(2x) + 2f(xy) = 2x^2y^2 + 8x^2",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 4,
+   "answer": "f(x) = x^2",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = x^2"
+   ],
+   "flags": []
+  },
+  {
+   "id": "447f62fccd",
+   "equation": "f(x) + f(x + y) + f(x - y) = 6x + 3",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 6,
+   "answer": "f(x) = 2x + 1",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub R2: x:=y - x\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = 2x + 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "f584ff1c54",
+   "equation": "2f(xy) = f(-y) + 3 - 2xy - y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 5,
+   "answer": "f(x) = 3 - x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsurj\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = 3 - x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "010a60a88c",
+   "equation": "f(-y)f(x + 1) + f(x - y) = 3x - xy - 4y + 8",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 1,
+   "seconds": 0.066,
+   "proof_len": 15,
+   "answer": "f(x) = x + 2",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub R2: x:=y - x\nsub R2: x:=x - y\nsub P: y:=0\nsub R4: x:=-x\ninj\nsub R4: x:=1\nsub R5: x:=x + 1\nsub P: y:=x\nsub P: y:=-x\nsub R5: x:=2x\nsplit R2\nconclude",
+   "solutions": [
+    "f(x) = x + 2"
+   ],
+   "flags": []
+  },
+  {
+   "id": "ccd865f4a8",
+   "equation": "f(2x + y) + f(y) = f(2y) + 2x",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 6,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "2bf4faf8bb",
+   "equation": "f(2x + y) + 2f(x) = 2f(y) + y - 4x - 1",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 4,
+   "answer": "f(x) = -x - 1",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = -x - 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "a9e930dc84",
+   "equation": "f(y - x) + 2f(y^2) = 2y^4 - 2xy + x^2 + y^2",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 5,
+   "answer": "f(x) = x^2",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = x^2"
+   ],
+   "flags": []
+  },
+  {
+   "id": "310c7c96f4",
+   "equation": "2f(y) + f(y - x) = 2f(2x - y)f(2x) + 4xy - 8x^2 - x + 3y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 41,
+   "seconds": 0.066,
+   "proof_len": 37,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub R2: x:=-x\nsub R2: x:=y - x\nsub R2: x:=x - y\nsub R4: x:=0\nsub R5: x:=-x\nsub R5: x:=y - x\nsub R5: x:=2y - x\nsub R5: x:=x - y\nsub R5: x:=2x\nsub R5: x:=2x - y\nsub P: y:=0\nsub R11: x:=0\nsub R12: x:=-x\nsub R12: x:=y - x\nsub R12: x:=2y - x\nsub R12: x:=x - y\nsub R12: x:=2x\nsub R12: x:=2x - y\nsub R18: x:=0\nsub R19: x:=-x\nsub R19: x:=y - x\nsub P: y:=x\nsub R21: x:=2y - x\nsub R21: x:=x - y\nsub R21: x:=2x\nsub R21: x:=2x - y\nsplit R4\nconclude\nsub R7: x:=4\nsub R6: x:=4\nsub R6: y:=-x\nsub R9: x:=-x\nsub R13: x:=-x\nsub R5: x:=4",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "f9591704f3",
+   "equation": "2f(2y) = f(y)f(x) + -4xy - 8y",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 6,
+   "answer": "f(x) = -2x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsurj\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = -2x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "75d4c6da33",
+   "equation": "f(x + y) = yf(xy) + x - xy^2 + y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 4,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "03833ce205",
+   "equation": "f(x + y + 1) = 2f(0) + 2f(2x) + 2y - 6x + 2",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 5,
+   "answer": "f(x) = 2x",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = 2x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "615a44c892",
+   "equation": "f(x^2 - y^2) + f(xy + x) = y^2 - xy - x^2 - x + 2",
+   "domain": "Q",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.066,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "5ac138b0b7",
+   "equation": "2f(2x + y) + f(y - 1) = 4x + 3y - 1",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 6,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "e15fbbc61b",
+   "equation": "f(xy) + 2yf(2x - y) = f(x^2 - y^2) + 5xy - x^2 - y^2",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 10,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0\nsub P: y:=0\nsub P: y:=x\nsub R1: x:=-x\nsub R1: x:=2y - x\nsub R1: x:=2x - y\nsub R1: x:=xy\nsub R1: x:=-x^2\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "550d19fc4d",
+   "equation": "f(xy + x) + xf(x + y) = x^2y^2 + xy^2 + 4x^2y + x^3 + x^2",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 15,
+   "seconds": 0.066,
+   "proof_len": 13,
+   "answer": "f(x) = x^2",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: y:=0\nsub R2: x:=xy + x\nsub R2: x:=x + y\nsub R2: x:=xy + y\nsub P: y:=x\nsub R2: x:=x^2 + x\nsub R2: x:=2x\nsub P: y:=-x\nsub R5: y:=1\nsub R2: x:=x + 1\nconclude",
+   "solutions": [
+    "f(x) = x^2"
+   ],
+   "flags": []
+  },
+  {
+   "id": "ff8136843f",
+   "equation": "f(x + y) + 2f(xy) = 2x^2y^2 + 4xy + x^2 + y^2 + x + y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 3,
+   "answer": "f(x) = x^2 + x",
+   "reason": "",
+   "proof": "sub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x^2 + x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "4dbed550fe",
+   "equation": "f(x + y) = f(x^2 + y) + f(x^2 - y^2)f(y) + y^3 - x^2y - x^2 + x",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 64,
+   "seconds": 0.066,
+   "proof_len": 10,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsub P: y:=x\nsub P: y:=-x\nsub R8: x:=-4\nsub R12: y:=1 + --5*0\nsub R7: x:=x + 1\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "7167193682",
+   "equation": "f(x - y) + 2f(x + 2y) = 2yf(x^2) + 6x - 4x^2y + 6y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 5,
+   "answer": "f(x) = 2x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = 2x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "116192dc54",
+   "equation": "f(1) = 2xf(-y) + -4xy - 2",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 5,
+   "answer": "f(x) = -2x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: y:=0\nsub P: y:=x\nconclude",
+   "solutions": [
+    "f(x) = -2x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "aca9a78e4d",
+   "equation": "f(x) = f(y)f(x - y) + 2f(x + y) + y^2 - xy - 3x - 2y - 6",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 11,
+   "answer": "f(x) = x + 2",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub R2: x:=-x\nsub R2: x:=y - x\nsub R4: x:=y - x\nsub R4: x:=x + y\nsub P: y:=0\ninj\nsub R2: x:=-x\nconclude",
+   "solutions": [
+    "f(x) = x + 2"
+   ],
+   "flags": []
+  },
+  {
+   "id": "d67b1944fb",
+   "equation": "(x + y)f(y) + f(x + y) = xy^2 + y^3 + 2xy + x^2 + y^2",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 6,
+   "answer": "f(x) = x^2",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub R2: x:=x + y\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = x^2"
+   ],
+   "flags": []
+  },
+  {
+   "id": "f23f0a3c6c",
+   "equation": "2f(x - y) + f(x^2 - y^2) + f(x + y + 1) = y^2 - x^2 - 3x + y + 11",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 6,
+   "answer": "f(x) = 3 - x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsub P: y:=x\nconclude",
+   "solutions": [
+    "f(x) = 3 - x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "716598a48a",
+   "equation": "f(x + y + 1) + f(xy + x) = -2xy - 4x - 2y - 2",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 4,
+   "answer": "f(x) = -2x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = -2x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "7f3f8840c5",
+   "equation": "2f(y) + f(-y) + f(x + y)f(0) = 2x + 4y + 4",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 7,
+   "answer": "f(x) = 2x + 1",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\ninj\nsub R3: x:=-x\nsub R3: x:=-y\nconclude",
+   "solutions": [
+    "f(x) = 2x + 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "a3e4b6c066",
+   "equation": "f(y) = 2f(x - y) + 4xy - 2x^2 - y^2",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 5,
+   "answer": "f(x) = x^2",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub R2: x:=-x\nconclude",
+   "solutions": [
+    "f(x) = x^2"
+   ],
+   "flags": []
+  },
+  {
+   "id": "7b1095ac24",
+   "equation": "f(x - y) = 2f(x) + -3x - 3y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 5,
+   "answer": "f(x) = 3x",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = 3x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "7a7febd8aa",
+   "equation": "f(2x - y)f(-x) + f(xy) = -2x^2",
+   "domain": "Q",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.066,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "3048d34ac4",
+   "equation": "f(x + y) = f(x + y)f(x + 2y) + 2x - 12xy - 4x^2 - 8y^2 + 2y",
+   "domain": "Q",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.066,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "ef9810ee33",
+   "equation": "2f(y) + f(x + 2y) = 2x + 8y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 6,
+   "answer": "f(x) = 2x",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = 2x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "ed4cddba29",
+   "equation": "f(x + y) = f(y) + 2f(-y) + x + 2y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 5,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "e54825a21a",
+   "equation": "f(1) + 2f(xy + x) = 2xy + 2x + 1",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 4,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "0f2ef37eca",
+   "equation": "f(x + 2y) + f(y) = f(x) + 4xy + 5y^2 + 3y",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 5,
+   "answer": "f(x) = x^2 + x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=x\nconclude",
+   "solutions": [
+    "f(x) = x^2 + x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "5d5dc68805",
+   "equation": "f(x)f(2x) + 2f(y) = f(y - x) + 8x^2 + 2x + 2y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 4,
+   "answer": "f(x) = 2x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = 2x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "7e4f574e9f",
+   "equation": "f(x^2) + f(x^2 - y^2) = 2y^2 - 4x^2",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 6,
+   "seconds": 0.066,
+   "proof_len": 8,
+   "answer": "f(x) = -2x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsqadd\nsub R1: x:=x - f(-3)\nsub R1: x:=1\nconclude",
+   "solutions": [
+    "f(x) = -2x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "00b1f6acda",
+   "equation": "f(x) = 2f(y^2) + f(-x) + 2x - 2y^2",
+   "domain": "R",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.066,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "7822aee805",
+   "equation": "f(y)f(xy) + f(y) = xy^2 - xy",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 111,
+   "seconds": 0.066,
+   "proof_len": 16,
+   "answer": "f(x) = x - 1",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub R2: x:=xy\nsub P: y:=x\nsub R2: x:=x^2\nsub P: y:=-x\nsub R2: x:=-x\nsub R2: x:=-x^2\nsub R12: x:=-x\nsub R17: x:=-x\nsplit R1\nsub R6: x:=4^3\nsub R5: x:=f(0), y:=y\nsub R3: x:=-x\nconclude",
+   "solutions": [
+    "f(x) = x - 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "19b20836cf",
+   "equation": "f(x - y) = f(x^2 - y^2) + f(xy) + y^2 - xy - x^2 + x - y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 8,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsub R2: x:=-x\nsub R2: x:=y - x\nsub P: y:=x\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "afd0e8f0c7",
+   "equation": "2f(x + 2y) = f(x) + 2x + 8y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 5,
+   "answer": "f(x) = 2x",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = 2x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "992d1ca4e2",
+   "equation": "f(x + y) + f(2x + y) + f(x + y)f(x - y) = x^2 - y^2 - 3x - 2y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 24,
+   "answer": "f(x) = -x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub R2: x:=-x\nsub R2: x:=y - x\nsub R4: x:=y - x\nsub R4: x:=x + y\nsub R4: x:=x + 2y\nsub R4: x:=2x + y\nsub P: y:=0\nsub R6: x:=2x\nsub R10: x:=-x\nsub R3: x:=y - x\nsub R3: x:=x + y\nsub R3: x:=x + 2y\nsub R3: x:=2x + y\nsub R8: x:=2x + y\nsub R14: x:=y - x\nsub R14: x:=x + y\nsub R14: x:=x + 2y\nsub P: y:=x\nsub R3: x:=3x\nsub R10: x:=-x\nconclude",
+   "solutions": [
+    "f(x) = -x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "9d9cf8ccec",
+   "equation": "f(x^2 + y) = xf(2x + y) + xy + x^2 - y",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 4,
+   "answer": "f(x) = -x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = -x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "3ad93f2a38",
+   "equation": "f(x + y) + f(xy) = f(x) + -2xy - 2y",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 6,
+   "answer": "f(x) = -2x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\ninj\nsurj\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = -2x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "e4f77b7a48",
+   "equation": "xf(-y) = f(xy + x) + 2(x - y)f(y) + 4y - 2x - 2",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 4,
+   "answer": "f(x) = 2",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = 2"
+   ],
+   "flags": []
+  },
+  {
+   "id": "9a987c9631",
+   "equation": "f(xy + x) + f(1) = f(x + y + 1) + y - xy + 1",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 4,
+   "answer": "f(x) = 1 - x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = 1 - x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "2e0771a4db",
+   "equation": "f(xy) + f(x - y) = y - xy - x + 2",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 4,
+   "answer": "f(x) = 1 - x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = 1 - x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "5edf9a860e",
+   "equation": "f(x + 1) + 2f(xy + x) = 2xy + 3x + 1",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 7,
+   "seconds": 0.066,
+   "proof_len": 8,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: y:=0\nsub P: y:=x\nsub P: y:=-x\nsub R8: x:=1\nsub P: x:=2\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "095e4062d0",
+   "equation": "f(2x) + f(x + y) = 2xy + 5x^2 + y^2 + 3x + y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 4,
+   "answer": "f(x) = x^2 + x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x^2 + x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "dad5a75c2c",
+   "equation": "f(x + y) = f(xy)f(x^2 + y) + xy - x^3y - xy^2 + x^2 + x + 2y - 2",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 11,
+   "answer": "f(x) = x - 1",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\ninj\nsub R2: x:=x + y\nsub R2: x:=y^2 + x\nsub R2: x:=xy\nsub R2: x:=x^2 + y\nsub P: y:=0\nsub R2: x:=x^2\nconclude",
+   "solutions": [
+    "f(x) = x - 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "b19db31660",
+   "equation": "f(2y) + f(x + y) = -x - 3y - 2",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 7,
+   "answer": "f(x) = -x - 1",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\ninj\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = -x - 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "7a9d88502e",
+   "equation": "f(x^2) + f(xy) = 2xy + 2x^2",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 5,
+   "seconds": 0.066,
+   "proof_len": 6,
+   "answer": "f(x) = 2x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: y:=0\nsub P: y:=-x\nsub R2: y:=1\nconclude",
+   "solutions": [
+    "f(x) = 2x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "cac9191696",
+   "equation": "f(x) + f(x + y) = 2f(x - y) - 3y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 4,
+   "answer": "f(x) = c - x for any constant c",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0\nsub R1: x:=-x\nconclude",
+   "solutions": [
+    "f(x) = c - x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "1267d46695",
+   "equation": "f(x) + xf(x^2 - y^2) = x^3 - xy^2 + x",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 5,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: y:=0\nsub P: y:=x\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "b2c128c2e9",
+   "equation": "f(y^2)f(2y) = f(x) + 2y^3 - y^2 + x - 2y",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 6,
+   "answer": "f(x) = 1 - x",
+   "reason": "",
+   "proof": "inj\nsurj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = 1 - x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "9c1ea33857",
+   "equation": "f(x + y) + f(x^2 - y^2) = f(x - y) + x^4 - 2x^2y^2 + y^4 + 4xy",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 6,
+   "answer": "f(x) = x^2",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub R2: x:=-x\nsub P: y:=x\nconclude",
+   "solutions": [
+    "f(x) = x^2"
+   ],
+   "flags": []
+  },
+  {
+   "id": "26c1eadc9b",
+   "equation": "f(x + y) + f(x - y) = f(x^2 + y)f(x) + -x^3 - xy - 2x^2 - 2y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 1,
+   "seconds": 0.066,
+   "proof_len": 30,
+   "answer": "f(x) = x + 2",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub R2: x:=-x\nsub R2: x:=y - x\nsub R2: x:=x - y\nsub R4: x:=0\nsub R5: x:=-x\nsub R5: x:=y - x\nsub R5: x:=x - y\nsub R5: x:=x + y\nsub R5: x:=y^2 + x\nsub R5: x:=x^2 + y\nsub P: y:=0\nsub R5: x:=x^2\nsub R12: x:=0\nsub R13: x:=-x\nsub R13: x:=y - x\nsub R13: x:=x - y\nsub R13: x:=x + y\nsub R13: x:=y^2 + x\nsub R13: x:=x^2\nsub R13: x:=x^2 + y\nsub R15: x:=-x\nsub P: y:=x\nsub R6: x:=x^2 + x\nsub R6: x:=2x\nsub R30: x:=0\nsplit R3\nconclude",
+   "solutions": [
+    "f(x) = x + 2"
+   ],
+   "flags": []
+  },
+  {
+   "id": "b29c72f244",
+   "equation": "2f(xy) = f(x - y) + 2x^2y^2 + 2xy - x^2 - y^2 + 1",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 4,
+   "answer": "f(x) = x^2 + 1",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x^2 + 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "e6ef5f7ed7",
+   "equation": "f(x - y) = 2f(x + 1) + -x - y - 2",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 5,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "b5c797545f",
+   "equation": "f(x + y + 1) + f(y) + 2f(x^2)f(x + y) = 2x^2y + 2x^3 - x - 2y - 1",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 10,
+   "answer": "f(x) = -x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub R2: x:=x + y\nsub P: y:=0\nsub R5: x:=1\nsub P: y:=x\nsub R3: x:=2x\nsub P: y:=-x\nconclude",
+   "solutions": [
+    "f(x) = -x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "4e839c0ad0",
+   "equation": "f(x)f(y) = f(2y) + xy - 2y",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 6,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsurj\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "4a537da8a7",
+   "equation": "f(x + y + 1) + f(0)f(x + y) = -x - y - 1",
+   "domain": "R",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.066,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "46ce2cbe21",
+   "equation": "f(y) + f(y - 1) + f(x + y) = x + 3y + 5",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 7,
+   "answer": "f(x) = x + 2",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\ninj\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = x + 2"
+   ],
+   "flags": []
+  },
+  {
+   "id": "9ac86c8a2b",
+   "equation": "f(2x) + 2f(x)f(y^2) = 2xy^2 - 2y^2 - 4x + 3",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 1,
+   "seconds": 0.066,
+   "proof_len": 8,
+   "answer": "f(x) = 1 - x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsub P: y:=x\nsplit R1\nconclude\nconclude",
+   "solutions": [
+    "f(x) = 1 - x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "b98963a483",
+   "equation": "f(x + 2y) + yf(y^2) = y^3 + x + 2y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 6,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "2ad223e4eb",
+   "equation": "f(xy + x) + 2f(y) = 3 - xy - x - 2y",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 4,
+   "answer": "f(x) = 1 - x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = 1 - x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "cc4e6a52f2",
+   "equation": "2f(2x + y) + f(x + 2y) = 5x + 4y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 6,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsurj\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "76e7f506ac",
+   "equation": "f(x + 2y) = f(x) + 4xy + 4y^2",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 3,
+   "answer": "f(x) = x^2 + c for any constant c",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x^2 + c"
+   ],
+   "flags": []
+  },
+  {
+   "id": "c1cae902d3",
+   "equation": "f(x - y)f(x + y) + f(xy) = 2f(2x) + xy + x^2 - y^2 - 4x",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 6,
+   "seconds": 0.066,
+   "proof_len": 17,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub R2: x:=y - x\nsub P: y:=0\nsub P: y:=x\nsub P: y:=-x\nsub R8: x:=-x^2\nsub P: x:=-1, y:=x\nsub R15: x:=0\nsub R16: x:=-x\nsub R3: x:=y - x\nsub R4: x:=-1\nsub R8: x:=-x\nsub R10: x:=-2\nsub R11: x:=-1\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "48f0c41679",
+   "equation": "f(x + 1) + xf(2x) + xf(y - 1) = xy + 2x^2 - 2x",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 5,
+   "answer": "f(x) = x - 1",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: y:=0\nsub P: y:=x\nconclude",
+   "solutions": [
+    "f(x) = x - 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "ba8bb8b0bc",
+   "equation": "f(0) = f(x - y) + 2xy - x^2 - y^2",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 3,
+   "answer": "f(x) = x^2 + c for any constant c",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x^2 + c"
+   ],
+   "flags": []
+  },
+  {
+   "id": "cc65aed843",
+   "equation": "2(x - y)f(x + y) + f(x^2 + y) = 3x^2 - 2y^2 + y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 12,
+   "seconds": 0.066,
+   "proof_len": 28,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub R2: x:=x + y\nsub R2: x:=y^2 + x\nsub R2: x:=x^2 + y\nsub P: y:=0\nsub R2: x:=x^2\nsub R6: x:=x + y\nsub R6: x:=y^2 + x\nsub R6: x:=x^2\nsub R6: x:=x^2 + y\nsub R13: x:=x + y\nsub R13: x:=y^2 + x\nsub R13: x:=x^2\nsub R13: x:=x^2 + y\nsub R19: x:=x^2\nsub P: y:=x\nsub R2: x:=y^2 + x\nsub R22: x:=x + y\nsub R27: x:=x^2\nsub R29: x:=x^2\nsub R31: x:=x^2\nsub P: y:=-x\nsub R14: y:=5\nsub R2: x:=x + 5\nsub R6: x:=x + 5\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "a82b96f42c",
+   "equation": "f(x) + f(x + y + 1) = f(x + y) + x + 1",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 7,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\ninj\nsurj\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "cedb31b0d4",
+   "equation": "f(2x) = 2f(x + y) + -2y - 2",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 5,
+   "answer": "f(x) = x + 2",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x + 2"
+   ],
+   "flags": []
+  },
+  {
+   "id": "a78ba4a0dc",
+   "equation": "f(x - y)f(x) = f(x + 1) + 4x^2 - 4xy - 2x - 2",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 8,
+   "answer": "f(x) = 2x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub R2: x:=-x\nsub R2: x:=1\nsub P: y:=0\nsub P: y:=x\nconclude",
+   "solutions": [
+    "f(x) = 2x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "69101f12c6",
+   "equation": "2f(-y)f(y - x) + f(0) = 2xy - 2y^2",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 32,
+   "seconds": 0.066,
+   "proof_len": 23,
+   "answer": "f(x) = -x; f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub R2: x:=y - x\nsub P: y:=0\nsub R2: x:=-x\nsub R2: x:=y - x\nsub R2: x:=x - y\nsub P: y:=-x\nsub R2: x:=-2x\nsplit R1\nsub R7: y:=5\nsub R8: x:=0\nsub R9: x:=5 - x\ninj\nsub R3: x:=-5\nsub R4: x:=-2x\nsub R4: x:=-x\nsub R4: x:=y - x\nsub R4: x:=x - y\nsplit R3\nconclude\nconclude",
+   "solutions": [
+    "f(x) = -x",
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "687b39426d",
+   "equation": "f(x) = 2f(x + y) + 2f(y^2) + 2y^2 + x + 2y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 7,
+   "answer": "f(x) = -x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\ninj\nsurj\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = -x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "9d90538846",
+   "equation": "2f(x^2 - y^2) = f(0)f(y^2) + 3y^2 - 2x^2 + 1",
+   "domain": "R",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.066,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "66d0898a40",
+   "equation": "f(x + y) = 2f(x + 1) + f(x + y)f(x - y) + y^2 - x^2 - x + y - 2",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 13,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub R2: x:=-x\nsub R2: x:=y - x\nsub R4: x:=1\nsub R5: x:=x + 1\nsub R5: x:=y - x\nsub R5: x:=x + y\nsub P: y:=0\nsub P: y:=x\nsub P: y:=-x\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "e627b096c7",
+   "equation": "f(x) + f(x + y)f(y^2) = xy^2 + y^3 + x",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 11,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\ninj\nsub R2: x:=x + y\nsub R2: x:=x^2\nsub P: y:=x\nsub R2: x:=2x\nsub P: y:=-x\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "60e6924e9d",
+   "equation": "f(y^2) + f(-x)f(x^2 + y) + f(y) = 2y^2 - 4x^3 - 4xy + 2y",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 1,
+   "seconds": 0.066,
+   "proof_len": 14,
+   "answer": "f(x) = 2x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub R2: x:=-x\nsub P: y:=0\nsub R6: x:=0\nsub R7: x:=-x\nsub P: y:=x\nsub P: y:=-x\nsub R11: x:=-x\nsub R17: x:=-x\nsplit R2\nconclude\nsub R3: x:=x^2 - x",
+   "solutions": [
+    "f(x) = 2x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "0d60aa9c95",
+   "equation": "2f(y - 1) = f(y) + f(y)f(2x + y) + -2xy - y^2 - 4x - 3y - 4",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 11,
+   "seconds": 0.066,
+   "proof_len": 16,
+   "answer": "f(x) = x + 2",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsub P: y:=x\nsub P: y:=-x\nsub R4: x:=-x\nsub R6: x:=-x\nsub P: y:=2\nsub R2: x:=1\nsub R5: x:=1\nsub R6: x:=2\nsub R11: x:=1\nsub R16: x:=1\nsub R21: x:=-1\nconclude",
+   "solutions": [
+    "f(x) = x + 2"
+   ],
+   "flags": []
+  },
+  {
+   "id": "6b66e7be53",
+   "equation": "f(y)f(x - y) + f(x) = xy - y^2 + 3x + 6",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 1,
+   "seconds": 0.066,
+   "proof_len": 13,
+   "answer": "f(x) = x + 2",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub R2: x:=y - x\nsub P: y:=0\ninj\nsub R2: x:=-x\nsub R2: x:=y - x\nsub R2: x:=x - y\nsub P: y:=-x\nsub R2: x:=2x\nsplit R1\nconclude",
+   "solutions": [
+    "f(x) = x + 2"
+   ],
+   "flags": []
+  },
+  {
+   "id": "ebe9959e7c",
+   "equation": "2f(x - y)f(2x) + 2f(2x) = 4x^2 - 4xy + 4x",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 10,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub R2: x:=y - x\nsub R2: x:=x - y\nsub P: y:=0\nsub R2: x:=-x\nsub R2: x:=2x\nsub P: y:=x\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "44f7c67098",
+   "equation": "f(x) + f(x - y) = 3xy^2 - 3x^2y + 2x^3 - y^3",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 4,
+   "answer": "f(x) = x^3",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x^3"
+   ],
+   "flags": []
+  },
+  {
+   "id": "7212234e98",
+   "equation": "f(y) + f(y)f(2x) = 2xy + 2x + 2y + 2",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 7,
+   "answer": "f(x) = x + 1",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\ninj\nsub R2: x:=2x\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = x + 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "f45fe67446",
+   "equation": "2f(x + y) + f(x^2 + y) = x^4 + 2x^2y + 4xy + 2x^2 + 3y^2",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 4,
+   "answer": "f(x) = x^2",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x^2"
+   ],
+   "flags": []
+  },
+  {
+   "id": "02e986d885",
+   "equation": "f(x - y) = f(-x)f(x - y) + x^2 - xy + x - y",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 10,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub R2: x:=y - x\nsub R2: x:=x - y\nsub P: y:=0\nsub R2: x:=-x\ninj\nsub R8: x:=-x\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "8d8f711245",
+   "equation": "f(xy + x) = 2f(0) + xy + x - 1",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 4,
+   "answer": "f(x) = x + 1",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = x + 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "77800dd21c",
+   "equation": "f(2x - y) = f(xy + x) + x - xy - y",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 3,
+   "answer": "f(x) = x + c for any constant c",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x + c"
+   ],
+   "flags": []
+  },
+  {
+   "id": "3efc877e9b",
+   "equation": "2f(-x) + f(x + 2y) = 2y - x",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 5,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "927b71d0ef",
+   "equation": "f(y) + 2f(x + 2y) + f(xy)f(x) = 4",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 1,
+   "seconds": 0.066,
+   "proof_len": 17,
+   "answer": "f(x) = -4; f(x) = 1",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsub R2: x:=x + 2y\nsub R2: x:=2x + y\nsub R2: x:=xy\nsub P: y:=x\nsub R2: x:=3x\nsub R2: x:=x^2\nsub P: y:=-x\nsub R2: x:=-x\nsub R2: x:=-x^2\nsub R21: x:=-x\nsplit R1\nconclude\nconclude",
+   "solutions": [
+    "f(x) = -4",
+    "f(x) = 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "8a267dea3a",
+   "equation": "xf(x + y + 1) + 2f(x - y) = xy + x^2 + 3x - 2y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 4,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "e4168acacc",
+   "equation": "2f(x + 1) = f(-y) + 2x + y + 2",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 5,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "251c68ce8a",
+   "equation": "f(x - y) + 2f(x^2 - y^2) = 2f(2y) + 2x^2 - 2y^2 + x - 5y + 1",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 8,
+   "answer": "f(x) = x + 1",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsub R2: x:=-x\nsub R2: x:=y - x\nsub R2: x:=-x^2\nconclude",
+   "solutions": [
+    "f(x) = x + 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "39bd10d05d",
+   "equation": "f(xy + x)f(xy + x) + f(y) = x^2y^2 + 2x^2y + x^2 - y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 4,
+   "answer": "f(x) = -x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = -x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "01b295fc8e",
+   "equation": "2f(x + 1) + f(xy) = 3xy + 6x + 6",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 5,
+   "answer": "f(x) = 3x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsurj\nsub P: x:=0, y:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = 3x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "d73dc3ae4a",
+   "equation": "2f(xy) + f(0) = f(x + y) + 2x^2y^2 - 2xy - x^2 - y^2",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 3,
+   "answer": "f(x) = x^2",
+   "reason": "",
+   "proof": "sub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x^2"
+   ],
+   "flags": []
+  },
+  {
+   "id": "7712eec801",
+   "equation": "f(x^2 + y) = 2xf(x + y) + y - 2xy - x^2",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 4,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "c4a827ca4a",
+   "equation": "f(x)f(x + 2y) + f(xy) = 10xy + 4x^2",
+   "domain": "Q",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.066,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "818bc0e6d2",
+   "equation": "f(-y) + xf(x - y) = 2x^2 - 2xy + x - 2y + 1",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 4,
+   "answer": "f(x) = 2x + 1",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = 2x + 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "7def53b24a",
+   "equation": "f(x - y)f(y) + f(x - y) = xy - y^2 + x - y",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 10,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub R2: x:=-x\nsub R2: x:=y - x\nsub R4: x:=y - x\nsub P: y:=0\ninj\nsub R2: x:=-x\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "9e110f6eee",
+   "equation": "f(2y) = 2f(2x - y) + 4y - 4x - 1",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 6,
+   "answer": "f(x) = x + 1",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = x + 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "25fe081a70",
+   "equation": "f(2y) + f(2x) = f(x) + 2x + 4y + 1",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 6,
+   "answer": "f(x) = 2x + 1",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\ninj\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = 2x + 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "f9ab64b42f",
+   "equation": "f(0) + (x - y)f(x) = f(x + y)f(xy) + x^2 - xy^2 - x^2y - xy",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 16,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub R2: x:=x + y\nsub R2: x:=xy\nsub P: y:=0\nsub R4: x:=x + y\nsub R4: x:=xy\nsub P: y:=x\nsub R2: x:=2x\nsub R2: x:=x^2\nsub R4: x:=2x\nsub R4: x:=x^2\nsub P: y:=-x\nsub R2: x:=-x^2\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "6c0ade5019",
+   "equation": "2f(x^2 + y) + f(x + 1) + f(y) = 2x^2 + x + 3y + 1",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 4,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "8496828a8d",
+   "equation": "f(xy + x) = f(x) + f(1) + 2xy - 2",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 3,
+   "seconds": 0.066,
+   "proof_len": 6,
+   "answer": "f(x) = 2x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: y:=x\nsub P: y:=-x\nsub R4: y:=4\nconclude",
+   "solutions": [
+    "f(x) = 2x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "2b7c0d78df",
+   "equation": "f(x - y)f(y) = f(-y)f(x^2 + y) + x^2y + xy",
+   "domain": "R",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.066,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "420ad5609f",
+   "equation": "f(y)f(x + y) = 2f(y) + 2f(x^2) + xy - 2x^2 + y^2 - 2y",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 21,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub R2: x:=x + y\nsub R2: x:=x^2\nsub P: y:=0\nsub R8: x:=0\nsub R9: x:=x + y\nsub R9: x:=x^2\nsub R13: x:=0\nsub R14: x:=x + y\nsub R14: x:=x^2\nsub R17: x:=0\nsub P: y:=x\nsub R7: x:=2x\nsub R13: x:=2x\nsub R21: x:=2x\nsub R26: x:=2x\nsub P: y:=-x\nsub R5: x:=-x\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "4dbf876608",
+   "equation": "f(y - x) + f(2x) = 2f(2x + y)f(x) + x - 2xy - 4x^2 + y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 1,
+   "seconds": 0.066,
+   "proof_len": 19,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\ninj\nsub R2: x:=y - x\nsub R2: x:=x - y\nsub R2: x:=x + 2y\nsub R2: x:=2x\nsub R2: x:=2x + y\nsub P: y:=0\nsub R2: x:=-x\nsub P: y:=x\nsub R2: x:=3x\nsub P: y:=-x\nsub R2: x:=-2x\nsub R12: x:=-x\nsub R18: x:=-x\nsplit R1\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "3d8fa4520d",
+   "equation": "2f(2y) + 2f(x - y) = 2x + 2y + 4",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 6,
+   "answer": "f(x) = x + 1",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = x + 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "1c6bc2243f",
+   "equation": "f(x^2) + f(y) + f(y^2) = x^2 + y^2 + y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 6,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\ninj\nsurj\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "1ca5647ae9",
+   "equation": "f(2x) + 2f(y) + f(x - y) = -3x - y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 5,
+   "answer": "f(x) = -x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub R2: x:=-x\nconclude",
+   "solutions": [
+    "f(x) = -x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "00c21226ea",
+   "equation": "f(y) + f(2y) = 2f(x) + 2x - 3y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 5,
+   "answer": "f(x) = c - x for any constant c",
+   "reason": "",
+   "proof": "inj\nsurj\nsub P: x:=y, y:=x\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = c - x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "9a83ac58f7",
+   "equation": "f(y^2) + 2f(2x) = y^4 + 8x^2",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 4,
+   "answer": "f(x) = x^2",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x^2"
+   ],
+   "flags": []
+  },
+  {
+   "id": "88f3bbb811",
+   "equation": "f(0) + f(2x)f(-y) = -2xy",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 48,
+   "seconds": 0.066,
+   "proof_len": 16,
+   "answer": "f(x) = -x; f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsub P: y:=x\nsub P: y:=-x\nsub R2: x:=-x\nsplit R1\nsub R6: x:=4\nsub R4: x:=-x\ninj\nsub R2: x:=8\nsub R3: x:=2x\nsplit R2\nconclude\nconclude",
+   "solutions": [
+    "f(x) = -x",
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "b9601eea7c",
+   "equation": "2f(2y)f(x + y) + f(-x) + f(x + y) = 4xy + 4y^2 + y",
+   "domain": "R",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.066,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "d7cdec4062",
+   "equation": "2xf(1) + 2f(x + y) + f(x) = 3x + 2y - 3",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 5,
+   "answer": "f(x) = x - 1",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x - 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "9ecb9cda9a",
+   "equation": "f(x) + 2f(y)f(y) = 2y^4 + x^2",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 4,
+   "answer": "f(x) = x^2",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x^2"
+   ],
+   "flags": []
+  },
+  {
+   "id": "dba00c7283",
+   "equation": "f(x + 2y) + f(-x)f(-x) = x^2 + x + 2y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 5,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "38f9b95af2",
+   "equation": "2f(x^2 + y) + f(y^2) + 2(x + y)f(x) = 2x - 2xy - 4x^2 - y^2 + 3",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 17,
+   "answer": "f(x) = 1 - x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsub R2: x:=y^2 + x\nsub R2: x:=x^2\nsub R2: x:=x^2 + y\nsub R6: x:=y^2 + x\nsub R6: x:=x^2\nsub R6: x:=x^2 + y\nsub R12: x:=y^2 + x\nsub R12: x:=x^2\nsub R12: x:=x^2 + y\nsub R16: x:=x^2\nsub P: y:=x\nsub R2: x:=x^2 + x\nconclude",
+   "solutions": [
+    "f(x) = 1 - x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "a04c6a1c17",
+   "equation": "f(x + y) + f(x^2 + y) = f(x - y) + x^2 + 3y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 5,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub R2: x:=-x\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "e7f362e4f0",
+   "equation": "f(-y)f(xy) + f(x - y)f(x + y) = 2f(x - y)f(xy)",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 97,
+   "seconds": 0.066,
+   "proof_len": 22,
+   "answer": "f(x) = c for any constant c",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0\nsub R1: x:=-x\nsub R1: x:=y - x\nsub R4: x:=y - x\nsub P: y:=0\nsub R3: x:=-x\nsub R3: x:=y - x\nsub R3: x:=x - y\nsub R3: x:=x + y\nsub R3: x:=xy\nsub P: y:=x\nsub R3: x:=2x\nsub R3: x:=x^2\nsub P: y:=-x\nsub R1: x:=-x^2\nsub R3: x:=-x^2\nsub R8: x:=-x^2\nsub R15: x:=1\nsplitnz f(0^2)\nconclude\nconclude",
+   "solutions": [
+    "f(x) = c"
+   ],
+   "flags": []
+  },
+  {
+   "id": "37c0b8fe02",
+   "equation": "2f(y) = f(1)f(xy + x) + 2f(x + y) + 2x",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 8,
+   "answer": "f(x) = 1 - x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: y:=0\ninj\nsub R2: x:=1\nsub R3: x:=xy + x\nsub R3: x:=x + y\nconclude",
+   "solutions": [
+    "f(x) = 1 - x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "bab88a7011",
+   "equation": "f(-y) + 2f(x + y) = 2x + y - 3",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 7,
+   "answer": "f(x) = x - 1",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\ninj\nsub R3: x:=-x\nconclude",
+   "solutions": [
+    "f(x) = x - 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "bf05de707b",
+   "equation": "f(x + y) = f(2y) + 3xy^2 + 3x^2y + x^3 - 7y^3",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 4,
+   "answer": "f(x) = x^3 + c for any constant c",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = x^3 + c"
+   ],
+   "flags": []
+  },
+  {
+   "id": "79f485844c",
+   "equation": "f(-x) + f(x + y + 1) + f(y - 1) = 2y + 3",
+   "domain": "R",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.066,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "ecc9d5b4e8",
+   "equation": "2f(x + y) = f(x + 2y) + f(y^2) + y^2 - x",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 4,
+   "answer": "f(x) = c - x for any constant c",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = c - x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "60671da2a5",
+   "equation": "2f(x + y) + f(-x) = x + 2y + 3",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 5,
+   "answer": "f(x) = x + 1",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x + 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "772893e07b",
+   "equation": "f(x + y + 1) + 2f(2x) + f(x) = -6x - y - 1",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 5,
+   "answer": "f(x) = -x",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = -x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "68c8ee4eaa",
+   "equation": "f(-x)f(0) = f(x^2 - y^2) + 2y^2 - 2x^2",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 30,
+   "seconds": 0.066,
+   "proof_len": 10,
+   "answer": "f(x) = 2x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsub P: y:=x\nsub R4: x:=-x^2\nsqadd\nsub R1: x:=5\nsub R2: x:=6 - (3/4 - x)\nconclude",
+   "solutions": [
+    "f(x) = 2x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "376c7cd016",
+   "equation": "f(x)f(2x - y) = f(x - y) + f(y^2)f(x) + 2x^2 - xy^2 - xy + x - y",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 4,
+   "answer": "f(x) = -x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = -x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "683bb93e9f",
+   "equation": "f(x) + f(y)f(x + y) = xy + y^2 + x",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 13,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub R2: x:=x + y\nsub P: y:=0\ninj\nsub R2: x:=x + y\nsub P: y:=x\nsub R2: x:=2x\nsub R7: x:=2x\nsub P: y:=-x\nsub R2: x:=-x\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "15914b9a5d",
+   "equation": "f(2x + y) + f(2x - y) + f(y) = 3",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 5,
+   "answer": "f(x) = 1",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub R2: x:=-x\nconclude",
+   "solutions": [
+    "f(x) = 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "4a6466c2db",
+   "equation": "f(xy) = f(y - 1) + 2xy - 2y + 2",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 4,
+   "answer": "f(x) = 2x + c for any constant c",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = 2x + c"
+   ],
+   "flags": []
+  },
+  {
+   "id": "c2a83e422d",
+   "equation": "f(y - 1) + f(y) + 2f(y - x) = 4y - 2x - 1",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 6,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "59551f64a1",
+   "equation": "f(x^2 + y)f(y) = 2f(x) + x^2y + y^2 + 2x",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 1,
+   "seconds": 0.066,
+   "proof_len": 20,
+   "answer": "f(x) = -x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub R2: x:=y^2 + x\nsub R2: x:=x^2 + y\nsub P: y:=0\nsub R4: x:=x^2\nsub P: y:=x\nsub R4: x:=x^2 + x\nsub P: y:=-x\nsub R2: x:=-x\nsub R6: x:=-x\nsub R3: x:=x^2 - x\nsub R3: x:=x^2 + x\nsub R3: x:=y^2 + x\nsub R3: x:=x^2\nsub R3: x:=x^2 + y\nsub R8: x:=x^2 - x\nsplit R1\nconclude",
+   "solutions": [
+    "f(x) = -x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "b7c51ec8a0",
+   "equation": "f(x + y)f(y^2) = f(x^2 - y^2) + xy^2 + y^3 - x^2 + 3y^2 + 2x + 2y + 2",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 1,
+   "seconds": 0.066,
+   "proof_len": 19,
+   "answer": "f(x) = x + 2",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsub R4: x:=0\nsub P: y:=x\nsub P: y:=-x\nsub R5: x:=x + y\nsub R5: x:=2x\nsub R5: x:=-x^2\nsub R5: x:=y^2 - x^2\nsub R5: x:=x^2\nsub R5: x:=x^2 - y^2\nsub R12: x:=0\nsub R13: x:=x + y\nsub R13: x:=2x\nsub R13: x:=-x^2\nsplit R3\nconclude",
+   "solutions": [
+    "f(x) = x + 2"
+   ],
+   "flags": []
+  },
+  {
+   "id": "436c393059",
+   "equation": "f(y) = 2f(xy) + y^2 - 2x^2y^2",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 4,
+   "answer": "f(x) = x^2",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x^2"
+   ],
+   "flags": []
+  },
+  {
+   "id": "d4d47fb8fc",
+   "equation": "f(x - y) + 2f(-x) + f(2y) = y - x",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 6,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsub R2: x:=-x\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "4d14f90edb",
+   "equation": "f(x^2 + y) + 2f(x + y) = f(2x + y) + x^4 + 2x^2y - 2x^2 + 2y^2",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 4,
+   "answer": "f(x) = x^2",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x^2"
+   ],
+   "flags": []
+  },
+  {
+   "id": "d7b3f97a24",
+   "equation": "f(2y) = f(xy + x) + 2y - xy - x",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 3,
+   "answer": "f(x) = x + c for any constant c",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x + c"
+   ],
+   "flags": []
+  },
+  {
+   "id": "f741639a0a",
+   "equation": "2f(2x + y) = xf(-y) + 2f(2x) + 9xy - xy^2 + 2y^2 + 2y",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 3,
+   "answer": "f(x) = x^2 + x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x^2 + x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "426a10c051",
+   "equation": "f(y)f(x + 2y) = f(x + y) + xy + 2y^2 - x - y",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 1,
+   "seconds": 0.066,
+   "proof_len": 21,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\ninj\nsub R2: x:=x + y\nsub R2: x:=x + 2y\nsub R2: x:=2x\nsub R2: x:=2x + y\nsub P: y:=x\nsub R2: x:=3x\nsub P: y:=-x\nsub R2: x:=-x\nsub R17: x:=-x\nsub R11: x:=x + y\nsub R11: x:=x + 2y\nsub R11: x:=2x\nsub R11: x:=2x + y\nsub R11: x:=3x\nsplit R1\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "8f1cb6b659",
+   "equation": "f(xy + x) = f(2x) + x^2y^2 + 2x^2y + xy - 3x^2 - x",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 4,
+   "seconds": 0.066,
+   "proof_len": 6,
+   "answer": "f(x) = x^2 + x + c for any constant c",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: y:=0\nsub P: y:=x\nsub P: y:=-x\nsub R5: y:=4\nconclude",
+   "solutions": [
+    "f(x) = x^2 + x + c"
+   ],
+   "flags": []
+  },
+  {
+   "id": "32aa176659",
+   "equation": "2f(x + y) + f(2x - y) + f(y) = 4x + 2y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 5,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub R2: x:=-x\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "d80c665a23",
+   "equation": "2f(2x - y) + f(y - x) = 9x^2 - 10xy + 3y^2",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 5,
+   "answer": "f(x) = x^2",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub R2: x:=-x\nconclude",
+   "solutions": [
+    "f(x) = x^2"
+   ],
+   "flags": []
+  },
+  {
+   "id": "99199f4e2b",
+   "equation": "f(2y) + f(2x) = 2x + 2y - 2",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 4,
+   "answer": "f(x) = x - 1",
+   "reason": "",
+   "proof": "surj\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x - 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "220875e2bf",
+   "equation": "2f(-y) = f(xy) + -xy - 2y",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 5,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsurj\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "18fe2d3e0d",
+   "equation": "f(y - 1) + f(2x + y) = 2f(y) + 2x - 1",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 6,
+   "answer": "f(x) = x + c for any constant c",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = x + c"
+   ],
+   "flags": []
+  },
+  {
+   "id": "8044f9009e",
+   "equation": "f(x + 2y) = 2f(x + y) + -2x - 1",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 5,
+   "answer": "f(x) = 2x + 1",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = 2x + 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "79d2c84a6d",
+   "equation": "f(xy + x) + f(y) + 2f(x + y)f(x - y) = 2x^2 - xy - 2y^2 - x - y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 1,
+   "seconds": 0.066,
+   "proof_len": 25,
+   "answer": "f(x) = -x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub R2: x:=-x\nsub R2: x:=y - x\nsub R4: x:=y - x\nsub R4: x:=xy + x\nsub R4: x:=x + y\nsub R4: x:=xy + y\nsub P: y:=0\nsub R3: x:=y - x\nsub R3: x:=xy + x\nsub R3: x:=x + y\nsub R3: x:=xy + y\nsub R6: x:=xy + y\nsub P: y:=x\nsub R3: x:=x^2 + x\nsub R3: x:=2x\nsub R6: x:=x^2 + x\nsub R6: x:=2x\nsub R24: x:=0\nsub P: y:=-x\nsub R4: x:=x - x^2\nsplit R2\nconclude",
+   "solutions": [
+    "f(x) = -x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "e554bae29d",
+   "equation": "xf(2x) + f(0) = f(y) + 3x - 2x^2 + y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 5,
+   "answer": "f(x) = 3 - x",
+   "reason": "",
+   "proof": "inj\nsurj\nsub P: x:=y, y:=x\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = 3 - x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "3ce588dc1c",
+   "equation": "2f(y) + f(x - y) = x^2 - 2xy + 3y^2 + 3",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 5,
+   "answer": "f(x) = x^2 + 1",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub R2: x:=-x\nconclude",
+   "solutions": [
+    "f(x) = x^2 + 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "aec023b8b6",
+   "equation": "f(y)f(y) = f(x^2 - y^2) + 2y^2 - x^2",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 9,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsub P: y:=x\nsub R4: x:=-x^2\nsqadd\nsqlin\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "90978ae87c",
+   "equation": "f(x - y) + 2f(xy) = 2xy + x - y - 3",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 4,
+   "answer": "f(x) = x - 1",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x - 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "fa5afe7e47",
+   "equation": "f(x^2 + y) = f(y) + f(x^2 - y^2) - y^2",
+   "domain": "R",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.066,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "b66e9284ff",
+   "equation": "2f(xy)f(x + y) + f(x) = 2xy^2 + 2x^2y + x",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 7,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\ninj\nsurj\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "d1c94740e5",
+   "equation": "f(2x + y) + f(y) = f(x) + 2x + 4y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 4,
+   "answer": "f(x) = 2x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = 2x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "a19581e228",
+   "equation": "f(x^2 + y) = f(x) + x^6 + 3x^4y + 3x^2y^2 - x^3 + y^3",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 3,
+   "answer": "f(x) = x^3 + c for any constant c",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x^3 + c"
+   ],
+   "flags": []
+  },
+  {
+   "id": "f8be4850b7",
+   "equation": "f(y) + f(xy + x) = x^2y^2 + 2x^2y + x^2 + y^2",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 4,
+   "answer": "f(x) = x^2",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x^2"
+   ],
+   "flags": []
+  },
+  {
+   "id": "00a04c1844",
+   "equation": "f(1) + f(y - 1) + 2f(x - y) = 2x^2 - 4xy + 3y^2 - 2y + 2",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 6,
+   "answer": "f(x) = x^2",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub R2: x:=1\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = x^2"
+   ],
+   "flags": []
+  },
+  {
+   "id": "17d9294016",
+   "equation": "f(y) + f(1) + f(xy) = x^2y^2 + y^2 + 4",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 4,
+   "answer": "f(x) = x^2 + 1",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x^2 + 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "e48193ba95",
+   "equation": "2f(xy) = 2f(y^2) + f(2x) + 2x^2y^2 - 2y^4 - 4x^2 - 1",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 5,
+   "answer": "f(x) = x^2 + 1",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = x^2 + 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "1cbe5a84af",
+   "equation": "f(y) = f(xy) + 2f(x + y) + -xy - 2x - y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 6,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\ninj\nsurj\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "b8e9bb1a44",
+   "equation": "f(x + 2y) = 2f(x - y) + f(x)f(y) + 4y - xy - x",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 11,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\ninj\nsub R2: x:=-x\nsub R2: x:=y - x\nsub R2: x:=x - y\nsub R2: x:=x + 2y\nsub R2: x:=2x\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "0b39929cae",
+   "equation": "f(1) + f(x + y + 1) + f(x^2 + y) = x^2 + x + 2y + 5",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 8,
+   "answer": "f(x) = x + 1",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsub P: y:=x\nsub P: y:=-x\nsub R10: x:=x + 1\nconclude",
+   "solutions": [
+    "f(x) = x + 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "446226ba84",
+   "equation": "f(y) = f(x + y)f(x) + y - xy - x^2",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 13,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\ninj\nsub R2: x:=x + y\nsub P: y:=0\nsub R5: x:=x + y\nsub P: y:=x\nsub R2: x:=2x\nsub R7: x:=2x\nsub P: y:=-x\nsub R2: x:=-x\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "861ab716eb",
+   "equation": "2f(y^2) = f(xy) + 4y^2 - 2xy",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 4,
+   "seconds": 0.066,
+   "proof_len": 6,
+   "answer": "f(x) = 2x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=-x\nsub P: y:=3\nconclude",
+   "solutions": [
+    "f(x) = 2x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "c8e05b5099",
+   "equation": "2xf(x + y) = f(2y) + f(x^2) + 2xy + x^2 + 2x - 2y - 2",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 4,
+   "answer": "f(x) = x + 1",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x + 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "30ef69da38",
+   "equation": "f(y) + f(x + y) = 2f(x) + 4y - 2x",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 5,
+   "answer": "f(x) = 2x + c for any constant c",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\ninj\nsurj\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = 2x + c"
+   ],
+   "flags": []
+  },
+  {
+   "id": "9077cb7c11",
+   "equation": "f(y - x)f(2x) + f(x + y) = 2xy - 2x^2 + x + y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 1,
+   "seconds": 0.066,
+   "proof_len": 15,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\ninj\nsub R2: x:=y - x\nsub R2: x:=x - y\nsub R2: x:=x + y\nsub R2: x:=2x\nsub P: y:=0\nsub R2: x:=-x\nsub P: y:=-x\nsub R2: x:=-2x\nsub R14: x:=-x\nsplit R1\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "3317f04c4d",
+   "equation": "2f(y) + 2f(xy) = 2x^2y^2 + 2xy + 2y^2 + 2y",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 4,
+   "answer": "f(x) = x^2 + x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x^2 + x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "0ec19b7624",
+   "equation": "f(2y) + f(xy)f(y^2) = xy^3 - 2y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 25,
+   "seconds": 0.066,
+   "proof_len": 10,
+   "answer": "f(x) = -x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=x\nsub P: y:=-x\nsplit R1\nconclude\nsub R5: x:=1 - x\nsub R10: x:=0\nsub R3: x:=2",
+   "solutions": [
+    "f(x) = -x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "713bbb42b4",
+   "equation": "2f(xy + x) + 2f(x - y) = 2xy + 4x - 2y",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 4,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "2a4bd26271",
+   "equation": "f(x + y) + f(x)f(-x) = x - x^2 + y + 6",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 5,
+   "answer": "f(x) = x - 3; f(x) = x + 2",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x - 3",
+    "f(x) = x + 2"
+   ],
+   "flags": []
+  },
+  {
+   "id": "cdd8045058",
+   "equation": "2f(2y) + f(x + y) = 2x + 10y + 3",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 7,
+   "answer": "f(x) = 2x + 1",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\ninj\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = 2x + 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "c9101fa2ad",
+   "equation": "f(x + 2y) + f(x^2 + y) = x^2 + x + 3y + 4",
+   "domain": "R",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.066,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "0e00a04261",
+   "equation": "f(x + y) + 2f(x - y) + f(y) = 3x + 8",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 6,
+   "answer": "f(x) = x + 2",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub R2: x:=y - x\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = x + 2"
+   ],
+   "flags": []
+  },
+  {
+   "id": "e3f06796bf",
+   "equation": "2f(x + 2y) = f(x^2) + 2f(2x) + 12y - 3x^2 - 6x",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 5,
+   "answer": "f(x) = 3x",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = 3x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "3d1fe52c1b",
+   "equation": "f(y - x) = f(x + 2y) + -4x - 2y",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 6,
+   "answer": "f(x) = 2x + c for any constant c",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0\nsub P: y:=0\nsub R1: x:=y - x\nsub P: y:=x\nconclude",
+   "solutions": [
+    "f(x) = 2x + c"
+   ],
+   "flags": []
+  },
+  {
+   "id": "cd328af2b9",
+   "equation": "f(x^2 - y^2) = f(x - y)f(x^2 - y^2) + xy^2 + x^2y - x^3 - y^3 + x^2 - y^2",
+   "domain": "Q",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 0.066,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "f6200af2e5",
+   "equation": "f(y - 1) = f(x - y) + 2xy - x^2 - 2y + 1",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 5,
+   "answer": "f(x) = x^2 + c for any constant c",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = x^2 + c"
+   ],
+   "flags": []
+  },
+  {
+   "id": "7211edaca1",
+   "equation": "2f(x + 2y) + f(x - y)f(y^2) = xy^2 - y^3 - y^2 - 3x - 3y + 3",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 0.066,
+   "proof_len": 15,
+   "answer": "f(x) = 1 - x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\ninj\nsub R2: x:=-x\nsub R2: x:=y - x\nsub R2: x:=x - y\nsub R2: x:=x + 2y\nsub R2: x:=2x\nsub R2: x:=2x + y\nsub R2: x:=x^2\nsub P: y:=x\nsub R2: x:=3x\nconclude",
+   "solutions": [
+    "f(x) = 1 - x"
+   ],
+   "flags": []
+  }
+ ]
+}
