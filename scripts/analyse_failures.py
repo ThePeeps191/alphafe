@@ -13,7 +13,7 @@ import json
 import pathlib
 import sys
 
-from alphafe.bench import BENCH_DIR, load_seed
+from alphafe.bench import BENCH_DIR, ROOT, load_seed
 from alphafe.env import FREE_MOVES
 from alphafe.moves import parse_proof
 
@@ -29,7 +29,7 @@ def known_proof_lengths() -> dict:
     best: dict = {}
     for path in (BENCH_DIR / "seed" / "proofs").glob("*.proof"):
         best[path.stem] = creative(parse_proof(path.read_text()))
-    for path in pathlib.Path("results").glob("*.json"):
+    for path in (ROOT / "results").glob("*.json"):
         payload = json.loads(path.read_text())
         if not isinstance(payload, dict) or "rows" not in payload:
             continue
@@ -41,6 +41,8 @@ def known_proof_lengths() -> dict:
 
 
 def main() -> None:
+    if len(sys.argv) < 2 or sys.argv[1] in ("-h", "--help"):
+        sys.exit(__doc__)
     lengths = known_proof_lengths()
     seeds = {b.id: b for b in load_seed()}
     for name in sys.argv[1:]:

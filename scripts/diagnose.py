@@ -61,6 +61,8 @@ def variants(move, state, view):
 
 
 def main() -> None:
+    if len(sys.argv) < 2 or sys.argv[1] in ("-h", "--help"):
+        sys.exit(__doc__)
     device = torch.device("cpu")
     model, _ = load_model(sys.argv[1], device)
     proposer = NeuralProposer(model, device)

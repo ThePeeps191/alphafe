@@ -21,6 +21,8 @@ def show(state):
 
 
 def main():
+    if len(sys.argv) < 3 or sys.argv[1] in ("-h", "--help"):
+        sys.exit(__doc__)
     problem = Problem.parse(sys.argv[1], sys.argv[2])
     text = sys.stdin.read() if len(sys.argv) < 4 or sys.argv[3] == "-" else open(sys.argv[3]).read()
     state = initial_state(problem)

@@ -4,17 +4,18 @@ For every suite and solver, prints the number solved for each tag; for
 trained-network rows evaluated with several sampling seeds it prints the
 range. Brute-force and reference rows are taken from the first tag.
 """
-import glob
 import json
 import sys
+
+from alphafe.bench import ROOT
 
 SUITES = ["seed", "real", "synthetic-tier1", "synthetic-tier2", "synthetic-tier3", "synthetic-tier4"]
 
 
 def load(tag: str) -> dict:
     out: dict = {}
-    for path in glob.glob(f"results/{tag}_*.json"):
-        payload = json.loads(open(path).read())
+    for path in sorted((ROOT / "results").glob(f"{tag}_*.json")):
+        payload = json.loads(path.read_text())
         config = payload.get("config", {})
         if "suite" in config:
             out[(config["suite"], config["solver"])] = payload
@@ -32,6 +33,8 @@ def cell(payload) -> str:
 
 
 def main() -> None:
+    if len(sys.argv) < 2 or sys.argv[1] in ("-h", "--help"):
+        sys.exit(__doc__)
     tags = sys.argv[1:]
     data = {tag: load(tag) for tag in tags}
     for suite in SUITES:

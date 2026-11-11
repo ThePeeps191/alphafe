@@ -1,9 +1,12 @@
 """Summarise a training log: python scripts/show_log.py <run>"""
 import json
-import pathlib
 import sys
 
-path = pathlib.Path("logs") / sys.argv[1] / "train.jsonl"
+from alphafe.bench import ROOT
+
+if len(sys.argv) < 2 or sys.argv[1] in ("-h", "--help"):
+    sys.exit(__doc__)
+path = ROOT / "logs" / sys.argv[1] / "train.jsonl"
 for line in path.read_text().splitlines():
     r = json.loads(line)
     extras = {k: v for k, v in r.items() if k.startswith(("heldout", "uniform", "promoted"))}

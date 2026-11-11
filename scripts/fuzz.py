@@ -3,7 +3,11 @@ import random
 import sys
 import time
 
-sys.path.insert(0, ".")
+import pathlib
+
+if len(sys.argv) > 1 and sys.argv[1] in ("-h", "--help"):
+    sys.exit(__doc__)
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))      # the tests package, from any directory
 from tests.seedlib import load_seeds, seed_problem
 from tests.test_modelcheck import CASES, instantiate, walk
 

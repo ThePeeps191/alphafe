@@ -9,6 +9,8 @@ import time
 from alphafe.eval import run_baseline, save, summary, synthetic_heldout
 
 if __name__ == "__main__":
+    if len(sys.argv) > 1 and sys.argv[1] in ("-h", "--help"):
+        sys.exit(__doc__)
     budget = int(sys.argv[1]) if len(sys.argv) > 1 else 20000
     for tier, benches in synthetic_heldout(200).items():
         began = time.time()
