@@ -107,16 +107,25 @@ class ProblemPool:
     never proposes a move and so teaches nothing.
     """
 
-    def __init__(self, seed: int, per_tier: int, for_training: bool = False, disguised: bool = False):
+    def __init__(self, seed: int, per_tier: int, for_training: bool = False, disguised: bool = False,
+                 processes: int = 0):
         protected = protected_keys() if for_training else benchmark_keys()
         data = generate(seed, per_tier, exclude=protected)
         easy: list = []
         if for_training:
+            # Starting a problem runs every opening substitution, so sorting out the ones the
+            # environment solves by itself is the slow part of building a pool: spread it over processes.
+            everything = [item for items in data.values() for item in items]
+            if processes > 1:
+                with multiprocessing.get_context("spawn").Pool(processes) as helpers:
+                    flags = helpers.map(_solved_at_start, everything, chunksize=64)
+            else:
+                flags = [_solved_at_start(item) for item in everything]
+            solved = {item.key for item, flag in zip(everything, flags) if flag}
             kept: dict = {}
             for tier, items in data.items():
-                kept[tier] = []
-                for item in items:
-                    (easy if _solved_at_start(item) else kept[tier]).append(item)
+                kept[tier] = [item for item in items if item.key not in solved]
+                easy += [item for item in items if item.key in solved]
             data = kept
         self.train = {tier: [g for g in items if g.split == "train"] for tier, items in data.items()}
         self.test = {tier: [g for g in items if g.split == "test"] for tier, items in data.items()}
@@ -552,7 +561,8 @@ def train(config: TrainConfig, resume: bool = False) -> dict:
     rng = random.Random(config.seed)
     torch.manual_seed(config.seed)
 
-    pool = ProblemPool(config.seed, config.per_tier, for_training=True, disguised=config.disguised)
+    pool = ProblemPool(config.seed, config.per_tier, for_training=True, disguised=config.disguised,
+                       processes=config.workers)
     model = PolicyValueNet(ModelConfig(**config.model)).to(device)
     optimizer = torch.optim.AdamW(model.parameters(), lr=config.lr, weight_decay=config.weight_decay)
     buffer = ReplayBuffer(config.buffer_size)
