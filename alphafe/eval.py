@@ -366,7 +366,7 @@ def full_eval(checkpoint, tag: Optional[str] = "eval", heldout: int = 200, basel
 
     import torch
 
-    from .model import DIVERSE, ModelConfig, NeuralProposer, PolicyValueNet, load_model, pick_device
+    from .model import DIVERSE, SUBTERM_PROPOSALS, ModelConfig, NeuralProposer, PolicyValueNet, load_model, pick_device
     from .search import MAX_DEPTH, UniformProposer
 
     max_depth = MAX_DEPTH if max_depth is None else max_depth
@@ -387,7 +387,7 @@ def full_eval(checkpoint, tag: Optional[str] = "eval", heldout: int = 200, basel
     chosen = select_suites(suites, heldout)
     stamp = provenance(checkpoint if model is not None else None, dev, {
         "suites": list(chosen), "heldout_per_tier": heldout, "sampling_seeds": [SAMPLING_SEED + i for i in range(seeds)],
-        "proposals_per_state": PROPOSALS, "temperature": list(temperature) if isinstance(temperature, (list, tuple)) else temperature,
+        "proposals_per_state": PROPOSALS, "subterm_proposals": SUBTERM_PROPOSALS, "temperature": list(temperature) if isinstance(temperature, (list, tuple)) else temperature,
         "value_weight": value_weight, "greedy_budget": GREEDY_BUDGET, "search_budget": SEARCH_BUDGET,
         "big_budget": big_budget, "baseline_budgets": list(baseline_budgets), "baseline_seconds": baseline_seconds,
         "baseline_workers": workers, "max_depth": max_depth, "routine_moves": dict(ROUTINE),
@@ -401,10 +401,15 @@ def full_eval(checkpoint, tag: Optional[str] = "eval", heldout: int = 200, basel
         spread: dict = {}
         per_seed: dict = {}
 
+        def proposer_for(net, mode, seed):
+            # A search mixes in proposals built from the page; "no backtracking" is the network alone.
+            return NeuralProposer(net, dev, temperature=temperature, rng=random.Random(seed),
+                                  n_subterm=SUBTERM_PROPOSALS if mode == "search" else 0)
+
         def network_rows(label, mode, budget, weight):
             for index in range(seeds):
                 torch.manual_seed(SAMPLING_SEED + index)
-                rows = run_policy(benches, NeuralProposer(model, dev, temperature=temperature), mode, budget,
+                rows = run_policy(benches, proposer_for(model, mode, SAMPLING_SEED + index), mode, budget,
                                   value_weight=weight, mismatches=found, max_depth=max_depth,
                                   solver=f"{label}, sampling seed {SAMPLING_SEED + index}")
                 spread.setdefault(label, []).append(sum(r.solved for r in rows))
@@ -419,13 +424,13 @@ def full_eval(checkpoint, tag: Optional[str] = "eval", heldout: int = 200, basel
                 network_rows(f"network, search ({big_budget} calls)", "search", big_budget, value_weight)
         torch.manual_seed(SAMPLING_SEED)
         references = (
-            ("untrained network", lambda: NeuralProposer(untrained, dev, temperature=temperature)),
-            ("uniform policy", lambda: UniformProposer(random.Random(0))),
+            ("untrained network", lambda mode: proposer_for(untrained, mode, SAMPLING_SEED)),
+            ("uniform policy", lambda mode: UniformProposer(random.Random(0))),
         )
         for name, make in references:
             for mode, word, budget in (("greedy", "no backtracking", GREEDY_BUDGET), ("search", "search", SEARCH_BUDGET)):
                 label = f"{name}, {word} ({budget} calls)"
-                runs[label] = run_policy(benches, make(), mode, budget, mismatches=found, solver=label, max_depth=max_depth)
+                runs[label] = run_policy(benches, make(mode), mode, budget, mismatches=found, solver=label, max_depth=max_depth)
         budgets = list(baseline_budgets)
         if big_budget and big_budget not in budgets and suite in BIG_BUDGET_SUITES:
             budgets.append(big_budget)

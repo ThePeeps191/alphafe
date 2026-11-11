@@ -399,7 +399,8 @@ def sample_subterm_move(view: StateView, rng) -> Optional[tuple]:
     v - t for it, where t occurs in the state (an f(...) or an argument of f)
     and v is the variable itself. Occasionally a second variable is set to 0.
     Returns (token ids, a nominal log-probability) or None if nothing applies.
-    This is an exploration heuristic for self-play only; it is not used in evaluation.
+    Searches mix a few of these into the network's proposals (model.SUBTERM_PROPOSALS),
+    and self-play can use them for exploration (TrainConfig.n_subterm).
     """
     import math
 

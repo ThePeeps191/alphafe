@@ -12,6 +12,7 @@ import argparse
 import pathlib
 import pickle
 import sys
+from typing import Optional
 
 from . import terms as T
 from .bench import ROOT
@@ -39,16 +40,18 @@ def _load_network(checkpoint, device: str):
 GREEDY_CALLS = 32       # the first calls of the budget are spent without backtracking
 
 
-def _solve_with_network(problem: Problem, model, dev, budget: int, max_depth: int, seconds: float) -> SearchResult:
+def _solve_with_network(problem: Problem, model, dev, budget: int, max_depth: int, seconds: float,
+                        seed: Optional[int] = None) -> SearchResult:
     """Network search within ``budget`` checker calls and ``seconds`` in total.
 
     Up to 32 calls are spent without backtracking first; the search with
     backtracking gets what is left of the budget, so the reported calls
     never exceed it. The reported time covers both stages.
     """
+    import random
     import time
 
-    from .model import DIVERSE, NeuralProposer
+    from .model import DIVERSE, SUBTERM_PROPOSALS, NeuralProposer
     from .search import BestFirstSearch, GreedySearch, run_searches
 
     began = time.time()
@@ -59,7 +62,8 @@ def _solve_with_network(problem: Problem, model, dev, budget: int, max_depth: in
         result = greedy.result()
     else:
         search = BestFirstSearch(problem, budget=budget - greedy.calls, max_depth=max_depth)
-        run_searches([search], NeuralProposer(model, dev, temperature=DIVERSE), k=8, deadline=deadline)
+        mixed = NeuralProposer(model, dev, temperature=DIVERSE, n_subterm=SUBTERM_PROPOSALS, rng=random.Random(seed))
+        run_searches([search], mixed, k=8, deadline=deadline)
         result = search.result()
         result.checker_calls += greedy.calls
     result.seconds = time.time() - began
@@ -89,7 +93,7 @@ def cmd_solve(args) -> int:
                     import torch
 
                     torch.manual_seed(args.seed)
-                result = _solve_with_network(problem, model, dev, args.budget, args.max_depth, args.seconds)
+                result = _solve_with_network(problem, model, dev, args.budget, args.max_depth, args.seconds, args.seed)
                 print(f"Network search: {'solved' if result.solved else 'not solved'} "
                       f"({result.checker_calls} checker calls, {result.seconds:.1f}s)")
         else:

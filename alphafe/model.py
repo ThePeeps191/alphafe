@@ -201,6 +201,11 @@ def pad_batch(sequences: list, device=None, multiple: int = 1) -> torch.Tensor:
 # few faithful samples and adds progressively more adventurous ones.
 DIVERSE = (0.6, 0.8, 1.0, 1.0, 1.3, 1.6, 2.0, 3.0)
 
+# How many of the proposals for a state a search replaces by substitutions built from expressions
+# already on the page (tokenizer.sample_subterm_move). A trained policy gives some whole kinds of
+# move, x := f(x) for one, almost no probability, and no number of samples then finds them.
+SUBTERM_PROPOSALS = 2
+
 
 class NeuralProposer:
     """Samples moves from the network under the move grammar.
