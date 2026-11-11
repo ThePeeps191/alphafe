@@ -307,20 +307,27 @@ class Poly:
 
     # -- rewriting ----------------------------------------------------------
 
-    def rewrite(self, fn: Callable[[Atom], Optional["Poly"]], memo: Optional[dict] = None) -> "Poly":
+    def rewrite(self, fn: Callable[[Atom], Optional["Poly"]], memo: Optional[dict] = None,
+                limit: Optional[int] = None) -> "Poly":
         """Rewrite atoms bottom-up.
 
         ``fn(atom)`` returns a replacement polynomial or ``None`` to keep the
         atom. Arguments of f are rewritten first, then ``fn`` sees the rebuilt
         atom. The replacement itself is not rewritten again (single pass).
         Returns ``self`` (the same object) when nothing changed.
+
+        With ``limit``, ``TooLarge`` is raised as soon as the expansion would
+        multiply more than that many pairs of terms at once or hold more than
+        that many terms: putting a five-term expression into x^8 is thousands
+        of terms, and a caller that would refuse the result anyway should not
+        pay for it.
         """
         if memo is None:
             memo = {}
         changed = False
         replaced: dict = {}
         for atom in self.top_atoms():
-            new = _rewrite_atom(atom, fn, memo)
+            new = _rewrite_atom(atom, fn, memo, limit)
             if new is not None:
                 replaced[atom] = new
                 changed = True
@@ -337,15 +344,18 @@ class Poly:
             for atom, exp in mono:
                 factor = replaced.get(atom)
                 if factor is not None:
-                    product = product * (factor if exp == 1 else factor ** exp)
+                    for _ in range(exp):
+                        product = times(product, factor, limit)
             result = result + product
+            if limit is not None and len(result.terms) > limit:
+                raise TooLarge()
         return result + Poly(untouched)
 
-    def subst(self, mapping: dict) -> "Poly":
+    def subst(self, mapping: dict, limit: Optional[int] = None) -> "Poly":
         """Simultaneously replace variables: ``mapping`` is {name: Poly}.
 
         Substitution reaches inside f(...): f(x + y) with x := f(y) becomes
-        f(f(y) + y).
+        f(f(y) + y). ``limit`` is the work limit of ``rewrite``.
         """
         if not mapping or not (self.variables() & mapping.keys()):
             return self
@@ -355,7 +365,7 @@ class Poly:
                 return mapping.get(atom[1])
             return None
 
-        return self.rewrite(fn)
+        return self.rewrite(fn, limit=limit)
 
     def replace_atoms(self, mapping: dict) -> "Poly":
         """Replace whole atoms (at any depth): ``mapping`` is {atom: Poly}."""
@@ -365,6 +375,17 @@ class Poly:
 
 
 ZERO = Poly()
+
+
+class TooLarge(Exception):
+    """An expansion went over the work limit its caller set (see ``Poly.rewrite``)."""
+
+
+def times(a: Poly, b: Poly, limit: Optional[int] = None) -> Poly:
+    """``a * b``, refused with ``TooLarge`` if it means multiplying more than ``limit`` pairs of terms."""
+    if limit is not None and len(a.terms) * len(b.terms) > limit:
+        raise TooLarge()
+    return a * b
 
 
 def atom_arg(atom: Atom) -> Poly:
@@ -422,14 +443,14 @@ def atom_vars(atom: Atom) -> frozenset:
     return cached
 
 
-def _rewrite_atom(atom: Atom, fn, memo: dict) -> Optional[Poly]:
+def _rewrite_atom(atom: Atom, fn, memo: dict, limit: Optional[int] = None) -> Optional[Poly]:
     """Rewrite one atom; ``None`` means unchanged."""
     if atom in memo:
         return memo[atom]
     result: Optional[Poly]
     if atom[0] == "f":
         arg = atom_arg(atom)
-        new_arg = arg.rewrite(fn, memo)
+        new_arg = arg.rewrite(fn, memo, limit)
         rebuilt = atom if new_arg is arg else f_atom(new_arg.key)
         result = fn(rebuilt)
         if result is None and rebuilt is not atom:
@@ -814,8 +835,8 @@ def _factor_rest(poly: Poly, depth: int) -> list:
 # Conversion between terms and polynomials, printing
 # ---------------------------------------------------------------------------
 
-def to_poly(term: T.Term) -> Poly:
-    """Canonicalise a term."""
+def to_poly(term: T.Term, limit: Optional[int] = None) -> Poly:
+    """Canonicalise a term. ``limit`` bounds each multiplication (``times``); over it, ``TooLarge`` is raised."""
     if isinstance(term, T.Num):
         return Poly.const(term.value)
     if isinstance(term, T.Var):
@@ -823,17 +844,23 @@ def to_poly(term: T.Term) -> Poly:
     if isinstance(term, T.Sym):
         return Poly.named(term.name)
     if isinstance(term, T.App):
-        return Poly.f(to_poly(term.arg))
+        return Poly.f(to_poly(term.arg, limit))
     if isinstance(term, T.Add):
-        return to_poly(term.left) + to_poly(term.right)
+        return to_poly(term.left, limit) + to_poly(term.right, limit)
     if isinstance(term, T.Sub):
-        return to_poly(term.left) - to_poly(term.right)
+        return to_poly(term.left, limit) - to_poly(term.right, limit)
     if isinstance(term, T.Mul):
-        return to_poly(term.left) * to_poly(term.right)
+        return times(to_poly(term.left, limit), to_poly(term.right, limit), limit)
     if isinstance(term, T.Neg):
-        return -to_poly(term.arg)
+        return -to_poly(term.arg, limit)
     if isinstance(term, T.Pow):
-        return to_poly(term.base) ** term.exp
+        base = to_poly(term.base, limit)
+        if limit is None:
+            return base ** term.exp
+        result = Poly.const(1)
+        for _ in range(term.exp):
+            result = times(result, base, limit)
+        return result
     raise TypeError(f"not a term: {term!r}")
 
 

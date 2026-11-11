@@ -65,6 +65,7 @@ from . import terms as T
 from .algebra import (
     ONE,
     Poly,
+    TooLarge,
     Unsupported,
     ZERO,
     atom_arg,
@@ -113,6 +114,7 @@ MAX_ROWS = 40           # identities per branch
 MAX_POLY_TERMS = 80     # monomials per identity
 MAX_POLY_SIZE = 400     # structural size per identity
 MAX_TERM_SIZE = 40      # nodes in a substituted term
+WORK_TERMS = 1000       # term pairs in one multiplication, and terms held, while a substitution is expanded
 MAX_WITNESSES = 3
 MAX_BRANCHES = 16
 WITNESS_NAMES = "abcde"
@@ -322,7 +324,10 @@ class Branch:
         if not self._rules and not self.props:
             return poly
         for _ in range(NORM_PASSES):
-            new = poly.rewrite(self._rewrite_atom)
+            try:
+                new = poly.rewrite(self._rewrite_atom, limit=WORK_TERMS)
+            except TooLarge:
+                raise Reject("identity too large") from None
             if new is poly or new == poly:
                 return poly
             poly = new
@@ -639,7 +644,10 @@ def _term_poly(state: State, branch: Branch, term: T.Term, ground: bool = False)
     for sub in T.subterms(term):
         if isinstance(sub, T.Pow) and sub.exp > 6:
             raise Reject("exponent too large")
-    return to_poly(term)
+    try:
+        return to_poly(term, WORK_TERMS)
+    except TooLarge:
+        raise Reject("term too large") from None
 
 
 def _resolve(state: State, branch: Branch, target) -> Poly:
@@ -943,7 +951,10 @@ def _do_subst(state: State, branch: Branch, move: Subst) -> _Outcome:
         mapping[name] = _term_poly(state, branch, term)
     if not mapping:
         raise Reject("a substitution needs at least one binding")
-    instance = target.subst(mapping)
+    try:
+        instance = target.subst(mapping, WORK_TERMS)
+    except TooLarge:
+        raise Reject("identity too large") from None
     shown = branch.norm(instance)
     branch.add([instance])
     return _Outcome(instance=shown, source=target, raw=instance)

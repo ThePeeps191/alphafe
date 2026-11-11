@@ -260,3 +260,40 @@ def test_conclude_without_a_target_tries_every_explicit_identity():
         assert result.solved and str(result.solutions) == "f(x) = c^2x - c^2 + c for any constant c", last
     # A named target is still taken at its word.
     assert "cannot pin down the constants" in check(problem, parse_proof(moves + "conclude R2")).error
+
+
+@pytest.mark.parametrize("equation, move, reason", [
+    ("f(x+y) = f(x) + y", "sub P: x:=((x+y+1)^6)^6", "term too large"),                    # nested powers: degree 36
+    ("f(x+y) = f(x) + y", "sub P: x:=(((x+y+f(x)+1)^6)^6)^6", "term too large"),
+    ("f(x^2+y) = f(x)^2 + f(y) + x^6", "sub P: x:=x+y+f(x)+f(y)+1", "identity too large"),  # five terms into x^6
+])
+def test_an_expansion_over_the_work_limit_is_refused_without_being_carried_out(equation, move, reason):
+    """These used to be expanded in full (seconds to minutes) before the size cap on identities refused them."""
+    import time
+
+    from alphafe.checker import Reject, apply, initial_state
+    from alphafe.moves import parse_move
+
+    state = initial_state(Problem.parse(equation))
+    began = time.time()
+    with pytest.raises(Reject) as refused:
+        apply(state, parse_move(move))
+    assert refused.value.reason == reason
+    assert time.time() - began < 1.0
+
+
+def test_the_work_limit_counts_pairs_of_terms_and_terms_held():
+    from alphafe.algebra import Poly, TooLarge, parse_poly, times, to_poly
+    from alphafe import terms as T
+
+    wide = parse_poly("x + y + f(x) + f(y) + 1")
+    assert times(wide, wide, 25) == wide * wide
+    with pytest.raises(TooLarge):
+        times(wide, wide, 24)
+    row = parse_poly("f(x) + x^3")
+    assert row.subst({"x": wide}, limit=1000) == row.subst({"x": wide})        # within the limit: the same polynomial
+    with pytest.raises(TooLarge):
+        row.subst({"x": wide}, limit=20)
+    with pytest.raises(TooLarge):
+        to_poly(T.parse("(x + y + 1)^6"), 20)
+    assert to_poly(T.parse("(x + y + 1)^6"), 1000) == to_poly(T.parse("(x + y + 1)^6"))

@@ -18,8 +18,8 @@ from dataclasses import dataclass, field
 from typing import Optional
 
 from . import terms as T
-from .algebra import ZERO, Poly, atom_arg, atom_vars, poly_term
-from .checker import LOAD_REFUSED, NORM_PASSES, Problem, Reject, State, apply, check, initial_state
+from .algebra import ZERO, Poly, TooLarge, atom_arg, atom_vars, poly_term
+from .checker import LOAD_REFUSED, NORM_PASSES, WORK_TERMS, Problem, Reject, State, apply, check, initial_state
 from .moves import Cancel, Cauchy, Conclude, Inj, Move, Quadratic, SqAdd, SqLin, Subst, Surj
 from .solutions import SolutionSet
 
@@ -64,9 +64,15 @@ def _f_atoms(polys) -> set:
 
 
 @functools.lru_cache(maxsize=50_000)
-def _instance(row: Poly, name: str, site: Poly) -> Poly:
-    """``row`` with the variable ``name`` replaced by ``site``. Cached: neighbouring states share most rows."""
-    return row.subst({name: site})
+def _instance(row: Poly, name: str, site: Poly) -> Optional[Poly]:
+    """``row`` with the variable ``name`` replaced by ``site``, or None if that is over the checker's work limit.
+
+    Cached: neighbouring states share most rows.
+    """
+    try:
+        return row.subst({name: site}, WORK_TERMS)
+    except TooLarge:
+        return None
 
 
 _VARIABLE = {name: Poly.var(name) for name in "xyz"}
@@ -102,8 +108,11 @@ def _normal_instance(branch, row: Poly, name: str, site: Poly) -> Optional[Poly]
 
     poly = _instance(row, name, site)
     result = None
-    for _ in range(NORM_PASSES):          # the loop of Branch.norm
-        new = poly.rewrite(fn)
+    for _ in range(NORM_PASSES if poly is not None else 0):          # the loop of Branch.norm
+        try:
+            new = poly.rewrite(fn, limit=WORK_TERMS)
+        except TooLarge:
+            break
         if new is poly or new == poly:
             result = poly
             break

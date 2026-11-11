@@ -386,10 +386,14 @@ def make_batch(buffer: ReplayBuffer, config: TrainConfig, rng: random.Random, de
     return pieces
 
 
-def train_steps(model, optimizer, buffer: ReplayBuffer, config: TrainConfig, rng, device, step: int) -> tuple[dict, int]:
+def train_steps(model, optimizer, buffer: ReplayBuffer, config: TrainConfig, rng, device, step: int,
+                more=None) -> tuple[dict, int]:
+    """``config.steps_per_iter`` gradient steps; with ``more`` (a function), further steps for as long as it returns True."""
     model.train()
     totals = {"policy_loss": 0.0, "value_loss": 0.0}
-    for _ in range(config.steps_per_iter):
+    count = 0
+    while count < config.steps_per_iter or (more is not None and more()):
+        count += 1
         step += 1
         lr = config.lr * min(1.0, step / config.warmup)
         for group in optimizer.param_groups:
@@ -409,7 +413,7 @@ def train_steps(model, optimizer, buffer: ReplayBuffer, config: TrainConfig, rng
             totals["value_loss"] += value_loss.item()
         torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
         optimizer.step()
-    return {k: round(v / config.steps_per_iter, 4) for k, v in totals.items()}, step
+    return {**{k: round(v / max(count, 1), 4) for k, v in totals.items()}, "steps": count}, step
 
 
 def play(model, device, items: list, config: TrainConfig, rng: random.Random) -> list:
@@ -548,6 +552,7 @@ def _train_loop(config, began, device, ckpt_dir, log_path, last, pool, progress,
         state["tier_iters"] += 1
         tier = state["tier"]
 
+        losses: dict = {}
         # 1-2. self-play
         if adaptive:
             picks = progress.sample(rng, config.problems_per_iter)
@@ -561,7 +566,13 @@ def _train_loop(config, began, device, ckpt_dir, log_path, last, pool, progress,
             jobs = [(str(weights), asdict(config), items[begin: begin + size],
                      (config.seed * 1_000_003 + state["iteration"]) * 1009 + begin)
                     for begin in range(0, len(items), size)]
-            shares = actors.map(_actor, jobs)
+            playing = actors.map_async(_actor, jobs)
+            # The workers play on CPU cores and the gradient steps run on ``device``, so the two
+            # overlap: learn from the examples already in the buffer until this round is in.
+            if buffer.solve:
+                losses, state["step"] = train_steps(model, optimizer, buffer, config, rng, device, state["step"],
+                                                    more=lambda: not playing.ready())
+            shares = playing.get()
             solved = [flag for share in shares for flag in share["solved"]]
             calls = [count for share in shares for count in share["calls"]]
         else:
@@ -587,9 +598,8 @@ def _train_loop(config, began, device, ckpt_dir, log_path, last, pool, progress,
                         buffer.add(kind, example)
         else:
             harvest(searches, buffer, rng, minimise=config.minimise, mirror=config.mirror)
-        losses = {}
-        if buffer.solve:
-            losses, state["step"] = train_steps(model, optimizer, buffer, config, rng, device, state["step"])
+            if buffer.solve:
+                losses, state["step"] = train_steps(model, optimizer, buffer, config, rng, device, state["step"])
 
         record = {
             "iteration": state["iteration"], "tier": tier, "selfplay_rate_tier": round(rate, 4),
