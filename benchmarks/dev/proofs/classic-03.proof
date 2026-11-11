@@ -1,0 +1,23 @@
+# Found by hand in the environment (10 proposed moves), then pruned to the moves it needs.
+sub P: x:=0, y:=0
+sub P: x:=1
+inj
+surj
+pre 0
+sub P: x:=a
+sub P: y:=a
+sub [f(f(x)) - 2f(x) - ax = 0]: x:=a
+sub [f(af(x)) - ax = 0]: x:=0
+cancel
+split [af(0) = a]
+onto [f(f(x)) - 2f(x) = 0]: x
+conclude
+split [a^2 = 1]
+sub [f(f(x)) - 2f(x) + x = 0]: x:=-f(x)
+sub P: y:=-f(y)
+sub [f(f(x) - xy) = 2f(x) - xf(y)]: x:=1
+sub [f(-x) = f(x) - 2x]: x:=x - 2
+sub [f(f(x)) = 2f(x) - x]: x:=f(x) + 2
+sub [f(x - 2) = 2x - f(x)]: x:=x + 2
+sub [f(x - 2) + f(x) - 2x = 0]: x:=x + 4
+conclude

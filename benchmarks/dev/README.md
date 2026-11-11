@@ -34,7 +34,7 @@ known. The MOHS numbers are rough estimates.
 
 ## Proofs
 
-`proofs/<id>.proof` are hand-written proofs that the checker accepts, 12 so
+`proofs/<id>.proof` are hand-written proofs that the checker accepts, 13 so
 far. They exist for diagnosis (`scripts/diagnose.py --suite dev` shows where
 a search loses the thread) and are never used as training data. Dev problems
 and their twins are also kept out of the synthetic training pool.
