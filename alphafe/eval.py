@@ -428,7 +428,12 @@ def full_eval(checkpoint, tag: Optional[str] = "eval", heldout: int = 200, basel
             ("uniform policy", lambda mode: UniformProposer(random.Random(0))),
         )
         for name, make in references:
-            for mode, word, budget in (("greedy", "no backtracking", GREEDY_BUDGET), ("search", "search", SEARCH_BUDGET)):
+            modes = [("greedy", "no backtracking", GREEDY_BUDGET), ("search", "search", SEARCH_BUDGET)]
+            if name == "untrained network" and big_budget and suite in BIG_BUDGET_SUITES:
+                # The control for the big-budget network row: the same search, page-based proposals
+                # included, with random weights. What the trained row adds to it is what training is worth.
+                modes.append(("search", "search", big_budget))
+            for mode, word, budget in modes:
                 label = f"{name}, {word} ({budget} calls)"
                 runs[label] = run_policy(benches, make(mode), mode, budget, mismatches=found, solver=label, max_depth=max_depth)
         budgets = list(baseline_budgets)
