@@ -32,6 +32,45 @@ Mono = tuple  # sorted tuple of (atom, exponent) pairs; () is the monomial 1
 ONE = Fraction(1)
 
 
+class FAtom(tuple):
+    """The atom ``('f', key)``: an ordinary tuple that computes its hash once.
+
+    Atoms sit inside the monomials that every dictionary of terms is keyed
+    by, and Python hashes a plain nested tuple in full on every lookup. An
+    FAtom equals, compares and hashes exactly like the plain tuple with the
+    same content, so nothing depends on every atom being built here; equal
+    FAtoms made by ``f_atom`` are also one object, which turns most
+    comparisons into a pointer check. It also keeps its argument as a
+    ``Poly`` (see ``atom_arg``).
+    """
+
+    def __new__(cls, key: tuple):
+        self = tuple.__new__(cls, ("f", key))
+        self._hash = tuple.__hash__(self)
+        self._arg = None
+        return self
+
+    def __hash__(self) -> int:
+        return self._hash
+
+    def __reduce__(self):
+        # The hash of a string differs between processes, so a stored hash must not travel.
+        return (f_atom, (self[1],))
+
+
+_ATOMS: dict = {}
+
+
+def f_atom(key: tuple) -> FAtom:
+    """The atom f(p) for the polynomial with canonical key ``key``."""
+    atom = _ATOMS.get(key)
+    if atom is None:
+        if len(_ATOMS) > 500_000:
+            _ATOMS.clear()          # atoms stay equal by content; only the sharing is lost
+        atom = _ATOMS[key] = FAtom(key)
+    return atom
+
+
 def mono_mul(a: Mono, b: Mono) -> Mono:
     """Multiply two monomials (merge their atom/exponent lists)."""
     if not a:
@@ -51,7 +90,7 @@ class Poly:
     as immutable: every operation returns a new ``Poly``.
     """
 
-    __slots__ = ("terms", "_key", "_hash", "_vars", "_lead")
+    __slots__ = ("terms", "_key", "_hash", "_vars", "_lead", "_tops")
 
     def __init__(self, terms: Optional[dict] = None):
         self.terms: dict[Mono, Fraction] = terms if terms is not None else {}
@@ -59,6 +98,7 @@ class Poly:
         self._hash = None
         self._vars = None
         self._lead = None       # (rank of the leading monomial, the monomial), see ``leading``
+        self._tops = None
 
     # -- constructors -------------------------------------------------------
 
@@ -82,7 +122,10 @@ class Poly:
     @staticmethod
     def f(arg: "Poly") -> "Poly":
         """The atom f(arg) as a polynomial."""
-        return Poly.atom(("f", arg.key))
+        atom = f_atom(arg.key)
+        if atom._arg is None:
+            atom._arg = arg
+        return Poly.atom(atom)
 
     @staticmethod
     def from_key(key: tuple) -> "Poly":
@@ -214,9 +257,12 @@ class Poly:
             return self.terms[()]
         return None
 
-    def top_atoms(self) -> set:
+    def top_atoms(self) -> frozenset:
         """Atoms that occur as factors of monomials (not inside f(...))."""
-        return {atom for mono in self.terms for atom, _ in mono}
+        tops = self._tops
+        if tops is None:
+            tops = self._tops = frozenset({atom for mono in self.terms for atom, _ in mono})
+        return tops
 
     def all_atoms(self) -> set:
         """Atoms at every nesting level."""
@@ -323,6 +369,16 @@ class Poly:
 ZERO = Poly()
 
 
+def atom_arg(atom: Atom) -> Poly:
+    """The argument p of the atom f(p). Shared between callers: treat it as immutable, like every ``Poly``."""
+    if type(atom) is FAtom:
+        arg = atom._arg
+        if arg is None:
+            arg = atom._arg = Poly(dict(atom[1]))
+        return arg
+    return Poly.from_key(atom[1])
+
+
 def _coerce(value) -> Poly:
     return value if isinstance(value, Poly) else Poly.const(value)
 
@@ -374,9 +430,9 @@ def _rewrite_atom(atom: Atom, fn, memo: dict) -> Optional[Poly]:
         return memo[atom]
     result: Optional[Poly]
     if atom[0] == "f":
-        arg = Poly.from_key(atom[1])
+        arg = atom_arg(atom)
         new_arg = arg.rewrite(fn, memo)
-        rebuilt = atom if new_arg is arg else ("f", new_arg.key)
+        rebuilt = atom if new_arg is arg else f_atom(new_arg.key)
         result = fn(rebuilt)
         if result is None and rebuilt is not atom:
             result = Poly.atom(rebuilt)
@@ -799,7 +855,7 @@ def atom_term(atom: Atom) -> T.Term:
         return T.Var(atom[1])
     if kind == "c":
         return T.Sym(atom[1])
-    return T.App(poly_term(Poly.from_key(atom[1])))
+    return T.App(poly_term(atom_arg(atom)))
 
 
 def _mono_term(mono: Mono, coef: Fraction) -> T.Term:
@@ -899,7 +955,7 @@ def evaluate(poly: Poly, func: Callable[[Fraction], Fraction], values: dict) -> 
 
 def _eval_atom(atom: Atom, func, values: dict) -> Fraction:
     if atom[0] == "f":
-        return Fraction(func(evaluate(Poly.from_key(atom[1]), func, values)))
+        return Fraction(func(evaluate(atom_arg(atom), func, values)))
     return Fraction(values[atom[1]])
 
 
@@ -913,7 +969,7 @@ def apply_function(poly: Poly, expr: Poly, var: str = "x") -> Poly:
 
     def fn(atom):
         if atom[0] == "f":
-            return expr.subst({var: Poly.from_key(atom[1])})
+            return expr.subst({var: atom_arg(atom)})
         return None
 
     return poly.rewrite(fn)

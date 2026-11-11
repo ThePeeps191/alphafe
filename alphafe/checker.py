@@ -67,10 +67,12 @@ from .algebra import (
     Poly,
     Unsupported,
     ZERO,
+    atom_arg,
     atom_vars,
     div_exact,
     equation_poly,
     equation_str,
+    f_atom,
     factor_hint,
     has_no_root,
     has_var_f,
@@ -279,13 +281,13 @@ class Branch:
         props = self.props
         if atom[0] != "f" or not props:
             return None
-        arg = Poly.from_key(atom[1])
+        arg = atom_arg(atom)
         if "involution" in props and len(arg.terms) == 1:
             # f(f(B)) = B
             (mono, coef), = arg.terms.items()
             inner = _single_atom(mono)
             if coef == 1 and inner is not None and inner[0] == "f":
-                return Poly.from_key(inner[1])
+                return atom_arg(inner)
         if "additive" in props:
             # f(q1*m1 + q2*m2 + ...) = q1*f(m1) + q2*f(m2) + ...  (additive
             # functions are linear over the rationals, on R as well as on Q)
@@ -673,7 +675,7 @@ def injectivity_variable(branch: Branch, poly: Poly) -> Optional[str]:
     fresh = Poly.named("#t")
     for name in sorted(poly.variables()):
         v = ("v", name)
-        replaced = poly.replace_atoms({("f", Poly.var(name).key): fresh})
+        replaced = poly.replace_atoms({f_atom(Poly.var(name).key): fresh})
         coeffs = replaced.coeffs_in(v)
         if set(coeffs) - {0, 1} or 1 not in coeffs:
             continue
@@ -760,19 +762,19 @@ def cancel_steps(branch: Branch, poly: Poly, index: Optional[dict] = None):
         (m1, c1), (m2, c2) = poly.terms.items()
         a1, a2 = _single_atom(m1), _single_atom(m2)
         if a1 is not None and a2 is not None and a1[0] == "f" and a2[0] == "f" and c1 + c2 == 0:
-            yield Poly.from_key(a1[1]) - Poly.from_key(a2[1]), None
+            yield atom_arg(a1) - atom_arg(a2), None
     for atom, value in _f_values(poly):
         if not atom_vars(atom):
             continue
         if not value.variables():
             for known, image in branch._rules.items():
                 if known[0] == "f" and not atom_vars(known) and image == value:
-                    yield Poly.from_key(atom[1]) - Poly.from_key(known[1]), Poly.atom(known) - value
+                    yield atom_arg(atom) - atom_arg(known), Poly.atom(known) - value
         if index is None:
             index = value_index(branch)
         for other in index.get(value, ()):
             if other != atom:
-                yield Poly.from_key(atom[1]) - Poly.from_key(other[1]), Poly.atom(other) - value
+                yield atom_arg(atom) - atom_arg(other), Poly.atom(other) - value
 
 
 def cauchy_form(poly: Poly) -> Optional[tuple]:
@@ -859,7 +861,7 @@ def explicit_form(poly: Poly) -> Optional[Poly]:
     rest = poly - Poly({mono: coef})
     if atom in rest.top_atoms():
         return None  # f(...) also appears in a product or a power
-    arg = Poly.from_key(atom[1])
+    arg = atom_arg(atom)
     arg_coeffs = arg.coeffs_in(("v", name))
     if set(arg_coeffs) - {0, 1} or 1 not in arg_coeffs:
         return None
@@ -1130,7 +1132,7 @@ def _do_onto(state: State, branch: Branch, move: Onto) -> _Outcome:
     if name not in poly.variables():
         raise Reject(f"{name} does not occur in the identity")
     fresh = Poly.named("#t")
-    replaced = poly.replace_atoms({("f", Poly.var(name).key): fresh})
+    replaced = poly.replace_atoms({f_atom(Poly.var(name).key): fresh})
     if name in replaced.variables():
         raise Reject(f"{name} occurs outside f({name}), so f({name}) cannot be replaced by a free variable")
     result = replaced.replace_atoms({("c", "#t"): Poly.var(name)})

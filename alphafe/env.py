@@ -18,7 +18,7 @@ from dataclasses import dataclass, field
 from typing import Optional
 
 from . import terms as T
-from .algebra import ZERO, Poly, atom_vars, poly_term
+from .algebra import ZERO, Poly, atom_arg, atom_vars, poly_term
 from .checker import LOAD_REFUSED, Problem, Reject, State, apply, check, initial_state
 from .moves import Cancel, Cauchy, Conclude, Inj, Move, Quadratic, SqAdd, SqLin, Subst, Surj
 from .solutions import SolutionSet
@@ -92,7 +92,7 @@ def routine_moves(state: State, tried: set):
     present = _f_atoms(rows)
     sites = [ZERO]
     for atom in sorted(present):
-        arg = Poly.from_key(atom[1])
+        arg = atom_arg(atom)
         if arg not in sites and len(arg.terms) <= MAX_SITE_TERMS:
             sites.append(arg)
     row_set = set(rows)

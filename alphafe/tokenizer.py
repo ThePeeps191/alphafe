@@ -22,7 +22,7 @@ from dataclasses import dataclass, field
 from typing import Optional
 
 from . import terms as T
-from .algebra import Poly, leading_mono, poly_term
+from .algebra import Poly, atom_arg, leading_mono, poly_term
 from .checker import State, _single_atom
 from .moves import Move, Onto, Pre, Split, SplitNZ, Subst
 
@@ -146,7 +146,7 @@ def _subterms(polys: list) -> list:
         for atom in sorted(poly.all_atoms()):      # sorted: sets have no stable order between runs
             if atom[0] != "f":
                 continue
-            arg = Poly.from_key(atom[1])
+            arg = atom_arg(atom)
             for candidate in (arg, Poly.atom(atom)):
                 if candidate.const_value() is None and candidate not in seen:
                     seen[candidate] = poly_term(candidate)
