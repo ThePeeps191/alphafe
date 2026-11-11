@@ -3,6 +3,7 @@
     .venv/bin/python scripts/validate_bench.py                     # every *.jsonl in benchmarks/real
     .venv/bin/python scripts/validate_bench.py path/to/file.jsonl  # specific files
     .venv/bin/python scripts/validate_bench.py --seed              # the seed benchmark (fewer required fields)
+    .venv/bin/python scripts/validate_bench.py --dev               # the development suite (same)
 
 Exits with status 1 if there is any error. See benchmarks/real/INSTRUCTIONS.md
 for what each message means and alphafe/benchcheck.py for what is checked.
@@ -17,12 +18,13 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Check benchmark files.")
     parser.add_argument("paths", nargs="*", help="JSON Lines files (default: benchmarks/real/*.jsonl)")
     parser.add_argument("--seed", action="store_true", help="check benchmarks/seed with the basic field list")
+    parser.add_argument("--dev", action="store_true", help="check benchmarks/dev with the basic field list")
     parser.add_argument("--no-training-check", action="store_true",
                         help="skip the comparison with the synthetic training pool (about 10 seconds)")
     args = parser.parse_args()
 
-    strict = not args.seed
-    paths = args.paths or sorted((BENCH_DIR / ("seed" if args.seed else "real")).glob("*.jsonl"))
+    strict = not (args.seed or args.dev)
+    paths = args.paths or sorted((BENCH_DIR / ("seed" if args.seed else "dev" if args.dev else "real")).glob("*.jsonl"))
     if not paths:
         print("no .jsonl files to check")
         sys.exit(0)

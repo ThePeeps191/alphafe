@@ -1,0 +1,14 @@
+sub P: x:=0
+inj
+surj
+pre 0
+sub P: x:=a
+sub P: x:=f(x)
+sub [f(x)^2 = x^2]: x:=1
+split [f(1)^2 = 1]
+sub P: x:=1
+sub [f(x)^2 = x^2]: x:=f(x)-1
+conclude
+sub P: x:=1
+sub [f(x)^2 = x^2]: x:=f(x)+1
+conclude

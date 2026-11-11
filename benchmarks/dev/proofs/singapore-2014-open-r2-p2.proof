@@ -1,0 +1,5 @@
+sub P: x:=1
+surj
+pre -1
+sub P: y:=a
+conclude

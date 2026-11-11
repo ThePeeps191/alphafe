@@ -1,0 +1,26 @@
+sub P: y:=0
+splitnz f(0)+1
+sub P: y:=1
+sub P: x:=1, y:=1
+sub P: x:=2, y:=2
+split [f(2)^2 = 9]
+split [f(1)^2 = f(1) + 6]
+sub [f(x + 1) = 3f(x) + 2x + 1]: x:=-1
+sub P: y:=-1
+sub [f(x + 1) = 3f(x) + 2x + 1]: x:=x-1
+sub [f(x) = 3f(-x) - 4x + 2]: x:=-x
+conclude
+sub [f(x + 1) = -2f(x) + 2x + 1]: x:=-1
+sub P: y:=-1
+sub [f(x + 1) = -2f(x) + 2x + 1]: x:=x-1
+sub [f(x) = -2f(-x) + 6x - 3]: x:=-x
+conclude
+split [f(1)^2 = f(1)]
+sub [f(x + 1) = f(x) + 2x + 1]: x:=-1
+sub P: y:=-1
+sub [f(x + 1) = f(x) + 2x + 1]: x:=x-1
+sub P: y:=-y
+sub [f(x + y) = f(x - y) + 4xy]: y:=x
+conclude
+conclude
+conclude

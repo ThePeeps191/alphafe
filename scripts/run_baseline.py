@@ -10,7 +10,7 @@ import argparse
 import time
 
 from alphafe.baseline.guesser import guess
-from alphafe.bench import load_real, load_seed
+from alphafe.bench import load_dev, load_real, load_seed
 from alphafe.eval import markdown_by_mohs, markdown_summary, run_baseline, save, unflagged
 
 if __name__ == "__main__":
@@ -20,11 +20,12 @@ if __name__ == "__main__":
     parser.add_argument("mode", nargs="?", choices=("widening", "plain"), default="widening",
                         help="widening pool ladder (default) or one breadth-first search over the full pool")
     parser.add_argument("label", nargs="?", default="", help="suffix for the result file names")
-    parser.add_argument("--suite", action="append", choices=("seed", "real"), help="repeatable; default: both")
+    parser.add_argument("--suite", action="append", choices=("seed", "dev", "real"),
+                        help="repeatable; default: seed and real")
     args = parser.parse_args()
     widening = args.mode == "widening"
     tag = ("" if widening else "_plainbfs") + (f"_{args.label}" if args.label else "")
-    loaders = {"seed": load_seed, "real": load_real}
+    loaders = {"seed": load_seed, "dev": load_dev, "real": load_real}
     for name in args.suite or ("seed", "real"):
         benches = loaders[name]()
         if not benches:

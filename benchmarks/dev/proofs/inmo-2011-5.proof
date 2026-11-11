@@ -1,0 +1,7 @@
+sub P: x:=0, y:=0
+sub P: y:=x
+sub P: x:=0
+sub [f(-x)*f(x) = x^2*f(x)]: x:=-x
+sub P: x:=y, y:=x
+sub [x^2*f(y) = y^2*f(x)]: y:=1
+conclude

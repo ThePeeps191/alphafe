@@ -1,0 +1,8 @@
+sub P: y:=0
+inj
+surj
+pre 2
+sub P: x:=a-y
+cancel
+sub [f(a - y) = f(a - x) + 2x - 2y]: x:=a
+conclude

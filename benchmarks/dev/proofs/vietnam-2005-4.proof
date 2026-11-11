@@ -1,0 +1,15 @@
+sub P: y:=x
+sub P: y:=0
+sub P: x:=0
+sub [f(f(x)) = f(0)*f(x) - f(x) + f(0)]: x:=-x
+sub [f(0)*f(-x) = f(0)*f(x) + f(-x) + f(x) - 2f(0)]: x:=-x
+splitnz f(0)
+sub [f(x)^2 = x^2]: x:=1
+split [f(1)^2 = 1]
+sub P: y:=1
+sub [f(f(x)) = -f(x)]: x:=1-x
+sub [f(x)^2 = x^2]: x:=x-1
+sub [x*f(x) + f(x) = -x^2 - x]: x:=x-1
+conclude
+sub P: y:=1
+sub [f(f(x)) = -f(x)]: x:=1-x

@@ -1,0 +1,13 @@
+sub P: y:=(x^2 - f(x))/2
+sub [f(x)^2 = x^2*f(x)]: x:=0
+sub P: x:=0
+sub [f(x)^2 = x^2*f(x)]: x:=1
+split [f(1)^2 = f(1)]
+sub P: x:=1
+sub [f(x)^2 = x^2*f(x)]: x:=1-x
+sub [x*f(x) = f(x)/2]: x:=-x
+conclude
+sub P: x:=1
+sub [f(x)^2 = x^2*f(x)]: x:=1-x
+sub [f(x)^2 = x^2*f(x)]: x:=1+x
+conclude

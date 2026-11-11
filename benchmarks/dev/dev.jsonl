@@ -1,0 +1,20 @@
+{"id": "imo-1992-2", "equation": "f(x^2 + f(y)) = y + f(x)^2", "domain": "R", "solutions": ["f(x) = x"], "mohs": 20, "mohs_source": "estimate", "source": "IMO 1992, 2 (study B02)"}
+{"id": "isl-2005-a4", "equation": "f(x+y) + f(x)f(y) = f(xy) + 2xy + 1", "domain": "R", "solutions": ["f(x) = 2x - 1", "f(x) = -x - 1", "f(x) = x^2 - 1"], "mohs": 25, "mohs_source": "estimate", "source": "IMO Shortlist 2005, A4 (study B06)"}
+{"id": "study-b09", "equation": "f(f(x+y)) = f(x+y) + f(x)f(y) - xy", "domain": "R", "solutions": ["f(x) = x"], "mohs": 15, "mohs_source": "estimate", "source": "classic (study B09)"}
+{"id": "study-b14", "equation": "f(xy + 1) = f(x)f(y) - f(y) - x + 2", "domain": "R", "solutions": ["f(x) = x + 1"], "mohs": 5, "mohs_source": "estimate", "source": "classic (study B14)"}
+{"id": "study-b15", "equation": "f(f(x) + y) = f(f(x) - y) + 4f(x)y", "domain": "R", "solutions": ["f(x) = 0", "f(x) = x^2 + c"], "mohs": 20, "mohs_source": "estimate", "source": "classic (study B15)"}
+{"id": "study-b17", "equation": "f(f(x)^2 + f(y)) = xf(x) + y", "domain": "R", "solutions": ["f(x) = x", "f(x) = -x"], "mohs": 15, "mohs_source": "estimate", "source": "classic (study B17)"}
+{"id": "study-b19", "equation": "f(x+y) - 2f(x-y) + f(x) - 2f(y) = y - 2", "domain": "R", "solutions": ["f(x) = x + 1"], "mohs": 5, "mohs_source": "estimate", "source": "classic (study B19)"}
+{"id": "study-b20", "equation": "f(xy) = xf(x) + yf(y)", "domain": "R", "solutions": ["f(x) = 0"], "mohs": 0, "mohs_source": "estimate", "source": "classic (study B20)"}
+{"id": "study-b21", "equation": "2f(x) + f(1-x) = x^2", "domain": "R", "solutions": ["f(x) = x^2/3 + 2x/3 - 1/3"], "mohs": 0, "mohs_source": "estimate", "source": "textbook (study B21)"}
+{"id": "imo-2019-1-over-q", "equation": "f(2x) + 2f(y) = f(f(x+y))", "domain": "Q", "solutions": ["f(x) = 0", "f(x) = 2x + c"], "mohs": 5, "mohs_source": "estimate", "source": "IMO 2019, 1, run over Q; the original is on Z (study B22)"}
+{"id": "classic-01", "equation": "f(x+y) + f(x)f(y) = f(xy) + f(x) + f(y)", "domain": "R", "solutions": ["f(x) = 0", "f(x) = 2", "f(x) = x"], "mohs": 15, "mohs_source": "estimate", "source": "classic"}
+{"id": "classic-02", "equation": "f(f(x) + y) = f(x+y) + xf(y) - xy - x + 1", "domain": "R", "solutions": ["f(x) = x + 1"], "mohs": 10, "mohs_source": "estimate", "source": "classic"}
+{"id": "classic-03", "equation": "f(xf(y) + f(x)) = 2f(x) + xy", "domain": "R", "solutions": ["f(x) = x + 1"], "mohs": 10, "mohs_source": "estimate", "source": "classic"}
+{"id": "classic-04", "equation": "f(x+y)^2 = f(x)^2 + f(y)^2", "domain": "R", "solutions": ["f(x) = 0"], "mohs": 5, "mohs_source": "estimate", "source": "classic"}
+{"id": "classic-05", "equation": "f(xy)(x + f(y)) = x^2 f(y) + y^2 f(x)", "domain": "R", "solutions": ["f(x) = 0", "f(x) = x"], "mohs": 15, "mohs_source": "estimate", "source": "classic"}
+{"id": "classic-06", "equation": "f(x^2 + y) = f(x)^2 + f(y)", "domain": "R", "solutions": ["f(x) = 0", "f(x) = x"], "mohs": 15, "mohs_source": "estimate", "source": "classic"}
+{"id": "classic-07", "equation": "f(x^2 + f(y)) = xf(x) + y", "domain": "R", "solutions": ["f(x) = x", "f(x) = -x"], "mohs": 15, "mohs_source": "estimate", "source": "classic"}
+{"id": "classic-08", "equation": "f(f(x) + 2y) = 6x + f(f(y) - x)", "domain": "R", "solutions": ["f(x) = 2x + c"], "mohs": 20, "mohs_source": "estimate", "source": "classic"}
+{"id": "classic-09", "equation": "f(x^3) + f(y^3) = (x + y)(f(x^2) + f(y^2) - f(xy))", "domain": "R", "solutions": ["f(x) = cx"], "mohs": 15, "mohs_source": "estimate", "source": "classic"}
+{"id": "classic-10", "equation": "f(xy + f(x)) = xf(y) + f(x)", "domain": "R", "solutions": ["f(x) = 0", "f(x) = x"], "mohs": 15, "mohs_source": "estimate", "source": "classic"}

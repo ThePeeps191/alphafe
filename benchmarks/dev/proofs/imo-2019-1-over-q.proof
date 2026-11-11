@@ -1,0 +1,5 @@
+sub P: x:=0
+sub P: y:=0
+sub [f(f(x)) = 2f(x) + f(0)]: x:=x+y
+cauchy
+conclude

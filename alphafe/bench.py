@@ -60,6 +60,15 @@ def load_real() -> list[BenchProblem]:
     return load_dir("real")
 
 
+def load_dev() -> list[BenchProblem]:
+    """The development suite: benchmarks/dev plus the real problems flagged ``seen_in_development``.
+
+    These are harder than the seed problems (mostly 10M and above) and may be
+    looked at, diagnosed and tuned on. See benchmarks/dev/README.md.
+    """
+    return load_dir("dev") + [b for b in load_real() if b.meta.get("seen_in_development")]
+
+
 class AnswerMismatch(AssertionError):
     """A checked proof produced a solution set different from the recorded answer.
 

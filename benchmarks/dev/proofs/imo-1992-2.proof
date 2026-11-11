@@ -1,0 +1,14 @@
+sub P: x:=0
+inj
+surj
+sub P: x:=-x
+pre 0
+sub [f(-x)^2 = f(x)^2]: x:=a
+sub [f(f(x)) = x + f(0)^2]: x:=a
+sub [f(f(x)) = x + f(0)^2]: x:=-a
+split [f(0)^2 = f(0)]
+sub P: y:=0
+sub P: y:=f(y)
+sqadd
+sqlin
+conclude

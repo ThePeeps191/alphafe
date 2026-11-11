@@ -286,8 +286,8 @@ def common_calls(first: list[Row], second: list[Row]) -> Optional[tuple]:
     return len(pairs), round(sum(a for a, _ in pairs) / len(pairs), 1), round(sum(b for _, b in pairs) / len(pairs), 1)
 
 
-SUITE_CHOICES = ("seed", "real", "synthetic", "synthetic-tier1", "synthetic-tier2", "synthetic-tier3", "synthetic-tier4")
-BIG_BUDGET_SUITES = ("seed", "real")      # the suites that get the --big-budget rows (network and brute force)
+SUITE_CHOICES = ("seed", "dev", "real", "synthetic", "synthetic-tier1", "synthetic-tier2", "synthetic-tier3", "synthetic-tier4")
+BIG_BUDGET_SUITES = ("seed", "dev", "real")      # the suites that get the --big-budget rows (network and brute force)
 SAMPLING_SEED = 1000                      # sampling seed i of a network row is SAMPLING_SEED + i
 
 
@@ -307,7 +307,7 @@ class EvalRun:
 
 def select_suites(names, heldout: int = 200) -> dict:
     """The benchmark suites to evaluate, in the usual order. ``names`` None or empty means all."""
-    from .bench import load_real, load_seed
+    from .bench import load_dev, load_real, load_seed
 
     wanted = set(names or ())
     unknown = wanted - set(SUITE_CHOICES)
@@ -320,6 +320,8 @@ def select_suites(names, heldout: int = 200) -> dict:
     suites: dict = {}
     if want("seed"):
         suites["seed"] = load_seed()
+    if want("dev"):
+        suites["dev"] = load_dev()
     if want("real"):
         real = load_real()
         if real:
@@ -497,11 +499,12 @@ def report(results: dict, spreads: Optional[dict] = None, seed_rows: Optional[di
         if pairs:
             parts.append("")
             parts.append("Mean checker calls on commonly solved problems: " + "; ".join(pairs) + ".")
-        if suite in ("seed", "real"):
+        if suite in ("seed", "dev", "real"):
             parts.append("")
             parts.append(markdown_by_mohs(runs))
         first = next(iter(runs.values()))
-        flagged = [r for r in first if r.flags]
+        # The dev suite is development data throughout, so the flags of the real problems in it say nothing there.
+        flagged = [r for r in first if r.flags] if suite != "dev" else []
         if flagged:
             clean = {label: unflagged(rows) for label, rows in runs.items()}
             parts.append("")
