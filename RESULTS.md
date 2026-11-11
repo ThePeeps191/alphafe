@@ -864,3 +864,98 @@ estimates):
   including everything at 25M and above, 27 of 32 at 15M and 23 of 43 at
   10M. Two problems cannot be loaded. The unsolved problems have not been
   inspected.
+
+## M9: a development suite, a faster checker and proposals built from the page
+
+M8 left 81 of the 124 unseen real problems unsolved, nearly all of them rated
+10M or more, and nothing to measure progress on between runs of the real
+benchmark: the seed set was close to saturated and the held-out tiers are
+much easier than competition problems.
+
+### The development suite
+
+`alphafe eval --suite dev` runs 32 problems that may be looked at and tuned
+on: ten from the design study behind issue #99, ten classics added from
+memory, and the twelve real problems flagged as seen in development.
+`benchmarks/dev/README.md` says how they were chosen. Candidates that were
+the same equation as an unflagged real problem or a seed problem, up to
+renaming and sign changes, were dropped without being run. Thirteen have a
+hand proof that the checker accepts.
+
+Baseline at commit `06d4101`, M8 weights (`results/dev0_*`,
+`results/baseline_dev_20000_dev0.json`):
+
+| solver | solved of 32 |
+|---|---|
+| network, search (128 calls) | 15 |
+| network, search (2,000 calls) | 19 |
+| brute force (2,000 calls) | 15 |
+| brute force (20,000 calls) | 22 |
+
+Five problems were solved by brute force and not by the network, and their
+brute-force proofs had two proposed moves each, for example IMO 1992/2 with
+`sub P: x:=f(x)` and `sub P: y:=f(y)`.
+
+### A faster checker (issue #104)
+
+Every change below gives the same proofs, checker calls and node counts as
+before on 883 problems (seed, dev and held-out; brute force, 600 calls), and
+the same solved, calls and proof length as the stored 2,000-call run on 851.
+
+* The leading monomial of an identity is computed once per polynomial.
+  `Branch.add` used to rank every row again on every call.
+* `f(...)` atoms keep their hash and are shared (`algebra.FAtom`). They were
+  nested tuples, hashed in full on every dictionary lookup.
+* The normal form of a routine instance is kept with what it depended on
+  (the properties in force and the rule of every atom looked up) and reused
+  while that is unchanged.
+* An instance the checker would refuse as already known is not sent to it.
+* Expanding a substitution has a work limit (`checker.WORK_TERMS`, and a
+  tighter `env.INSTANCE_WORK` for routine instances). A five-term expression
+  put into x^8 used to be expanded in full before the size cap refused it.
+
+Brute force, 2,000 calls, the 51 seed and 800 held-out problems, 8 worker
+processes: 2,188 CPU seconds before and 449 after. The held-out tier 4 went
+from about 6 ms per call to 1.3 ms.
+
+Sampling a move now decodes one position at a time from cached keys and
+values (`model.StepDecoder`); the old code ran the whole decoder over the
+partial move for every token. A network search over the dev suite at 2,000
+calls took 245 seconds before these changes and 101 after (MPS).
+
+Garbage collection turned out not to matter: raising its thresholds changes
+that run by about 5%.
+
+### Proposals built from the page (issue #105)
+
+`scripts/diagnose.py --suite dev` replays the hand proofs and reports the
+probability the network gives each proposed move. For the M8 weights the
+least likely move of a proof has a median log-probability of -29 over the 12
+dev proofs with a proposed move, and it is above -5 in one of them. The
+moves it does not see are of one kind: a substitution whose term is itself
+an expression of f, such as `x := f(x)` (-25), `y := -f(y)` (-31) or
+`x := a - y` (-29), and instances at shifted arguments such as
+`x := x - 2` (-23). Sampling never reaches such a move.
+
+A search now takes two of its eight proposals per state from
+`tokenizer.sample_subterm_move`, which substitutes an expression that is
+already on the page, as it is, negated, or added to the variable
+(`model.SUBTERM_PROPOSALS`). The brute-force pool is not involved. The
+"no backtracking" row stays the network alone.
+
+M8 weights, CPU, sampling seeds 1000 and 1001:
+
+| | dev (32) | seed (51) | tier 1 | tier 2 | tier 3 | tier 4 |
+|---|---|---|---|---|---|---|
+| network alone, 128 calls | 16, 16 | 42, 43 | 188, 186 | 193, 193 | 130, 129 | 89, 86 |
+| two of eight from the page, 128 calls | 16, 18 | 42, 44 | 189, 188 | 192, 193 | 132, 131 | 92, 90 |
+| network alone, 2,000 calls | 18, 19 | 46, 46 | | | | |
+| two of eight from the page, 2,000 calls | 21, 22 | 50, 50 | | | | |
+
+Variants that were within noise of the adopted one: ten proposals per state
+with two or three from the page (dev 23, 23 and seed 48 to 50 at 2,000
+calls), and a sampler weighted towards short expressions and the original
+equation (dev 22, 23 and seed 50, 49).
+
+At 2,000 calls the seed set is down to one unsolved problem (s46). The four
+one-move problems of issue #105 are solved.
