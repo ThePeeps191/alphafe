@@ -228,6 +228,10 @@ def detect_property(row: Poly) -> Optional[str]:
     return None
 
 
+# The rewrite rule of a row, computed once per row: equal rows in different states share one rule object.
+_RULE_OF: dict = {}
+
+
 class Branch:
     """The facts known in one case of the proof. See the module docstring."""
 
@@ -272,7 +276,12 @@ class Branch:
             atom = _single_atom(lead)
             if atom is not None:
                 # row is  atom + rest = 0,  so  atom = -rest
-                self._rules[atom] = Poly({lead: ONE}) - row
+                rule = _RULE_OF.get(row)
+                if rule is None:
+                    if len(_RULE_OF) > 100_000:
+                        _RULE_OF.clear()
+                    rule = _RULE_OF[row] = Poly({lead: ONE}) - row
+                self._rules[atom] = rule
 
     def _rewrite_atom(self, atom) -> Optional[Poly]:
         rule = self._rules.get(atom)
@@ -672,6 +681,27 @@ def injectivity_variable(branch: Branch, poly: Poly) -> Optional[str]:
     proven-nonzero constant and R free of v. Then f(a) = f(b) makes R take the
     same value at v = a and v = b, so alpha*a = alpha*b and a = b.
     """
+    shapes = _INJ_SHAPES.get(poly)
+    if shapes is None:
+        if len(_INJ_SHAPES) > 100_000:
+            _INJ_SHAPES.clear()
+        shapes = _INJ_SHAPES[poly] = _injectivity_shapes(poly)
+    for name, alpha in shapes:
+        if branch.known_nonzero(alpha):
+            return name
+    return None
+
+
+_INJ_SHAPES: dict = {}
+
+
+def _injectivity_shapes(poly: Poly) -> tuple:
+    """The (variable, alpha) pairs of ``injectivity_variable`` that have the right shape.
+
+    This part depends on the identity alone, so it is computed once per
+    identity; whether alpha is nonzero depends on the case and is asked each time.
+    """
+    out = []
     fresh = Poly.named("#t")
     for name in sorted(poly.variables()):
         v = ("v", name)
@@ -684,9 +714,8 @@ def injectivity_variable(branch: Branch, poly: Poly) -> Optional[str]:
             continue
         if alpha.variables() or alpha.contains_atom(("c", "#t")):
             continue
-        if branch.known_nonzero(alpha):
-            return name
-    return None
+        out.append((name, alpha))
+    return tuple(out)
 
 
 def surjectivity_variable(branch: Branch, poly: Poly) -> Optional[str]:

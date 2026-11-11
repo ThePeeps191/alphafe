@@ -332,14 +332,12 @@ class Poly:
             if not any(atom in replaced for atom, _ in mono):
                 untouched[mono] = coef
                 continue
-            product = Poly.const(coef)
+            # The atoms that stay form one monomial (still sorted); the replaced ones are multiplied in.
+            product = Poly({tuple(pair for pair in mono if pair[0] not in replaced): coef})
             for atom, exp in mono:
                 factor = replaced.get(atom)
-                if factor is None:
-                    factor = Poly({((atom, exp),): ONE})
-                elif exp != 1:
-                    factor = factor ** exp
-                product = product * factor
+                if factor is not None:
+                    product = product * (factor if exp == 1 else factor ** exp)
             result = result + product
         return result + Poly(untouched)
 

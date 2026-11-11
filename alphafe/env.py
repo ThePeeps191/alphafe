@@ -19,7 +19,7 @@ from typing import Optional
 
 from . import terms as T
 from .algebra import ZERO, Poly, atom_arg, atom_vars, poly_term
-from .checker import LOAD_REFUSED, Problem, Reject, State, apply, check, initial_state
+from .checker import LOAD_REFUSED, NORM_PASSES, Problem, Reject, State, apply, check, initial_state
 from .moves import Cancel, Cauchy, Conclude, Inj, Move, Quadratic, SqAdd, SqLin, Subst, Surj
 from .solutions import SolutionSet
 
@@ -50,14 +50,68 @@ def _opening_moves(problem: Problem) -> list[Move]:
     return out
 
 
+@functools.lru_cache(maxsize=50_000)
+def _f_atoms_of(poly: Poly) -> frozenset:
+    return frozenset(atom for atom in poly.all_atoms() if atom[0] == "f")
+
+
 def _f_atoms(polys) -> set:
-    return {atom for poly in polys for atom in poly.all_atoms() if atom[0] == "f"}
+    """Every f(...) that occurs in the polynomials, at any depth."""
+    out: set = set()
+    for poly in polys:
+        out |= _f_atoms_of(poly)
+    return out
 
 
 @functools.lru_cache(maxsize=50_000)
 def _instance(row: Poly, name: str, site: Poly) -> Poly:
     """``row`` with the variable ``name`` replaced by ``site``. Cached: neighbouring states share most rows."""
     return row.subst({name: site})
+
+
+_VARIABLE = {name: Poly.var(name) for name in "xyz"}
+_NORMAL: dict = {}
+
+
+def _normal_instance(branch, row: Poly, name: str, site: Poly) -> Optional[Poly]:
+    """``branch.norm`` of the instance of ``row`` at ``name := site``; None if the checker refuses to normalise it.
+
+    Neighbouring states ask this for the same instances over and over, and
+    the answer is the same whenever the rewriting meets the same rules. So
+    it is kept together with what it depended on: the properties in force
+    and, for every atom that was looked up, the rule it had (or that it had
+    none). A stored answer is used only if all of that still holds, which
+    makes it exactly what ``branch.norm`` would return.
+    """
+    key = (row, name, site)
+    rules = branch._rules
+    hit = _NORMAL.get(key)
+    if hit is not None and hit[0] == branch.props:
+        for atom, rule in hit[1]:
+            if rules.get(atom) is not rule:
+                break
+        else:
+            return hit[2]
+    looked_up: dict = {}
+    rewrite_atom = branch._rewrite_atom
+
+    def fn(atom):
+        if atom not in looked_up:
+            looked_up[atom] = rules.get(atom)
+        return rewrite_atom(atom)
+
+    poly = _instance(row, name, site)
+    result = None
+    for _ in range(NORM_PASSES):          # the loop of Branch.norm
+        new = poly.rewrite(fn)
+        if new is poly or new == poly:
+            result = poly
+            break
+        poly = new
+    if len(_NORMAL) > 200_000:
+        _NORMAL.clear()
+    _NORMAL[key] = (frozenset(branch.props), tuple(looked_up.items()), result)
+    return result
 
 
 def routine_moves(state: State, tried: set):
@@ -91,30 +145,30 @@ def routine_moves(state: State, tried: set):
         return
     present = _f_atoms(rows)
     sites = [ZERO]
+    known_sites = {ZERO}
     for atom in sorted(present):
         arg = atom_arg(atom)
-        if arg not in sites and len(arg.terms) <= MAX_SITE_TERMS:
+        if arg not in known_sites and len(arg.terms) <= MAX_SITE_TERMS:
             sites.append(arg)
+            known_sites.add(arg)
     row_set = set(rows)
     for index, row in enumerate(rows):
         variables = row.variables()
         if len(variables) != 1:
             continue
         (name,) = variables
-        if any(other < name and row.subst({name: Poly.var(other)}) in row_set for other in "xyz"):
+        if any(other < name and _instance(row, name, _VARIABLE[other]) in row_set for other in "xyz"):
             continue                      # a renamed copy of an identity that is handled through its first copy
+        own = _VARIABLE[name] if name in _VARIABLE else Poly.var(name)
         for site in sites:
             key = (row, site)
-            if key in tried or site == Poly.var(name):
+            if key in tried or site == own:
                 continue
             tried.add(key)
-            try:
-                instance = branch.norm(_instance(row, name, site))
-            except Reject:
+            instance = _normal_instance(branch, row, name, site)
+            if instance is None or instance.is_zero():
                 continue
-            if instance.is_zero():
-                continue
-            new_atoms = _f_atoms([instance]) - present
+            new_atoms = _f_atoms_of(instance) - present
             if new_atoms and not (site.is_zero() and not any(atom_vars(atom) for atom in new_atoms)):
                 continue
             try:
