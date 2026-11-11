@@ -29,25 +29,51 @@ MAX_FREE_STEPS = 40
 # Routine substitutions (see ``routine_moves``). Each switch can be turned off
 # to measure what it contributes; MAX_ROUTINE bounds the number applied after
 # one proposed move.
-ROUTINE = {"opening": True, "swap": True, "instances": True, "witness": True}
+ROUTINE = {"opening": True, "ones": True, "fterms": True, "swap": True, "instances": True, "witness": True}
 MAX_ROUTINE = 10
 MAX_SITE_TERMS = 4      # arguments of f with more monomials than this are not used as substitution sites
 INSTANCE_WORK = 200     # work limit (Poly.rewrite) for a routine instance: routine substitutions are small ones
 
 
 def _opening_moves(problem: Problem) -> list[Move]:
-    """The substitutions into P that nearly every solution starts with."""
+    """The substitutions into P that solutions start with: the simplest things one can put for x or y.
+
+    ``opening``: both variables 0, each of them 0, y := x and y := -x.
+    ``ones``:    each of them 1, then each of them -1.
+    ``fterms``:  x := f(x), y := f(y), x := f(y), y := f(x), x := -f(y), y := -f(x).
+
+    Each is tried at the start and kept if the checker accepts it. A search
+    over these would branch on them; applied together they accumulate in one
+    state, because what a case knows only grows. That is worth far more than
+    it costs: with the last two groups brute force at 600 calls solves 706 of
+    883 development problems where it solved 653 (RESULTS.md, M9).
+    """
     names = sorted(problem.poly.variables())
+    both = "x" in names and "y" in names
     zero = T.num(0)
+    x, y = T.Var("x"), T.Var("y")
     out: list[Move] = []
-    if "x" in names and "y" in names:
-        out.append(Subst("P", (("x", zero), ("y", zero))))
-    for name in ("x", "y"):
-        if name in names:
-            out.append(Subst("P", ((name, zero),)))
-    if "x" in names and "y" in names:
-        out.append(Subst("P", (("y", T.Var("x")),)))
-        out.append(Subst("P", (("y", T.Neg(T.Var("x"))),)))
+    if ROUTINE["opening"]:
+        if both:
+            out.append(Subst("P", (("x", zero), ("y", zero))))
+        for name in ("x", "y"):
+            if name in names:
+                out.append(Subst("P", ((name, zero),)))
+        if both:
+            out.append(Subst("P", (("y", x),)))
+            out.append(Subst("P", (("y", T.Neg(x)),)))
+    if ROUTINE["ones"]:
+        for value in (T.num(1), T.num(-1)):
+            for name in ("x", "y"):
+                if name in names:
+                    out.append(Subst("P", ((name, value),)))
+    if ROUTINE["fterms"] and both:
+        out.append(Subst("P", (("x", T.App(x)),)))
+        out.append(Subst("P", (("y", T.App(y)),)))
+        out.append(Subst("P", (("x", T.App(y)),)))
+        out.append(Subst("P", (("y", T.App(x)),)))
+        out.append(Subst("P", (("x", T.Neg(T.App(y))),)))
+        out.append(Subst("P", (("y", T.Neg(T.App(x))),)))
     return out
 
 
@@ -235,15 +261,14 @@ def start(problem: Problem) -> tuple[State, list[Move]]:
     size caps). Searches use ``try_start`` and report that as "not solved".
     """
     state, applied = close(initial_state(problem))
-    if ROUTINE["opening"]:
-        for move in _opening_moves(problem):
-            if not state.branches:
-                break
-            try:
-                state, more = step(state, move)
-            except Reject:
-                continue
-            applied = applied + more
+    for move in _opening_moves(problem):
+        if not state.branches:
+            break
+        try:
+            state, more = step(state, move)
+        except Reject:
+            continue
+        applied = applied + more
     return state, applied
 
 

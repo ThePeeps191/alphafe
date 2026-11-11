@@ -110,7 +110,7 @@ from .solutions import SolutionSet, fit_candidate, make_solution_set, verify
 
 NORM_PASSES = 30        # cap on rewriting passes (termination guard, not soundness)
 WORK_BUDGET = 400       # cap on normalisation work per move
-MAX_ROWS = 40           # identities per branch
+MAX_ROWS = 80           # identities per branch
 MAX_POLY_TERMS = 80     # monomials per identity
 MAX_POLY_SIZE = 400     # structural size per identity
 MAX_TERM_SIZE = 40      # nodes in a substituted term

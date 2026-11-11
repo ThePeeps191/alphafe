@@ -659,7 +659,7 @@ def _train_loop(config, began, device, ckpt_dir, log_path, last, pool, progress,
 
                 losses, state["step"] = train_steps(model, optimizer, buffer, config, rng, device, state["step"], more=more)
             try:
-                shares = playing.get(timeout=max(1.0, give_up - time.time()))
+                shares = playing.get(timeout=max(0.0, give_up - time.time()))
             except multiprocessing.TimeoutError:
                 # A worker that died or is stuck never reports; without this the run would train for ever.
                 raise RuntimeError(f"self-play round {state['iteration']} did not finish within {config.round_seconds:.0f} s: "

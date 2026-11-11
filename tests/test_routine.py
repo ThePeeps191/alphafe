@@ -64,6 +64,23 @@ def test_switches_turn_each_kind_off(monkeypatch):
     assert parse_move("sub P: x:=y, y:=x") in proof
 
 
+def test_the_opening_substitutions_come_in_three_groups(monkeypatch):
+    """Zeros and diagonals, then 1 and -1, then f of a variable. IMO 1992/2 needs the last group and nothing else."""
+    problem = Problem.parse("f(x^2 + f(y)) = y + f(x)^2")
+    state, proof = start(problem)
+    assert state.solved and state.solution_set == parse_solution_set(["f(x) = x"])
+    assert parse_move("sub P: x:=f(x)") in proof and check(problem, proof).solved
+    monkeypatch.setitem(env.ROUTINE, "fterms", False)
+    state, proof = start(problem)
+    assert not state.solved and parse_move("sub P: x:=f(x)") not in proof and parse_move("sub P: x:=1") in proof
+    monkeypatch.setitem(env.ROUTINE, "ones", False)
+    _, proof = start(problem)
+    assert parse_move("sub P: x:=1") not in proof and parse_move("sub P: x:=0") in proof
+    monkeypatch.setitem(env.ROUTINE, "opening", False)
+    _, proof = start(problem)
+    assert parse_move("sub P: x:=0") not in proof
+
+
 def test_instances_do_not_feed_themselves():
     """IMO 2019/1 over Q. f(f(x)) = 2f(x) + f(0) taken at x := f(0), then at the new argument, and so on,
     would produce f(3f(0)), f(7f(0)), ... without end. An instance may not introduce a new f(...)."""
@@ -78,7 +95,6 @@ def test_instances_do_not_feed_themselves():
 
 def test_one_call_applies_a_bounded_number_of_routine_moves(monkeypatch):
     problem = Problem.parse("f(x + f(y)) = f(x) + y", "Q")
-    monkeypatch.setitem(env.ROUTINE, "opening", False)
     for cap in (0, 1, 3):
         monkeypatch.setattr(env, "MAX_ROUTINE", cap)
         _, moves = close(initial_state(problem))
