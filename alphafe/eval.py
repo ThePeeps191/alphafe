@@ -321,7 +321,9 @@ def select_suites(names, heldout: int = 200) -> dict:
     if want("seed"):
         suites["seed"] = load_seed()
     if want("dev"):
-        suites["dev"] = load_dev()
+        dev = load_dev()
+        if dev:
+            suites["dev"] = dev
     if want("real"):
         real = load_real()
         if real:
