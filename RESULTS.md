@@ -959,3 +959,60 @@ equation (dev 22, 23 and seed 50, 49).
 
 At 2,000 calls the seed set is down to one unsolved problem (s46). The four
 one-move problems of issue #105 are solved.
+
+### A larger opening set
+
+The environment used to start every problem with five substitutions into the
+original equation: both variables 0, each of them 0, y := x and y := -x. The
+brute-force proofs of the dev problems that the network missed pointed at
+what was missing: they needed `x := f(x)` or `x := 1` and little else.
+
+Three groups are now applied at the start (`env._opening_moves`):
+
+* `opening`: the five above;
+* `ones`: each variable 1, then each variable -1;
+* `fterms`: x := f(x), y := f(y), x := f(y), y := f(x), x := -f(y),
+  y := -f(x).
+
+A search over these substitutions branches on them. Applied together they
+accumulate in one state, because what a case knows only grows, and the
+routine instances then combine them. With all of them many problems start
+with more than 40 identities, so the cap per case is 80.
+
+Brute force, 2,000 calls, 8 worker processes (`results/m9_ablation_*.json`,
+`scripts/ablate_routine.py`):
+
+| environment | seed (51) | tier 1 | tier 2 | tier 3 | tier 4 | CPU seconds |
+|---|---|---|---|---|---|---|
+| M8 (`m8`) | 48 | 190 | 192 | 130 | 99 | 450 |
+| plus 1 and -1, cap 80 (`ones`) | 50 | 191 | 196 | 137 | 101 | 623 |
+| plus f-terms (`full`) | 50 | 190 | 194 | 144 | 114 | 1,310 |
+
+On the dev suite brute force at 2,000 calls goes from 15 to 23 of 32, which
+is one more than it reached with 20,000 calls before. IMO 1992/2 is solved
+by the environment alone. A call costs about three times as much, because
+states are larger; at equal CPU time the new environment is still ahead
+(706 of 883 development problems at 600 calls and 489 CPU seconds, against
+674 at 2,000 calls and 492 CPU seconds).
+
+Screened with the same harness and not adopted (883 problems: seed, dev and
+held-out; brute force):
+
+| candidate | effect |
+|---|---|
+| the five openings applied to every derived identity in two variables | +12 at 600 calls for 2.6 times the CPU; +1 at 2,000 calls on top of `ones` |
+| only their zero substitutions | none |
+| shift openings x := x + y, x := x - y | none on top of the adopted set |
+| negated own f-term, x := -f(x) | none |
+| 20 routine moves per proposed move, from 10 | +2 |
+| a cap of 120 identities, from 80 | +1 |
+| shifted instances that introduce a new f(...), capped (issue #106) | the allowance is spent on f(x + 8), f(x + 12) |
+
+Two checker changes went in with it. `cancel` compares constant arguments
+too (f(a) = 0 and f(-a) = 0 give a = -a for an injective f; issue #79), which
+changes 8 of the 883 problems at 600 calls and gains or loses none. And
+there is now a test suite against solutions that are not polynomials
+(`tests/test_nonpoly.py`, issue #96): |x|, 1/x, wild additive functions on
+Q(sqrt 2) and others must survive every accepted sequence of moves, and
+removing the injectivity guard of `cancel` or the domain guard of `cauchy`
+makes it fail.
