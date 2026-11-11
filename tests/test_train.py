@@ -172,6 +172,13 @@ def test_self_play_can_run_in_worker_processes(tmp_path, monkeypatch):
 
 
 @pytest.mark.slow
+def test_a_self_play_round_that_never_finishes_stops_the_run(tmp_path, monkeypatch):
+    config = tiny_run(tmp_path, monkeypatch, workers=1, curriculum="adaptive", round_seconds=0.0)
+    with pytest.raises(RuntimeError, match="did not finish"):
+        train(config)
+
+
+@pytest.mark.slow
 def test_resume_restores_the_replay_buffer_and_the_random_stream(tmp_path, monkeypatch, capsys):
     config = tiny_run(tmp_path, monkeypatch)
     train(config)

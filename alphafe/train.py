@@ -26,6 +26,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import multiprocessing
 import pathlib
 import random
 import time
@@ -60,6 +61,7 @@ class TrainConfig:
     problems_per_iter: int = 192
     budget: int = 48                # checker calls per self-play attempt
     workers: int = 0                # self-play processes (each on one CPU core); 0: in this process, on ``device``
+    round_seconds: float = 1800.0   # with workers: a self-play round that takes longer than this stops the run
     k: int = 8                      # proposals per expanded state ...
     n_uniform: int = 2              # ... of which this many are uniform-random (exploration)
     n_subterm: int = 0              # ... and this many substitute an expression already in the state
@@ -528,8 +530,6 @@ def train(config: TrainConfig, resume: bool = False) -> dict:
     record: dict = {}
     actors = None
     if config.workers > 0:
-        import multiprocessing
-
         actors = multiprocessing.get_context("spawn").Pool(config.workers)
     try:
         record = _train_loop(config, began, device, ckpt_dir, log_path, last, pool, progress, adaptive, model, optimizer,
@@ -567,12 +567,18 @@ def _train_loop(config, began, device, ckpt_dir, log_path, last, pool, progress,
                      (config.seed * 1_000_003 + state["iteration"]) * 1009 + begin)
                     for begin in range(0, len(items), size)]
             playing = actors.map_async(_actor, jobs)
+            give_up = time.time() + config.round_seconds
             # The workers play on CPU cores and the gradient steps run on ``device``, so the two
             # overlap: learn from the examples already in the buffer until this round is in.
             if buffer.solve:
                 losses, state["step"] = train_steps(model, optimizer, buffer, config, rng, device, state["step"],
-                                                    more=lambda: not playing.ready())
-            shares = playing.get()
+                                                    more=lambda: not playing.ready() and time.time() < give_up)
+            try:
+                shares = playing.get(timeout=max(1.0, give_up - time.time()))
+            except multiprocessing.TimeoutError:
+                # A worker that died or is stuck never reports; without this the run would train for ever.
+                raise RuntimeError(f"self-play round {state['iteration']} did not finish within {config.round_seconds:.0f} s: "
+                                   "a worker is stuck or has died (the last checkpoint is from the round before)") from None
             solved = [flag for share in shares for flag in share["solved"]]
             calls = [count for share in shares for count in share["calls"]]
         else:
