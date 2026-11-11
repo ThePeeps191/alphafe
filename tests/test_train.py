@@ -263,3 +263,14 @@ def test_train_command_line_reports_a_bad_override(capsys, monkeypatch):
     with pytest.raises(SystemExit) as stop:
         train_module.main(["--run", "x", "--set", "mirror=tru"])
     assert stop.value.code == 2 and "mirror is on or off" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("command", ["train", "eval"])
+def test_help_prints_no_numpy_warning(command):
+    """torch warns when NumPy is missing; alphafe.model silences that, so it has to be imported before torch."""
+    import subprocess
+    import sys
+
+    done = subprocess.run([sys.executable, "-m", "alphafe.cli", command, "--help"], capture_output=True, text=True, timeout=120)
+    assert done.returncode == 0 and "usage:" in done.stdout
+    assert "NumPy" not in done.stderr and "NumPy" not in done.stdout

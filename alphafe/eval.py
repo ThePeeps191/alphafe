@@ -364,9 +364,9 @@ def full_eval(checkpoint, tag: Optional[str] = "eval", heldout: int = 200, basel
     """
     import random
 
-    import torch
-
     from .model import DIVERSE, SUBTERM_PROPOSALS, ModelConfig, NeuralProposer, PolicyValueNet, load_model, pick_device
+
+    import torch      # after .model, which silences torch's NumPy warning before importing it
     from .search import MAX_DEPTH, UniformProposer
 
     max_depth = MAX_DEPTH if max_depth is None else max_depth

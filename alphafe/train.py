@@ -32,6 +32,8 @@ import random
 import time
 from dataclasses import asdict, dataclass, field
 
+from . import model as _model      # first: it silences torch's NumPy warning before torch is imported
+
 import torch
 import torch.nn.functional as F
 
