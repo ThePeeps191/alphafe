@@ -149,3 +149,21 @@ def test_a_checkpoint_from_before_the_vocabulary_was_recorded_loads_only_if_the_
     monkeypatch.setattr(tokenizer, "VOCAB", list(tokenizer.VOCAB) + ["NEW"])
     with pytest.raises(VocabularyMismatch, match="tokens and the code now has"):
         load_model(path, CPU)
+
+
+def test_solve_keeps_within_its_budget_and_repeats_with_a_seed():
+    """The search stage used to get the whole budget after 32 calls had been spent without backtracking."""
+    from alphafe.cli import _solve_with_network
+
+    problem = Problem.parse("f(x)f(y) = f(x+y) + xy")
+    outcomes = []
+    for _ in range(2):
+        torch.manual_seed(7)
+        model = PolicyValueNet(TINY)
+        torch.manual_seed(3)
+        result = _solve_with_network(problem, model, CPU, budget=60, max_depth=16, seconds=60)
+        assert result.checker_calls <= 60
+        outcomes.append((result.solved, result.checker_calls))
+    assert outcomes[0] == outcomes[1]                                   # same seed, same device: same run
+    stopped = _solve_with_network(problem, PolicyValueNet(TINY), CPU, budget=5000, max_depth=16, seconds=0.0)
+    assert not stopped.solved and stopped.reason == "time budget exhausted"

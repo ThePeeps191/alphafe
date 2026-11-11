@@ -36,18 +36,33 @@ def _load_network(checkpoint, device: str):
     return model, dev
 
 
-def _solve_with_network(problem: Problem, model, dev, budget: int, max_depth: int) -> SearchResult:
+GREEDY_CALLS = 32       # the first calls of the budget are spent without backtracking
+
+
+def _solve_with_network(problem: Problem, model, dev, budget: int, max_depth: int, seconds: float) -> SearchResult:
+    """Network search within ``budget`` checker calls and ``seconds`` in total.
+
+    Up to 32 calls are spent without backtracking first; the search with
+    backtracking gets what is left of the budget, so the reported calls
+    never exceed it. The reported time covers both stages.
+    """
+    import time
+
     from .model import DIVERSE, NeuralProposer
     from .search import BestFirstSearch, GreedySearch, run_searches
 
-    greedy = GreedySearch(problem, budget=min(32, budget), max_depth=max_depth)
-    run_searches([greedy], NeuralProposer(model, dev, temperature=DIVERSE), k=8)
-    if greedy.solved_node is not None:
-        return greedy.result()
-    search = BestFirstSearch(problem, budget=budget, max_depth=max_depth)
-    run_searches([search], NeuralProposer(model, dev, temperature=DIVERSE), k=8)
-    result = search.result()
-    result.checker_calls += greedy.calls
+    began = time.time()
+    deadline = began + seconds
+    greedy = GreedySearch(problem, budget=min(GREEDY_CALLS, budget), max_depth=max_depth)
+    run_searches([greedy], NeuralProposer(model, dev, temperature=DIVERSE), k=8, deadline=deadline)
+    if greedy.solved_node is not None or budget - greedy.calls <= 0:
+        result = greedy.result()
+    else:
+        search = BestFirstSearch(problem, budget=budget - greedy.calls, max_depth=max_depth)
+        run_searches([search], NeuralProposer(model, dev, temperature=DIVERSE), k=8, deadline=deadline)
+        result = search.result()
+        result.checker_calls += greedy.calls
+    result.seconds = time.time() - began
     return result
 
 
@@ -70,7 +85,11 @@ def cmd_solve(args) -> int:
                 reason = str(err).strip().splitlines()[0][:200] if str(err).strip() else type(err).__name__
                 print(f"Could not load {checkpoint} ({reason}); using the brute-force baseline.")
             else:
-                result = _solve_with_network(problem, model, dev, args.budget, args.max_depth)
+                if args.seed is not None:
+                    import torch
+
+                    torch.manual_seed(args.seed)
+                result = _solve_with_network(problem, model, dev, args.budget, args.max_depth, args.seconds)
                 print(f"Network search: {'solved' if result.solved else 'not solved'} "
                       f"({result.checker_calls} checker calls, {result.seconds:.1f}s)")
         else:
@@ -125,17 +144,24 @@ def main(argv=None) -> int:
     parser = argparse.ArgumentParser(prog="alphafe", description="Solve easy olympiad functional equations with checked proofs.")
     sub = parser.add_subparsers(dest="command", required=True)
 
-    solve = sub.add_parser("solve", help="find all solutions with a checked proof")
+    solve = sub.add_parser("solve", help="find all solutions with a checked proof",
+                           formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     solve.add_argument("equation", help='e.g. "f(x+y) = f(x) + y"')
-    solve.add_argument("--domain", choices=["R", "Q"], default="R")
-    solve.add_argument("--checkpoint", default=str(DEFAULT_CHECKPOINT))
-    solve.add_argument("--budget", type=int, default=512, help="checker calls for the network search")
+    solve.add_argument("--domain", choices=["R", "Q"], default="R", help="f maps this set to itself")
+    solve.add_argument("--checkpoint", default=str(DEFAULT_CHECKPOINT),
+                       help="network weights; without the file, brute force is used")
+    solve.add_argument("--budget", type=int, default=512,
+                       help="checker calls for the network search in total (the first 32 without backtracking)")
+    solve.add_argument("--seed", type=int, default=None,
+                       help="seed for the network's sampling, to repeat a run on the same device")
     solve.add_argument("--max-depth", type=int, default=16,
                        help="proposed moves in a row inside one case for the network search")
     solve.add_argument("--baseline", action="store_true", help="skip the network, use brute force only")
-    solve.add_argument("--baseline-budget", type=int, default=20000)
-    solve.add_argument("--seconds", type=float, default=60.0)
-    solve.add_argument("--device", default="auto", choices=["auto", "cpu", "mps", "cuda"])
+    solve.add_argument("--baseline-budget", type=int, default=20000, help="checker calls for brute force")
+    solve.add_argument("--seconds", type=float, default=60.0,
+                       help="time limit for the network search, and again for brute force")
+    solve.add_argument("--device", default="auto", choices=["auto", "cpu", "mps", "cuda"],
+                       help="where the network runs")
     solve.set_defaults(func=cmd_solve)
 
     chk = sub.add_parser("check", help="check a proof written in the move format")

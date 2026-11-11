@@ -64,6 +64,7 @@ class _Search:
         self.max_depth = max_depth
         self.calls = 0
         self.began = time.time()
+        self.ended: Optional[float] = None      # set by run_searches when the search finishes
         self.done = False
         self.solved_node: Optional[Node] = None
         self.solutions = None
@@ -117,7 +118,7 @@ class _Search:
         solved = self.solved_node is not None
         return SearchResult(
             solved=solved, proof=self.solved_node.proof if solved else [], solutions=self.solutions,
-            checker_calls=self.calls, seconds=time.time() - self.began, nodes=len(self.nodes),
+            checker_calls=self.calls, seconds=(self.ended or time.time()) - self.began, nodes=len(self.nodes),
             reason="" if solved else (self.reason or "budget exhausted"), source=self.source,
         )
 
@@ -278,15 +279,30 @@ class UniformProposer:
         return out
 
 
-def run_searches(searches: list, proposer, k: int) -> None:
-    """Advance many searches together until all are done, batching the proposer's work."""
+def run_searches(searches: list, proposer, k: int, deadline: Optional[float] = None) -> None:
+    """Advance many searches together until all are done, batching the proposer's work.
+
+    ``deadline`` (a ``time.time()`` value) stops the searches that are still
+    running once it has passed; their reason is then "time budget exhausted".
+    """
+    def stamp() -> None:
+        now = time.time()
+        for search in searches:
+            if search.done and search.ended is None:
+                search.ended = now
+
     while True:
+        if deadline is not None and time.time() > deadline:
+            for search in searches:
+                if not search.done:
+                    search.done, search.reason = True, "time budget exhausted"
         pending = []
         for search in searches:
             if not search.done:
                 node = search.request()
                 if node is not None:
                     pending.append((search, node))
+        stamp()
         if not pending:
             return
         proposals = proposer.propose([node.view for _, node in pending], k)
