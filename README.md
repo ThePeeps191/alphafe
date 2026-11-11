@@ -93,7 +93,7 @@ now.
 cp checkpoints/myrun/last.pt checkpoints/best.pt
 
 # Compare the network, an untrained network and brute force on all benchmarks,
-# or on one of them (--suite seed, real or synthetic).
+# or on one of them (--suite seed, dev, real or synthetic).
 .venv/bin/alphafe eval --checkpoint checkpoints/best.pt
 .venv/bin/alphafe eval --checkpoint checkpoints/best.pt --suite real
 ```
@@ -213,7 +213,10 @@ The network is a 2.5M-parameter encoder-decoder transformer. It reads the
 current proof state and writes the next move token by token under a grammar
 that permits only well-formed moves. Search either follows its best accepted
 proposal without backtracking or keeps a frontier and expands the most likely
-state first.
+state first. A search with backtracking also tries, next to the network's
+proposals, a few substitutions built from expressions that are already on
+the page, because a trained policy gives some kinds of move (`x := f(x)`, for
+one) almost no probability.
 
 Training is self-play on synthetic problems. Proofs the checker accepts
 become training examples, and so do the identities derived in failed
@@ -234,6 +237,10 @@ a map of the modules.
 * `benchmarks/synthetic/heldout.jsonl`: 800 generated problems, 200 per
   curriculum tier, frozen in a file and excluded from training by a hash of
   the canonical equation.
+* `benchmarks/dev/`: a development suite of 32 harder problems, mostly rated
+  10M and above, with 13 checked proofs. It is hand-picked and may be tuned
+  on, so it says what to work on next and not how good the solver is. Twelve
+  of its problems are the real problems flagged as seen in development.
 * `benchmarks/real/`: 137 real competition problems, used only for testing.
   They were selected by rules fixed in advance from MathNet and Evan Chen's
   solution notes, and `benchmarks/real/SKIPPED.md` lists everything the rules
