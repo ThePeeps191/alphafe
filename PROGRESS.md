@@ -56,6 +56,16 @@ A fresh session should read this file, `DECISIONS.md` and `git log` first.
   checkpoints record their vocabulary, safe `train --resume`, one-line CLI
   errors, every script has `--help`.
 
+- **M9 saturation and speed**: `benchmarks/dev` (a development suite of 32
+  harder problems, `--suite dev`); the checker about five times faster with
+  identical results (`algebra.FAtom`, cached leading monomials, memoised
+  routine instances, work limits); `model.StepDecoder`; searches take two of
+  eight proposals per state from the page; opening substitutions at 1, -1 and
+  f of a variable, with 80 identities per case; `cancel` on constant
+  arguments; tests against non-polynomial solutions (`tests/test_nonpoly.py`);
+  training with self-play workers, an adaptive curriculum and a step cap.
+  Numbers are in RESULTS.md, M9.
+
 ## Next
 
 The task list is the GitHub issue tracker; issue #99 is the roadmap and its
@@ -64,18 +74,20 @@ configuration on the seed and held-out sets only, then run the real
 benchmark once, under a protocol committed before the run (RESULTS.md, M7 and
 M8, show the form). Most promising next, in order:
 
-1. The network gives some single "idea" moves no probability (`y := f(y)`),
-   so it misses one-move proofs that brute force finds: issues #105 (search),
-   #92 and #83 (training data), #103 (the curriculum no longer runs easy to
-   hard).
-2. Speed: a checker call is several times slower with the routine moves, and
-   half of a long evaluation is garbage collection (#104).
-3. More moves for 15M to 20M problems: #77 and #78 (IMO 1999/6), then the
-   small checker deductions #79 to #81.
-4. Several training seeds, so that single-run differences can be trusted.
+1. The trained weights add little once the search has page-based proposals
+   and the environment makes the opening substitutions: with random weights
+   the same search is within a few problems at 2,000 calls (#107). The policy
+   gives the moves that matter almost no probability (`scripts/diagnose.py
+   --suite dev`). More self-play data per minute and problems with a known
+   first move (#92) are the two leads.
+2. Shifted instances such as f(x - 2) are what the routine moves still
+   refuse; a plain cap on them feeds itself (#106).
+3. A proposed move costs about three times more in the larger states (#109),
+   and the network reads only 14 identities of a case (#108).
+4. More moves for 15M to 20M problems: #77 and #78, then #80 and #81.
 
-After M8 the seed problems the network misses at 2,000 calls are s37, s38,
-s39, s42 and s46; brute force misses s33, s34 and s46.
+Nothing heavy may run on the machine while a training run is going: a run is
+limited by wall-clock time (DECISIONS.md).
 
 ## How to run
 
@@ -86,10 +98,13 @@ s39, s42 and s46; brute force misses s33, s34 and s46.
 .venv/bin/python scripts/fuzz.py 40 80            # long soundness fuzz
 .venv/bin/python scripts/run_baseline.py 20000 120 [--suite real]   # brute force on the seed and real benchmarks
 .venv/bin/alphafe train --run NAME --minutes 28 [--resume]   # self-play training
+.venv/bin/alphafe train --run NAME --minutes 150 --set workers=6 --set curriculum=adaptive --set n_subterm=2   # as run m3
+.venv/bin/alphafe eval --suite dev --checkpoint checkpoints/best.pt --big-budget 2000   # the development suite
+.venv/bin/python scripts/ablate_routine.py full 2000 600 out.json   # brute force under one environment configuration
 .venv/bin/python scripts/show_log.py NAME            # summarise logs/NAME/train.jsonl
 .venv/bin/alphafe eval --checkpoint checkpoints/NAME/last.pt --tag NAME [--suite seed]   # three-mode evaluation
 .venv/bin/python scripts/analyse_failures.py results/FILE.json   # sort seed failures into groups
-.venv/bin/python scripts/diagnose.py checkpoints/NAME/last.pt [ids]   # probability the network gives each hand-proof move
+.venv/bin/python scripts/diagnose.py checkpoints/NAME/last.pt [--suite dev] [ids]   # probability the network gives each hand-proof move
 .venv/bin/python scripts/freeze_heldout.py --check   # compare a fresh generation with the frozen file (--force overwrites)
 ```
 
