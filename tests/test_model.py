@@ -167,3 +167,27 @@ def test_solve_keeps_within_its_budget_and_repeats_with_a_seed():
     assert outcomes[0] == outcomes[1]                                   # same seed, same device: same run
     stopped = _solve_with_network(problem, PolicyValueNet(TINY), CPU, budget=5000, max_depth=16, seconds=0.0)
     assert not stopped.solved and stopped.reason == "time budget exhausted"
+
+
+def test_step_decoder_gives_the_logits_of_the_full_decoder():
+    """Sampling decodes one position at a time from cached keys and values; that must not change the answer."""
+    from alphafe.model import StepDecoder
+    from alphafe.tokenizer import BOS, PAD
+
+    torch.manual_seed(0)
+    model = PolicyValueNet(ModelConfig(d_model=32, n_heads=4, enc_layers=1, dec_layers=2, d_ff=64)).eval()
+    states, k, length = 3, 2, 11                     # 11 positions: the cache has to grow once
+    src = torch.randint(4, model.config.vocab_size, (states, 20))
+    src[1, 12:] = PAD                                # a shorter state, so the padding mask matters
+    moves = torch.randint(4, model.config.vocab_size, (states * k, length))
+    moves[:, 0] = BOS
+    with torch.no_grad():
+        memory, pad = model.encode(src)
+        full = model.decode(memory.repeat_interleave(k, dim=0), pad.repeat_interleave(k, dim=0), moves)
+        decoder = StepDecoder(model, memory, pad, k)
+        for position in range(length):
+            logits = decoder.step(moves[:, position], position)
+            assert torch.allclose(logits, full[:, position], atol=1e-4), position
+    model.train()
+    with pytest.raises(ValueError):
+        StepDecoder(model, memory, pad, k)

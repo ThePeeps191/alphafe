@@ -102,6 +102,87 @@ class PolicyValueNet(nn.Module):
         return self.decode(memory, pad, tgt_in), self.value(memory, pad)
 
 
+class StepDecoder:
+    """Writes moves one token at a time without redoing the earlier positions.
+
+    ``PolicyValueNet.decode`` runs the whole decoder over the partial move for
+    every new token. The answer at a position depends only on the tokens up
+    to it, so this class keeps, for each layer, the attention keys and values
+    of the positions already written and computes only the new one. The
+    encoder output is projected to cross-attention keys and values once.
+    ``step`` returns the same logits as ``decode`` at that position, up to
+    rounding (tests/test_model.py compares them).
+
+    Every state gets ``k`` rows (the k samples drawn for it); row r of the
+    token vector belongs to state r // k.
+    """
+
+    def __init__(self, model: PolicyValueNet, memory: torch.Tensor, pad: torch.Tensor, k: int, width: int = TGT_BUCKET):
+        config = model.config
+        self.model, self.k = model, k
+        self.states, source_len, d = memory.shape
+        self.heads, self.head_dim = config.n_heads, d // config.n_heads
+        self.d = d
+        for layer in model.decoder.layers:
+            if not layer.norm_first or layer.activation is not F.relu or model.training:
+                raise ValueError("StepDecoder supports the evaluation mode of a pre-norm ReLU decoder only")
+        self.cross = []
+        for layer in model.decoder.layers:
+            weight, bias = layer.multihead_attn.in_proj_weight, layer.multihead_attn.in_proj_bias
+            keys = self._heads(F.linear(memory, weight[d:2 * d], bias[d:2 * d])).unsqueeze(1)       # [B, 1, h, S, dh]
+            values = self._heads(F.linear(memory, weight[2 * d:], bias[2 * d:])).unsqueeze(1)
+            self.cross.append((keys.transpose(-2, -1), values))
+        self.cross_block = pad.view(self.states, 1, 1, 1, source_len)                               # True: padding
+        self.width = 0
+        self.cache: list = [None] * len(model.decoder.layers)
+        self._grow(width)
+
+    def _heads(self, x: torch.Tensor) -> torch.Tensor:
+        """[..., L, d] -> [..., h, L, dh]"""
+        shape = x.shape[:-1] + (self.heads, self.head_dim)
+        return x.view(shape).transpose(-3, -2)
+
+    def _grow(self, width: int) -> None:
+        """Make room for ``width`` positions (kept a multiple of TGT_BUCKET: MPS compiles a graph per shape)."""
+        device = self.cross[0][1].device
+        for index, old in enumerate(self.cache):
+            shape = (self.states, self.k, self.heads, width, self.head_dim)
+            keys, values = torch.zeros(shape, device=device), torch.zeros(shape, device=device)
+            if old is not None:
+                keys[:, :, :, : self.width] = old[0]
+                values[:, :, :, : self.width] = old[1]
+            self.cache[index] = (keys, values)
+        self.width = width
+        self.positions = torch.arange(width, device=device)
+
+    def _attend(self, query: torch.Tensor, keys_t: torch.Tensor, values: torch.Tensor, block: torch.Tensor) -> torch.Tensor:
+        """One query per row and head. query [B, k, h, 1, dh]; keys_t [..., dh, L]; values [..., L, dh]."""
+        scores = (query @ keys_t) / (self.head_dim ** 0.5)
+        weights = torch.softmax(scores.masked_fill(block, float("-inf")), dim=-1)
+        return (weights @ values).reshape(self.states, self.k, self.d)
+
+    @torch.no_grad()
+    def step(self, tokens: torch.Tensor, position: int) -> torch.Tensor:
+        """tokens: [B * k] ids written at ``position``. Returns the next-token logits [B * k, V]."""
+        model, d = self.model, self.d
+        if position >= self.width:
+            self._grow(self.width + TGT_BUCKET)
+        x = (model.embed(tokens) + model.tgt_pos(self.positions[position])).view(self.states, self.k, d)
+        later = (self.positions > position).view(1, 1, 1, 1, self.width)                             # True: not written yet
+        for layer, (keys, values), (cross_keys_t, cross_values) in zip(model.decoder.layers, self.cache, self.cross):
+            attention = layer.self_attn
+            q, key, value = F.linear(layer.norm1(x), attention.in_proj_weight, attention.in_proj_bias).split(d, dim=-1)
+            shape = (self.states, self.k, self.heads, self.head_dim)
+            keys[:, :, :, position] = key.view(shape)
+            values[:, :, :, position] = value.view(shape)
+            x = x + attention.out_proj(self._attend(q.view(shape).unsqueeze(-2), keys.transpose(-2, -1), values, later))
+            attention = layer.multihead_attn
+            q = F.linear(layer.norm2(x), attention.in_proj_weight[:d], attention.in_proj_bias[:d])
+            x = x + attention.out_proj(self._attend(q.view(shape).unsqueeze(-2), cross_keys_t, cross_values, self.cross_block))
+            x = x + layer.linear2(F.relu(layer.linear1(layer.norm3(x))))
+        return model.policy_head(model.dec_norm(x)).view(self.states * self.k, -1)
+
+
 def pad_batch(sequences: list, device=None, multiple: int = 1) -> torch.Tensor:
     """Stack id lists into a padded tensor. ``multiple`` rounds the width up, which
     keeps the number of distinct tensor shapes small (Apple's MPS backend
@@ -210,22 +291,18 @@ class NeuralProposer:
     def _sample(self, views: list, k: int) -> list:
         device = self.device
         n_real = len(views)
-        # Round the batch up to a power of two (at least 16) with copies of the first state.
-        size = 16
+        # Round the batch up to a power of two with copies of the first state. MPS compiles a graph
+        # per tensor shape, so there the batch is at least 16; on the CPU one state costs one state.
+        size = 1 if torch.device(device).type == "cpu" else 16
         while size < n_real:
             size *= 2
         views = list(views) + [views[0]] * (size - n_real)
         src = pad_batch([v.tokens[:MAX_SRC] for v in views], device, SRC_BUCKET)
         memory, pad = self.model.encode(src)
-        memory = memory.repeat_interleave(k, dim=0)
-        pad = pad.repeat_interleave(k, dim=0)
+        decoder = StepDecoder(self.model, memory, pad, k)
         grammars = [MoveGrammar(view) for view in views for _ in range(k)]
         batch = len(grammars)
-        # The partial moves live in a fixed-width buffer (grown in steps of
-        # TGT_BUCKET); position t of the decoder output only depends on tokens
-        # up to t, so the padding to its right is harmless.
-        tgt = torch.full((batch, TGT_BUCKET), PAD, dtype=torch.long, device=device)
-        tgt[:, 0] = BOS
+        tokens = torch.full((batch,), BOS, dtype=torch.long, device=device)
         ladder = self.temperature if isinstance(self.temperature, (tuple, list)) else (self.temperature,)
         temps = torch.tensor([ladder[j % len(ladder)] for _ in range(len(views)) for j in range(k)],
                              dtype=torch.float32, device=device).unsqueeze(1)
@@ -243,7 +320,7 @@ class NeuralProposer:
             mask = torch.full((batch, vocab), float("-inf"))
             mask[rows, cols] = 0.0
             active = torch.tensor([not g.done for g in grammars], device=device)
-            logits = self.model.decode(memory, pad, tgt)[:, position, :] + mask.to(device)
+            logits = decoder.step(tokens, position) + mask.to(device)
             logits[~active] = 0.0                      # finished rows: any distribution, result ignored
             log_probs = F.log_softmax(logits, dim=-1)  # the model's own probabilities (for ranking)
             choice = torch.multinomial(F.softmax(logits / temps, dim=-1), 1).squeeze(1)
@@ -256,10 +333,7 @@ class NeuralProposer:
                 else:
                     grammar.advance(choice_list[i])
                     next_col.append(choice_list[i])
-            if position + 1 >= tgt.size(1):
-                extra = torch.full((batch, TGT_BUCKET), PAD, dtype=torch.long, device=device)
-                tgt = torch.cat([tgt, extra], dim=1)
-            tgt[:, position + 1] = torch.tensor(next_col, dtype=torch.long, device=device)
+            tokens = torch.tensor(next_col, dtype=torch.long, device=device)
         logp_list = logps.tolist()
         out = []
         for v in range(n_real):
