@@ -131,6 +131,38 @@ def tiny_run(tmp_path, monkeypatch, **changes):
     return TrainConfig(**settings)
 
 
+def test_progress_prefers_untried_problems_and_lets_hopeless_ones_fade():
+    from alphafe.train import Progress
+
+    progress = Progress(["a", "b", "c"])
+    assert [progress.weight(i) for i in range(3)] == [1.0, 1.0, 1.0]
+    assert progress.record(0, True) is True and progress.record(0, True) is False      # only the first solution is "first"
+    for _ in range(3):
+        progress.record(1, False)
+    assert progress.weight(1) == 0.25 and progress.weight(2) == 1.0
+    assert 0 < progress.weight(0) < Progress.SOLVED_WEIGHT
+    progress.record(0, False)                              # a later failure does not unsolve a problem
+    assert progress.fails[0] == 0 and progress.known() == 1
+    picks = progress.sample(random.Random(0), 300)
+    assert picks.count(2) > picks.count(1) > 0
+    with pytest.raises(ValueError):
+        Progress(["a"], fails=[0, 0], solved=[0])
+
+
+@pytest.mark.slow
+def test_adaptive_curriculum_runs_and_resumes_with_its_progress(tmp_path, monkeypatch):
+    config = tiny_run(tmp_path, monkeypatch, curriculum="adaptive", iterations=2)
+    record = train(config)
+    assert record["tier"] == 4 and "known_solved" in record and "heldout_t4_greedy" in record
+    payload = torch.load(tmp_path / "checkpoints" / "t" / "last.pt", weights_only=True)
+    attempts = sum(payload["state"]["fails"]) + sum(payload["state"]["solved"])
+    assert 0 < attempts <= 24                               # two iterations of twelve problems
+    config.iterations = 3
+    assert train(config, resume=True)["iteration"] == 3
+    with pytest.raises(ValueError, match="curriculum"):
+        train(tiny_run(tmp_path, monkeypatch, run="u", curriculum="ladder"))
+
+
 @pytest.mark.slow
 def test_resume_restores_the_replay_buffer_and_the_random_stream(tmp_path, monkeypatch, capsys):
     config = tiny_run(tmp_path, monkeypatch)

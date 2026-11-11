@@ -13,7 +13,9 @@ Each iteration:
    * *value* examples: states on successful proofs are labelled solvable,
      states of failed attempts unsolvable;
 4. take gradient steps on a replay buffer of such examples;
-5. raise the tier when the solve rate on the current tier is high enough.
+5. raise the tier when the solve rate on the current tier is high enough
+   (``curriculum="tiers"``), or choose the next problems by what each one's
+   earlier attempts showed (``curriculum="adaptive"``, see ``Progress``).
 
 Nothing here uses the brute-force baseline, the seed benchmark, the real
 benchmark, or the held-out synthetic test split.
@@ -73,6 +75,7 @@ class TrainConfig:
     hindsight_fraction: float = 0.25   # share of each batch
     negative_fraction: float = 0.15
     buffer_size: int = 120_000
+    curriculum: str = "tiers"          # "tiers": the ladder below. "adaptive": no ladder, see ``Progress``
     promote_at: float = 0.75           # self-play solve rate on the current tier needed to move up
     min_iters_per_tier: int = 6
     max_iters_per_tier: int = 25
@@ -109,6 +112,50 @@ class ProblemPool:
             pick = tier if tier == 1 or rng.random() < 0.5 else rng.randint(1, tier - 1)
             out.append(rng.choice(self.train[pick]))
         return out
+
+
+class Progress:
+    """What self-play has done with each training problem, and which ones to try next.
+
+    The adaptive curriculum has no tiers. A problem is drawn with a weight
+    that depends on its own history: 1 if it was never tried, 1 / (1 + fails)
+    while it is unsolved (many generated problems have no proof at all, and
+    this lets them fade), and ``SOLVED_WEIGHT`` / sqrt(1 + times solved) once
+    it has been solved (solved problems keep supplying examples, written by
+    the current network). Easy problems are solved first whatever their
+    tier, so the order of difficulty is found, not assumed.
+    """
+
+    SOLVED_WEIGHT = 0.5
+
+    def __init__(self, items: list, fails=None, solved=None):
+        self.items = items
+        self.fails = list(fails) if fails is not None else [0] * len(items)
+        self.solved = list(solved) if solved is not None else [0] * len(items)
+        if len(self.fails) != len(items) or len(self.solved) != len(items):
+            raise ValueError("the stored curriculum progress does not match the problem pool")
+
+    def weight(self, index: int) -> float:
+        if self.solved[index]:
+            return self.SOLVED_WEIGHT / (1 + self.solved[index]) ** 0.5
+        return 1.0 / (1 + self.fails[index])
+
+    def sample(self, rng: random.Random, n: int) -> list:
+        """Indices of the next ``n`` problems (with repetition)."""
+        return rng.choices(range(len(self.items)), [self.weight(i) for i in range(len(self.items))], k=n)
+
+    def record(self, index: int, solved: bool) -> bool:
+        """Note the outcome of one attempt. Returns True if this is the problem's first solution."""
+        if solved:
+            self.solved[index] += 1
+            return self.solved[index] == 1
+        if not self.solved[index]:
+            self.fails[index] += 1
+        return False
+
+    def known(self) -> int:
+        """How many problems have been solved at least once."""
+        return sum(1 for count in self.solved if count)
 
 
 def _solved_at_start(item) -> bool:
@@ -397,6 +444,11 @@ def train(config: TrainConfig, resume: bool = False) -> dict:
     optimizer = torch.optim.AdamW(model.parameters(), lr=config.lr, weight_decay=config.weight_decay)
     buffer = ReplayBuffer(config.buffer_size)
     state = {"iteration": 0, "step": 0, "tier": config.start_tier, "tier_iters": 0, "ema": 0.0, "seconds": 0.0}
+    if config.curriculum not in ("tiers", "adaptive"):
+        raise ValueError(f"curriculum is 'tiers' or 'adaptive', not {config.curriculum!r}")
+    adaptive = config.curriculum == "adaptive"
+    if adaptive:
+        state["tier"] = config.max_tier        # every tier is in play from the start
 
     last = ckpt_dir / "last.pt"
     if resume and last.exists():
@@ -423,6 +475,10 @@ def train(config: TrainConfig, resume: bool = False) -> dict:
     else:
         (log_dir / "config.json").write_text(json.dumps(asdict(config), indent=1))
 
+    progress = None
+    if adaptive:
+        everything = [item for tier in range(1, config.max_tier + 1) for item in pool.train[tier]]
+        progress = Progress(everything, state.get("fails"), state.get("solved"))
     log_path = log_dir / "train.jsonl"
     print(f"run {config.run}: device {device}, {model.n_parameters():,} parameters, "
           f"train problems per tier {[len(v) for v in pool.train.values()]}, held out {[len(v) for v in pool.test.values()]}")
@@ -435,7 +491,11 @@ def train(config: TrainConfig, resume: bool = False) -> dict:
         tier = state["tier"]
 
         # 1-2. self-play
-        items = pool.sample_train(rng, tier, config.problems_per_iter)
+        if adaptive:
+            picks = progress.sample(rng, config.problems_per_iter)
+            items = [progress.items[index] for index in picks]
+        else:
+            items = pool.sample_train(rng, tier, config.problems_per_iter)
         searches = [BestFirstSearch(item.problem(), budget=config.budget) for item in items]
         proposer = NeuralProposer(model, device, DIVERSE if config.diverse else config.temperature, config.n_uniform, rng,
                                   n_subterm=config.n_subterm)
@@ -445,6 +505,11 @@ def train(config: TrainConfig, resume: bool = False) -> dict:
         overall = sum(s.solved_node is not None for s in searches) / len(searches)
         state["ema"] = rate if state["tier_iters"] == 1 else 0.6 * state["ema"] + 0.4 * rate
         selfplay_seconds = time.time() - tick
+        first_solves = 0
+        if adaptive:
+            for index, search in zip(picks, searches):
+                first_solves += progress.record(index, search.solved_node is not None)
+            state["fails"], state["solved"] = progress.fails, progress.solved
 
         # 3-4. learn
         harvest(searches, buffer, rng, minimise=config.minimise, mirror=config.mirror)
@@ -459,6 +524,8 @@ def train(config: TrainConfig, resume: bool = False) -> dict:
             "buffer": [len(buffer.solve), len(buffer.hindsight), len(buffer.negative)], **losses,
             "selfplay_s": round(selfplay_seconds, 1), "iter_s": round(time.time() - tick, 1),
         }
+        if adaptive:
+            record["first_solves"], record["known_solved"] = first_solves, progress.known()
         if device.type == "mps":
             torch.mps.empty_cache()
             record["mps_gb"] = round(torch.mps.driver_allocated_memory() / 2**30, 2)
@@ -474,7 +541,7 @@ def train(config: TrainConfig, resume: bool = False) -> dict:
 
         # 5. curriculum
         promote = state["tier_iters"] >= config.min_iters_per_tier and state["ema"] >= config.promote_at
-        if (promote or state["tier_iters"] >= config.max_iters_per_tier) and tier < config.max_tier:
+        if not adaptive and (promote or state["tier_iters"] >= config.max_iters_per_tier) and tier < config.max_tier:
             state["tier"], state["tier_iters"] = tier + 1, 0
             record["promoted_to"] = tier + 1
 
