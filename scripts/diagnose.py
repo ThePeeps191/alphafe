@@ -1,10 +1,11 @@
-"""Where does the network lose the thread on the seed problems it cannot solve?
+"""Where does the network lose the thread on the problems it cannot solve?
 
-    python scripts/diagnose.py checkpoints/v1/m5.pt [seed ids...]
+    python scripts/diagnose.py checkpoints/best.pt [--suite seed|dev] [problem ids...]
 
-For each hand-written seed proof, replay it and at every creative move report
-(a) whether the network's move grammar can write that move at all, and
-(b) the log-probability the network gives it in that state.
+For each hand-written proof of the suite, replay it and at every creative
+move report (a) whether the network's move grammar can write that move at
+all, and (b) the log-probability the network gives it in that state. The
+last line gives the median, over the proofs, of the least likely step.
 
 This is diagnosis only. The hand proofs are never used for training.
 """
@@ -14,7 +15,7 @@ import sys
 import torch
 
 from alphafe.algebra import Poly, monic, to_poly
-from alphafe.bench import BENCH_DIR, load_seed
+from alphafe.bench import BENCH_DIR, load_dev, load_seed
 from alphafe.checker import Reject
 from alphafe.env import FREE_MOVES, quote_targets, start, step
 from alphafe.model import NeuralProposer, load_model
@@ -66,9 +67,18 @@ def main() -> None:
     device = torch.device("cpu")
     model, _ = load_model(sys.argv[1], device)
     proposer = NeuralProposer(model, device)
-    wanted = set(sys.argv[2:])
-    for bench in load_seed():
-        path = BENCH_DIR / "seed" / "proofs" / f"{bench.id}.proof"
+    rest = sys.argv[2:]
+    suite = "seed"
+    if "--suite" in rest:
+        at = rest.index("--suite")
+        suite = rest[at + 1] if at + 1 < len(rest) else ""
+        del rest[at: at + 2]
+    if suite not in ("seed", "dev"):
+        sys.exit("--suite takes seed or dev")
+    wanted = set(rest)
+    hardest = []
+    for bench in (load_seed() if suite == "seed" else load_dev()):
+        path = BENCH_DIR / suite / "proofs" / f"{bench.id}.proof"
         if not path.exists() or (wanted and bench.id not in wanted):
             continue
         state, _ = start(bench.problem)
@@ -110,9 +120,15 @@ def main() -> None:
                 lines.append(f"      (replay stopped: {reject.reason})")
                 break
         status = "blocked by the grammar" if blocked else f"least likely step {worst:.2f}"
+        if lines:
+            hardest.append(float("-inf") if blocked else worst)
         status += f"; {routine} of the hand proof's moves were already made by the environment"
         print(f"{bench.id}  {bench.problem.equation}   [{status}]")
         print("\n".join(lines))
+    if hardest:
+        ranked = sorted(hardest)
+        print(f"{len(hardest)} proofs with at least one proposed move; least likely step: median {ranked[len(ranked) // 2]:.2f}, "
+              f"above -5 in {sum(v > -5 for v in hardest)}, blocked by the grammar in {sum(v == float('-inf') for v in hardest)}")
 
 
 if __name__ == "__main__":
