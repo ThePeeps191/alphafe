@@ -6,7 +6,10 @@ def test_solve_with_baseline(capsys):
     out = capsys.readouterr().out
     assert code == 0
     assert "Answer. f(x) = x + c for any constant c." in out
-    assert "Found by: baseline" in out and "P(0, y)" in out
+    # The opening substitutions are applied by the environment itself, so no search runs on this problem.
+    assert "Found by: the routine moves alone, without search" in out and "P(0, y)" in out
+    code = main(["solve", "f(x)f(y) = f(x+y) + xy", "--baseline"])       # this one needs a case split
+    assert code == 0 and "Found by: baseline" in capsys.readouterr().out
 
 
 def test_solve_reports_failure_honestly(capsys):

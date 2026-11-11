@@ -13,27 +13,25 @@ Answer. f(x) = 0; f(x) = 1.
 
 Solution. Let P(x, y) denote the assertion f(x-y) = f(x)f(y).
 P(0, y) gives f(-y) = f(0)f(y).
-P(y, y) gives f(y)^2 = f(0).
-P(-y, y) gives f(0)f(y)^2 = f(-2y).
-Putting x = 0 in f(x)^2 = f(0) gives f(0)^2 = f(0).
-Since f(0)^2 = f(0), we have f(0) = 0 or f(0) = 1.
-
-Case f(0) = 0.
-Hence f(x) = 0 for all x.
-Substituting this into the original equation and comparing coefficients, it holds exactly for: f(x) = 0.
-
-Case f(0) = 1.
-Hence f(x) = 1 for all x.
-Substituting this into the original equation and comparing coefficients, it holds exactly for: f(x) = 1.
+P(x, 0) gives f(0)f(x) = f(x).
+So f is even: f(-t) = f(t) for all t.
+P(x, x) gives f(x)^2 = f(0).
+P(x, -x) gives f(-x)f(x) = f(2x).
+With the relations already known, this becomes f(x)^2 = f(2x).
+Together with the earlier relations this yields f(2x) = f(0).
+Hence f(x) = f(0) for all x.
+Substituting this into the original equation and comparing coefficients, it holds exactly for: f(x) = 0; f(x) = 1.
 
 All cases are closed. Every function listed in the answer was substituted into the original equation and satisfies it exactly, and the argument above shows there are no others.
 ```
 
 The design follows [AlphaGeometry](https://www.nature.com/articles/s41586-023-06747-5)
 (Trinh et al., *Nature* 2024). A symbolic engine defines the legal proof moves
-and makes the routine deductions. A small neural network, trained from random
-weights on its own attempts, proposes the moves that need an idea:
-substitutions, case splits and preimages. AlphaFE is not affiliated with
+and makes the routine deductions, including the standard opening
+substitutions (the example above needs nothing else). A search then proposes
+the moves that need an idea: other substitutions, case splits and preimages.
+The search is guided by a small neural network trained from random weights on
+its own attempts, or runs as plain brute force. AlphaFE is not affiliated with
 Google DeepMind.
 
 When AlphaFE cannot find a proof it says so. All it prints then is a guess

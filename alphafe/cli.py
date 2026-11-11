@@ -91,7 +91,8 @@ def cmd_solve(args) -> int:
     proof = minimise(problem, result.proof)
     dropped = len(result.proof) - len(proof)
     note = f" ({dropped} unneeded move{'s' if dropped != 1 else ''} removed)" if dropped else ""
-    print(f"\nFound by: {result.source}{note}. Proof moves:\n{show_proof(proof)}\n")
+    finder = "the routine moves alone, without search" if result.checker_calls == 0 else result.source
+    print(f"\nFound by: {finder}{note}. Proof moves:\n{show_proof(proof)}\n")
     print(render(problem, proof))
     return 0
 
