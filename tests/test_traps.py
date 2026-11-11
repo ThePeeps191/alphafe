@@ -276,3 +276,25 @@ def test_the_square_lemmas_take_no_target_and_do_not_solve_cauchy_over_r():
 
     state, _ = start(Problem.parse("f(x+y) = f(x) + f(y)", "R"))     # Cauchy over R must stay open
     assert not state.solved
+
+
+# --- Trap: what counts as proven nonzero -------------------------------------
+
+def test_products_of_nonzero_constants_are_nonzero_and_nothing_else_is():
+    """c != 0 gives c^2 != 0 and, with d != 0, cd != 0. It gives nothing about a constant that was never
+    assumed nonzero, and a nonzero product makes each factor nonzero."""
+    equation = "f(f(x) + y) = f(1)^2*x + f(y) + f(1)^2 - 1"
+    result = run(equation, "R", "sub P: x:=1, y:=1\nsplitnz f(1)")
+    branch = result.state.current
+    from alphafe.algebra import parse_poly as P
+
+    assert branch.known_nonzero(P("f(1)")) and branch.known_nonzero(P("f(1)^2")) and branch.known_nonzero(P("-3f(1)^3"))
+    assert not branch.known_nonzero(P("f(2)")) and not branch.known_nonzero(P("f(1)*f(2)"))
+    assert not branch.known_nonzero(P("f(1) + 1")) and not branch.known_nonzero(P("f(1)^2 - 1"))
+    # With the coefficient f(1)^2 recognised, injectivity and surjectivity follow (they were refused before).
+    assert run(equation, "R", "sub P: x:=1, y:=1\nsplitnz f(1)\ninj\nsurj").ok
+    # The other direction: a nonzero product makes its factors nonzero.
+    after = run(equation, "R", "sub P: x:=1, y:=1\nsplitnz f(1)^2").state.current
+    assert after.known_nonzero(P("f(1)")) and not after.known_nonzero(P("f(2)"))
+    # Division is still refused by a constant that is merely not known to vanish.
+    assert rejected(run("f(x)*f(0) = x*f(0)", "R", "div P by f(0)"))

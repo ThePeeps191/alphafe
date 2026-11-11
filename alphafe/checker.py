@@ -340,17 +340,27 @@ class Branch:
         return self.normal_form(poly).is_zero()
 
     def known_nonzero(self, poly: Poly) -> bool:
-        """Is the constant ``poly`` proven nonzero in this branch?"""
+        """Is the constant ``poly`` proven nonzero in this branch?
+
+        Yes if it is a nonzero number, or a nonzero number times a product of
+        constants already proven nonzero (a product of nonzero numbers is
+        nonzero). The product is found by dividing out the proven-nonzero
+        constants exactly, as often as they divide.
+        """
         if poly.variables():
             return False
         poly = self.normal_form(poly)
-        value = poly.const_value()
-        if value is not None:
-            return value != 0
-        for known in self.nonzero:
-            ratio = div_exact(poly, known)
-            if ratio is not None and ratio.const_value() not in (None, 0):
-                return True
+        for _ in range(MAX_POLY_SIZE):          # each division lowers the degree, so this ends long before
+            value = poly.const_value()
+            if value is not None:
+                return value != 0
+            for known in self.nonzero:
+                quotient = div_exact(poly, known)
+                if quotient is not None:
+                    poly = quotient
+                    break
+            else:
+                return False
         return False
 
     # -- adding facts -------------------------------------------------------
@@ -501,7 +511,22 @@ class Branch:
         self.nonzero = updated
 
     def assume_nonzero(self, poly: Poly) -> None:
+        """Record that the constant ``poly`` is nonzero, and with it each of its factors.
+
+        If a product is nonzero, every factor is. The factorisation comes
+        from an untrusted helper, so it is multiplied back and compared
+        before any factor is recorded.
+        """
         self.nonzero.append(poly)
+        hinted = factor_hint(poly)
+        product = Poly.const(1)
+        for factor, mult in hinted:
+            product = product * factor ** mult
+        ratio = div_exact(poly, product) if hinted else None
+        if ratio is not None and ratio.const_value() not in (None, 0):
+            for factor, _ in hinted:
+                if factor.const_value() is None and not factor.variables() and factor not in self.nonzero:
+                    self.nonzero.append(factor)
         queue: deque = deque()
         self._requeue_all(queue)
         self.add(queue)
