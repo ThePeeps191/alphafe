@@ -1016,3 +1016,100 @@ there is now a test suite against solutions that are not polynomials
 Q(sqrt 2) and others must survive every accepted sequence of moves, and
 removing the injectivity guard of `cancel` or the domain guard of `cauchy`
 makes it fail.
+
+### Training in the new environment (runs `m2` and `m3`): no gain over random weights
+
+The trainer now plays its searches in worker processes while the gradient
+steps run on the GPU, picks the tier of each round from how the tiers are
+going (`curriculum=adaptive`), and takes one proposal per state from the
+uniform grammar and two from the page. Two runs used it, both for 150
+minutes with 576 problems a round at 96 calls:
+
+* `m2`, in the M8 environment. Side jobs on the same machine slowed it and
+  it was stopped after 14 rounds. At 2,000 calls it solved 19, 19 of the dev
+  suite and 50, 50 of the seed set, against 21, 22 and 50, 50 for the M8
+  weights.
+* `m3`, in the environment with the larger opening set, alone on the
+  machine: 23 rounds, 2,081 training problems solved at least once
+  (`results/train_m3_log.json`).
+
+Searches with two of eight proposals from the page, in the current
+environment, CPU, sampling seeds 1000 and 1001:
+
+| weights | dev, 128 calls | seed, 128 | tier 3, 128 | tier 4, 128 | dev, 2,000 | seed, 2,000 |
+|---|---|---|---|---|---|---|
+| M8 weights (`m1`) | 22, 21 | 48, 47 | 141, 140 | 106, 109 | 25, 24 | 49, 49 |
+| `m3` | 23, 20 | 47, 46 | 141, 139 | 107, 109 | 23, 24 | 51, 51 |
+| random weights | 22, 20 | 46, 46 | 137, 138 | 107, 107 | 24, 25 | 50, 48 |
+
+The three rows differ by less than two sampling seeds of one row do. The
+network alone, without proposals from the page, gives the same picture at
+128 calls (seed 1000): `m3` 21, 48, 139, 106 and random weights 22, 47, 136,
+105.
+
+In the M8 environment the M8 weights were clearly ahead of random weights at
+128 calls: 132, 131 against 114, 116 on tier 3 and 92, 90 against 79, 80 on
+tier 4. The larger opening set raised both to about 140 and 107. What the
+network had learned was mostly to make the substitutions that the
+environment now makes by itself.
+
+Why 150 more minutes did not move it, from the log and the replay buffer of
+`m3`:
+
+* The share of tier 4 solved in self-play averaged 0.20 over the first ten
+  rounds and 0.24 over the last ten, and the number of problems solved for
+  the first time fell from 117 in the first round to 33 in the last.
+* The buffer ended with 8,128 solved steps (both mirror images counted).
+  About 420,000 such rows were drawn for gradient steps, about fifty draws
+  per stored step, and the policy loss fell to 0.44. The network fits the
+  few proofs that the search already finds.
+* 51% of those steps are a case split on a shown identity and 36% are
+  substitutions, so the network was shown fewer than 3,000 substitutions
+  that led to a proof.
+* On the hand proofs of the dev suite the least likely step now has a median
+  log-probability of -11, up from -29, and is above -5 in one proof of
+  eight. `splitnz f(0)` gets -11 to -12 and `pre -1` gets -11. Three of the
+  eight proofs need a move the network cannot write, because it quotes an
+  identity that is not among the 14 shown (issue #108).
+
+Self-play at this rate cannot teach the policy moves that its own searches
+do not find, and the proofs they do find are one or two moves long. Issue
+#107 has the plan that follows from this.
+
+### Protocol for the real benchmark (written and committed before the run)
+
+* **Third look.** The real benchmark was run in M7 and M8. Nothing in this
+  milestone was chosen using it: every configuration was fixed on the seed
+  set, the dev suite and the held-out tiers. The flagged real problems are
+  part of the dev suite and were used freely. The 124 unflagged problems
+  were not run or inspected.
+* **Solver.** The code at the commit of this protocol, clean tree.
+* **Weights.** `alphafe-m3-150min.pt`, by rule: the run that was trained in
+  the environment being evaluated. The table above does not separate it
+  from the M8 weights or from random weights, so the choice is not made on
+  numbers.
+* **Commands.** `alphafe eval --suite real --tag m9 --checkpoint
+  checkpoints/alphafe-m3-150min.pt --seeds 3 --big-budget 2000`, then
+  `python scripts/run_baseline.py 20000 120 widening m9 --suite real`, one
+  after the other with nothing else running on the machine. Before them the
+  same evaluation on the dev, seed and held-out suites
+  (`results/m9_*`), which also checks that no proof gives an answer
+  different from a recorded one.
+* **Headline.** Network search at 2,000 calls on the 124 unflagged
+  problems, compared with M8 row by row. The search rows now take two of
+  eight proposals from the page; the "no backtracking" row is the network
+  alone.
+* **What counts as the network's contribution.** The trained row minus the
+  untrained row at the same budget (the evaluation now has an untrained row
+  at 2,000 calls as well). A difference inside the spread of the three
+  sampling seeds is reported as no difference. On the development sets
+  there is none, and the expectation written here in advance is that the
+  real benchmark shows the same: whatever is gained over M8 comes from the
+  environment and the proposals from the page.
+* **Brute force at 20,000 calls is not comparable across milestones.** It
+  stops at 120 seconds per problem and a call now costs about three times
+  as much as in M8, so more problems end at the time limit. The number that
+  did is reported with the row.
+* **If something goes wrong.** As before: an answer mismatch stops
+  everything else, and a rerun forced by a harness bug is reported together
+  with the first run.
