@@ -16,6 +16,16 @@ with batched GPU calls, and their time is the suite's total divided by the
 number of problems. Other jobs often shared the machine, so read times as
 rough.
 
+**Reproducing a row.** Rows that sample from a network (trained or
+untrained) depend on the device as well as on the seed: the same seed gives
+the same rows on the Apple GPU every time, and different rows on the CPU
+(the untrained-network seed rows are 25 and 32 solved on the GPU, as
+recorded, and 29 and 31 on the CPU). Brute-force and uniform-policy rows are
+the same everywhere. A row also depends on which problems share its suite,
+because the searches of a suite draw from one random stream (issue #100).
+Result files written from M7 on record the commit, the device, the hash of
+the weights and the settings; earlier files do not.
+
 ## M3: baselines on the seed benchmark (46 problems)
 
 Hardware: Apple M6, 12 cores, CPU only. Command: `python scripts/run_baseline.py <calls> 120`.
