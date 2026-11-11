@@ -179,6 +179,20 @@ def test_a_self_play_round_that_never_finishes_stops_the_run(tmp_path, monkeypat
 
 
 @pytest.mark.slow
+def test_a_run_can_start_from_the_weights_of_another(tmp_path, monkeypatch, capsys):
+    first = tiny_run(tmp_path, monkeypatch, run="a")
+    train(first)
+    weights = tmp_path / "checkpoints" / "a" / "last.pt"
+    second = tiny_run(tmp_path, monkeypatch, run="b", init=str(weights), steps_per_iter=0)
+    train(second)
+    assert "starting from the weights of" in capsys.readouterr().out
+    old = torch.load(weights, weights_only=True)["model"]
+    new = torch.load(tmp_path / "checkpoints" / "b" / "last.pt", weights_only=True)
+    assert all(torch.equal(old[name], tensor) for name, tensor in new["model"].items())      # no gradient step was taken
+    assert new["state"]["iteration"] == 1                                                       # a new run, not a resumed one
+
+
+@pytest.mark.slow
 def test_resume_restores_the_replay_buffer_and_the_random_stream(tmp_path, monkeypatch, capsys):
     config = tiny_run(tmp_path, monkeypatch)
     train(config)

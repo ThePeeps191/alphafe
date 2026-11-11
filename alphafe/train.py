@@ -55,6 +55,7 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 class TrainConfig:
     run: str = "default"
     seed: int = 0
+    init: str = ""                  # a checkpoint whose weights a new run starts from (default: random weights)
     per_tier: int = 3000            # synthetic problems generated per tier (about 10% are held out)
     start_tier: int = 1
     max_tier: int = N_TIERS
@@ -520,6 +521,14 @@ def train(config: TrainConfig, resume: bool = False) -> dict:
         print(f"resumed {config.run} at iteration {state['iteration']} (tier {state['tier']}, {len(buffer)} examples)")
     else:
         (log_dir / "config.json").write_text(json.dumps(asdict(config), indent=1))
+        if config.init:
+            # Start from another run's weights: after a change to the environment the old network is
+            # a better starting point than random weights, but its replay buffer and curriculum
+            # history belong to the old environment and are not taken over.
+            payload = torch.load(config.init, map_location="cpu", weights_only=True)
+            check_vocabulary(payload, config.init)
+            model.load_state_dict(payload["model"])
+            print(f"starting from the weights of {config.init}")
 
     progress = None
     if adaptive:
