@@ -106,8 +106,11 @@ It applies the free moves `conclude`, `cauchy`, `quadratic`, `sqadd`,
 It then applies routine substitutions, which are ordinary `sub` moves that
 need no idea:
 
-* at the start, the opening substitutions into the original equation P:
-  `x:=0, y:=0`, `x:=0`, `y:=0`, `y:=x` and `y:=-x`;
+* at the start, the opening substitutions into the original equation P, in
+  three groups: `x:=0, y:=0`, `x:=0`, `y:=0`, `y:=x` and `y:=-x`; then 1 and
+  -1 for each variable; then `x:=f(x)`, `y:=f(y)`, `x:=f(y)`, `y:=f(x)`,
+  `x:=-f(y)` and `y:=-f(x)`. A search over these would branch on them;
+  applied together they accumulate in one state;
 * the swap `x:=y, y:=x` of a two-variable problem;
 * closed instances: an identity in one variable v taken at v := T, where T
   is 0 or the argument of an f(...) already present, provided the result
@@ -120,7 +123,13 @@ any other move, so they cannot make the checker accept more. Knowledge in a
 case only grows, so applying them eagerly cannot lose a proof. It costs
 time: a proposed move takes several times longer to process. At most ten
 are applied after one proposed move. `env.ROUTINE` switches each kind off,
-for measuring and for tests.
+for measuring and for tests, and `scripts/ablate_routine.py` runs brute
+force under each combination that a milestone used.
+
+The network reads at most 14 identities of a case (the simplest first) and
+360 tokens. After the opening substitutions a hard problem has more than
+that, so the network sees a part of the page; brute force and the page-based
+proposals work on all of it.
 
 Found proofs therefore contain many moves that the final argument does not
 use. `env.minimise` drops proposed moves that are not needed and then
@@ -172,7 +181,7 @@ of these is a soundness rule; each turns "too large" into a refused move.
 | limit | value | what it bounds |
 |---|---|---|
 | `MAX_POLY_TERMS`, `MAX_POLY_SIZE` | 80, 400 | monomials and structural size of one identity |
-| `MAX_ROWS` | 40 | identities in one case |
+| `MAX_ROWS` | 80 | identities in one case |
 | `MAX_TERM_SIZE` | 40 | nodes of a term written in a move |
 | `WORK_TERMS` | 1,000 | term pairs in one multiplication, and terms held, while a substitution is expanded |
 | `env.INSTANCE_WORK` | 200 | the same, for the environment's routine instances |
