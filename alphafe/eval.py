@@ -306,7 +306,7 @@ class EvalRun:
 
 
 def select_suites(names, heldout: int = 200) -> dict:
-    """The benchmark suites to evaluate, in the usual order. ``names`` None or empty means all."""
+    """The benchmark suites to evaluate, in the usual order. ``names`` None or empty means all but ``dev``."""
     from .bench import load_dev, load_real, load_seed
 
     wanted = set(names or ())
@@ -320,7 +320,7 @@ def select_suites(names, heldout: int = 200) -> dict:
     suites: dict = {}
     if want("seed"):
         suites["seed"] = load_seed()
-    if want("dev"):
+    if "dev" in wanted:                  # development problems overlap the real suite: only on request
         suites["dev"] = load_dev()
     if want("real"):
         real = load_real()
@@ -533,7 +533,7 @@ def main(argv=None) -> None:
     parser.add_argument("--checkpoint", default=None,
                         help="weights to evaluate (default: checkpoints/best.pt if it exists; a path given here must exist)")
     parser.add_argument("--suite", action="append", choices=SUITE_CHOICES, metavar="NAME",
-                        help=f"evaluate only this suite; repeatable (default: all). One of: {', '.join(SUITE_CHOICES)}")
+                        help=f"evaluate only this suite; repeatable (default: all but dev). One of: {', '.join(SUITE_CHOICES)}")
     parser.add_argument("--tag", default=None,
                         help="prefix for the files written to results/ (default: 'eval', or none when one --suite is given)")
     parser.add_argument("--heldout", type=int, default=200, help="held-out synthetic problems per tier")
