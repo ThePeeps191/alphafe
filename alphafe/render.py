@@ -88,12 +88,23 @@ def _describe(problem: Problem, entry: LogEntry) -> list[str]:
         if entry.closed == "contradiction":
             lines.append(f"{lead} leads to {_absurd(entry.reason)}. So this case is impossible.")
             return lines
-        shown = entry.instance
-        if shown is not None and not shown.is_zero():
-            lines.append(f"{lead} gives {_eq(shown)}.")
+        # First the identity exactly as the substitution gives it, then (if different) what it becomes
+        # after rewriting with the relations already known. Printing only the second can show an
+        # equation the substitution does not give, even one in a variable that was just replaced.
+        shown, raw = entry.instance, entry.raw
+        if raw is not None and not raw.is_zero():
+            lines.append(f"{lead} gives {_eq(monic(raw))}.")
+            # The rewritten form is shown only when it is about the same variables. Rewriting with the
+            # identity that was substituted into can bring back a variable the substitution removed; that
+            # is a true consequence, but not a way of reading this step, and the next line lists what follows.
+            if (shown is not None and not shown.is_zero() and monic(shown) != monic(raw)
+                    and shown.variables() <= raw.variables()):
+                lines.append(f"With the relations already known, this becomes {_eq(monic(shown))}.")
+        elif shown is not None and not shown.is_zero():
+            lines.append(f"{lead} gives {_eq(monic(shown))}.")
         else:
             lines.append(f"{lead}, simplified with what we already know, gives new information.")
-        extra = _new_facts(entry, skip=shown)
+        extra = [fact for fact in _new_facts(entry, skip=shown) if raw is None or fact != _eq(monic(raw))]
         if extra:
             lines.append("Together with the earlier relations this yields " + "; ".join(extra) + ".")
     elif isinstance(move, (Split, SplitNZ)):
@@ -120,7 +131,13 @@ def _describe(problem: Problem, entry: LogEntry) -> list[str]:
             "while the other side takes every value."
         )
     elif isinstance(move, Cancel):
-        lines.append(f"Since f is injective, {_eq(entry.source)} gives {_eq(entry.instance)}.")
+        if entry.partner is not None:
+            lines.append(
+                f"The relations {_eq(entry.source)} and {_eq(entry.partner)} give the same value of f at two "
+                f"arguments. Since f is injective, the arguments are equal: {_eq(entry.instance)}."
+            )
+        else:
+            lines.append(f"Since f is injective, {_eq(entry.source)} gives {_eq(entry.instance)}.")
         lines.extend(_fact_line(entry, skip=entry.instance))
     elif isinstance(move, Pre):
         lines.append(f"Since f is surjective, there is a constant {entry.witness} with f({entry.witness}) = {poly_str(entry.extra)}.")
@@ -199,6 +216,22 @@ def _fact_line(entry: LogEntry, skip: Poly | None = None) -> list[str]:
     return ["We now know: " + "; ".join(facts) + "."] if facts else []
 
 
+def _case_entry_line(case: tuple, rows: tuple) -> list[str]:
+    """One sentence saying what the relations become under the assumption of a case just entered."""
+    hidden: set = set()
+    facts = []
+    for row in rows:
+        text = _eq(row)
+        if row in hidden or text == case[-1]:
+            continue
+        hidden |= _renamings(row)
+        facts.append(text)
+    if not facts:
+        return []
+    more = " (and others)" if len(facts) > 4 else ""
+    return ["With this, the relations above become: " + "; ".join(facts[:4]) + more + "."]
+
+
 def render_result(problem: Problem, result: CheckResult) -> str:
     """Write up a check result (use ``render`` to check and render in one go)."""
     names = _variables(problem)
@@ -212,6 +245,8 @@ def render_result(problem: Problem, result: CheckResult) -> str:
         out += [f"Answer. {result.solutions}.", ""]
     out.append(f"Solution. Let P({', '.join(names)}) denote the assertion {problem.equation}.")
     log = result.state.log if result.state is not None else ()
+    # What the known relations turn into on entering each case, keyed by the full case path.
+    on_entry = {entry.case + (label,): rows for entry in log for label, rows in entry.child_rows}
     current_case: tuple = ()
     for entry in log:
         if entry.move is None:
@@ -222,6 +257,7 @@ def render_result(problem: Problem, result: CheckResult) -> str:
             current_case = entry.case
             if current_case:
                 out += ["", f"Case {' and '.join(current_case)}."]
+                out.extend(_case_entry_line(current_case, on_entry.get(current_case, ())))
         out.extend(_describe(problem, entry))
     out.append("")
     if result.solved:

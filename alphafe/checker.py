@@ -527,8 +527,11 @@ class LogEntry:
     candidate: Optional[Poly] = None     # f(x) = candidate, before pinning constants
     solutions: tuple = ()
     children: tuple = ()                 # for splits: (label, closed_reason or None)
+    child_rows: tuple = ()               # for splits: (label, identities that changed on entering that case)
     witness: Optional[str] = None
     extra: Optional[Poly] = None
+    raw: Optional[Poly] = None           # for substitutions: the identity exactly as substituted, before rewriting
+    partner: Optional[Poly] = None       # for cancel: the second identity f(B) = V that was compared with the source
 
 
 class State:
@@ -717,23 +720,34 @@ def cancel_results(branch: Branch, poly: Poly, index: Optional[dict] = None):
 
     ``index`` is ``value_index(branch)``; it is built here when not given.
     """
+    for result, _ in cancel_steps(branch, poly, index):
+        yield result
+
+
+def cancel_steps(branch: Branch, poly: Poly, index: Optional[dict] = None):
+    """``cancel_results`` with, for each result, the second identity it rests on (or None).
+
+    For the rules that compare f(A) = V with another fact f(B) = V, the
+    partner is that fact, as the polynomial f(B) - V. It is only used to
+    word the step in the written solution.
+    """
     if len(poly.terms) == 2:
         (m1, c1), (m2, c2) = poly.terms.items()
         a1, a2 = _single_atom(m1), _single_atom(m2)
         if a1 is not None and a2 is not None and a1[0] == "f" and a2[0] == "f" and c1 + c2 == 0:
-            yield Poly.from_key(a1[1]) - Poly.from_key(a2[1])
+            yield Poly.from_key(a1[1]) - Poly.from_key(a2[1]), None
     for atom, value in _f_values(poly):
         if not atom_vars(atom):
             continue
         if not value.variables():
             for known, image in branch._rules.items():
                 if known[0] == "f" and not atom_vars(known) and image == value:
-                    yield Poly.from_key(atom[1]) - Poly.from_key(known[1])
+                    yield Poly.from_key(atom[1]) - Poly.from_key(known[1]), Poly.atom(known) - value
         if index is None:
             index = value_index(branch)
         for other in index.get(value, ()):
             if other != atom:
-                yield Poly.from_key(atom[1]) - Poly.from_key(other[1])
+                yield Poly.from_key(atom[1]) - Poly.from_key(other[1]), Poly.atom(other) - value
 
 
 def cauchy_form(poly: Poly) -> Optional[tuple]:
@@ -876,7 +890,18 @@ def _do_subst(state: State, branch: Branch, move: Subst) -> _Outcome:
     instance = target.subst(mapping)
     shown = branch.norm(instance)
     branch.add([instance])
-    return _Outcome(instance=shown, source=target)
+    return _Outcome(instance=shown, source=target, raw=instance)
+
+
+def _case_changes(parent: Branch, children: list) -> tuple:
+    """For each new case, the identities that are new or changed once its assumption is added.
+
+    Entering a case rewrites the known identities with the assumption, and
+    the written solution has to say what they become: otherwise it jumps
+    from the case heading to a conclusion that uses them.
+    """
+    before = set(parent.rows)
+    return tuple((child.case[-1], tuple(row for row in child.rows if row not in before)) for child in children)
 
 
 def _do_split(state: State, branch: Branch, move: Split) -> _Outcome:
@@ -940,7 +965,7 @@ def _do_split(state: State, branch: Branch, move: Split) -> _Outcome:
             continue
         summary.append((label, None))
         children.append(child)
-    return _Outcome(branches=children, source=poly, children=tuple(summary))
+    return _Outcome(branches=children, source=poly, children=tuple(summary), child_rows=_case_changes(branch, children))
 
 
 def _do_splitnz(state: State, branch: Branch, move: SplitNZ) -> _Outcome:
@@ -980,7 +1005,7 @@ def _do_splitnz(state: State, branch: Branch, move: SplitNZ) -> _Outcome:
         summary.append((nonzero.case[-1], None))
     except _Closed as closed:
         summary.append((nonzero.case[-1], closed.reason))
-    return _Outcome(branches=children, source=poly, children=tuple(summary))
+    return _Outcome(branches=children, source=poly, children=tuple(summary), child_rows=_case_changes(branch, children))
 
 
 def _do_divide(state: State, branch: Branch, move: Divide) -> _Outcome:
@@ -1033,10 +1058,10 @@ def _do_cancel(state: State, branch: Branch, move: Cancel) -> _Outcome:
         raise Reject("cannot cancel f: injectivity has not been proven")
     index = value_index(branch)
     for poly in _candidates(state, branch, move.target):
-        for result in cancel_results(branch, poly, index):
+        for result, partner in cancel_steps(branch, poly, index):
             if not branch.known_zero(result):
                 branch.add([result])
-                return _Outcome(source=poly, instance=result)
+                return _Outcome(source=poly, instance=result, partner=partner)
     raise Reject("no identity of the form f(A) = f(B) gives anything new")
 
 
