@@ -76,3 +76,28 @@ def test_tiers_follow_structure_only():
     for g in ALL:
         assert g.tier == tier_of(g.depth, g.size)
     assert all(g.depth == 1 for g in DATA[1]) and all(g.depth >= 2 for g in DATA[3])
+
+
+def test_a_disguised_problem_has_the_same_solutions_and_its_undo_move_recovers_the_plain_one():
+    import random
+
+    from alphafe.algebra import monic
+    from alphafe.checker import apply, initial_state
+    from alphafe.generate import disguise
+    from alphafe.moves import parse_move
+
+    rng = random.Random(4)
+    made = 0
+    for item in [g for items in DATA.values() for g in items][:60]:
+        hidden = disguise(item, rng)
+        if hidden is None:
+            continue
+        made += 1
+        assert hidden.undo and hidden.planted == item.planted and hidden.key != item.key
+        problem = hidden.problem()
+        assert verify_solution(problem, hidden.planted), hidden.equation
+        # The undo move, applied to the disguised equation, gives the plain equation back.
+        state = apply(initial_state(problem), parse_move(hidden.undo))
+        plain = monic(item.problem().poly)
+        assert state.current.known_zero(plain), (item.equation, hidden.equation, hidden.undo)
+    assert made >= 30

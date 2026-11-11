@@ -31,13 +31,14 @@ import pathlib
 import random
 import time
 from dataclasses import asdict, dataclass, field
+from typing import Optional
 
 from . import model as _model      # first: it silences torch's NumPy warning before torch is imported
 
 import torch
 import torch.nn.functional as F
 
-from .generate import N_TIERS, benchmark_keys, generate, protected_keys
+from .generate import N_TIERS, benchmark_keys, disguise, generate, protected_keys
 from .model import (DIVERSE, SRC_BUCKET, TGT_BUCKET, ModelConfig, NeuralProposer, PolicyValueNet, check_vocabulary,
                     pad_batch, pick_device, save_checkpoint)
 from .search import BestFirstSearch, GreedySearch, UniformProposer, run_searches
@@ -57,6 +58,7 @@ class TrainConfig:
     seed: int = 0
     init: str = ""                  # a checkpoint whose weights a new run starts from (default: random weights)
     per_tier: int = 3000            # synthetic problems generated per tier (about 10% are held out)
+    disguised: bool = False         # add disguised problems, and learn their known first move when an attempt fails
     start_tier: int = 1
     max_tier: int = N_TIERS
     iterations: int = 1000
@@ -104,12 +106,33 @@ class ProblemPool:
     never proposes a move and so teaches nothing.
     """
 
-    def __init__(self, seed: int, per_tier: int, for_training: bool = False):
-        data = generate(seed, per_tier, exclude=protected_keys() if for_training else benchmark_keys())
+    def __init__(self, seed: int, per_tier: int, for_training: bool = False, disguised: bool = False):
+        protected = protected_keys() if for_training else benchmark_keys()
+        data = generate(seed, per_tier, exclude=protected)
+        easy: list = []
         if for_training:
-            data = {tier: [g for g in items if not _solved_at_start(g)] for tier, items in data.items()}
+            kept: dict = {}
+            for tier, items in data.items():
+                kept[tier] = []
+                for item in items:
+                    (easy if _solved_at_start(item) else kept[tier]).append(item)
+            data = kept
         self.train = {tier: [g for g in items if g.split == "train"] for tier, items in data.items()}
         self.test = {tier: [g for g in items if g.split == "test"] for tier, items in data.items()}
+        self.disguised = 0
+        if for_training and disguised:
+            # The problems the environment solves by itself teach nothing as they are. Hidden behind
+            # a change of variables each becomes a problem with a known proof that starts with one idea.
+            rng = random.Random(seed + 7919)
+            seen = {g.key for items in data.values() for g in items} | set(protected)
+            for item in easy:
+                hidden = disguise(item, rng)
+                if hidden is None or hidden.key in seen or hidden.split != "train" or _solved_at_start(hidden):
+                    continue
+                if planted_examples(hidden):
+                    seen.add(hidden.key)
+                    self.train[hidden.tier].append(hidden)
+                    self.disguised += 1
 
     def sample_train(self, rng: random.Random, tier: int, n: int) -> list:
         """Half from the current tier, half spread over the earlier ones."""
@@ -162,6 +185,40 @@ class Progress:
     def known(self) -> int:
         """How many problems have been solved at least once."""
         return sum(1 for count in self.solved if count)
+
+
+_PLANTED: dict = {}
+
+
+def planted_examples(item) -> list:
+    """Solve examples from the known proof of a disguised problem: [(state tokens, move tokens)], or [].
+
+    The proof is the undo move followed by whatever the environment then
+    does by itself. It counts only if replaying it through the checker
+    really solves the problem; then the one proposed move is an example
+    like any found by self-play, and so is its mirror image.
+    """
+    if not item.undo:
+        return []
+    cached = _PLANTED.get(item.key)
+    if cached is None:
+        from .moves import parse_move
+
+        cached = []
+        problem = item.problem()
+        move = parse_move(item.undo)
+        try:
+            state, _ = start(problem)
+            view = encode_state(state)
+            ids = encode_move(move, view)
+            if ids is not None and not state.solved and step(state, move)[0].solved:
+                cached = [(tuple(view.tokens), tuple(ids))] + swapped_examples(problem, [move])
+        except Reject:
+            cached = []
+        if len(_PLANTED) > 100_000:
+            _PLANTED.clear()
+        _PLANTED[item.key] = cached
+    return cached
 
 
 def _solved_at_start(item) -> bool:
@@ -323,10 +380,18 @@ def minimal_examples(search) -> list:
 
 
 def harvest(searches: list, buffer: ReplayBuffer, rng: random.Random, max_hindsight: int = 4,
-            minimise: bool = True, mirror: bool = False) -> None:
-    """Turn finished self-play searches into training examples."""
-    for search in searches:
+            minimise: bool = True, mirror: bool = False, items: Optional[list] = None) -> None:
+    """Turn finished self-play searches into training examples.
+
+    ``items`` are the generated problems the searches were for. A failed
+    attempt at a disguised problem is answered with its known proof
+    (``planted_examples``).
+    """
+    for index, search in enumerate(searches):
         path = search.solution_path()
+        if not path and items is not None:
+            for pair in planted_examples(items[index]):
+                buffer.add("solve", pair)
         if len(path) > 1:
             if minimise:
                 pairs = minimal_examples(search)
@@ -453,7 +518,7 @@ def _actor(job: tuple) -> dict:
     torch.manual_seed(seed)
     searches = play(model, torch.device("cpu"), items, config, rng)
     examples = ReplayBuffer(10 ** 9)
-    harvest(searches, examples, rng, minimise=config.minimise, mirror=config.mirror)
+    harvest(searches, examples, rng, minimise=config.minimise, mirror=config.mirror, items=items)
     return {"solved": [s.solved_node is not None for s in searches], "calls": [s.calls for s in searches],
             "solve": examples.solve, "hindsight": examples.hindsight, "negative": examples.negative}
 
@@ -486,7 +551,7 @@ def train(config: TrainConfig, resume: bool = False) -> dict:
     rng = random.Random(config.seed)
     torch.manual_seed(config.seed)
 
-    pool = ProblemPool(config.seed, config.per_tier, for_training=True)
+    pool = ProblemPool(config.seed, config.per_tier, for_training=True, disguised=config.disguised)
     model = PolicyValueNet(ModelConfig(**config.model)).to(device)
     optimizer = torch.optim.AdamW(model.parameters(), lr=config.lr, weight_decay=config.weight_decay)
     buffer = ReplayBuffer(config.buffer_size)
@@ -536,7 +601,8 @@ def train(config: TrainConfig, resume: bool = False) -> dict:
         progress = Progress(everything, state.get("fails"), state.get("solved"))
     log_path = log_dir / "train.jsonl"
     print(f"run {config.run}: device {device}, {model.n_parameters():,} parameters, "
-          f"train problems per tier {[len(v) for v in pool.train.values()]}, held out {[len(v) for v in pool.test.values()]}")
+          f"train problems per tier {[len(v) for v in pool.train.values()]} ({pool.disguised} of them disguised), "
+          f"held out {[len(v) for v in pool.test.values()]}")
     uniform = UniformProposer(random.Random(config.seed + 1))
     record: dict = {}
     actors = None
@@ -614,7 +680,7 @@ def _train_loop(config, began, device, ckpt_dir, log_path, last, pool, progress,
                     for example in share[kind]:
                         buffer.add(kind, example)
         else:
-            harvest(searches, buffer, rng, minimise=config.minimise, mirror=config.mirror)
+            harvest(searches, buffer, rng, minimise=config.minimise, mirror=config.mirror, items=items)
             if buffer.solve:
                 losses, state["step"] = train_steps(model, optimizer, buffer, config, rng, device, state["step"])
 

@@ -76,6 +76,7 @@ class Generated:
     depth: int
     size: int
     key: str              # canonical hash (invariant under renaming variables and scaling)
+    undo: str = ""        # for a disguised problem: the move that gives the plain equation back (see ``disguise``)
 
     def problem(self) -> Problem:
         return Problem.parse(self.equation, self.domain, self.key[:10])
@@ -184,6 +185,54 @@ def generate_one(rng: random.Random, level: int) -> Optional[Generated]:
     if state.solved:
         return None  # trivial: the free moves alone finish it
     return Generated(text, domain, f"f(x) = {planted}", tier_of(depth, size), depth, size, canonical_key(problem.poly))
+
+
+# Changes of variables v -> v + s(u), written with u for the other variable. (weight, s)
+SHIFTS = [
+    (6, "f(u)"), (4, "-f(u)"), (4, "u"), (2, "-u"), (2, "f(u) + u"), (2, "f(u) - u"), (2, "2u"), (2, "1"), (1, "-1"),
+    (2, "f(0)"), (1, "2f(u)"),
+]
+
+
+def disguise(item: Generated, rng: random.Random) -> Optional[Generated]:
+    """The same problem after a change of variables, together with the move that undoes it.
+
+    Replacing v by v + s(u) throughout turns an identity that holds for all
+    v and u into another one, and replacing v by v - s(u) turns it back, so
+    the two equations have exactly the same solutions. If the plain problem
+    is one the environment solves by itself, the disguised one has a proof
+    that starts with a single idea, ``sub P: v:=v - s(u)``: the kind of
+    substitution, chosen to simplify an argument of f, that randomly built
+    equations almost never reward. Returns None if the result is too large
+    or does not survive printing and parsing.
+    """
+    from .algebra import equation_str
+    from .moves import parse_move, show_move
+
+    problem = item.problem()
+    names = sorted(problem.poly.variables())
+    if len(names) != 2:
+        return None
+    v = rng.choice(names)
+    u = names[0] if v == names[1] else names[1]
+    shift_text = _weighted(rng, SHIFTS).replace("u", u)
+    hidden = problem.poly.subst({v: Poly.var(v) + parse_poly(shift_text)})
+    if len(hidden.variables()) != 2:
+        return None
+    text = equation_str(hidden)
+    try:
+        new = Problem.parse(text, item.domain)
+    except ValueError:
+        return None
+    if monic(new.poly) != monic(hidden):
+        return None
+    lhs, rhs = T.parse_equation(text)
+    depth = max(T.nesting_depth(lhs), T.nesting_depth(rhs))
+    size = T.term_size(lhs) + T.term_size(rhs)
+    if size > 48:
+        return None
+    undo = show_move(parse_move(f"sub P: {v}:={v} - ({shift_text})"))
+    return Generated(text, item.domain, item.planted, tier_of(depth, size), depth, size, canonical_key(new.poly), undo)
 
 
 def generate(seed: int, per_tier: int, exclude: Iterable[str] = ()) -> dict:
