@@ -19,7 +19,7 @@ from typing import Optional
 
 from . import terms as T
 from .algebra import ZERO, Poly, TooLarge, atom_arg, atom_vars, poly_term
-from .checker import LOAD_REFUSED, NORM_PASSES, WORK_TERMS, Problem, Reject, State, apply, check, initial_state
+from .checker import LOAD_REFUSED, NORM_PASSES, Problem, Reject, State, apply, check, initial_state
 from .moves import Cancel, Cauchy, Conclude, Inj, Move, Quadratic, SqAdd, SqLin, Subst, Surj
 from .solutions import SolutionSet
 
@@ -32,6 +32,7 @@ MAX_FREE_STEPS = 40
 ROUTINE = {"opening": True, "swap": True, "instances": True, "witness": True}
 MAX_ROUTINE = 10
 MAX_SITE_TERMS = 4      # arguments of f with more monomials than this are not used as substitution sites
+INSTANCE_WORK = 200     # work limit (Poly.rewrite) for a routine instance: routine substitutions are small ones
 
 
 def _opening_moves(problem: Problem) -> list[Move]:
@@ -65,12 +66,12 @@ def _f_atoms(polys) -> set:
 
 @functools.lru_cache(maxsize=50_000)
 def _instance(row: Poly, name: str, site: Poly) -> Optional[Poly]:
-    """``row`` with the variable ``name`` replaced by ``site``, or None if that is over the checker's work limit.
+    """``row`` with the variable ``name`` replaced by ``site``, or None if that is over the work limit.
 
     Cached: neighbouring states share most rows.
     """
     try:
-        return row.subst({name: site}, WORK_TERMS)
+        return row.subst({name: site}, INSTANCE_WORK)
     except TooLarge:
         return None
 
@@ -110,7 +111,7 @@ def _normal_instance(branch, row: Poly, name: str, site: Poly) -> Optional[Poly]
     result = None
     for _ in range(NORM_PASSES if poly is not None else 0):          # the loop of Branch.norm
         try:
-            new = poly.rewrite(fn, limit=WORK_TERMS)
+            new = poly.rewrite(fn, limit=INSTANCE_WORK)
         except TooLarge:
             break
         if new is poly or new == poly:
