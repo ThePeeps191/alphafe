@@ -272,23 +272,86 @@ class NeuralProposer:
         return out
 
 
+class VocabularyMismatch(ValueError):
+    """A checkpoint was trained with a different token vocabulary than the code has now."""
+
+
+def _code_version() -> str:
+    """The git commit of the code, with "-dirty" if tracked files are modified; "" outside a checkout."""
+    import pathlib
+    import subprocess
+
+    root = pathlib.Path(__file__).resolve().parent.parent
+
+    def git(*args) -> str:
+        try:
+            done = subprocess.run(["git", *args], cwd=root, capture_output=True, text=True, timeout=20)
+        except (OSError, subprocess.SubprocessError):
+            return ""
+        return done.stdout.strip() if done.returncode == 0 else ""
+
+    commit = git("rev-parse", "HEAD")
+    if commit and git("status", "--porcelain", "--untracked-files=no"):
+        commit += "-dirty"
+    return commit
+
+
 def save_checkpoint(path, model: PolicyValueNet, extra: dict) -> None:
-    torch.save({"config": asdict(model.config), "model": model.state_dict(), **extra}, path)
+    """Write a training checkpoint.
+
+    Besides the weights it records the token vocabulary they were trained
+    with (token ids mean nothing without it), the commit of the code and the
+    torch version. All are plain strings, so ``weights_only`` loading works.
+    """
+    from .tokenizer import VOCAB
+
+    torch.save({"config": asdict(model.config), "model": model.state_dict(), "vocab": list(VOCAB),
+                "commit": _code_version(), "torch": str(torch.__version__), **extra}, path)
+
+
+def check_vocabulary(payload: dict, path="") -> None:
+    """Raise ``VocabularyMismatch`` unless the checkpoint's vocabulary is the current one.
+
+    A checkpoint whose vocabulary differs still loads as tensors, and the
+    grammar mask keeps its moves well formed, so nothing else would fail: the
+    network would simply read and write the wrong symbols and score a little
+    worse. Checkpoints written before the vocabulary was recorded (release
+    v0.1.0) are accepted when the size matches.
+    """
+    from .tokenizer import VOCAB
+
+    stored = payload.get("vocab")
+    if stored is None:
+        size = payload["config"].get("vocab_size")
+        if size != len(VOCAB):
+            raise VocabularyMismatch(
+                f"checkpoint {path} was trained with {size} tokens and the code now has {len(VOCAB)}: "
+                "retrain, or check out the version of the code the weights belong to")
+        return
+    if list(stored) != list(VOCAB):
+        where = next((i for i, (a, b) in enumerate(zip(stored, VOCAB)) if a != b), min(len(stored), len(VOCAB)))
+        theirs = stored[where] if where < len(stored) else "(nothing)"
+        mine = VOCAB[where] if where < len(VOCAB) else "(nothing)"
+        commit = payload.get("commit") or "an unrecorded commit"
+        raise VocabularyMismatch(
+            f"checkpoint {path} was trained with a different token vocabulary (token {where} is {theirs!r} there and "
+            f"{mine!r} in the code now). It was trained at {commit}: retrain, or check out that version")
 
 
 def load_model(path, device) -> tuple[PolicyValueNet, dict]:
     # weights_only=True: a checkpoint is tensors and plain values, never code,
     # so a file downloaded from someone else cannot run anything when loaded.
     payload = torch.load(path, map_location="cpu", weights_only=True)
+    check_vocabulary(payload, path)
     model = PolicyValueNet(ModelConfig(**payload["config"]))
     model.load_state_dict(payload["model"])
     return model.to(device), payload
 
 
-# What a published checkpoint keeps: the weights and how they were trained.
-# The optimiser state and the random-number state (two thirds of a training
-# checkpoint) are only needed to resume training.
-EXPORT_KEYS = ("config", "model", "state", "train_config")
+# What a published checkpoint keeps: the weights, how they were trained, and
+# what they were trained with. The optimiser state and the random-number
+# state (two thirds of a training checkpoint) are only needed to resume training.
+EXPORT_KEYS = ("config", "model", "state", "train_config", "vocab", "commit", "torch")
 
 
 def export_checkpoint(source, target) -> dict:

@@ -25,7 +25,6 @@ import argparse
 import json
 import math
 import pathlib
-import pickle
 import random
 import time
 from dataclasses import asdict, dataclass, field
@@ -34,8 +33,8 @@ import torch
 import torch.nn.functional as F
 
 from .generate import N_TIERS, benchmark_keys, generate
-from .model import (DIVERSE, SRC_BUCKET, TGT_BUCKET, ModelConfig, NeuralProposer, PolicyValueNet, pad_batch, pick_device,
-                    save_checkpoint)
+from .model import (DIVERSE, SRC_BUCKET, TGT_BUCKET, ModelConfig, NeuralProposer, PolicyValueNet, check_vocabulary,
+                    pad_batch, pick_device, save_checkpoint)
 from .search import BestFirstSearch, GreedySearch, UniformProposer, run_searches
 from . import terms as T
 from .algebra import Poly
@@ -382,15 +381,25 @@ def train(config: TrainConfig, resume: bool = False) -> dict:
 
     last = ckpt_dir / "last.pt"
     if resume and last.exists():
-        payload = torch.load(last, map_location="cpu", weights_only=False)
+        # weights_only=True for both files: they hold tensors and plain values, and a file from
+        # someone else (a downloaded checkpoint put here to continue training) must not run code.
+        payload = torch.load(last, map_location="cpu", weights_only=True)
+        check_vocabulary(payload, last)
         model.load_state_dict(payload["model"])
-        optimizer.load_state_dict(payload["optimizer"])
-        state = payload["state"]
-        rng.setstate(payload["rng"])
-        buffer_path = ckpt_dir / "buffer.pkl"
+        state = payload.get("state", state)
+        if "optimizer" in payload and "rng" in payload:
+            optimizer.load_state_dict(payload["optimizer"])
+            rng.setstate(_as_rng_state(payload["rng"]))
+        else:
+            print(f"{last} is a weights-only export (no optimiser or random state): "
+                  "continuing with a fresh optimiser and a fresh random stream")
+        buffer_path = ckpt_dir / BUFFER_FILE
         if buffer_path.exists():
-            with open(buffer_path, "rb") as fh:
-                buffer.solve, buffer.hindsight, buffer.negative = pickle.load(fh)
+            stored = torch.load(buffer_path, map_location="cpu", weights_only=True)
+            buffer.solve, buffer.hindsight, buffer.negative = ([tuple(tuple(part) for part in item) for item in store]
+                                                               for store in stored)
+        elif (ckpt_dir / "buffer.pkl").exists():
+            print(f"{ckpt_dir / 'buffer.pkl'} is in the old pickle format and is not loaded; the replay buffer starts empty")
         print(f"resumed {config.run} at iteration {state['iteration']} (tier {state['tier']}, {len(buffer)} examples)")
     else:
         (log_dir / "config.json").write_text(json.dumps(asdict(config), indent=1))
@@ -458,11 +467,50 @@ def train(config: TrainConfig, resume: bool = False) -> dict:
         save_checkpoint(last, model, {"optimizer": optimizer.state_dict(), "state": state, "rng": rng.getstate(),
                                       "train_config": asdict(config)})
         if state["iteration"] % 5 == 0:
-            with open(ckpt_dir / "buffer.pkl", "wb") as fh:
-                pickle.dump((buffer.solve, buffer.hindsight, buffer.negative), fh)
-    with open(ckpt_dir / "buffer.pkl", "wb") as fh:
-        pickle.dump((buffer.solve, buffer.hindsight, buffer.negative), fh)
+            _save_buffer(ckpt_dir, buffer)
+    _save_buffer(ckpt_dir, buffer)
     return record
+
+
+BUFFER_FILE = "buffer.pt"
+
+
+def _save_buffer(ckpt_dir, buffer: ReplayBuffer) -> None:
+    """The replay buffer as plain lists of integers (no pickle of arbitrary objects, so it loads with weights_only)."""
+    torch.save([[[list(part) for part in item] for item in store]
+                for store in (buffer.solve, buffer.hindsight, buffer.negative)], ckpt_dir / BUFFER_FILE)
+
+
+def _as_rng_state(stored):
+    """``random.Random.getstate()`` as it comes back from a checkpoint: lists turned into the tuples setstate wants."""
+    version, internal, gauss = stored
+    return (version, tuple(internal), gauss)
+
+
+TRUE_WORDS, FALSE_WORDS = ("true", "1", "yes", "on"), ("false", "0", "no", "off")
+
+
+def apply_overrides(config: TrainConfig, items: list) -> None:
+    """Apply ``KEY=VALUE`` overrides to a config, refusing anything that cannot be read exactly."""
+    fields = sorted(asdict(config))
+    for item in items:
+        key, sep, value = item.partition("=")
+        if not sep:
+            raise ValueError(f"--set {item}: expected KEY=VALUE")
+        if key not in fields or key == "model":
+            hint = " (the model size is not set this way)" if key == "model" else ""
+            raise ValueError(f"--set {item}: unknown setting{hint}; the settings are: {', '.join(f for f in fields if f != 'model')}")
+        current = getattr(config, key)
+        if isinstance(current, bool):
+            word = value.strip().lower()
+            if word not in TRUE_WORDS + FALSE_WORDS:
+                raise ValueError(f"--set {item}: {key} is on or off; write {key}=true or {key}=false")
+            setattr(config, key, word in TRUE_WORDS)
+        else:
+            try:
+                setattr(config, key, type(current)(value))
+            except ValueError:
+                raise ValueError(f"--set {item}: {key} takes {type(current).__name__} values") from None
 
 
 def main(argv=None) -> None:
@@ -479,10 +527,12 @@ def main(argv=None) -> None:
     if args.resume and config_path.exists():
         saved = json.loads(config_path.read_text())
         config = TrainConfig(**{**saved, "minutes": args.minutes, "iterations": args.iterations})
-    for item in args.set:
-        key, _, value = item.partition("=")
-        current = getattr(config, key)
-        setattr(config, key, type(current)(value) if not isinstance(current, bool) else value == "True")
+    try:
+        apply_overrides(config, args.set)
+    except ValueError as err:
+        parser.error(str(err))
+    if args.set:
+        print("settings: " + ", ".join(f"{key}={getattr(config, key)}" for key in sorted(asdict(config)) if key != "model"))
     train(config, resume=args.resume)
 
 

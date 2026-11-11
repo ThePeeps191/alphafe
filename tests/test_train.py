@@ -111,9 +111,106 @@ def test_training_runs_checkpoints_and_resumes(tmp_path, monkeypatch):
     record = train(config)
     assert record["iteration"] == 2 and "heldout_t1_greedy" in record
     assert (tmp_path / "checkpoints" / "t" / "last.pt").exists()
-    assert (tmp_path / "checkpoints" / "t" / "buffer.pkl").exists()
+    # The replay buffer is stored as plain lists (buffer.pt); it used to be a pickle (buffer.pkl).
+    assert (tmp_path / "checkpoints" / "t" / "buffer.pt").exists()
+    assert not (tmp_path / "checkpoints" / "t" / "buffer.pkl").exists()
     lines = (tmp_path / "logs" / "t" / "train.jsonl").read_text().splitlines()
     assert len(lines) == 2 and json.loads(lines[0])["iteration"] == 1
     config.iterations = 3
     resumed = train(config, resume=True)
     assert resumed["iteration"] == 3
+
+
+def tiny_run(tmp_path, monkeypatch, **changes):
+    monkeypatch.setattr(train_module, "ROOT", tmp_path)
+    settings = dict(run="t", per_tier=40, iterations=1, problems_per_iter=12, budget=16, steps_per_iter=2,
+                    batch_size=8, eval_every=1, eval_problems=4, device="cpu", model=TINY_MODEL, minutes=5)
+    settings.update(changes)
+    return TrainConfig(**settings)
+
+
+@pytest.mark.slow
+def test_resume_restores_the_replay_buffer_and_the_random_stream(tmp_path, monkeypatch, capsys):
+    config = tiny_run(tmp_path, monkeypatch)
+    train(config)
+    ckpt = tmp_path / "checkpoints" / "t"
+    stored = torch.load(ckpt / "buffer.pt", map_location="cpu", weights_only=True)
+    sizes = [len(store) for store in stored]
+    assert sum(sizes) > 0
+    config.iterations = 2
+    capsys.readouterr()
+    train(config, resume=True)
+    assert f"{sum(sizes)} examples" in capsys.readouterr().out        # the whole buffer came back
+
+
+@pytest.mark.slow
+def test_resume_never_runs_code_from_the_checkpoint_or_the_buffer(tmp_path, monkeypatch):
+    """A downloaded checkpoint put at checkpoints/<run>/last.pt to continue training must not be able to run code."""
+    import pathlib
+
+    config = tiny_run(tmp_path, monkeypatch)
+    train(config)
+    ckpt = tmp_path / "checkpoints" / "t"
+
+    class Payload:
+        def __reduce__(self):
+            return (pathlib.Path.touch, (tmp_path / "ran",))
+
+    good = torch.load(ckpt / "last.pt", map_location="cpu", weights_only=True)
+    torch.save({**good, "extra": Payload()}, ckpt / "last.pt")
+    with pytest.raises(Exception):
+        train(config, resume=True)
+    assert not (tmp_path / "ran").exists()
+    torch.save(good, ckpt / "last.pt")
+    torch.save([[Payload()], [], []], ckpt / "buffer.pt")
+    with pytest.raises(Exception):
+        train(config, resume=True)
+    assert not (tmp_path / "ran").exists()
+    # An old pickle buffer is left alone, with a message, instead of being unpickled.
+    (ckpt / "buffer.pt").unlink()
+    import pickle
+    (ckpt / "buffer.pkl").write_bytes(pickle.dumps(Payload()))
+    config.iterations = 2
+    train(config, resume=True)
+    assert not (tmp_path / "ran").exists()
+
+
+@pytest.mark.slow
+def test_training_can_continue_from_a_weights_only_export(tmp_path, monkeypatch, capsys):
+    from alphafe.model import export_checkpoint
+
+    config = tiny_run(tmp_path, monkeypatch)
+    train(config)
+    ckpt = tmp_path / "checkpoints" / "t"
+    export_checkpoint(ckpt / "last.pt", ckpt / "slim.pt")
+    (ckpt / "slim.pt").replace(ckpt / "last.pt")
+    (ckpt / "buffer.pt").unlink()
+    config.iterations = 2
+    capsys.readouterr()
+    record = train(config, resume=True)                                # used to fail with KeyError: 'optimizer'
+    assert record["iteration"] == 2 and "weights-only export" in capsys.readouterr().out
+
+
+def test_set_overrides_are_read_exactly_or_refused():
+    from alphafe.train import apply_overrides
+
+    config = TrainConfig()
+    apply_overrides(config, ["mirror=false", "diverse=0", "minimise=No", "budget=64", "lr=0.001", "run=abc"])
+    assert (config.mirror, config.diverse, config.minimise, config.budget, config.lr, config.run) == (False, False, False, 64, 0.001, "abc")
+    apply_overrides(config, ["mirror=true", "diverse=1", "minimise=YES"])      # "true" used to mean False
+    assert config.mirror and config.diverse and config.minimise
+    for bad, message in [("mirror=maybe", "mirror is on or off"), ("nosuch=1", "unknown setting"),
+                         ("model={}", "unknown setting"), ("budget=many", "budget takes int values"), ("budget", "expected KEY=VALUE")]:
+        with pytest.raises(ValueError, match=message):
+            apply_overrides(config, [bad])
+
+
+def test_train_command_line_reports_a_bad_override(capsys, monkeypatch):
+    seen = {}
+    monkeypatch.setattr(train_module, "train", lambda config, resume=False: seen.update(config=config))
+    train_module.main(["--run", "x", "--set", "mirror=false", "--set", "budget=64"])
+    assert seen["config"].mirror is False and seen["config"].budget == 64
+    assert "mirror=False" in capsys.readouterr().out
+    with pytest.raises(SystemExit) as stop:
+        train_module.main(["--run", "x", "--set", "mirror=tru"])
+    assert stop.value.code == 2 and "mirror is on or off" in capsys.readouterr().err

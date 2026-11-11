@@ -83,7 +83,8 @@ def test_exported_checkpoint_keeps_the_weights_and_drops_the_training_state(tmp_
                                   "state": {"iteration": 3}, "train_config": {"run": "t"}})
     export_checkpoint(full, slim)
     raw = torch.load(slim, map_location="cpu", weights_only=True)
-    assert set(raw) == {"config", "model", "state", "train_config"}
+    # The export keeps what identifies the weights (vocabulary, commit, torch) and drops optimiser and random state.
+    assert set(raw) == {"config", "model", "state", "train_config", "vocab", "commit", "torch"}
     loaded, payload = load_model(slim, CPU)
     assert payload["state"] == {"iteration": 3}
     for name, tensor in model.state_dict().items():
@@ -109,3 +110,40 @@ def test_value_guided_search_with_network():
     search = BestFirstSearch(Problem.parse("f(x+y) = f(x) + y"), budget=120, value_weight=1.0)
     run_searches([search], proposer, k=8)
     assert search.done and search.calls <= 120 and len(search.nodes) > 1
+
+
+def test_checkpoints_record_their_vocabulary_and_a_mismatch_is_refused(tmp_path, monkeypatch):
+    """Token ids mean nothing without the vocabulary. A reordered vocabulary of the same size used to load
+    without any error and score a little worse; now it is refused with the first differing token named."""
+    from alphafe import tokenizer
+    from alphafe.model import VocabularyMismatch
+
+    path = tmp_path / "m.pt"
+    save_checkpoint(path, PolicyValueNet(TINY), {})
+    payload = torch.load(path, map_location="cpu", weights_only=True)
+    assert payload["vocab"] == tokenizer.VOCAB and payload["torch"] == torch.__version__ and "commit" in payload
+    load_model(path, CPU)                                              # the vocabulary it was saved with
+    swapped = list(tokenizer.VOCAB)
+    i, j = swapped.index("x"), swapped.index("y")
+    swapped[i], swapped[j] = swapped[j], swapped[i]
+    monkeypatch.setattr(tokenizer, "VOCAB", swapped)
+    with pytest.raises(VocabularyMismatch, match=f"token {min(i, j)} is 'x' there and 'y' in the code now"):
+        load_model(path, CPU)
+    monkeypatch.setattr(tokenizer, "VOCAB", list(payload["vocab"]) + ["NEW"])
+    with pytest.raises(VocabularyMismatch, match="'NEW' in the code now"):
+        load_model(path, CPU)
+
+
+def test_a_checkpoint_from_before_the_vocabulary_was_recorded_loads_only_if_the_size_matches(tmp_path, monkeypatch):
+    from dataclasses import asdict
+
+    from alphafe import tokenizer
+    from alphafe.model import VocabularyMismatch
+
+    path = tmp_path / "old.pt"
+    model = PolicyValueNet(TINY)
+    torch.save({"config": asdict(model.config), "model": model.state_dict()}, path)     # the v0.1.0 format
+    load_model(path, CPU)
+    monkeypatch.setattr(tokenizer, "VOCAB", list(tokenizer.VOCAB) + ["NEW"])
+    with pytest.raises(VocabularyMismatch, match="tokens and the code now has"):
+        load_model(path, CPU)
