@@ -41,19 +41,41 @@ A fresh session should read this file, `DECISIONS.md` and `git log` first.
   minimises proofs and mirrors them (x <-> y); the held-out set is frozen in
   `benchmarks/synthetic/heldout.jsonl`; seeds s47-s50 are three-variable.
 
+- **M7 real benchmark**: `benchmarks/real/` (137 competition problems selected by
+  rules fixed in advance, 13 flagged as not fully unseen), the validator
+  (`alphafe/benchcheck.py`, `scripts/validate_bench.py`) and the version 1
+  baseline: 13 of the 124 unflagged problems at 2,000 calls.
+- **M8 routine moves**: `env.close` applies opening substitutions, the swap,
+  closed instances and witnesses by itself; `env.prune` and `env.minimise` cut
+  found proofs back to the moves they use; depth limit 16 per case; lemmas
+  `sqadd` and `sqlin`; USAMO 2002/4 added as seed s51; training pool excludes
+  twins of benchmark problems and problems the environment solves alone;
+  network retrained (`m1`, release v0.2.0). Real benchmark: 43 of 124.
+- **Harness and hygiene**: `alphafe eval --suite`, provenance in result files,
+  answer mismatches kept with their proof, CI on Python 3.11 to 3.13,
+  checkpoints record their vocabulary, safe `train --resume`, one-line CLI
+  errors, every script has `--help`.
+
 ## Next
 
-See the end of RESULTS.md for the current failure analysis. Open directions,
-most promising first:
+The task list is the GitHub issue tracker; issue #99 is the roadmap and its
+comments record what is done. The rule for every milestone: choose the
+configuration on the seed and held-out sets only, then run the real
+benchmark once, under a protocol committed before the run (RESULTS.md, M7 and
+M8, show the form). Most promising next, in order:
 
-1. The unsolved 10M seeds (s37, s38, s42, s46, s43) each hinge on one "idea"
-   substitution the network gives almost no probability (`scripts/diagnose.py`
-   shows which). More self-play at larger budgets on tiers 3-4, or a generator
-   that produces more problems needing such substitutions, is the next thing to try.
-2. Give the generator three-variable problems.
-3. Product reasoning in the checker (multiply an identity by a term and reduce
-   products) and wider injectivity/surjectivity criteria.
-4. More training seeds and sampling seeds, to turn "within noise" into answers.
+1. The network gives some single "idea" moves no probability (`y := f(y)`),
+   so it misses one-move proofs that brute force finds: issues #105 (search),
+   #92 and #83 (training data), #103 (the curriculum no longer runs easy to
+   hard).
+2. Speed: a checker call is several times slower with the routine moves, and
+   half of a long evaluation is garbage collection (#104).
+3. More moves for 15M to 20M problems: #77 and #78 (IMO 1999/6), then the
+   small checker deductions #79 to #81.
+4. Several training seeds, so that single-run differences can be trusted.
+
+After M8 the seed problems the network misses at 2,000 calls are s37, s38,
+s39, s42 and s46; brute force misses s33, s34 and s46.
 
 ## How to run
 
@@ -62,13 +84,13 @@ most promising first:
 .venv/bin/python scripts/check_seed_proofs.py     # hand-written seed proofs
 .venv/bin/python scripts/play.py "f(x+y) = f(x) + y" R proof.txt   # replay a proof step by step
 .venv/bin/python scripts/fuzz.py 40 80            # long soundness fuzz
-.venv/bin/python scripts/run_baseline.py 20000 120   # baseline on seed (+ real) benchmarks
+.venv/bin/python scripts/run_baseline.py 20000 120 [--suite real]   # brute force on the seed and real benchmarks
 .venv/bin/alphafe train --run NAME --minutes 28 [--resume]   # self-play training
 .venv/bin/python scripts/show_log.py NAME            # summarise logs/NAME/train.jsonl
-.venv/bin/alphafe eval --checkpoint checkpoints/NAME/last.pt --tag NAME   # three-mode evaluation
+.venv/bin/alphafe eval --checkpoint checkpoints/NAME/last.pt --tag NAME [--suite seed]   # three-mode evaluation
 .venv/bin/python scripts/analyse_failures.py results/FILE.json   # sort seed failures into groups
 .venv/bin/python scripts/diagnose.py checkpoints/NAME/last.pt [ids]   # probability the network gives each hand-proof move
-.venv/bin/python scripts/freeze_heldout.py           # (re)write benchmarks/synthetic/heldout.jsonl; do not rerun casually
+.venv/bin/python scripts/freeze_heldout.py --check   # compare a fresh generation with the frozen file (--force overwrites)
 ```
 
 ## State of the local (uncommitted) artefacts
