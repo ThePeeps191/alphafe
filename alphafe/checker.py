@@ -75,7 +75,7 @@ from .algebra import (
     has_no_root,
     has_var_f,
     leading_mono,
-    mono_rank,
+    leading_rank,
     monic,
     poly_size,
     poly_str,
@@ -424,7 +424,7 @@ class Branch:
                     break
             else:
                 break
-        self.rows.sort(key=lambda row: mono_rank(leading_mono(row)))
+        self.rows.sort(key=leading_rank)
 
     def _cancel_variable(self, poly: Poly, names) -> Optional[Poly]:
         """If poly = v * Q and Q is known to vanish at v = 0, return Q."""

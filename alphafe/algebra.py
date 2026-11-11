@@ -51,13 +51,14 @@ class Poly:
     as immutable: every operation returns a new ``Poly``.
     """
 
-    __slots__ = ("terms", "_key", "_hash", "_vars")
+    __slots__ = ("terms", "_key", "_hash", "_vars", "_lead")
 
     def __init__(self, terms: Optional[dict] = None):
         self.terms: dict[Mono, Fraction] = terms if terms is not None else {}
         self._key = None
         self._hash = None
         self._vars = None
+        self._lead = None       # (rank of the leading monomial, the monomial), see ``leading``
 
     # -- constructors -------------------------------------------------------
 
@@ -467,8 +468,22 @@ def mono_rank(mono: Mono) -> tuple:
     return (var_f_depth(mono), mono_size(mono), mono)
 
 
+def leading(poly: Poly) -> tuple:
+    """(rank, monomial) of the leading monomial of a nonzero polynomial, computed once per object."""
+    lead = poly._lead
+    if lead is None:
+        mono = max(poly.terms, key=mono_rank)
+        lead = poly._lead = (mono_rank(mono), mono)
+    return lead
+
+
 def leading_mono(poly: Poly) -> Mono:
-    return max(poly.terms, key=mono_rank)
+    return leading(poly)[1]
+
+
+def leading_rank(poly: Poly) -> tuple:
+    """``mono_rank`` of the leading monomial: the key the checker sorts its identities by."""
+    return leading(poly)[0]
 
 
 def monic(poly: Poly) -> Poly:

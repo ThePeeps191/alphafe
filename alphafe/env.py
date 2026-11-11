@@ -117,6 +117,11 @@ def routine_moves(state: State, tried: set):
             new_atoms = _f_atoms([instance]) - present
             if new_atoms and not (site.is_zero() and not any(atom_vars(atom) for atom in new_atoms)):
                 continue
+            try:
+                if branch.known_zero(instance):
+                    continue              # already known: the checker would refuse it ("no new information")
+            except Reject:
+                pass                      # let the checker give its own verdict
             yield key, Subst(index, ((name, poly_term(site)),))
 
 
