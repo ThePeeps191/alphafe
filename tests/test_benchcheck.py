@@ -29,7 +29,7 @@ def test_the_real_benchmark_in_the_repository_is_valid():
 
 def test_the_seed_benchmark_passes_the_basic_check():
     report = validate(sorted((BENCH_DIR / "seed").glob("*.jsonl")), strict=False)
-    assert report.records == 50 and report.errors == []
+    assert report.records == 51 and report.errors == []       # 50 written for the project, plus USAMO 2002/4 (s51)
     # Two pairs are the same equation with x and y exchanged; reported, not fatal, for the seed set.
     assert sum("up to renaming" in w for w in report.warnings) == 2
 

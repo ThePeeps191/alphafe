@@ -44,3 +44,4 @@
 {"id": "s44", "equation": "f(x+y) = f(x) + f(y) + 2xy", "domain": "Q", "solutions": ["f(x) = x^2 + c*x"], "mohs": 10, "source": "seed"}
 {"id": "s45", "equation": "f(x+y) + f(x-y) = 2f(x) + 2f(y)", "domain": "Q", "solutions": ["f(x) = c*x^2"], "mohs": 15, "source": "seed"}
 {"id": "s46", "equation": "f(f(x) + y) = 2x + f(f(y) - x)", "domain": "R", "solutions": ["f(x) = x + c"], "mohs": 20, "source": "seed"}
+{"id": "s51", "equation": "f(x^2 - y^2) = xf(x) - yf(y)", "domain": "R", "solutions": ["f(x) = c*x"], "mohs": 10, "source": "seed", "notes": "USAMO 2002, Problem 4 (10M on Evan Chen's chart). Added with the sqadd lemma (issues #2 and #98): the solver was run on it during development, so it belongs to the development set and not to benchmarks/real."}

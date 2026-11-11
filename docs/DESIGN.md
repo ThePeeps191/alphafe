@@ -56,11 +56,14 @@ pre 0                      pick a with f(a) = 0 (needs surjectivity)
 onto R2: y                 y occurs only as f(y) and f is surjective: replace f(y) by y
 cauchy                     additive (up to a polynomial term) over Q implies polynomial
 quadratic                  f(x+y) + f(x-y) = 2f(x) + 2f(y) over Q implies f(x) = f(1)x^2
+sqadd                      f(x^2 + y) = f(x^2) + f(y), or over R f(x^2 - y^2) = f(x^2) - f(y^2),
+                           implies f is additive
+sqlin                      over R: additive with f(x^2) = f(x)^2 implies f(x) = f(1)x
 conclude                   read off f(x) = ..., pin down constants by substituting back
 div R3 by f(0)             divide by a proven-nonzero constant
 ```
 
-`benchmarks/seed/proofs/` has 48 examples (47 written by hand, one found by
+`benchmarks/seed/proofs/` has 49 examples (48 written by hand, one found by
 the network). `scripts/play.py` steps through a proof and prints the state
 after each move.
 
@@ -80,7 +83,9 @@ rule and covered in `tests/test_traps.py`:
 | cancelling f from f(A) = f(B) | allowed only after injectivity is established |
 | choosing a with f(a) = t | allowed only after surjectivity is established, and only for constant t |
 | dividing | allowed only by constants proven nonzero; a common factor needs a case split |
-| concluding that an additive f is linear | allowed over Q, refused over R |
+| concluding that an additive f is linear | allowed over Q; over R only together with f(x^2) = f(x)^2, which makes f monotone (`sqlin`) |
+| treating "additive on squares" as additive | `sqadd` needs f(x^2 + y) = f(x^2) + f(y) with a free y; f(x^2 + y^2) = f(x^2) + f(y^2) holds for f(t) = \|t\| and is refused |
+| using "every non-negative number is a square" over Q | the difference-of-squares form of `sqadd` is refused over Q |
 | incomplete case splits | the factors are multiplied back to confirm the split is exhaustive, and every case must close |
 | unverified answers | every claimed solution is substituted into the original equation exactly |
 
@@ -95,8 +100,8 @@ different answer raises `AnswerMismatch` instead of being scored.
 The search environment (`alphafe/env.py`) does two things by itself after
 every proposed move.
 
-It applies the free moves `conclude`, `cauchy`, `quadratic`, `inj`, `surj`
-and `cancel` whenever they are legal.
+It applies the free moves `conclude`, `cauchy`, `quadratic`, `sqadd`,
+`sqlin`, `inj`, `surj` and `cancel` whenever they are legal.
 
 It then applies routine substitutions, which are ordinary `sub` moves that
 need no idea:

@@ -11,7 +11,8 @@ from . import terms as T
 from .algebra import Poly, equation_str, monic, poly_str
 from .checker import CheckResult, LogEntry, Problem, check
 from .solutions import make_family
-from .moves import Cancel, Cauchy, Conclude, Divide, Inj, Onto, Pre, Quadratic, Split, SplitNZ, Subst, Surj
+from .moves import (Cancel, Cauchy, Conclude, Divide, Inj, Onto, Pre, Quadratic, Split, SplitNZ, SqAdd, SqLin, Subst,
+                    Surj)
 
 DOMAIN_WORD = {"R": "real", "Q": "rational"}
 PROPERTY_SENTENCE = {
@@ -143,6 +144,27 @@ def _describe(problem: Problem, entry: LogEntry) -> list[str]:
             "f(0) = 0, f even and f(nt) = n^2 f(t) for integers n (induction), hence "
             f"{_eq(entry.instance)}."
         )
+    elif isinstance(move, SqAdd):
+        if "y^2" in _eq(entry.source):
+            lines.append(
+                f"From the relations so far, {_eq(entry.source)} for all real x, y. Every non-negative real is a "
+                "square, so f(u - v) = f(u) - f(v) for all u, v >= 0. Taking u = v gives f(0) = 0 and u = 0 gives "
+                "f(-v) = -f(v), so f is odd. For a, b >= 0, f(a) = f((a + b) - b) = f(a + b) - f(b), and the other "
+                f"signs follow from oddness. Hence {_eq(entry.instance)} for all x, y."
+            )
+        else:
+            lines.append(
+                f"From the relations so far, {_eq(entry.source)} for all x, y. A non-negative number is a sum of "
+                "squares (one square over the reals, four over the rationals), so f(t + y) = f(t) + f(y) for all "
+                "t >= 0 and all y. For t < 0, applying this to -t and t + y gives f(y) = f(-t) + f(t + y), and "
+                f"y = 0 shows f(-t) = -f(t). Hence {_eq(entry.instance)} for all x, y."
+            )
+    elif isinstance(move, SqLin):
+        lines.append(
+            f"We have {_eq(entry.source)}, so f(t) >= 0 for t >= 0. Since f is additive, f(y) = f(x) + f(y - x) >= f(x) "
+            "whenever x <= y: f is non-decreasing. An additive function satisfies f(q) = q f(1) for rational q, and "
+            f"squeezing a real x between rationals gives {_eq(entry.instance)}."
+        )
     elif isinstance(move, Conclude):
         lines.append(f"Hence f(x) = {poly_str(entry.candidate)} for all x.")
         if not entry.solutions:
@@ -157,7 +179,7 @@ def _describe(problem: Problem, entry: LogEntry) -> list[str]:
     if entry.closed == "contradiction" and not isinstance(move, Subst):
         lines.append(f"This leads to {_absurd(entry.reason)}. So this case is impossible.")
         return lines
-    if isinstance(move, (Cauchy, Quadratic)):
+    if isinstance(move, (Cauchy, Quadratic, SqAdd, SqLin)):
         lines.extend(_fact_line(entry, skip=entry.instance))
     elif not isinstance(move, (Subst, Divide, Cancel, Onto)):
         lines.extend(_fact_line(entry))

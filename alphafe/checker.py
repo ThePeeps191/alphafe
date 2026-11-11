@@ -95,6 +95,8 @@ from .moves import (
     Onto,
     Pre,
     Quadratic,
+    SqAdd,
+    SqLin,
     Split,
     SplitNZ,
     Subst,
@@ -1166,6 +1168,83 @@ def _do_conclude(state: State, branch: Branch, move: Conclude) -> _Outcome:
     raise Reject("no identity of the form f(x) = explicit expression")
 
 
+def _do_sqadd(state: State, branch: Branch, move: SqAdd) -> _Outcome:
+    """Additivity from an identity about squares.
+
+    (a) Over R or Q: if f(x^2 + y) = f(x^2) + f(y) for all x, y, then f is additive.
+
+        x = y = 0 gives f(0) = 0. Every t >= 0 in the domain is a sum of at
+        most four squares of elements of the domain (one square over R;
+        over Q, t = p/q = pq/q^2 and pq is a sum of four integer squares by
+        Lagrange's theorem). Applying the hypothesis once per square, and
+        once more with y = 0 to split f of the partial sums, gives
+        f(t + y) = f(t) + f(y) for all t >= 0 and all y. For t < 0 apply
+        this to -t >= 0 with y replaced by t + y: f(y) = f(-t) + f(t + y).
+        Taking y = 0 there gives f(-t) = -f(t), so f(t + y) = f(t) + f(y).
+
+    (b) Over R only: if f(x^2 - y^2) = f(x^2) - f(y^2) for all x, y, then f is additive.
+
+        Every u >= 0 is a square, so f(u - v) = f(u) - f(v) for all
+        u, v >= 0. u = v gives f(0) = 0; u = 0 gives f(-v) = -f(v) for
+        v >= 0, hence f is odd on all of R. For a, b >= 0:
+        f(a) = f((a + b) - b) = f(a + b) - f(b). For a >= 0 > b:
+        f(a + b) = f(a - (-b)) = f(a) - f(-b) = f(a) + f(b). For a, b < 0
+        use oddness. Over Q a non-negative number need not be a square, so
+        the argument does not start and the move is refused there.
+
+    The hypothesis is tested with ``known_zero`` on exactly these templates,
+    so it may follow from the current identities by rewriting (the state may
+    hold f(x^2 + y) = f(x)^2 + f(y) together with f(x^2) = f(x)^2). It is
+    not enough that f is additive on sums of two squares:
+    f(x^2 + y^2) = f(x^2) + f(y^2) holds for f(t) = |t|, which is not additive.
+    """
+    if move.target is not None:
+        raise Reject("sqadd takes no target")
+    if "additive" in branch.props:
+        raise Reject("f is already known to be additive")
+    x, y = Poly.var("x"), Poly.var("y")
+    with_sum = Poly.f(x * x + y) - Poly.f(x * x) - Poly.f(y)
+    with_difference = Poly.f(x * x - y * y) - Poly.f(x * x) + Poly.f(y * y)
+    if branch.known_zero(with_sum):
+        source = with_sum
+    elif branch.domain == "R" and branch.known_zero(with_difference):
+        source = with_difference
+    else:
+        raise Reject("neither f(x^2 + y) = f(x^2) + f(y) nor (over R) f(x^2 - y^2) = f(x^2) - f(y^2) is known")
+    additive = Poly.f(x + y) - Poly.f(x) - Poly.f(y)
+    branch.add([additive])
+    return _Outcome(source=source, instance=additive)
+
+
+def _do_sqlin(state: State, branch: Branch, move: SqLin) -> _Outcome:
+    """Over R: an additive f with f(x^2) = f(x)^2 for all x is f(x) = f(1)x.
+
+    For t >= 0, f(t) = f(sqrt t)^2 >= 0. So for x <= y,
+    f(y) = f(x) + f(y - x) >= f(x): f is non-decreasing. An additive function
+    satisfies f(q) = q f(1) for rational q. For real x and rationals
+    p < x < q: p f(1) = f(p) <= f(x) <= f(q) = q f(1), and letting p and q
+    tend to x gives f(x) = f(1)x.
+
+    The square on the right is what carries the sign information:
+    f(x^2) = x f(x) or f(x^2) = f(x) f(-x) say nothing about signs and are
+    not accepted. Additivity must already be established. Over Q the move
+    is refused: square roots are not available, and ``cauchy`` does the job.
+    """
+    if move.target is not None:
+        raise Reject("sqlin takes no target")
+    if branch.domain != "R":
+        raise Reject("sqlin is for R; over Q an additive function is linear by cauchy")
+    if "additive" not in branch.props:
+        raise Reject("f is not known to be additive")
+    x = Poly.var("x")
+    square = Poly.f(x * x) - Poly.f(x) * Poly.f(x)
+    if not branch.known_zero(square):
+        raise Reject("f(x^2) = f(x)^2 is not known")
+    explicit = Poly.f(x) - Poly.f(Poly.const(1)) * x
+    branch.add([explicit])
+    return _Outcome(source=square, instance=explicit)
+
+
 _HANDLERS = {
     Subst: _do_subst,
     Split: _do_split,
@@ -1178,6 +1257,8 @@ _HANDLERS = {
     Onto: _do_onto,
     Cauchy: _do_cauchy,
     Quadratic: _do_quadratic,
+    SqAdd: _do_sqadd,
+    SqLin: _do_sqlin,
     Conclude: _do_conclude,
 }
 

@@ -219,10 +219,11 @@ a map of the modules.
 
 ## Benchmarks
 
-* `benchmarks/seed/`: 50 classic easy problems written for this project, four
-  of them in three variables, with verified answers, estimated MOHS ratings
-  and 48 checked proofs. Two pairs are the same equation with x and y
-  exchanged, so 48 are distinct. Treat it as a development set.
+* `benchmarks/seed/`: 51 problems with verified answers, estimated MOHS
+  ratings and 49 checked proofs. Fifty are classic easy problems written for
+  this project, four of them in three variables; two pairs are the same
+  equation with x and y exchanged. The last is USAMO 2002/4, added with the
+  lemma it needed. Treat it as a development set.
 * `benchmarks/synthetic/heldout.jsonl`: 800 generated problems, 200 per
   curriculum tier, frozen in a file and excluded from training by a hash of
   the canonical equation.

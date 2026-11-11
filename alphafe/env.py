@@ -20,10 +20,10 @@ from typing import Optional
 from . import terms as T
 from .algebra import ZERO, Poly, atom_vars, poly_term
 from .checker import LOAD_REFUSED, Problem, Reject, State, apply, check, initial_state
-from .moves import Cancel, Cauchy, Conclude, Inj, Move, Quadratic, Subst, Surj
+from .moves import Cancel, Cauchy, Conclude, Inj, Move, Quadratic, SqAdd, SqLin, Subst, Surj
 from .solutions import SolutionSet
 
-FREE_MOVES: tuple = (Conclude(), Cauchy(), Quadratic(), Inj(), Surj(), Cancel())
+FREE_MOVES: tuple = (Conclude(), Cauchy(), Quadratic(), SqAdd(), SqLin(), Inj(), Surj(), Cancel())
 MAX_FREE_STEPS = 40
 
 # Routine substitutions (see ``routine_moves``). Each switch can be turned off

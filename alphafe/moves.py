@@ -21,6 +21,9 @@ Text format, one move per line (``#`` starts a comment)::
                                 replace f(y) by y
     cauchy                      additive (up to a polynomial) over Q implies polynomial
     quadratic                   f(x+y) + f(x-y) = 2f(x) + 2f(y) over Q implies f(x) = f(1)x^2
+    sqadd                       f(x^2 + y) = f(x^2) + f(y), or over R f(x^2 - y^2) = f(x^2) - f(y^2),
+                                implies f is additive
+    sqlin                       over R, additive with f(x^2) = f(x)^2 implies f(x) = f(1)x
     conclude                    read off f(x) = ... and pin down the constants
 
 Where a target (``P``, ``R2`` or ``[...]``) is optional and omitted, the
@@ -108,13 +111,28 @@ class Quadratic:
 
 
 @dataclass(frozen=True)
+class SqAdd:
+    """Additivity from an identity about squares (a lemma; it takes no target)."""
+
+    target: Optional[Target] = None
+
+
+@dataclass(frozen=True)
+class SqLin:
+    """Over R: additive and f(x^2) = f(x)^2 give f(x) = f(1)x (a lemma; it takes no target)."""
+
+    target: Optional[Target] = None
+
+
+@dataclass(frozen=True)
 class Conclude:
     target: Optional[Target] = None
 
 
-Move = Union[Subst, Split, SplitNZ, Divide, Inj, Surj, Cancel, Pre, Onto, Cauchy, Quadratic, Conclude]
+Move = Union[Subst, Split, SplitNZ, Divide, Inj, Surj, Cancel, Pre, Onto, Cauchy, Quadratic, SqAdd, SqLin, Conclude]
 
-_SIMPLE = {"inj": Inj, "surj": Surj, "cancel": Cancel, "cauchy": Cauchy, "quadratic": Quadratic, "conclude": Conclude}
+_SIMPLE = {"inj": Inj, "surj": Surj, "cancel": Cancel, "cauchy": Cauchy, "quadratic": Quadratic, "sqadd": SqAdd,
+           "sqlin": SqLin, "conclude": Conclude}
 _SIMPLE_NAMES = {cls: name for name, cls in _SIMPLE.items()}
 
 

@@ -1,0 +1,5 @@
+sub P: y:=0                 # f(x^2) = x f(x), so P reads f(x^2 - y^2) = f(x^2) - f(y^2)
+sqadd                       # x^2 runs over the non-negative reals: f is additive
+sub P: x:=x + y             # with additivity: x f(y) + y f(x) = 2 f(xy)
+sub [y*f(x) + x*f(y) - 2f(x*y) = 0]: x:=1
+conclude

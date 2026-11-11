@@ -101,3 +101,30 @@ def test_two_roots_are_never_merged():
     branch = Branch("R")
     branch.add([P("f(x)^2 - f(x)")])
     assert set(branch.rows) == {P("f(x)^2 - f(x)"), P("f(y)^2 - f(y)")}   # (one copy per variable name)
+
+
+# --- the square lemmas --------------------------------------------------------
+
+def test_usamo_2002_4_with_sqadd():
+    """f(x^2 - y^2) = x f(x) - y f(y): the step "x^2 runs over the non-negative reals" (issue #2)."""
+    proof = "sub P: y:=0\nsqadd\nsub P: x:=x + y\nsub [y*f(x) + x*f(y) - 2f(x*y) = 0]: x:=1\nconclude"
+    result = run("f(x^2 - y^2) = x*f(x) - y*f(y)", "R", proof)
+    assert result.solved and result.solutions == parse_solution_set(["f(x) = c*x"])
+    assert not run("f(x^2 - y^2) = x*f(x) - y*f(y)", "Q", proof).ok        # the lemma is for R
+
+
+def test_the_square_lemmas_keep_every_solution():
+    """Model check: after sqadd and sqlin every known solution still satisfies everything in the state."""
+    import random
+
+    from alphafe.modelcheck import check_state
+
+    for equation, domain, proof, solutions in [
+        ("f(x^2 - y^2) = x*f(x) - y*f(y)", "R", "sub P: y:=0\nsqadd", ["0", "x", "-3x", "x/2"]),
+        ("f(x^2 + y) = f(x)^2 + f(y)", "R", "sub P: y:=0\nsub P: x:=0, y:=0\nsqadd\nsqlin", ["0", "x"]),
+        ("f(x^2 + y) = f(x^2) + f(y)", "Q", "sqadd", ["0", "x", "5x/3"]),
+    ]:
+        result = run(equation, domain, proof)
+        assert result.ok
+        for text in solutions:
+            check_state(result.state, P(text), random.Random(0))

@@ -229,3 +229,50 @@ def test_irrational_constants_are_refused_not_dropped():
     # concluding f(x) = c*x with c^2 = 2 is refused with an explanation
     stuck = run("f(x*f(y)) = 2xy", "R", "sub P: y:=1\nsub P: x:=1\nsub P: x:=1, y:=1")
     assert stuck.ok and not stuck.solved
+
+
+# --- Traps around the square lemmas (sqadd, sqlin) --------------------------
+
+def test_additive_on_sums_of_two_squares_is_not_additive():
+    """f(x^2 + y^2) = f(x^2) + f(y^2) holds for f(t) = |t|, which is not additive.
+    Only f(x^2 + y) = f(x^2) + f(y), with a free second argument, gives additivity."""
+    assert rejected(run("f(x^2 + y^2) = f(x^2) + f(y^2)", "R", "sqadd"), "neither")
+    assert rejected(run("f(x^2 + y^2) = f(x^2) + f(y^2)", "Q", "sqadd"), "neither")
+    assert run("f(x^2 + y) = f(x^2) + f(y)", "R", "sqadd").ok
+    assert run("f(x^2 + y) = f(x^2) + f(y)", "Q", "sqadd").ok
+
+
+def test_the_difference_of_squares_form_needs_real_square_roots():
+    """Over R every u >= 0 is a square, so f(x^2 - y^2) = f(x^2) - f(y^2) says f(u - v) = f(u) - f(v) for
+    u, v >= 0. Over Q it only speaks about rational squares, and the move is refused."""
+    assert run("f(x^2 - y^2) = f(x^2) - f(y^2)", "R", "sqadd").ok
+    assert rejected(run("f(x^2 - y^2) = f(x^2) - f(y^2)", "Q", "sqadd"), "neither")
+
+
+def test_sqadd_needs_f_of_a_square_not_the_square_of_f():
+    """f(x^2 + y) = f(x)^2 + f(y) alone is not the hypothesis. With f(x^2) = f(x)^2 also known, it is."""
+    equation = "f(x^2 + y) = f(x)^2 + f(y)"
+    assert rejected(run(equation, "R", "sqadd"), "neither")
+    result = run(equation, "R", "sub P: y:=0\nsub P: x:=0, y:=0\nsqadd")      # f(0) = 0, then f(x^2) = f(x)^2
+    assert result.ok and "additive" in result.state.current.props
+
+
+def test_sqlin_needs_additivity_and_a_genuine_square():
+    """The sign information comes from f(x^2) = f(x)^2 >= 0. f(x^2) = x f(x) carries none, and without
+    additivity nothing follows at all (f = 1 satisfies f(x^2) = f(x)^2)."""
+    assert rejected(run("f(x^2) = f(x)^2", "R", "sqlin"), "not known to be additive")
+    assert rejected(run("f(x^2 - y^2) = x*f(x) - y*f(y)", "R", "sub P: y:=0\nsqadd\nsqlin"), "f(x^2) = f(x)^2 is not known")
+    assert rejected(run("f(x^2 + y) = f(x^2) + f(y)", "R", "sqadd\nsqlin"), "f(x^2) = f(x)^2 is not known")
+    assert rejected(run("f(x^2 + y) = f(x)^2 + f(y)", "Q", "sub P: y:=0\nsub P: x:=0, y:=0\nsqadd\nsqlin"), "over Q")
+    result = run("f(x^2 + y) = f(x)^2 + f(y)", "R", "sub P: y:=0\nsub P: x:=0, y:=0\nsqadd\nsqlin\nconclude")
+    assert result.solved and result.solutions == parse_solution_set(["f(x) = 0", "f(x) = x"])
+
+
+def test_the_square_lemmas_take_no_target_and_do_not_solve_cauchy_over_r():
+    assert rejected(run("f(x^2 + y) = f(x^2) + f(y)", "R", "sqadd P"), "takes no target")
+    assert rejected(run("f(x+y) = f(x) + f(y)", "R", "sqadd"), "already known to be additive")
+    assert rejected(run("f(x+y) = f(x) + f(y)", "R", "sqlin"), "f(x^2) = f(x)^2 is not known")
+    from alphafe.env import start
+
+    state, _ = start(Problem.parse("f(x+y) = f(x) + f(y)", "R"))     # Cauchy over R must stay open
+    assert not state.solved
