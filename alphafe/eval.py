@@ -15,7 +15,7 @@ from dataclasses import asdict, dataclass, field
 from typing import Optional
 
 from .bench import ROOT, AnswerMismatch, BenchProblem, canary
-from .env import SearchResult
+from .env import ROUTINE, SearchResult
 from .moves import show_proof
 
 RESULTS_DIR = ROOT / "results"
@@ -230,16 +230,19 @@ PROPOSALS = 8           # proposals requested per expanded state
 
 
 def run_policy(benches: list[BenchProblem], proposer, mode: str, budget: int, k: int = PROPOSALS,
-               value_weight: float = 0.0, mismatches: Optional[list] = None, solver: str = "") -> list[Row]:
+               value_weight: float = 0.0, mismatches: Optional[list] = None, solver: str = "",
+               max_depth: Optional[int] = None) -> list[Row]:
     """Run a proposer (network or uniform) over problems. mode: 'greedy' or 'search'."""
-    from .search import BestFirstSearch, GreedySearch, run_searches
+    from .search import MAX_DEPTH, BestFirstSearch, GreedySearch, run_searches
+
+    depth = MAX_DEPTH if max_depth is None else max_depth
 
     # The network reads only the variables x, y, z; a problem written in other letters is renamed for the search.
     problems = [b.problem.standard_names()[0] for b in benches]
     if mode == "greedy":
-        searches = [GreedySearch(p, budget=budget) for p in problems]
+        searches = [GreedySearch(p, budget=budget, max_depth=depth) for p in problems]
     else:
-        searches = [BestFirstSearch(p, budget=budget, value_weight=value_weight) for p in problems]
+        searches = [BestFirstSearch(p, budget=budget, value_weight=value_weight, max_depth=depth) for p in problems]
     began = time.time()
     run_searches(searches, proposer, k)
     elapsed = (time.time() - began) / max(1, len(benches))
@@ -331,7 +334,7 @@ def select_suites(names, heldout: int = 200) -> dict:
 def full_eval(checkpoint, tag: Optional[str] = "eval", heldout: int = 200, baseline_budgets=(SEARCH_BUDGET, 2000),
               device: str = "auto", workers: int = 8, big_budget: int = 0, value_weight: float = 0.0,
               diverse: bool = True, seeds: int = 1, suites=None, mismatches: Optional[list] = None,
-              baseline_seconds: float = 120.0) -> EvalRun:
+              baseline_seconds: float = 120.0, max_depth: Optional[int] = None) -> EvalRun:
     """The three-mode evaluation on the chosen benchmarks (all of them by default).
 
     Returns an ``EvalRun``; ``results, spreads = full_eval(...)`` also works.
@@ -362,8 +365,9 @@ def full_eval(checkpoint, tag: Optional[str] = "eval", heldout: int = 200, basel
     import torch
 
     from .model import DIVERSE, ModelConfig, NeuralProposer, PolicyValueNet, load_model, pick_device
-    from .search import UniformProposer
+    from .search import MAX_DEPTH, UniformProposer
 
+    max_depth = MAX_DEPTH if max_depth is None else max_depth
     if big_budget in (GREEDY_BUDGET, SEARCH_BUDGET):
         raise ValueError(f"--big-budget {big_budget} is the budget of a standard row; its results would overwrite that row")
     raise_at_end = mismatches is None
@@ -384,7 +388,7 @@ def full_eval(checkpoint, tag: Optional[str] = "eval", heldout: int = 200, basel
         "proposals_per_state": PROPOSALS, "temperature": list(temperature) if isinstance(temperature, (list, tuple)) else temperature,
         "value_weight": value_weight, "greedy_budget": GREEDY_BUDGET, "search_budget": SEARCH_BUDGET,
         "big_budget": big_budget, "baseline_budgets": list(baseline_budgets), "baseline_seconds": baseline_seconds,
-        "baseline_workers": workers,
+        "baseline_workers": workers, "max_depth": max_depth, "routine_moves": dict(ROUTINE),
     })
 
     out: dict = {}
@@ -399,7 +403,8 @@ def full_eval(checkpoint, tag: Optional[str] = "eval", heldout: int = 200, basel
             for index in range(seeds):
                 torch.manual_seed(SAMPLING_SEED + index)
                 rows = run_policy(benches, NeuralProposer(model, dev, temperature=temperature), mode, budget,
-                                  value_weight=weight, mismatches=found, solver=f"{label}, sampling seed {SAMPLING_SEED + index}")
+                                  value_weight=weight, mismatches=found, max_depth=max_depth,
+                                  solver=f"{label}, sampling seed {SAMPLING_SEED + index}")
                 spread.setdefault(label, []).append(sum(r.solved for r in rows))
                 per_seed.setdefault(label, []).append(rows)
                 if index == 0:
@@ -418,7 +423,7 @@ def full_eval(checkpoint, tag: Optional[str] = "eval", heldout: int = 200, basel
         for name, make in references:
             for mode, word, budget in (("greedy", "no backtracking", GREEDY_BUDGET), ("search", "search", SEARCH_BUDGET)):
                 label = f"{name}, {word} ({budget} calls)"
-                runs[label] = run_policy(benches, make(), mode, budget, mismatches=found, solver=label)
+                runs[label] = run_policy(benches, make(), mode, budget, mismatches=found, solver=label, max_depth=max_depth)
         budgets = list(baseline_budgets)
         if big_budget and big_budget not in budgets and suite in BIG_BUDGET_SUITES:
             budgets.append(big_budget)
@@ -538,6 +543,8 @@ def main(argv=None) -> None:
                         help="sample all proposals at temperature 1 instead of a spread")
     parser.add_argument("--seeds", type=int, default=1, help="sampling seeds for the trained-network rows")
     parser.add_argument("--workers", type=int, default=8, help="processes for the brute-force rows")
+    parser.add_argument("--max-depth", type=int, default=None,
+                        help="proposed moves in a row inside one case for the network searches (default 16)")
     parser.add_argument("--allow-dirty", action="store_true",
                         help="run although tracked files have uncommitted changes (the result files record that)")
     args = parser.parse_args(argv)
@@ -554,7 +561,7 @@ def main(argv=None) -> None:
     run = full_eval(args.checkpoint if args.checkpoint is not None else default_checkpoint, tag,
                     heldout=args.heldout, device=args.device, big_budget=args.big_budget, value_weight=args.value_weight,
                     diverse=not args.single_temperature, seeds=args.seeds, suites=args.suite, mismatches=mismatches,
-                    workers=args.workers)
+                    workers=args.workers, max_depth=args.max_depth)
     text = report(run.results, run.spreads, run.seed_rows)
     RESULTS_DIR.mkdir(exist_ok=True)
     (RESULTS_DIR / f"{tag or args.suite[0]}.md").write_text(text)

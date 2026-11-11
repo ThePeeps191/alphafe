@@ -13,6 +13,8 @@ from alphafe.search import BestFirstSearch, UniformProposer, run_searches
 from alphafe.tokenizer import EOS, TOKEN_ID
 from alphafe.train import ProblemPool, ReplayBuffer, TrainConfig, harvest, make_batch, train
 
+pytestmark = pytest.mark.usefixtures("plain_environment")      # see tests/conftest.py
+
 TINY_MODEL = dict(d_model=32, n_heads=2, enc_layers=1, dec_layers=1, d_ff=64, dropout=0.0, vocab_size=len(TOKEN_ID),
                   max_src=448, max_tgt=56)
 

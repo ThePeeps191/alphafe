@@ -92,9 +92,39 @@ different answer raises `AnswerMismatch` instead of being scored.
 
 ## The network
 
-The search environment applies `conclude`, `cauchy`, `quadratic`, `inj`,
-`surj` and `cancel` by itself whenever they are legal. The network chooses
-the other moves: substitutions, case splits and preimages. It reads the
+The search environment (`alphafe/env.py`) does two things by itself after
+every proposed move.
+
+It applies the free moves `conclude`, `cauchy`, `quadratic`, `inj`, `surj`
+and `cancel` whenever they are legal.
+
+It then applies routine substitutions, which are ordinary `sub` moves that
+need no idea:
+
+* at the start, the opening substitutions into the original equation P:
+  `x:=0, y:=0`, `x:=0`, `y:=0`, `y:=x` and `y:=-x`;
+* the swap `x:=y, y:=x` of a two-variable problem;
+* closed instances: an identity in one variable v taken at v := T, where T
+  is 0 or the argument of an f(...) already present, provided the result
+  mentions no f(...) that is not present already. Without that condition
+  the step feeds itself and never stops;
+* a witness named by `pre` put into P, one variable at a time.
+
+Each of these goes through the checker and is written into the proof like
+any other move, so they cannot make the checker accept more. Knowledge in a
+case only grows, so applying them eagerly cannot lose a proof. It costs
+time: a proposed move takes several times longer to process. At most ten
+are applied after one proposed move. `env.ROUTINE` switches each kind off,
+for measuring and for tests.
+
+Found proofs therefore contain many moves that the final argument does not
+use. `env.minimise` drops proposed moves that are not needed and then
+`env.prune` removes every single move the proof can do without, as judged by
+re-checking; numbered targets are first rewritten as quoted identities so
+that removing an earlier move does not change what a later one points at.
+
+The network (or brute force) chooses the remaining moves: substitutions that
+need an idea, case splits and preimages. It reads the
 tokenised case and writes the move token by token, so a substituted term can
 be any expression and is not picked from a fixed list. A grammar restricts
 the output to well-formed moves. A value head estimates whether the state is

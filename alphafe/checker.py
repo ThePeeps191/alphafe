@@ -690,13 +690,30 @@ def _f_values(poly: Poly):
             yield atom, (Poly({mono: coef}) - poly).scale(1 / coef)
 
 
-def cancel_results(branch: Branch, poly: Poly):
+def value_index(branch: Branch) -> dict:
+    """{V: [f-atoms A, in row order]} for every reading f(A) = V of a current identity.
+
+    ``cancel_results`` compares one identity's readings with those of every
+    row. Computing each row's readings once per cancel move, instead of once
+    per comparison, is the whole point; the atoms are kept in the order the
+    nested loops used to meet them, so the results come out in the same order.
+    """
+    index: dict = {}
+    for row in branch.rows:
+        for other, other_value in _f_values(row):
+            index.setdefault(other_value, []).append(other)
+    return index
+
+
+def cancel_results(branch: Branch, poly: Poly, index: Optional[dict] = None):
     """Everything injectivity gives from ``poly = 0`` (a generator of new identities).
 
     * beta*(f(A) - f(B)) = 0 gives A = B;
     * f(A) = V, where V is a constant known to equal f(g), gives A = g;
     * f(A) = V together with another current identity f(B) = V (the same V)
       gives A = B.
+
+    ``index`` is ``value_index(branch)``; it is built here when not given.
     """
     if len(poly.terms) == 2:
         (m1, c1), (m2, c2) = poly.terms.items()
@@ -710,10 +727,11 @@ def cancel_results(branch: Branch, poly: Poly):
             for known, image in branch._rules.items():
                 if known[0] == "f" and not atom_vars(known) and image == value:
                     yield Poly.from_key(atom[1]) - Poly.from_key(known[1])
-        for row in branch.rows:
-            for other, other_value in _f_values(row):
-                if other != atom and other_value == value:
-                    yield Poly.from_key(atom[1]) - Poly.from_key(other[1])
+        if index is None:
+            index = value_index(branch)
+        for other in index.get(value, ()):
+            if other != atom:
+                yield Poly.from_key(atom[1]) - Poly.from_key(other[1])
 
 
 def cauchy_form(poly: Poly) -> Optional[tuple]:
@@ -1011,8 +1029,9 @@ def _do_cancel(state: State, branch: Branch, move: Cancel) -> _Outcome:
     """
     if "injective" not in branch.props:
         raise Reject("cannot cancel f: injectivity has not been proven")
+    index = value_index(branch)
     for poly in _candidates(state, branch, move.target):
-        for result in cancel_results(branch, poly):
+        for result in cancel_results(branch, poly, index):
             if not branch.known_zero(result):
                 branch.add([result])
                 return _Outcome(source=poly, instance=result)

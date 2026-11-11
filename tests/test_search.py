@@ -1,8 +1,12 @@
 import random
 
+import pytest
+
 from alphafe.checker import Problem, check
 from alphafe.search import BestFirstSearch, GreedySearch, UniformProposer, run_searches
 from alphafe.solutions import parse_solution_set
+
+pytestmark = pytest.mark.usefixtures("plain_environment")      # see tests/conftest.py
 
 
 def solve(search_cls, equation, domain="R", budget=200, seed=0):
@@ -26,10 +30,11 @@ def test_greedy_never_backtracks():
     search = solve(GreedySearch, "f(x+y) = f(x) + y", budget=100)
     assert search.result().source == "network-greedy"
     node = search.current
-    depth = node.depth
+    length = 0                          # counted by hand: node.depth starts again whenever a case closes
     while node.parent is not None:      # a single chain from the root
         node = node.parent
-    assert node is search.root and len(search.nodes) == depth + 1
+        length += 1
+    assert node is search.root and len(search.nodes) == length + 1
 
 
 def test_budget_is_respected_and_failure_is_reported():

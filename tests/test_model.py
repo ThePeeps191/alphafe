@@ -12,6 +12,8 @@ from alphafe.model import (ModelConfig, NeuralProposer, PolicyValueNet, export_c
 from alphafe.search import BestFirstSearch, run_searches
 from alphafe.tokenizer import BOS, EOS, PAD, decode_move, encode_state
 
+pytestmark = pytest.mark.usefixtures("plain_environment")      # see tests/conftest.py
+
 TINY = ModelConfig(d_model=32, n_heads=2, enc_layers=1, dec_layers=1, d_ff=64)
 CPU = torch.device("cpu")
 

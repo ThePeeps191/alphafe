@@ -26,7 +26,8 @@ from typing import Iterable, Optional
 from . import terms as T
 from .algebra import Poly, apply_function, monic, parse_poly, poly_term, to_poly
 from .checker import Problem
-from .env import start
+from .checker import initial_state
+from .env import close_free
 
 # (weight, formula) for the planted solution F.
 FUNCTIONS = [
@@ -176,9 +177,12 @@ def generate_one(rng: random.Random, level: int) -> Optional[Generated]:
     size = T.term_size(lhs) + T.term_size(rhs)
     if size > 40:
         return None
-    state, _ = start(problem)
+    # Only the free moves here, not the routine substitutions of the environment: which problems the
+    # generator emits defines the frozen held-out file and the training pools of the published weights,
+    # so it must not change when the environment learns to do more by itself.
+    state, _ = close_free(initial_state(problem))
     if state.solved:
-        return None  # trivial: the routine deductions alone finish it
+        return None  # trivial: the free moves alone finish it
     return Generated(text, domain, f"f(x) = {planted}", tier_of(depth, size), depth, size, canonical_key(problem.poly))
 
 
@@ -209,3 +213,63 @@ def benchmark_keys() -> set:
     from .bench import load_real, load_seed
 
     return {canonical_key(b.problem.poly) for b in load_seed() + load_real()}
+
+
+def _twin_term(term: T.Term, signs: dict, f_sign: int) -> T.Term:
+    if isinstance(term, T.Var):
+        return T.Neg(term) if signs.get(term.name, 1) < 0 else term
+    if isinstance(term, (T.Add, T.Sub, T.Mul)):
+        return type(term)(_twin_term(term.left, signs, f_sign), _twin_term(term.right, signs, f_sign))
+    if isinstance(term, T.Neg):
+        return T.Neg(_twin_term(term.arg, signs, f_sign))
+    if isinstance(term, T.Pow):
+        return T.Pow(_twin_term(term.base, signs, f_sign), term.exp)
+    if isinstance(term, T.App):
+        inner = T.App(_twin_term(term.arg, signs, f_sign))
+        return T.Neg(inner) if f_sign < 0 else inner
+    return term
+
+
+def twin_keys(equation: str) -> set:
+    """Canonical keys of an equation and of its twins.
+
+    A twin is the same problem after replacing some variables by their
+    negatives, or f by -f, or both: solve one and the other is solved by the
+    same steps with signs changed. ``canonical_key`` tells twins apart (it
+    ignores only variable names and scaling), so a split made by it alone
+    can put a problem in the test set and its twin in the training set.
+    """
+    from itertools import product
+
+    from .algebra import to_poly
+
+    lhs, rhs = T.parse_equation(equation)
+    names = sorted(T.term_vars(lhs) | T.term_vars(rhs))
+    keys = set()
+    for f_sign in (1, -1):
+        for combo in product((1, -1), repeat=len(names)):
+            signs = dict(zip(names, combo))
+            keys.add(canonical_key(to_poly(_twin_term(lhs, signs, f_sign)) - to_poly(_twin_term(rhs, signs, f_sign))))
+    return keys
+
+
+def protected_keys() -> set:
+    """Keys a training pool must not contain: every benchmark problem and each of its twins.
+
+    Covers the seed and real benchmarks and the frozen held-out file. The
+    twin relation is symmetric, so excluding the twins' keys of the benchmark
+    problems excludes exactly the generated problems that are twins of one.
+    """
+    import json
+
+    from .bench import BENCH_DIR, load_real, load_seed
+
+    keys: set = set()
+    for bench in load_seed() + load_real():
+        keys |= twin_keys(bench.problem.equation)
+    heldout = BENCH_DIR / "synthetic" / "heldout.jsonl"
+    if heldout.exists():
+        for line in heldout.read_text().splitlines():
+            if line.strip():
+                keys |= twin_keys(json.loads(line)["equation"])
+    return keys

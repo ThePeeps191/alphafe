@@ -13,18 +13,114 @@ and the final proof is re-checked from scratch by ``checker.check``.
 
 from __future__ import annotations
 
+import functools
 from dataclasses import dataclass, field
 from typing import Optional
 
+from . import terms as T
+from .algebra import ZERO, Poly, atom_vars, poly_term
 from .checker import LOAD_REFUSED, Problem, Reject, State, apply, check, initial_state
-from .moves import Cancel, Cauchy, Conclude, Inj, Move, Quadratic, Surj
+from .moves import Cancel, Cauchy, Conclude, Inj, Move, Quadratic, Subst, Surj
 from .solutions import SolutionSet
 
 FREE_MOVES: tuple = (Conclude(), Cauchy(), Quadratic(), Inj(), Surj(), Cancel())
 MAX_FREE_STEPS = 40
 
+# Routine substitutions (see ``routine_moves``). Each switch can be turned off
+# to measure what it contributes; MAX_ROUTINE bounds the number applied after
+# one proposed move.
+ROUTINE = {"opening": True, "swap": True, "instances": True, "witness": True}
+MAX_ROUTINE = 10
+MAX_SITE_TERMS = 4      # arguments of f with more monomials than this are not used as substitution sites
 
-def close(state: State) -> tuple[State, list[Move]]:
+
+def _opening_moves(problem: Problem) -> list[Move]:
+    """The substitutions into P that nearly every solution starts with."""
+    names = sorted(problem.poly.variables())
+    zero = T.num(0)
+    out: list[Move] = []
+    if "x" in names and "y" in names:
+        out.append(Subst("P", (("x", zero), ("y", zero))))
+    for name in ("x", "y"):
+        if name in names:
+            out.append(Subst("P", ((name, zero),)))
+    if "x" in names and "y" in names:
+        out.append(Subst("P", (("y", T.Var("x")),)))
+        out.append(Subst("P", (("y", T.Neg(T.Var("x"))),)))
+    return out
+
+
+def _f_atoms(polys) -> set:
+    return {atom for poly in polys for atom in poly.all_atoms() if atom[0] == "f"}
+
+
+@functools.lru_cache(maxsize=50_000)
+def _instance(row: Poly, name: str, site: Poly) -> Poly:
+    """``row`` with the variable ``name`` replaced by ``site``. Cached: neighbouring states share most rows."""
+    return row.subst({name: site})
+
+
+def routine_moves(state: State, tried: set):
+    """Substitutions that need no idea, as (key, move) pairs; ``tried`` holds the keys already used.
+
+    * the swap ``sub P: x:=y, y:=x`` of a two-variable problem;
+    * a named witness put into the original equation, one variable at a time;
+    * closed instances: an identity in one variable v, taken at v := T where
+      T is 0 or the argument of an f(...) already on the page, but only if
+      the instance mentions no f(...) that is not on the page already (at
+      T = 0, new variable-free ones are allowed). Without that condition the
+      step feeds itself: f(f(x)) = 2f(x) + c at x := f(0), then at the new
+      argument, and so on.
+
+    Every one is an ordinary ``Subst``, checked by the checker and recorded
+    in the proof like any other move. Knowledge in a case only grows, so
+    applying them eagerly cannot lose a proof; it costs time and space.
+    """
+    branch = state.current
+    rows = branch.rows
+    names = sorted(state.problem.poly.variables())
+    if ROUTINE["swap"] and len(names) == 2 and ("swap",) not in tried:
+        yield ("swap",), Subst("P", ((names[0], T.Var(names[1])), (names[1], T.Var(names[0]))))
+    if ROUTINE["witness"]:
+        for witness in branch.witnesses:
+            for name in names:
+                key = ("witness", witness, name)
+                if key not in tried:
+                    yield key, Subst("P", ((name, T.Sym(witness)),))
+    if not ROUTINE["instances"]:
+        return
+    present = _f_atoms(rows)
+    sites = [ZERO]
+    for atom in sorted(present):
+        arg = Poly.from_key(atom[1])
+        if arg not in sites and len(arg.terms) <= MAX_SITE_TERMS:
+            sites.append(arg)
+    row_set = set(rows)
+    for index, row in enumerate(rows):
+        variables = row.variables()
+        if len(variables) != 1:
+            continue
+        (name,) = variables
+        if any(other < name and row.subst({name: Poly.var(other)}) in row_set for other in "xyz"):
+            continue                      # a renamed copy of an identity that is handled through its first copy
+        for site in sites:
+            key = (row, site)
+            if key in tried or site == Poly.var(name):
+                continue
+            tried.add(key)
+            try:
+                instance = branch.norm(_instance(row, name, site))
+            except Reject:
+                continue
+            if instance.is_zero():
+                continue
+            new_atoms = _f_atoms([instance]) - present
+            if new_atoms and not (site.is_zero() and not any(atom_vars(atom) for atom in new_atoms)):
+                continue
+            yield key, Subst(index, ((name, poly_term(site)),))
+
+
+def close_free(state: State) -> tuple[State, list[Move]]:
     """Apply free moves until none is accepted. Returns the new state and the moves used."""
     applied: list[Move] = []
     progress = True
@@ -41,13 +137,45 @@ def close(state: State) -> tuple[State, list[Move]]:
     return state, applied
 
 
+def close(state: State) -> tuple[State, list[Move]]:
+    """Apply the free moves and then routine substitutions until nothing more applies (or the cap is reached)."""
+    state, applied = close_free(state)
+    tried: set = set()
+    count = 0
+    progress = True
+    while progress and state.branches and count < MAX_ROUTINE:
+        progress = False
+        for key, move in routine_moves(state, tried):
+            tried.add(key)
+            try:
+                new_state = apply(state, move)
+            except Reject:
+                continue
+            count += 1
+            state, free = close_free(new_state)
+            applied += [move] + free
+            progress = True
+            break
+    return state, applied
+
+
 def start(problem: Problem) -> tuple[State, list[Move]]:
-    """Initial state with the free moves already applied.
+    """Initial state with the free moves, the routine substitutions and the opening substitutions applied.
 
     Raises ``Reject`` if the checker cannot load the equation (it is over the
     size caps). Searches use ``try_start`` and report that as "not solved".
     """
-    return close(initial_state(problem))
+    state, applied = close(initial_state(problem))
+    if ROUTINE["opening"]:
+        for move in _opening_moves(problem):
+            if not state.branches:
+                break
+            try:
+                state, more = step(state, move)
+            except Reject:
+                continue
+            applied = applied + more
+    return state, applied
 
 
 def try_start(problem: Problem) -> tuple[Optional[State], list[Move], str]:
@@ -90,16 +218,112 @@ def confirm(problem: Problem, proof: list) -> Optional[SolutionSet]:
     return result.solutions if result.solved else None
 
 
-def minimise(problem: Problem, proof: list) -> list:
-    """Shorten a complete proof by dropping creative moves that are not needed.
+def creative_moves(problem: Problem, proof: list) -> Optional[list]:
+    """The moves of a proof that the environment did not add by itself, or None.
 
-    Each creative (non-free) move is removed in turn; if replaying the rest
-    (with free moves re-applied) still solves the problem, the move was dead
-    weight. Later moves may refer to identities by position, so a removal that
-    shifts positions simply fails to replay and is not made. The result is
-    re-checked; if anything goes wrong the original proof is returned.
+    A proof produced through ``start`` and ``step`` is the environment's own
+    moves (free moves and routine substitutions) with the proposed moves in
+    between. Replaying it tells them apart. None means the proof was not
+    produced that way (a hand-written proof, say).
     """
-    creative = [move for move in proof if move not in FREE_MOVES]
+    try:
+        state, applied = start(problem)
+    except Reject:
+        return None
+    if proof[:len(applied)] != applied:
+        return None
+    position, out = len(applied), []
+    while position < len(proof):
+        if state.solved:
+            return None
+        move = proof[position]
+        try:
+            state, applied = step(state, move)
+        except Reject:
+            return None
+        if proof[position:position + len(applied)] != applied:
+            return None
+        out.append(move)
+        position += len(applied)
+    return out if state.solved else None
+
+
+def quote_targets(problem: Problem, proof: list) -> list:
+    """The same proof with ``R<n>`` targets replaced by the identity they point at, where that is possible.
+
+    A numbered target means something else as soon as an earlier move is
+    removed. A quoted identity (``sub [f(f(x)) = x]: ...``) does not. A row
+    too large to be quoted keeps its number.
+    """
+    from dataclasses import replace
+
+    from .algebra import poly_term
+    from .moves import EqRef
+
+    out = []
+    try:
+        state = initial_state(problem)
+    except Reject:
+        return list(proof)
+    for move in proof:
+        target = getattr(move, "target", None)
+        chosen = move
+        if isinstance(target, int) and not isinstance(target, bool) and state.branches and target < len(state.current.rows):
+            quoted = replace(move, target=EqRef(poly_term(state.current.rows[target]), T.num(0)))
+            try:
+                if apply(state, quoted).key() == apply(state, move).key():
+                    chosen = quoted
+            except Reject:
+                pass
+        try:
+            state = apply(state, chosen)
+        except Reject:
+            return list(proof)
+        out.append(chosen)
+    return out
+
+
+def prune(problem: Problem, proof: list) -> list:
+    """Drop every move a complete proof does not need.
+
+    Moves are tried from the last to the first: a move can go if the rest is
+    still a complete proof of the same answer, as judged by ``check``. This
+    removes unused routine substitutions, unused free moves (an injectivity
+    nothing relies on) and dead proposed moves alike. Passes repeat until
+    nothing more goes. If the input is not a complete proof it is returned
+    unchanged.
+    """
+    wanted = confirm(problem, proof)
+    if wanted is None:
+        return proof
+    best = quote_targets(problem, proof)
+    if confirm(problem, best) != wanted:
+        best = list(proof)
+    changed = True
+    while changed:
+        changed = False
+        for index in range(len(best) - 1, -1, -1):
+            shorter = best[:index] + best[index + 1:]
+            if confirm(problem, shorter) == wanted:
+                best = shorter
+                changed = True
+    return best
+
+
+def minimise(problem: Problem, proof: list) -> list:
+    """Shorten a complete proof, for display.
+
+    First the proposed moves that are not needed are dropped: each is removed
+    in turn, and if replaying the rest through the environment still solves
+    the problem it was dead weight. Then ``prune`` removes every single move
+    the result does not need, the environment's own moves included. The
+    result is re-checked; if anything goes wrong the original proof is
+    returned.
+    """
+    wanted = confirm(problem, proof)
+    if wanted is None:
+        return proof
+    creative = creative_moves(problem, proof)
 
     def replay(moves):
         state, out = start(problem)
@@ -114,14 +338,17 @@ def minimise(problem: Problem, proof: list) -> list:
             return None
         return out if state.solved else None
 
-    index = 0
-    while index < len(creative) and len(creative) > 1:
-        shorter = creative[:index] + creative[index + 1:]
-        if replay(shorter) is not None:
-            creative = shorter
-        else:
-            index += 1
-    best = replay(creative)
-    if best is None or confirm(problem, best) is None or len(best) > len(proof):
-        return proof
-    return best
+    best = proof
+    if creative is not None:
+        index = 0
+        while index < len(creative):
+            shorter = creative[:index] + creative[index + 1:]
+            if replay(shorter) is not None:
+                creative = shorter
+            else:
+                index += 1
+        replayed = replay(creative)
+        if replayed is not None and confirm(problem, replayed) == wanted and len(replayed) <= len(proof):
+            best = replayed
+    pruned = prune(problem, best)
+    return pruned if confirm(problem, pruned) == wanted and len(pruned) <= len(proof) else proof

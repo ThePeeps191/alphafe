@@ -20,9 +20,29 @@ def test_generated_problems_are_valid_and_planted_solution_works():
 
 
 def test_generated_problems_are_not_trivial():
+    """The generator's promise: the free moves alone do not finish a generated problem.
+    (The environment's routine substitutions may; training pools leave those problems out.)"""
+    from alphafe.checker import initial_state
+    from alphafe.env import close_free
+
     for g in ALL[::5]:
-        state, _ = start(g.problem())
+        state, _ = close_free(initial_state(g.problem()))
         assert not state.solved
+
+
+def test_twins_of_benchmark_problems_are_protected():
+    """A sign-flipped copy of a benchmark problem has another canonical key but is the same problem."""
+    from alphafe.checker import Problem
+    from alphafe.generate import protected_keys, twin_keys
+
+    keys = protected_keys()
+    assert benchmark_keys() <= keys
+    for twin in ("f(x - y) + f(x) = 2x - y",       # seed s10 with y -> -y
+                 "f(y)f(x) + f(xy) = x + y"):       # seed s22, f(x)f(y) = f(xy) + x + y, with f -> -f
+        problem = Problem.parse(twin)
+        assert twin_keys(problem.equation) & keys, twin
+    assert canonical_key(Problem.parse("f(x - y) + f(x) = 2x - y").poly) not in benchmark_keys()  # the plain key misses it
+    assert len(twin_keys("f(x + y) = f(x) + y")) <= 8
 
 
 def test_no_duplicates_and_no_benchmark_problems():

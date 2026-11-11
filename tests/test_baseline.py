@@ -9,6 +9,8 @@ from alphafe.eval import by_mohs, run_baseline, score, summary
 from alphafe.moves import Conclude, parse_move
 from alphafe.solutions import parse_solution_set
 
+pytestmark = pytest.mark.usefixtures("plain_environment")      # see tests/conftest.py
+
 
 def test_guesser_finds_polynomial_answers():
     assert guess(Problem.parse("f(x+y) = f(x) + y")).solutions == parse_solution_set(["f(x) = x + c"])

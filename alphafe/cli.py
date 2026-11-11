@@ -36,15 +36,15 @@ def _load_network(checkpoint, device: str):
     return model, dev
 
 
-def _solve_with_network(problem: Problem, model, dev, budget: int) -> SearchResult:
+def _solve_with_network(problem: Problem, model, dev, budget: int, max_depth: int) -> SearchResult:
     from .model import DIVERSE, NeuralProposer
     from .search import BestFirstSearch, GreedySearch, run_searches
 
-    greedy = GreedySearch(problem, budget=min(32, budget))
+    greedy = GreedySearch(problem, budget=min(32, budget), max_depth=max_depth)
     run_searches([greedy], NeuralProposer(model, dev, temperature=DIVERSE), k=8)
     if greedy.solved_node is not None:
         return greedy.result()
-    search = BestFirstSearch(problem, budget=budget)
+    search = BestFirstSearch(problem, budget=budget, max_depth=max_depth)
     run_searches([search], NeuralProposer(model, dev, temperature=DIVERSE), k=8)
     result = search.result()
     result.checker_calls += greedy.calls
@@ -70,7 +70,7 @@ def cmd_solve(args) -> int:
                 reason = str(err).strip().splitlines()[0][:200] if str(err).strip() else type(err).__name__
                 print(f"Could not load {checkpoint} ({reason}); using the brute-force baseline.")
             else:
-                result = _solve_with_network(problem, model, dev, args.budget)
+                result = _solve_with_network(problem, model, dev, args.budget, args.max_depth)
                 print(f"Network search: {'solved' if result.solved else 'not solved'} "
                       f"({result.checker_calls} checker calls, {result.seconds:.1f}s)")
         else:
@@ -129,6 +129,8 @@ def main(argv=None) -> int:
     solve.add_argument("--domain", choices=["R", "Q"], default="R")
     solve.add_argument("--checkpoint", default=str(DEFAULT_CHECKPOINT))
     solve.add_argument("--budget", type=int, default=512, help="checker calls for the network search")
+    solve.add_argument("--max-depth", type=int, default=16,
+                       help="proposed moves in a row inside one case for the network search")
     solve.add_argument("--baseline", action="store_true", help="skip the network, use brute force only")
     solve.add_argument("--baseline-budget", type=int, default=20000)
     solve.add_argument("--seconds", type=float, default=60.0)

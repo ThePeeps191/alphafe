@@ -50,12 +50,15 @@ class Node:
         return self._view
 
 
+MAX_DEPTH = 16      # proposed moves in a row inside one case; the count starts again when a case closes
+
+
 class _Search:
     """Shared bookkeeping for the two search modes."""
 
     source = ""
 
-    def __init__(self, problem: Problem, budget: int, max_depth: int = 10):
+    def __init__(self, problem: Problem, budget: int, max_depth: int = MAX_DEPTH):
         self.problem = problem
         self.budget = budget
         self.max_depth = max_depth
@@ -133,7 +136,7 @@ class GreedySearch(_Search):
 
     source = "network-greedy"
 
-    def __init__(self, problem: Problem, budget: int = 64, max_depth: int = 10, patience: int = 2):
+    def __init__(self, problem: Problem, budget: int = 64, max_depth: int = MAX_DEPTH, patience: int = 2):
         super().__init__(problem, budget, max_depth)
         self.current = self.root
         self.patience = patience          # how many empty-handed proposal rounds to tolerate per state
@@ -151,6 +154,8 @@ class GreedySearch(_Search):
             if self.done:
                 return
             if child is not None:
+                if len(child.state.branches) < len(node.state.branches):
+                    child.depth = 0           # a case has been closed: the depth limit is per case
                 self.current = child
                 self._misses = 0
                 if child.depth >= self.max_depth:
@@ -173,7 +178,7 @@ class BestFirstSearch(_Search):
 
     source = "network-search"
 
-    def __init__(self, problem: Problem, budget: int = 256, max_depth: int = 10, revisit_penalty: float = 3.0,
+    def __init__(self, problem: Problem, budget: int = 256, max_depth: int = MAX_DEPTH, revisit_penalty: float = 3.0,
                  value_weight: float = 0.0):
         super().__init__(problem, budget, max_depth)
         self.revisit_penalty = revisit_penalty
@@ -218,8 +223,12 @@ class BestFirstSearch(_Search):
             child = self._try(node, ids, logp)
             if self.done:
                 return
-            if child is not None and child.depth < self.max_depth:
-                if len(child.state.branches) < len(node.state.branches):
+            if child is None:
+                continue
+            closed_a_case = len(child.state.branches) < len(node.state.branches)
+            # The depth limit does not apply to a move that closes a case: the count starts again there.
+            if closed_a_case or child.depth < self.max_depth:
+                if closed_a_case:
                     # A case has been closed: commit to this state and drop the
                     # rest of the frontier. Cases share no facts, so among the
                     # states that came from the same split the remaining cases

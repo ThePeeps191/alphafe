@@ -24,6 +24,8 @@ SINGLE_POOL = [
 # Terms tried when two variables are replaced at once.
 PAIR_POOL = ["0", "1", "-1", "x", "y", "-x", "-y", "x+y", "x-y", "f(x)", "f(y)", "(x+y)/2", "(x-y)/2", "2x", "2y"]
 SPLITNZ_POOL = ["f(0)", "f(1)"]
+# Values whose preimage is named when f is surjective. The environment then puts the witness into P.
+PRE_POOL = ["0", "1", "-1", "2"]
 MAX_TARGET_ROWS = 6
 
 
@@ -78,7 +80,8 @@ def candidate_moves(state: State, n_single: int = len(SINGLE_POOL), n_pair: int 
 
     if "surjective" in branch.props:
         if not branch.witnesses:
-            moves.append(Pre(T.num(0)))
+            for text in PRE_POOL:
+                moves.append(Pre(T.parse(text)))
         for index, row in enumerate(branch.rows):
             for name in sorted(row.variables()):
                 moves.append(Onto(index, name))

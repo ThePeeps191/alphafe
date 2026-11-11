@@ -32,7 +32,7 @@ from dataclasses import asdict, dataclass, field
 import torch
 import torch.nn.functional as F
 
-from .generate import N_TIERS, benchmark_keys, generate
+from .generate import N_TIERS, benchmark_keys, generate, protected_keys
 from .model import (DIVERSE, SRC_BUCKET, TGT_BUCKET, ModelConfig, NeuralProposer, PolicyValueNet, check_vocabulary,
                     pad_batch, pick_device, save_checkpoint)
 from .search import BestFirstSearch, GreedySearch, UniformProposer, run_searches
@@ -84,10 +84,21 @@ class TrainConfig:
 
 
 class ProblemPool:
-    """Synthetic problems by tier, split into train and held-out test by canonical hash."""
+    """Synthetic problems by tier, split into train and held-out test by canonical hash.
 
-    def __init__(self, seed: int, per_tier: int):
-        data = generate(seed, per_tier, exclude=benchmark_keys())
+    ``for_training`` builds the pool a training run uses. It differs from
+    the plain pool (the one the frozen held-out file was cut from) in two
+    ways. No problem in it is a benchmark problem or a twin of one
+    (``generate.protected_keys``): the hash split alone lets a held-out
+    problem's sign-flipped twin into the training half. And problems that
+    the environment solves by itself are left out, because a search on them
+    never proposes a move and so teaches nothing.
+    """
+
+    def __init__(self, seed: int, per_tier: int, for_training: bool = False):
+        data = generate(seed, per_tier, exclude=protected_keys() if for_training else benchmark_keys())
+        if for_training:
+            data = {tier: [g for g in items if not _solved_at_start(g)] for tier, items in data.items()}
         self.train = {tier: [g for g in items if g.split == "train"] for tier, items in data.items()}
         self.test = {tier: [g for g in items if g.split == "test"] for tier, items in data.items()}
 
@@ -98,6 +109,14 @@ class ProblemPool:
             pick = tier if tier == 1 or rng.random() < 0.5 else rng.randint(1, tier - 1)
             out.append(rng.choice(self.train[pick]))
         return out
+
+
+def _solved_at_start(item) -> bool:
+    try:
+        state, _ = start(item.problem())
+    except Reject:
+        return True
+    return state.solved
 
 
 class ReplayBuffer:
@@ -277,7 +296,7 @@ def harvest(searches: list, buffer: ReplayBuffer, rng: random.Random, max_hindsi
                 buffer.add("hindsight", (tuple(view.tokens), tuple(node.move_ids)))
 
 
-MAX_TRAIN_SRC = 256      # training examples with longer states are skipped (about 1% of them)
+MAX_TRAIN_SRC = 360      # tokenizer.MAX_STATE_TOKENS: with routine substitutions applied, states are long
 LENGTH_GROUPS = 3        # a batch is processed in this many length-sorted pieces
 
 
@@ -373,7 +392,7 @@ def train(config: TrainConfig, resume: bool = False) -> dict:
     rng = random.Random(config.seed)
     torch.manual_seed(config.seed)
 
-    pool = ProblemPool(config.seed, config.per_tier)
+    pool = ProblemPool(config.seed, config.per_tier, for_training=True)
     model = PolicyValueNet(ModelConfig(**config.model)).to(device)
     optimizer = torch.optim.AdamW(model.parameters(), lr=config.lr, weight_decay=config.weight_decay)
     buffer = ReplayBuffer(config.buffer_size)

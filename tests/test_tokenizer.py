@@ -47,11 +47,16 @@ def test_goal_conditioned_encoding():
 
 
 def test_state_encoding_is_bounded():
+    encoded = 0
     for item in generate(1, 30)[4]:
         state, _ = start(item.problem())
+        if state.solved:                # the routine substitutions finished it: there is no state to encode
+            continue
         view = encode_state(state)
+        encoded += 1
         assert len(view.tokens) <= MAX_STATE_TOKENS + 120
         assert all(0 <= i < len(VOCAB) for i in view.tokens)
+    assert encoded >= 10
 
 
 MOVES = [
@@ -160,7 +165,7 @@ def test_subterm_exploration_proposes_expressions_from_the_state():
     assert all(m.startswith("sub ") for m in moves)
 
 
-def test_problems_in_other_letters_are_renamed_for_the_network():
+def test_problems_in_other_letters_are_renamed_for_the_network(plain_environment):
     """The checker accepts x y z t u v w; the network vocabulary has x, y, z. (This used to raise KeyError.)"""
     import random
 

@@ -11,6 +11,9 @@ from alphafe.solutions import parse_solution_set
 from alphafe.tokenizer import MoveGrammar, TOKEN_ID, decode_move, encode_move, encode_state, sample_uniform
 
 from .seedlib import load_seeds, seed_problem
+import pytest
+
+pytestmark = pytest.mark.usefixtures("plain_environment")      # see tests/conftest.py
 
 THREE = [s for s in load_seeds() if len(seed_problem(s).poly.variables()) == 3]
 
