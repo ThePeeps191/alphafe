@@ -180,10 +180,16 @@ class BestFirstSearch(_Search):
     source = "network-search"
 
     def __init__(self, problem: Problem, budget: int = 256, max_depth: int = MAX_DEPTH, revisit_penalty: float = 3.0,
-                 value_weight: float = 0.0):
+                 value_weight: float = 0.0, systematic: int = 0):
         super().__init__(problem, budget, max_depth)
         self.revisit_penalty = revisit_penalty
         self.value_weight = value_weight      # > 0: also rank states by the value head's estimate
+        # > 0: each time a state is expanded, also try this many moves from the brute-force pool that the
+        # state has not tried yet, simplest first. The policy gives some single moves no probability at
+        # all (y := f(y), say), and enumeration reaches them. Evaluation and solve only: self-play
+        # training must not use the baseline's pool, which is the control experiment.
+        self.systematic = systematic
+        self._pool: dict = {}                 # id(node) -> iterator over the pool moves not yet tried there
         self._counter = itertools.count()
         self.frontier: list = []
         self._current: Optional[Node] = None
@@ -215,10 +221,34 @@ class BestFirstSearch(_Search):
         _, _, self._current = heapq.heappop(self.frontier)
         return self._current
 
+    def _systematic_proposals(self, node: Node, proposals: list) -> list:
+        """The next few untried pool moves for this state, ranked just below the sampled proposals."""
+        from .baseline.search import candidate_moves      # evaluation-time only, see __init__
+        from .tokenizer import encode_move
+
+        pool = self._pool.get(id(node))
+        if pool is None:
+            pool = self._pool[id(node)] = iter(candidate_moves(node.state))
+        sampled = {tuple(ids) for ids, _ in proposals}
+        floor = min((logp for _, logp in proposals), default=0.0) - 1.0
+        out: list = []
+        while len(out) < self.systematic:
+            move = next(pool, None)
+            if move is None:
+                break
+            ids = encode_move(move, node.view)
+            if ids is None or tuple(ids) in sampled:
+                continue
+            out.append((ids, floor))
+        return out
+
     def feed(self, proposals: list) -> None:
         node = self._current
         node.expansions += 1
-        for ids, logp in sorted(proposals, key=lambda p: -p[1]):
+        ordered = sorted(proposals, key=lambda p: -p[1])
+        if self.systematic:
+            ordered += self._systematic_proposals(node, proposals)
+        for ids, logp in ordered:
             if self.calls >= self.budget:
                 break
             child = self._try(node, ids, logp)
