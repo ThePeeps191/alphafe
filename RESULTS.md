@@ -789,3 +789,78 @@ minimum and maximum over them. `results/m8_m1_*` and `results/m8_v2_*`.
 * **If something goes wrong.** As in M7: an answer mismatch stops everything
   else, and a rerun forced by a harness bug is reported together with the
   first run.
+
+### Result on the real benchmark
+
+Run at commit `4e133bf`, clean tree, Apple GPU, weights
+`alphafe-m1-56min.pt`. The network and reference rows took 2 hours 56
+minutes, brute force at 20,000 calls 16 minutes. Files:
+`results/m8_real_*.json`, `results/m8.md`,
+`results/baseline_real_20000_m8.json`. No checked proof gave an answer
+different from the recorded one.
+
+Solved, version 1 (M7) and this milestone (M8), on the 124 unflagged problems
+and on all 137:
+
+| solver | 124: M7 | 124: M8 | 137: M7 | 137: M8 | M8 per sampling seed (137) |
+|---|---|---|---|---|---|
+| network, no backtracking (32 calls) | 6 | 24 (19.4%) | 10 | 30 | 30, 33, 35 |
+| network, search (128 calls) | 10 | 28 (22.6%) | 14 | 34 | 34, 34, 35 |
+| network, search (2,000 calls) | 13 | 43 (34.7%) | 17 | 50 | 50, 50, 49 |
+| untrained network, no backtracking (32) | 5 | 12 (9.7%) | 8 | 17 | |
+| untrained network, search (128) | 5 | 19 (15.3%) | 8 | 25 | |
+| uniform policy, no backtracking (32) | 4 | 13 (10.5%) | 7 | 18 | |
+| uniform policy, search (128) | 6 | 17 (13.7%) | 9 | 23 | |
+| brute force (128 calls) | 5 | 17 (13.7%) | 8 | 23 | |
+| brute force (2,000 calls) | 8 | 27 (21.8%) | 12 | 34 | |
+| brute force (20,000 calls) | 12 | 38 (30.6%) | 16 | 47 | |
+
+By MOHS value on the 124 unflagged problems (132 of the 137 values are
+estimates):
+
+| solver | 0M | 5M | 10M | 15M | 20M | 25M and up |
+|---|---|---|---|---|---|---|
+| network, search (128 calls) | 2/2 | 9/15 | 12/43 | 4/32 | 1/19 | 0/13 |
+| network, search (2,000 calls) | 2/2 | 13/15 | 20/43 | 5/32 | 3/19 | 0/13 |
+| brute force (2,000 calls) | 2/2 | 10/15 | 13/43 | 1/32 | 1/19 | 0/13 |
+| brute force (20,000 calls) | 2/2 | 12/15 | 18/43 | 5/32 | 1/19 | 0/13 |
+
+### Plain reading
+
+* **About a third of the unseen real problems are now solved, up from a
+  tenth.** The best row goes from 13 of 124 to 43 of 124. Every problem that
+  any solver solved in M7 is still solved by some solver here. Counting any
+  solver at any budget in this run, 48 of the 124 are solved (58 of 137).
+* **In the target range of 0M to 10M the best row solves 35 of 60**, against
+  13 of 60 before. The first problems rated 15M and 20M are solved (5 of 32
+  and 3 of 19). Nothing rated 25M or above is.
+* **On real problems the retrained network is ahead of brute force at every
+  budget tried**: 28 against 17 at 128 calls, 43 against 27 at 2,000, and its
+  43 at 2,000 calls is more than brute force reaches with 20,000 (38). On
+  the development sets the two were close at large budgets and brute force
+  led on the hardest tier, so this is a larger advantage than those sets
+  predicted. It is one training run and one benchmark; the per-seed counts
+  (50, 50, 49 on all 137) say the sampling noise is small, but nothing here
+  says how much another training seed would change.
+* **Where the gain comes from, as far as this run shows.** The routine moves
+  by themselves, with no proposed move at all, solve 8 of the 124 (11 of
+  137). Brute force, which has no network, goes from 8 to 27 at 2,000 calls:
+  that part is the environment, the depth limit and the checker fixes. The
+  rest is the network trained in the new environment. The two square lemmas
+  appear in the proof of one solved problem (`bmc-a1bc91-6`), so their reach
+  on this benchmark is one problem.
+* **The 20,000-call brute-force row is partly a time-limited row now.** A
+  checker call is several times slower with the routine moves, and 17 of
+  its 137 problems stopped at the 120 second limit before using their calls
+  (one did at 2,000 calls). In M7 none did. Its 38 is therefore a lower
+  bound on what 20,000 calls would give.
+* **Cost.** The network row at 2,000 calls takes 21.6 seconds per problem,
+  four times as long as in M7, and about half of the run's time went to
+  Python's garbage collector walking the search trees (issue #104).
+* **The flagged problems**: 7 of the 13 are solved at 2,000 calls (4 in M7).
+  They were used in developing this milestone and are not part of the
+  headline.
+* **What is still out of reach**: 81 of the 124 at the best single row,
+  including everything at 25M and above, 27 of 32 at 15M and 23 of 43 at
+  10M. Two problems cannot be loaded. The unsolved problems have not been
+  inspected.

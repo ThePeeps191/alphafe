@@ -35,9 +35,9 @@ its own attempts, or runs as plain brute force. AlphaFE is not affiliated with
 Google DeepMind.
 
 When AlphaFE cannot find a proof it says so. All it prints then is a guess
-among polynomials of degree at most 2, labelled as a guess. That is the usual
-outcome on competition problems today: on a benchmark of 137 real ones,
-version 1 finds a proof for about one in ten (see [Results](#results)).
+among polynomials of degree at most 2, labelled as a guess. On competition
+problems that is still the more common outcome: on a benchmark of 137 real
+ones it finds a proof for about a third (see [Results](#results)).
 
 ## Quick start
 
@@ -49,18 +49,18 @@ git clone https://github.com/ThePeeps191/alphafe.git
 cd alphafe
 uv venv .venv --python 3.12
 uv pip install --python .venv/bin/python -e ".[dev]"
-.venv/bin/python -m pytest            # about 400 tests, around ten seconds
+.venv/bin/python -m pytest            # about 500 tests, under a minute
 ```
 
 Download the trained network (10 MB) from the
-[v0.1.0 release](https://github.com/ThePeeps191/alphafe/releases/tag/v0.1.0):
+[v0.2.0 release](https://github.com/ThePeeps191/alphafe/releases/tag/v0.2.0):
 
 ```sh
 mkdir -p checkpoints
 curl -L -o checkpoints/best.pt \
-  https://github.com/ThePeeps191/alphafe/releases/download/v0.1.0/alphafe-v2-56min.pt
+  https://github.com/ThePeeps191/alphafe/releases/download/v0.2.0/alphafe-m1-56min.pt
 shasum -a 256 checkpoints/best.pt
-# 8f52cc591dd8a470d2b84966d471050b639d689765b895026e2f8f15b639bee3
+# d4fa23410759e994abfe8a71032c049e38dbcb62d85a9e776b3ce5bb2957eaed
 ```
 
 Then solve something:
@@ -72,8 +72,11 @@ Then solve something:
 
 Without `checkpoints/best.pt`, `solve` uses brute-force search and says so.
 Proposals are sampled, so the proof and the number of checker calls vary from
-run to run. The weights match the tokenizer and model at the `v0.1.0` tag;
-after a change to either, retrain.
+run to run unless you pass `--seed`. A checkpoint records the token vocabulary
+it was trained with, and loading one that does not match the code is
+refused. The version 1 weights (release v0.1.0) still load, but they were
+trained before the routine moves existed and are no better than brute force
+now.
 
 ## Commands
 
@@ -122,67 +125,72 @@ Difficulty is measured on Evan Chen's MOHS scale, which runs from 0M to 50M;
 
 ### Real competition problems
 
-On real problems the solver is weak. The real benchmark is 137 competition
-problems that fit the scope above, selected by rules fixed in advance and not
-looked at during development. Version 1 was run on it once, before anything
-was changed in response.
+The real benchmark is 137 competition problems that fit the scope above,
+selected by rules fixed in advance. Thirteen are flagged as seen during
+development; the other 124 have never been looked at, and they are the
+headline. Each version is run on the benchmark once, under a protocol
+committed before the run.
+
+Solved, of the 124:
 
 | | network, search (128 calls) | network, search (2,000 calls) | brute force (2,000 calls) | brute force (20,000 calls) |
 |---|---|---|---|---|
-| 124 problems never seen in development | 10 | 13 | 8 | 12 |
-| all 137 | 14 | 17 | 12 | 16 |
+| version 1 (first run) | 10 | 13 | 8 | 12 |
+| current version | 28 | 43 | 27 | 38 |
 
-That is about one problem in ten. The solved ones are rated 0M to 10M, and
-nothing rated 15M or above is solved by any solver. In the target range of
-0M to 10M the best row solves 13 of 60. The counts are small, so the gaps
-between solvers are a few problems each. `RESULTS.md` (M7) has the protocol,
-which was committed before the run, and the full tables.
+So about a third of real problems in scope are solved, up from a tenth. In
+the target range of 0M to 10M the best row solves 35 of 60. A few problems
+rated 15M and 20M are solved (5 of 32 and 3 of 19), and nothing rated 25M
+or above. On all 137 the best row solves 50.
+
+Three changes separate the two rows. The environment now makes the routine
+substitutions by itself (the standard openings, the swap, instances of
+identities already found). Two lemmas about squares were added. And the
+network was retrained from random weights for 56 minutes in that
+environment. Brute force has no network, so its gain (8 to 27) is the
+environment's share; the network adds the rest and is ahead of brute force
+at every budget tried.
+
+A "call" is one move sent to the checker. The network rows are the first of
+three sampling seeds, which solve 50, 50 and 49 of the 137. One training run
+was made. `RESULTS.md` (M7 and M8) has the protocols and the full tables.
 
 ### Synthetic and seed problems
 
-These are the problems the solver was developed on, and they are much easier
-than the real ones.
+These are the problems the solver was developed on. They are much easier
+than the real ones, and choices between versions are made on them.
 
-Problems solved, out of 200 per held-out tier and 50 on the seed benchmark.
-The network was trained once, for 28 minutes on a laptop GPU, and evaluated
-with three sampling seeds; a range is the minimum and maximum over those
-seeds. A "call" is one move sent to the checker.
+Problems solved, out of 200 per held-out tier and 51 on the seed benchmark;
+a range is the minimum and maximum over three sampling seeds.
 
 | | network, no backtracking (32 calls) | network, search (128 calls) | brute force (128 calls) | brute force (2,000 calls) |
 |---|---|---|---|---|
-| held-out synthetic, tier 1 | 179-180 | 185 | 173 | 177 |
-| held-out synthetic, tier 2 | 155-159 | 168-172 | 132 | 144 |
-| held-out synthetic, tier 3 | 79-81 | 84-89 | 60 | 81 |
-| held-out synthetic, tier 4 | 46-51 | 56-58 | 46 | 52 |
-| seed benchmark | 32-35 | 35-38 | 32 | 39 |
+| held-out synthetic, tier 1 | 185-186 | 187-188 | 188 | 190 |
+| held-out synthetic, tier 2 | 186-190 | 191-194 | 185 | 192 |
+| held-out synthetic, tier 3 | 123-126 | 129-131 | 114 | 130 |
+| held-out synthetic, tier 4 | 81-82 | 87-89 | 79 | 99 |
+| seed benchmark | 41-42 | 43-45 | 42 | 48 |
 
-At an equal small budget the trained network solves more than brute force,
-most clearly on tiers 2 and 3. On problems both solve, the network without
-backtracking needs a quarter to a half as many checker calls. Brute force
-with 20,000 calls still solves more held-out problems than the network does
-with 128 (188, 178, 97 and 63 on the four tiers). A network proposal also
-costs far more time than a checker call, so the network saves checker calls
-and does not save seconds.
+At 128 calls the network solves more than brute force on tiers 2 to 4, and
+about as many as brute force does with 2,000 calls on tiers 2 and 3. With a
+large budget brute force is still ahead on tier 4 and on the seed set (48
+against 46 at 2,000 calls). The routine moves alone, without any search,
+solve 175, 154, 83 and 52 of the four tiers. Many held-out problems in
+tiers 3 and 4 have no proof at all, so 200 is not the ceiling.
 
-On the seed benchmark with 2,000 calls the network solves 43-44 of 50, against
-39 for brute force at 2,000 calls and 45 at 20,000. That covers all 37 problems
-rated 0M or 5M and 5 of the 11 rated 10M (first sampling seed). The single 20M
-problem has not been solved by anything. Three seed problems had a network
-proof and no brute-force proof at 20,000 calls, and five went the other way.
+A network proposal costs far more time than a checker call, and the routine
+moves made each checker call several times slower, so the network saves
+calls and does not save seconds: its 2,000-call row takes about 20 seconds
+per real problem.
 
 No proof accepted by the checker has produced an answer different from a
 recorded one.
 
-The network in the quick start is the same training run after 56 minutes. It
-scores about the same (experiment E6 in `RESULTS.md`), and the 28-minute
-weights are in the release as `alphafe-v2-28min.pt`.
-
 The seed benchmark was used to choose fixes during development, so its
-numbers are optimistic. Each configuration was trained with a single seed, so
-small differences between runs may be noise. `RESULTS.md` has every
-measurement, including the first trained network, which did worse than an
-untrained one on the seed benchmark, and three experiments that made no
-difference.
+numbers are optimistic. `RESULTS.md` has every measurement, including the
+first trained network, which did worse than an untrained one, the version 1
+network, which turned out to be worth nothing once the routine moves were
+free, and the experiments that made no difference.
 
 ## How it works
 
@@ -197,7 +205,8 @@ where a person would need an idea.
 The checker is the only trusted component. The standard mistakes are blocked
 by rule: case splits are allowed only on facts without variables,
 cancellation only after injectivity is proved, division only by constants
-proved nonzero, and "additive implies linear" only over Q. Every claimed
+proved nonzero, and "additive implies linear" only over Q (over R it needs
+f(x^2) = f(x)^2 as well). Every claimed
 solution is substituted back into the original equation.
 
 The network is a 2.5M-parameter encoder-decoder transformer. It reads the

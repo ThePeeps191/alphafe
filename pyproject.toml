@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "alphafe"
-version = "0.1.0"
+version = "0.2.0"
 description = "A solver for easy olympiad functional equations: exact symbolic checker + small neural policy"
 readme = "README.md"
 requires-python = ">=3.11"
