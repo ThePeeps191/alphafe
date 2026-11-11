@@ -16,7 +16,7 @@ import torch
 from alphafe.algebra import Poly, monic, to_poly
 from alphafe.bench import BENCH_DIR, load_seed
 from alphafe.checker import Reject
-from alphafe.env import FREE_MOVES, start, step
+from alphafe.env import FREE_MOVES, quote_targets, start, step
 from alphafe.model import NeuralProposer, load_model
 from alphafe.moves import EqRef, Onto, Split, Subst, parse_proof, show_move
 from alphafe.tokenizer import encode_move, encode_state
@@ -72,12 +72,20 @@ def main() -> None:
         if not path.exists() or (wanted and bench.id not in wanted):
             continue
         state, _ = start(bench.problem)
-        lines, worst, blocked = [], 0.0, False
-        for move in parse_proof(path.read_text()):
+        lines, worst, blocked, routine = [], 0.0, False, 0
+        # Numbered targets in a hand proof count rows of the bare checker; the environment has more rows,
+        # so the targets are quoted first.
+        for move in quote_targets(bench.problem, parse_proof(path.read_text())):
             if state.solved:
                 break
             if move in FREE_MOVES:
                 continue            # the environment applies these by itself
+            try:
+                step(state, move)
+            except Reject as reject:
+                if reject.reason == "no new information":
+                    routine += 1    # a routine substitution the environment has already made
+                    continue
             view = encode_state(state)
             logps = []
             for candidate in variants(move, state, view):
@@ -102,6 +110,7 @@ def main() -> None:
                 lines.append(f"      (replay stopped: {reject.reason})")
                 break
         status = "blocked by the grammar" if blocked else f"least likely step {worst:.2f}"
+        status += f"; {routine} of the hand proof's moves were already made by the environment"
         print(f"{bench.id}  {bench.problem.equation}   [{status}]")
         print("\n".join(lines))
 

@@ -14,28 +14,41 @@ import pathlib
 import sys
 
 from alphafe.bench import BENCH_DIR, ROOT, load_seed
-from alphafe.env import FREE_MOVES
+from alphafe.checker import Problem
+from alphafe.env import FREE_MOVES, creative_moves, prune
 from alphafe.moves import parse_proof
 
 DEEP = 5
 
 
-def creative(proof) -> int:
-    return sum(1 for move in proof if move not in FREE_MOVES)
+def creative(problem: Problem, proof) -> int:
+    """Moves a search has to propose for this proof.
+
+    For a proof the environment produced, those are exactly the moves it did
+    not add by itself. For any other proof (a hand-written one), an upper
+    bound: the moves left after pruning that are not free moves. Some of
+    those the environment would also have made by itself.
+    """
+    proposed = creative_moves(problem, proof)
+    if proposed is not None:
+        return len(proposed)
+    return sum(1 for move in prune(problem, proof) if move not in FREE_MOVES)
 
 
 def known_proof_lengths() -> dict:
     """Shortest known number of creative moves per seed problem, from hand proofs and saved results."""
     best: dict = {}
+    problems = {b.id: b.problem for b in load_seed()}
     for path in (BENCH_DIR / "seed" / "proofs").glob("*.proof"):
-        best[path.stem] = creative(parse_proof(path.read_text()))
+        if path.stem in problems:
+            best[path.stem] = creative(problems[path.stem], parse_proof(path.read_text()))
     for path in (ROOT / "results").glob("*.json"):
         payload = json.loads(path.read_text())
         if not isinstance(payload, dict) or "rows" not in payload:
             continue
         for row in payload["rows"]:
-            if row["solved"] and row["id"].startswith("s") and row["proof"]:
-                n = creative(parse_proof(row["proof"]))
+            if row["solved"] and row["id"] in problems and row["proof"]:
+                n = creative(problems[row["id"]], parse_proof(row["proof"]))
                 best[row["id"]] = min(best.get(row["id"], n), n)
     return best
 
