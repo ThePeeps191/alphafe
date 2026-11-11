@@ -245,3 +245,18 @@ def test_conclude_reports_family_members_only():
     """f(x) = x + f(0) is concluded, then f(0) is pinned down by substituting back."""
     result = run("f(x+y) + f(x) = 2x + y", "R", "sub P: x:=0\nconclude")
     assert result.solved and str(result.solutions) == "f(x) = x"
+
+
+def test_conclude_without_a_target_tries_every_explicit_identity():
+    """It used to stop at the first identity whose constants it could not pin down, although a later one
+    concludes; the free moves and every search issue conclude without a target (issue #41)."""
+    from alphafe.checker import Problem, check
+    from alphafe.moves import parse_proof
+
+    problem = Problem.parse("f(x) = f(1)^2*x + f(0)", "R")
+    moves = "sub P: x:=1\nsub P: x:=x+1\n"
+    for last in ("conclude", "conclude R4"):
+        result = check(problem, parse_proof(moves + last))
+        assert result.solved and str(result.solutions) == "f(x) = c^2x - c^2 + c for any constant c", last
+    # A named target is still taken at its word.
+    assert "cannot pin down the constants" in check(problem, parse_proof(moves + "conclude R2")).error

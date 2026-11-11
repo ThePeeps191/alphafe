@@ -1179,7 +1179,13 @@ def _do_conclude(state: State, branch: Branch, move: Conclude) -> _Outcome:
     comparing coefficients tells us exactly which parameter values give
     solutions. So the solutions in this case are precisely the verified
     members of the family, and the case is closed.
+
+    Any explicit identity will do: each one is true in this case, so each
+    one's verified family contains every solution of the case and nothing
+    but solutions of the equation. When the constants of one candidate
+    cannot be pinned down exactly, the next candidate is tried.
     """
+    failure = None
     for poly in _candidates(state, branch, move.target):
         expr = explicit_form(poly)
         if expr is None:
@@ -1188,8 +1194,11 @@ def _do_conclude(state: State, branch: Branch, move: Conclude) -> _Outcome:
         try:
             solutions = fit_candidate(state.problem.poly, family, branch.domain)
         except Unsupported as err:
-            raise Reject(f"cannot pin down the constants: {err}") from None
+            failure = failure or str(err)
+            continue
         return _Outcome(branches=[], source=poly, candidate=expr, solutions=tuple(solutions), closed="concluded")
+    if failure is not None:
+        raise Reject(f"cannot pin down the constants: {failure}")
     raise Reject("no identity of the form f(x) = explicit expression")
 
 
