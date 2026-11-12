@@ -1420,7 +1420,7 @@ At 128 calls, split by the changes of variables that hide the problem
 |---|---|---|---|---|---|---|
 | planted-2 | 109, 109, 116 of 122 | 37 | 70 | 59, 54, 53 of 78 | 10 | 21 |
 | planted-3 | 73, 73, 75 of 109 | 16 | 29 | 38, 37, 42 of 91 | 15 | 22 |
-| planted-4 | 47, 52, 49 of 105 | 8 | 20 | 31, 31, 27 of 95 | 11 | 20 |
+| planted-4 | 47, 52, 49 of 105 | 8 | 20 | 31, 31, 27 of 95 | 11 | 18 |
 
 The other sets (m4 over three seeds, then untrained):
 
@@ -1438,7 +1438,7 @@ Read against the plan:
 * **The network learned to undo a change of variables, and not only the
   eleven it was shown.** On the problems that use a change kept out of
   training it solves 53 to 59 of 78, 37 to 42 of 91 and 27 to 31 of 95 at
-  128 calls, against 10, 15 and 11 for random weights and 21, 22 and 20 for
+  128 calls, against 10, 15 and 11 for random weights and 21, 22 and 18 for
   m3. Both conditions written in advance hold in all three suites and for
   every sampling seed. It does better still where it knew the changes (109
   of 122 against 59 of 78 on planted-2), so part of what it learned is
