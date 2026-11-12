@@ -1162,3 +1162,122 @@ proposed moves and are known to be solvable (issues #92 and #107).
 * **If something goes wrong.** As before: an answer mismatch stops
   everything else, and a rerun forced by a harness bug is reported together
   with the first run.
+
+### Result on the real benchmark
+
+Run at commit `b15885d`, clean tree, Apple GPU, weights
+`alphafe-m3-150min.pt`. The network and reference rows took 2 hours 58
+minutes, brute force at 20,000 calls 7 minutes. Files:
+`results/m9_real_*.json`, `results/m9.md`,
+`results/baseline_real_20000_m9.json`. No checked proof gave an answer
+different from the recorded one. A first launch was stopped about 20 seconds
+in, before it wrote anything, to add a guard that skips the brute-force stage
+if the evaluation fails; the run reported here is the second launch and the
+only one that produced output.
+
+Solved, M8 and this milestone (M9), on the 124 unflagged problems and on all
+137:
+
+| solver | 124: M8 | 124: M9 | 137: M8 | 137: M9 | M9 per sampling seed (124) |
+|---|---|---|---|---|---|
+| network, no backtracking (32 calls) | 24 | 34 (27.4%) | 30 | 43 | 34, 33, 32 |
+| network, search (128 calls) | 28 | 35 (28.2%) | 34 | 43 | 35, 37, 35 |
+| network, search (2,000 calls) | 43 | 45 (36.3%) | 50 | 56 | 45, 47, 44 |
+| untrained network, no backtracking (32) | 12 | 31 (25.0%) | 17 | 38 | |
+| untrained network, search (128) | 19 | 35 (28.2%) | 25 | 42 | |
+| untrained network, search (2,000) | not run | 44 (35.5%) | not run | 54 | |
+| uniform policy, no backtracking (32) | 13 | 31 (25.0%) | 18 | 38 | |
+| uniform policy, search (128) | 17 | 33 (26.6%) | 23 | 42 | |
+| brute force (128 calls) | 17 | 32 (25.8%) | 23 | 38 | |
+| brute force (2,000 calls) | 27 | 38 (30.6%) | 34 | 47 | |
+| brute force (20,000 calls) | 38 | 43 (34.7%) | 47 | 53 | |
+
+The M8 network rows per sampling seed on the 124 were 24, 28, 28 at 32
+calls, 28, 27, 28 at 128 and 43, 43, 42 at 2,000. The untrained and uniform
+rows have one sampling seed.
+
+By MOHS value on the 124 unflagged problems (132 of the 137 values are
+estimates):
+
+| solver | 0M | 5M | 10M | 15M | 20M | 25M and up |
+|---|---|---|---|---|---|---|
+| network, search (2,000 calls), M8 | 2/2 | 13/15 | 20/43 | 5/32 | 3/19 | 0/13 |
+| network, search (128 calls) | 2/2 | 10/15 | 16/43 | 5/32 | 2/19 | 0/13 |
+| network, search (2,000 calls) | 2/2 | 11/15 | 20/43 | 6/32 | 5/19 | 1/13 |
+| untrained network, search (2,000 calls) | 2/2 | 10/15 | 23/43 | 6/32 | 3/19 | 0/13 |
+| brute force (2,000 calls) | 2/2 | 10/15 | 20/43 | 5/32 | 1/19 | 0/13 |
+| brute force (20,000 calls) | 2/2 | 12/15 | 23/43 | 5/32 | 1/19 | 0/13 |
+
+### Plain reading
+
+* **The headline barely moved: 45 of 124 against 43.** Over the sampling
+  seeds it is 44 to 47 against 42 to 43. On the first seed 7 problems are
+  newly solved and 5 are lost. On all 137 the row goes from 50 to 56, but 4
+  of those 6 are flagged problems (11 of 13 solved against 7), and the
+  flagged problems are the dev suite this milestone was developed on.
+* **Training contributes nothing here at 128 or 2,000 calls.** By the rule
+  written in the protocol: untrained 35 against trained 35, 37, 35 at 128
+  calls, and untrained 44 against trained 45, 47, 44 at 2,000. Both are
+  inside the spread of the sampling seeds. On the first seed at 2,000 calls
+  the trained network solves 4 problems the untrained one does not, and the
+  untrained one solves 3 the trained one does not. With no backtracking at
+  32 calls the trained network has 34, 33, 32 against 31, a difference of 1
+  to 3 problems against a single untrained seed. The expectation written
+  before the run was no difference at 2,000 calls, and that is what
+  happened.
+* **What changed is the cheap end.** Every row without a trained network
+  roughly doubled at small budgets: untrained search at 128 calls from 19 to
+  35, uniform proposals at 32 calls from 13 to 31, brute force at 128 calls
+  from 17 to 32. The routine moves alone, with no proposed move, now solve
+  24 of the 124 (30 of 137); in M8 they solved 8 (11). Of the 45 problems in
+  the headline row, 24 need no call, 9 need at most 32, 3 need 33 to 128 and
+  9 need more. What used to take 2,000 calls of search mostly takes 32 now,
+  and the problems beyond that have not come closer.
+* **M8's reading that the network beats brute force no longer credits
+  training.** The network row is still ahead of brute force at 2,000 calls
+  (45 against 38) and level with brute force at 20,000 (43), but the
+  untrained network with the same proposal machinery is too (44). The lead
+  belongs to the sampling search and the proposals taken from the page, not
+  to the weights.
+* **The target range got slightly worse.** At 0M to 10M the headline row
+  solves 33 of 60, against 35 in M8 (11 of 15 at 5M against 13). The gains
+  are above it: 6 of 32 at 15M against 5, 5 of 19 at 20M against 3, and the
+  first unflagged problem rated 25M (`iran-2024-tst1-4`).
+* **Four problems solved in M8 are solved by no row and no seed now**:
+  `france-2016-jan-ex4`, `france-2024-senior-ex13`, `ukraine-2006-g10-2`
+  and `memo-2016-t2`. In M8 the first three took the network 108 to 1,586
+  calls, and brute force found `ukraine-2006-g10-2` at 8,316; now every
+  search on them runs out of budget (brute force at 20,000 calls stops at
+  the time limit on `france-2024-senior-ex13`). `memo-2016-t2` is
+  different: brute force reports its search space exhausted after 1,308
+  calls, so the proof M8 found is no longer reachable in this environment.
+  Counting any row and any seed, 52 of the 124 are solved here (63 of 137)
+  against 48 (58) in M8, and 56 (67) in at least one of the two. Every
+  problem solved in M7 is still solved. The four have not been inspected;
+  doing so means flagging them as seen in development.
+* **Searches that stop early.** Three problems end with an empty frontier in
+  the network search on all three seeds: `memo-2016-t2` after 22 to 24
+  calls, `taiwan-tst-2023-is1-1a` after 18 to 20 and `usajmo-2016-6` after
+  1,070 to 1,695. For the first, brute force agrees that there is nothing
+  left to try. For the other two the search's limit of six expansions per
+  state is a possible cause and has not been checked. Two problems still
+  cannot be loaded.
+* **The protocol's prediction about the time limit was wrong.** It said more
+  brute-force problems would stop at 120 seconds than in M8. Three did,
+  against 17, and the row took 21.5 seconds per problem against 49.7. The
+  faster checker outweighs the larger opening set. The 20,000-call row is
+  therefore closer to a real 20,000-call row than M8's was, and part of its
+  gain from 38 to 43 may be that.
+* **Cost.** The network row at 2,000 calls takes 18.3 seconds per problem
+  (21.6 in M8), brute force at 2,000 calls 2.7 seconds (8.4).
+* **The square lemmas** again appear in the proof of one solved problem
+  (`bmc-a1bc91-6`).
+* **What is still out of reach**: 79 of the 124 at the headline row,
+  including 12 of the 13 rated 25M and above, 26 of 32 at 15M and 23 of 43
+  at 10M. The unsolved problems have not been inspected.
+
+In one sentence: the environment got better at the easy end, the network did
+not learn anything that shows on real problems, and the count of unseen real
+problems solved went from 43 to 45. Why training does not help, and what is
+being tried next (problems with known multi-step proofs and an encoder that
+shows the whole state), is in the training section above and in issue #107.
