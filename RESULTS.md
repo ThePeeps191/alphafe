@@ -1281,3 +1281,109 @@ not learn anything that shows on real problems, and the count of unseen real
 problems solved went from 43 to 45. Why training does not help, and what is
 being tried next (problems with known multi-step proofs and an encoder that
 shows the whole state), is in the training section above and in issue #107.
+
+## M10: problems with known proofs, and a network that reads the whole state
+
+M9 ended with a trained network that random weights matched on every set
+that mattered. This milestone changes what the network is trained on and
+what it is shown, and adds a held-out set on which the difference can be
+measured. Issue #107 has the running account.
+
+### A held-out set with known proofs (`benchmarks/synthetic/planted.jsonl`)
+
+A generated problem is hidden behind one to three changes of variables
+(`generate.disguise`; sixteen changes such as x -> x + f(y), x -> 2x + y, or
+(x, y) -> (x + y, x - y)). Each change is a bijection of the pair of
+variables, so the hidden equation has the same solutions, and its proof is
+known without search: undo the changes one move at a time, then put the
+opening substitutions into the plain equation, which is now a derived
+identity (`alphafe/planted.py`). The proof is minimised and must replay
+through the environment.
+
+The file holds 600 such problems, 200 each whose known proof has 2, 3 and 4
+proposed moves, built from plain problems on the held-out side of the hash
+split. A search may find a shorter proof, so the number is an upper bound.
+Five of the sixteen changes are never used by a training pool
+(`generate.HELD_OUT_CHANGES`); 78, 91 and 95 of the problems use at least
+one of them.
+
+Solved before any change to training (commit `fa5339f`, m3 weights, which
+have never seen a disguised problem; three sampling seeds for the trained
+rows; `results/m10base_*`):
+
+| | m3, no backtracking (32) | m3, search (128) | untrained, search (128) | uniform, search (128) | brute force (128) | brute force (2,000) |
+|---|---|---|---|---|---|---|
+| planted-2 | 59, 57, 52 | 91, 87, 93 | 60 | 37 | 63 | 109 |
+| planted-3 | 32, 41, 33 | 51, 49, 48 | 33 | 20 | 34 | 66 |
+| planted-4 | 30, 30, 29 | 38, 45, 43 | 26 | 14 | 22 | 48 |
+
+Two things follow. The set has room: every problem has a proof and brute
+force at 2,000 calls finds a quarter to a half of them. And on it the m3
+weights are well ahead of random ones, about 1.5 times as many at 128 calls
+and three times as many without backtracking (untrained: 20, 11, 9). On the
+held-out tiers, the dev suite and the real benchmark that difference was a
+few problems or none, because most of what those sets have within reach is
+solved before a move is proposed. So M9's reading needs a correction:
+training had taught the network something, and the sets used to measure it
+could not show it. At this commit the network is shown 14 identities, and
+the later moves of a known proof often go into an identity beyond them; the
+trained and the untrained rows share that limit.
+
+### Where a search's calls went, and three changes to the search (commit `c9abb14`)
+
+With the m3 weights at 128 calls (CPU, one sampling seed, 32 dev problems,
+60 of held-out tier 4, 60 of planted-3):
+
+| | calls | new state | refused | repeat of a move already sent from that state |
+|---|---|---|---|---|
+| dev suite, before | 1,358 | 71% | 21% | 6% |
+| dev suite, after | 1,343 | 72% | 26% | 0 |
+| tier 4, before | 3,380 | 62% | 26% | 11% |
+| tier 4, after | 3,324 | 75% | 23% | 0 |
+| planted-3, before | 6,374 | 78% | 14% | 6% |
+| planted-3, after | 6,362 | 83% | 14% | 0 |
+
+On tier 4 a fifth of the calls were case splits and 3% of those gave a new
+state: the grammar offered a split on every fact about constants, and the
+policy had put its weight on facts that do not factor. On the dev problem
+`classic-05` all six network samples of a round were the same refused
+split, sent again every round, until the state had been visited six times
+and was dropped with 18 of 2,000 calls spent (issue #111).
+
+The changes, for every proposer: the grammar offers a split only on a fact
+that factors (the checker's own test), a move is sent to the checker once
+per state, and a state stays on the frontier until three rounds of
+proposals in a row hold nothing new. Solved in this sample: 22, 35 and 16
+after, against 23, 35 and 15 before, so no difference at this size. The
+full evaluation is part of the plan below.
+
+### Plan for the training run m4 (written while it runs, before any of its numbers)
+
+* **The run.** 150 minutes, as m3, with two differences: disguised problems
+  in the pool with their known proofs as 30% of every batch (six disguises
+  tried per generated problem, from the eleven training changes), and the
+  row-wise encoder that shows up to 80 identities and 2,048 tokens. The
+  encoder is a new architecture, so no earlier weights load in it.
+* **Comparison.** At one commit: m4, random weights in the same
+  architecture, uniform proposals and brute force, on the planted suites,
+  the held-out tiers, the dev suite and the seed set, three sampling seeds
+  for the trained rows.
+* **What would count as the network having learned to undo a change of
+  variables, and not sixteen templates.** On the planted problems that use
+  a held-out change, at 128 calls: m4 solves at least 1.5 times what random
+  weights solve in each of the three suites, and more than m3 did on the
+  same problems (21 of 78, 22 of 91, 18 of 95). If m4 is ahead only on the
+  problems whose changes it trained on, that is the template result and is
+  reported as such.
+* **What would count as progress on the other sets.** Trained minus
+  untrained outside the spread of the sampling seeds on held-out tiers 3
+  and 4 at 128 calls and on the dev suite at 2,000. M9 had 139 to 141 and
+  107 to 109 against 140 and 104 on the tiers, and 23 or 24 against 24 on
+  dev.
+* **Known confound.** The encoder and the training data change together.
+  If m4 is ahead, a second run with the encoder and without the disguised
+  problems separates them. If it is not, the first check is the planted
+  suites with random weights in both encoders.
+* **The real benchmark** is run once, after this, under its own protocol,
+  and only if the seed, dev and held-out sets do not fall below their M9
+  numbers.
