@@ -111,7 +111,7 @@ M9, show the form). Most promising next, in order:
    with the row-wise encoder takes 1.2 s alone and 3.7 s next to six
    self-play workers (m4 got 1,886 steps, m3 5,280); the no-backtracking
    row is untested with the argument proposals.
-4. The encoder branch (`encoder`, one commit on top of `1d2d3db`'s line;
+4. The encoder branch (`encoder`, one commit on top of an earlier `main`;
    rebase on `main` before use) is not merged: it changes the vocabulary,
    so the released weights would stop loading, and it has no measured gain
    on real-like sets.
