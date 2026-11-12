@@ -5,7 +5,7 @@ import random
 from alphafe.checker import check
 from alphafe.env import start, step
 from alphafe.generate import disguise, generate
-from alphafe.moves import EqRef
+from alphafe.moves import EqRef, show_move
 from alphafe.planted import planted_proof, solves, written
 from alphafe.tokenizer import decode_move, encode_move, encode_state
 from alphafe.train import planted_examples
@@ -70,7 +70,8 @@ def test_examples_are_the_moves_of_the_known_proof_as_the_network_writes_them():
                 assert step(state, shown)[0].key() == step(state, move)[0].key()
                 ids = encode_move(shown, view)
                 if ids is not None:                       # None: the row is not among those shown
-                    assert decode_move(ids, view) == shown
+                    # Compared as text: -1 is one number in an opening move and a negated 1 when read back.
+                    assert show_move(decode_move(ids, view)) == show_move(shown)
                     direct.append((tuple(view.tokens), tuple(ids)))
             state, _ = step(state, move)
         # The proof's own steps come first, in order; the mirror image, if any, follows.
