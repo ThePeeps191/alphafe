@@ -127,10 +127,12 @@ Difficulty is measured on Evan Chen's MOHS scale, which runs from 0M to 50M;
 ### Real competition problems
 
 The real benchmark is 137 competition problems that fit the scope above,
-selected by rules fixed in advance. Thirteen are flagged as seen during
-development; the other 124 have never been looked at, and they are the
-headline. Each version is run on the benchmark once, under a protocol
-committed before the run.
+selected by rules fixed in advance. For the three runs below, thirteen were
+flagged as seen during development and the other 124 had never been looked
+at; those 124 are the headline. Each version is run on the benchmark once,
+under a protocol committed before the run. Four more problems were flagged
+after the third run, to find out why they were no longer solved, so later
+runs have 120 unseen problems.
 
 Solved, of the 124:
 
@@ -259,14 +261,15 @@ a map of the modules.
   one to three changes of variables, 200 each with a known proof of 2, 3 and
   4 proposed moves. Also excluded from training. Evaluated on request with
   `--suite planted`.
-* `benchmarks/dev/`: a development suite of 32 harder problems, mostly rated
-  10M and above, with 13 checked proofs. It is hand-picked and may be tuned
-  on, so it says what to work on next and not how good the solver is. Twelve
-  of its problems are the real problems flagged as seen in development.
+* `benchmarks/dev/`: a development suite of 36 harder problems, mostly rated
+  10M and above, with 13 checked proofs. It may be tuned on, so it says what
+  to work on next and not how good the solver is. Twenty are hand-picked and
+  sixteen are the real problems flagged as seen in development (32 problems
+  in the results above, before four were flagged).
 * `benchmarks/real/`: 137 real competition problems, used only for testing.
   They were selected by rules fixed in advance from MathNet and Evan Chen's
   solution notes, and `benchmarks/real/SKIPPED.md` lists everything the rules
-  covered and left out. Thirteen are flagged as not fully unseen, and results
+  covered and left out. Seventeen are flagged as not fully unseen, and results
   are given with and without them.
 
 ## Known limits

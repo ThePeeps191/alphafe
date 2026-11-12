@@ -20,7 +20,7 @@ def test_the_dev_file_passes_the_basic_check():
 
 def test_the_suite_is_the_dev_file_plus_the_flagged_real_problems():
     flagged = [b.id for b in load_real() if b.meta.get("seen_in_development")]
-    assert len(flagged) == 12 and len(DEV) == 32
+    assert len(flagged) == 16 and len(DEV) == 36
     assert set(flagged) <= set(DEV)
 
 

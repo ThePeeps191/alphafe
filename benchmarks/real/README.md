@@ -31,7 +31,13 @@ with and without them.
 
 * `"in_training_pool": true` (1 problem): the synthetic generator also
   produces this equation, so the published weights may have trained on it.
-* `"seen_in_development": true` (12 problems). For 11 of them the solver
+* `"seen_in_development": true` (16 problems). Four were flagged on
+  2026-11-12: `france-2016-jan-ex4`, `france-2024-senior-ex13`,
+  `ukraine-2006-g10-2` and `memo-2016-t2` were solved in the second run of
+  this benchmark and by nothing in the third, and were opened to find out
+  why (issue #110). Results up to and including that third run count them
+  as unseen (124 unflagged problems); later ones have 120. For 11 of the
+  other 12 the solver
   was run on the problem, and proposals for improving it were written with
   the problem in view, before this benchmark existed (the study behind issue
   #99). Version 1 was not changed because of them, so its results on them
