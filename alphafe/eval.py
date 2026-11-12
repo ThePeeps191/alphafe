@@ -506,6 +506,24 @@ def _flag_counts(rows: list[Row]) -> str:
     return ", ".join(parts)
 
 
+def _unseen_changes(runs: dict, per_seed: dict) -> str:
+    """A planted suite split in two: problems hidden only by changes of variables that training pools use,
+    and problems hidden by at least one that they never use (``generate.HELD_OUT_CHANGES``)."""
+    unseen = {bench.id for benches in planted_heldout().values() for bench in benches if bench.meta.get("unseen_change")}
+    lines = ["| solver | changes used in training | at least one change never used in training |", "|---|---|---|"]
+    for label, rows in runs.items():
+        cells = []
+        for wanted in (False, True):
+            part = [r for r in rows if (r.id in unseen) == wanted]
+            text = f"{sum(r.solved for r in part)}/{len(part)}"
+            seeds = [sum(r.solved for r in rows_of_seed if (r.id in unseen) == wanted) for rows_of_seed in per_seed.get(label, [])]
+            if len(seeds) > 1:
+                text += f" (per seed: {', '.join(str(count) for count in seeds)})"
+            cells.append(text)
+        lines.append(f"| {label} | {cells[0]} | {cells[1]} |")
+    return "\n".join(lines)
+
+
 def report(results: dict, spreads: Optional[dict] = None, seed_rows: Optional[dict] = None) -> str:
     """Markdown tables for a ``full_eval`` result.
 
@@ -538,6 +556,14 @@ def report(results: dict, spreads: Optional[dict] = None, seed_rows: Optional[di
         if suite in ("seed", "dev", "real"):
             parts.append("")
             parts.append(markdown_by_mohs(runs))
+        early = {label: sum(r.reason == "frontier empty" for r in rows) for label, rows in runs.items()}
+        if any(early.values()):
+            parts.append("")
+            parts.append("Searches that ended with nothing left to try before the budget was spent: "
+                         + "; ".join(f"{label}: {count}" for label, count in early.items() if count) + ".")
+        if suite.startswith("planted"):
+            parts.append("")
+            parts.append(_unseen_changes(runs, (seed_rows or {}).get(suite, {})))
         first = next(iter(runs.values()))
         # The dev suite is development data throughout, so the flags of the real problems in it say nothing there.
         flagged = [r for r in first if r.flags] if suite != "dev" else []
