@@ -72,6 +72,18 @@ A fresh session should read this file, `DECISIONS.md` and `git log` first.
   (150 minutes) are not measurably better than random weights on real
   problems. Four problems solved in M8 are lost (#110).
 
+- **M10 (in progress)**: a frozen held-out set of 600 problems with known
+  proofs of 2, 3 and 4 proposed moves (`benchmarks/synthetic/planted.jsonl`,
+  `--suite planted`), five of sixteen changes of variables kept out of
+  training; a search sends a move once per state, offers a case split only
+  where the fact factors and has no fixed limit on visits (#111);
+  proposals that solve an argument of f for a variable (#33); the four
+  problems of #110 flagged and explained; run m4 (known proofs in every
+  batch, row-wise encoder on branch `encoder`). m4 is far ahead of random
+  weights on the planted suites and level with random weights plus the
+  argument proposals; nothing moved on dev, seed or the held-out tiers. The
+  real benchmark has not been run in this milestone.
+
 ## Next
 
 The task list is the GitHub issue tracker; issue #99 is the roadmap and its
@@ -80,20 +92,35 @@ configuration on the seed and held-out sets only, then run the real
 benchmark once, under a protocol committed before the run (RESULTS.md, M7 to
 M9, show the form). Most promising next, in order:
 
-1. Training (#107). The trained weights do no better than random ones on
-   real problems. Self-play problems are mostly solved by the routine moves,
-   so the trainer sees few proofs with several proposed moves, and the
-   network reads 14 of a median 25 identities. In progress on the local
-   branch `work`: problems hidden behind changes of variables whose proofs
-   are known by construction (`alphafe/planted.py`, #83), and an encoder
-   that reads every identity (#108, #16). The comparison that decides is
-   trained against random weights on a held-out set sorted by proof length.
-2. The four real problems lost since M8 (#110) and searches that stop with
-   an empty frontier (#111).
-3. Shifted instances such as f(x - 2) are what the routine moves still
-   refuse; a plain cap on them feeds itself (#106).
-4. A proposed move costs about three times more in the larger states (#109).
-5. More moves for 15M to 20M problems: #77 and #78, then #80 and #81.
+1. Find out what the unsolved real problems in the target range need. 27
+   of the 60 rated 0M to 10M were unsolved in M9 and none has been opened;
+   the dev suite cannot say, it had one unsolved problem in that range.
+   Proposed, not started: a seeded random sample of them, the rule and the
+   seed committed before any is opened, each flagged `seen_in_development`
+   (this shrinks the unseen set, now 120, for good; report on both
+   denominators afterwards). Sort the failures into missing move, search
+   depth or state size, and work on the largest group.
+2. The real benchmark for M10 (search fixes and argument proposals, m3
+   weights, old encoder) under a protocol written first. The development
+   sets predict no change; it has not been run.
+3. Training (#107): m4 showed that known proofs in the pool teach a
+   multi-move idea, shapes unseen in training included, and that the same
+   idea is cheap to write as a proposal. Do not build further families one
+   idea at a time. Open points if training is taken up again: the time
+   limit counts the pool build (45 of m4's 150 minutes); a gradient step
+   with the row-wise encoder takes 1.2 s alone and 3.7 s next to six
+   self-play workers (m4 got 1,886 steps, m3 5,280); the no-backtracking
+   row is untested with the argument proposals.
+4. The encoder branch (`encoder`, one commit on top of `1d2d3db`'s line;
+   rebase on `main` before use) is not merged: it changes the vocabulary,
+   so the released weights would stop loading, and it has no measured gain
+   on real-like sets.
+5. An environment that fills a case to the cap of 80 identities by itself
+   (#110, `memo-2016-t2`): 2 of 16 unsolved dev starts and 6 of 122 on tier
+   4. Limiting the routine moves to 64 or 48 identities changed nothing.
+6. Shifted instances such as f(x - 2) (#106); the cost of a proposed move
+   in large states (#109); more moves for 15M to 20M problems (#77, #78,
+   #80, #81).
 
 Nothing heavy may run on the machine while a training run is going: a run is
 limited by wall-clock time (DECISIONS.md).
@@ -119,6 +146,10 @@ limited by wall-clock time (DECISIONS.md).
 
 ## State of the local (uncommitted) artefacts
 
+- `checkpoints/m4/` (run m4: `last.pt`, `actor.pt`, `buffer.pt`): loads only on branch `encoder`. Ad hoc
+  measurement scripts of M10 are in `.scratch/` (ignored locally): `waste.py` (where a search's calls go),
+  `rowcap.py`, `lost4.py`, `plantstat.py`, `eval_m4.sh` (evaluation in six processes on the CPU, which is
+  faster than the GPU for searches).
 - `checkpoints/alphafe-m3-150min.pt` (M9, release v0.3.0; also copied to `checkpoints/best.pt`, which
   `alphafe solve` loads) and the full training state in `checkpoints/m3/`. `checkpoints/alphafe-m1-56min.pt`
   (M8, release v0.2.0) and `checkpoints/m1/`. Older: `checkpoints/v1/m5.pt` (M5),
