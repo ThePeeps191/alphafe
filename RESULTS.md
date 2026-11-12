@@ -1466,3 +1466,90 @@ Read against the plan:
   real number would move. The encoder stays on its branch: merging it
   would make the released weights unloadable for no measured gain on real
   problems.
+
+### Correction to the reading of m4: a stronger control
+
+The section above compares m4 with random weights. A third comparison,
+made afterwards, changes what the result means.
+
+Commit `18d02b2` adds a kind of proposal that needs no training (issue
+#33): for an argument of f that is c*v + rest in a variable v, the
+substitution that makes it vanish, that makes it equal another variable or
+another argument of f, or that turns it into v alone; and, for a surjective
+f, a preimage of 0, 1, -1 or 2. Two of the eight proposals per state are
+drawn this way. Solved at 128 calls on the first 60 problems of each planted
+suite (CPU, one sampling seed, `ARGUMENT_PROPOSALS` 0 or 2):
+
+| | planted-2 | planted-3 | planted-4 | tier 4 (60) | dev (32) | seed (51) |
+|---|---|---|---|---|---|---|
+| old encoder, random weights | 20 | 11 | 7 | 36 | 21 | 46 |
+| old encoder, random weights, with the proposals | 44 | 40 | 32 | 36 | 21 | 48 |
+| old encoder, m3 | 25 | 16 | 8 | 35 | 22 | 47 |
+| old encoder, m3, with the proposals | 48 | 44 | 32 | 39 | 22 | 47 |
+| new encoder, random weights | 17 | 9 | 4 | 36 | 21 | 46 |
+| new encoder, random weights, with the proposals | 45 | 41 | 25 | 36 | 21 | 47 |
+| new encoder, m4 | 48 | 37 | 20 | 35 | 21 | 48 |
+| new encoder, m4, with the proposals | 56 | 46 | 32 | 35 | 21 | 46 |
+
+At 2,000 calls on the dev suite and the seed set (old encoder): m3 solves
+25 and 51 without the proposals and 24 and 51 with them; random weights
+with them 25 and 50.
+
+* **Sixty lines of proposal code do what 150 minutes of training did.**
+  Random weights with the proposals solve 44, 40 and 32, where m4 without
+  them solves 48, 37 and 20. The sentences above that call m4 "worth more
+  than a sixty times larger search budget" and say the network "learned to
+  undo a change of variables" are true against random weights alone. Against
+  this control m4 is level on the first two suites and behind on the third.
+* **Training still adds something on top**: m4 with the proposals solves
+  56, 46 and 32 against 45, 41 and 25 for random weights with them. That is
+  one sampling seed and 60 problems per suite, so a difference of five is
+  the least that should be counted.
+* **The no-backtracking row has not been tried with the proposals.** There
+  m4 solved 146, 108 and 77 of 200 against 18, 12 and 9; the proposals are
+  only mixed into searches with backtracking.
+* **On the dev suite, the seed set and tier 4 the proposals change nothing**
+  either, at 128 or at 2,000 calls. Two independent routes solved the
+  planted family and neither moved the sets that resemble real problems.
+* **The search changes of `c9abb14` did not cost problems**: m3 with them
+  solves 25 of the dev suite and all 51 seed problems at 2,000 calls, where
+  the M9 control at the same seed and device had 23 and 51.
+
+What this leaves: the planted family measured whether training can teach a
+multi-move idea, and it can; but that idea was also easy to write down, and
+problems of that family are not what the solver fails on. Building more
+families one idea at a time would be the case-by-case path. What is missing
+is knowledge of what the unsolved real problems in the target range need:
+27 of the 60 rated 0M to 10M were unsolved and uninspected in M9, while the
+dev suite had one unsolved problem in that range before the four problems
+of the next section joined it.
+
+### The four problems lost since M8 (issue #110)
+
+They were flagged as seen in development (commit `086e5e6`) and then opened.
+The stored M8 proofs of three of them replay through today's checker move
+for move, so nothing in the checker changed for them. Brute force at 20,000
+calls and 300 seconds under variations of the environment:
+
+| | start, today | today | without the openings at 1 and -1 | M8 openings |
+|---|---|---|---|---|
+| `ukraine-2006-g10-2` (5M) | 28 identities | unsolved | solved, 9,653 calls | solved, 8,316 calls |
+| `memo-2016-t2` (20M) | 80 identities, the cap | search space exhausted at 1,308 | solved, 5,350 calls | unsolved |
+| `france-2024-senior-ex13` (10M) | 71 identities | time limit at 8,753 calls | unsolved | unsolved (5 identities at the start) |
+| `france-2016-jan-ex4` (10M) | 16 identities | unsolved | unsolved | unsolved |
+
+So the larger opening set of M9 is the cause for at least two: it fills the
+starting state (to the cap of 80 for `memo-2016-t2`, after which every
+substitution is refused) and widens every later choice. The other two were
+found only by the M8 network. On the development sets the same opening set
+was a clear gain (brute force at 2,000 calls: 144 and 114 on tiers 3 and 4
+against 130 and 99), and a search that splits its budget between the two
+environments would solve fewer there, not more (142 and 111 at 1,000 calls
+each). No change was made on the strength of four problems.
+
+One idea was tried for the full starting states and dropped: stopping the
+routine and opening substitutions at 64 or 48 identities, to leave room
+below the cap of 80 for proposed moves. Brute force at 2,000 calls on the
+dev suite, the seed set, 100 problems each of tiers 2 to 4 and 60 of
+planted-3 solves 23, 50, 97, 72, 56 and 18 as it is, 23, 50, 98, 72, 56 and
+18 with a limit of 64, and 23, 50, 98, 72, 54 and 19 with 48.
