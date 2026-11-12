@@ -255,6 +255,10 @@ a map of the modules.
 * `benchmarks/synthetic/heldout.jsonl`: 800 generated problems, 200 per
   curriculum tier, frozen in a file and excluded from training by a hash of
   the canonical equation.
+* `benchmarks/synthetic/planted.jsonl`: 600 generated problems hidden behind
+  one to three changes of variables, 200 each with a known proof of 2, 3 and
+  4 proposed moves. Also excluded from training. Evaluated on request with
+  `--suite planted`.
 * `benchmarks/dev/`: a development suite of 32 harder problems, mostly rated
   10M and above, with 13 checked proofs. It is hand-picked and may be tuned
   on, so it says what to work on next and not how good the solver is. Twelve

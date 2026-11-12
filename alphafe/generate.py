@@ -370,8 +370,9 @@ def twin_keys(equation: str) -> set:
 def protected_keys() -> set:
     """Keys a training pool must not contain: every benchmark problem and each of its twins.
 
-    Covers the seed, development and real benchmarks and the frozen held-out file. The
-    twin relation is symmetric, so excluding the twins' keys of the benchmark
+    Covers the seed, development and real benchmarks, the frozen held-out file and
+    the frozen problems with known proofs (their hidden and their plain equations).
+    The twin relation is symmetric, so excluding the twins' keys of the benchmark
     problems excludes exactly the generated problems that are twins of one.
     """
     import json
@@ -386,4 +387,10 @@ def protected_keys() -> set:
         for line in heldout.read_text().splitlines():
             if line.strip():
                 keys |= twin_keys(json.loads(line)["equation"])
+    planted = BENCH_DIR / "synthetic" / "planted.jsonl"
+    if planted.exists():
+        for line in planted.read_text().splitlines():
+            if line.strip():
+                record = json.loads(line)
+                keys |= twin_keys(record["equation"]) | twin_keys(record["plain"])
     return keys

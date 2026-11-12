@@ -255,6 +255,7 @@ def run_policy(benches: list[BenchProblem], proposer, mode: str, budget: int, k:
 
 
 HELDOUT_FILE = "heldout.jsonl"
+PLANTED_FILE = "planted.jsonl"
 
 
 def synthetic_heldout(limit: int = 200) -> dict:
@@ -274,6 +275,26 @@ def synthetic_heldout(limit: int = 200) -> dict:
     return dict(sorted(out.items()))
 
 
+def planted_heldout(limit: int = 200) -> dict:
+    """Held-out problems with a known proof, by the number of proposed moves in it, from the frozen file
+    benchmarks/synthetic/planted.jsonl (written once by scripts/freeze_planted.py). An empty dict without the file.
+
+    Each is a generated problem behind changes of variables; undoing them is the known proof. A search may
+    find a shorter one, so the number is an upper bound. Answers are not recorded."""
+    from .bench import BENCH_DIR
+    from .checker import Problem
+
+    path = BENCH_DIR / "synthetic" / PLANTED_FILE
+    out: dict = {}
+    for line in path.read_text().splitlines() if path.exists() else ():
+        rec = json.loads(line)
+        bucket = out.setdefault(rec["moves"], [])
+        if len(bucket) < limit:
+            bucket.append(BenchProblem(rec["id"], Problem.parse(rec["equation"], rec["domain"], rec["id"]), None, None,
+                                       rec["source"], rec))
+    return dict(sorted(out.items()))
+
+
 def common_calls(first: list[Row], second: list[Row]) -> Optional[tuple]:
     """Mean checker calls of two solvers on the problems BOTH solved: (n, mean first, mean second).
 
@@ -286,7 +307,8 @@ def common_calls(first: list[Row], second: list[Row]) -> Optional[tuple]:
     return len(pairs), round(sum(a for a, _ in pairs) / len(pairs), 1), round(sum(b for _, b in pairs) / len(pairs), 1)
 
 
-SUITE_CHOICES = ("seed", "dev", "real", "synthetic", "synthetic-tier1", "synthetic-tier2", "synthetic-tier3", "synthetic-tier4")
+SUITE_CHOICES = ("seed", "dev", "real", "synthetic", "synthetic-tier1", "synthetic-tier2", "synthetic-tier3", "synthetic-tier4",
+                 "planted", "planted-2", "planted-3", "planted-4")
 BIG_BUDGET_SUITES = ("seed", "dev", "real")      # the suites that get the --big-budget rows (network and brute force)
 SAMPLING_SEED = 1000                      # sampling seed i of a network row is SAMPLING_SEED + i
 
@@ -306,7 +328,7 @@ class EvalRun:
 
 
 def select_suites(names, heldout: int = 200) -> dict:
-    """The benchmark suites to evaluate, in the usual order. ``names`` None or empty means all but ``dev``."""
+    """The benchmark suites to evaluate, in the usual order. ``names`` None or empty means all but ``dev`` and ``planted``."""
     from .bench import load_dev, load_real, load_seed
 
     wanted = set(names or ())
@@ -330,6 +352,10 @@ def select_suites(names, heldout: int = 200) -> dict:
         for tier, benches in synthetic_heldout(heldout).items():
             if want(f"synthetic-tier{tier}"):
                 suites[f"synthetic-tier{tier}"] = benches
+    if any(name.startswith("planted") for name in wanted):       # problems with known proofs: only on request
+        for moves, benches in planted_heldout(heldout).items():
+            if "planted" in wanted or f"planted-{moves}" in wanted:
+                suites[f"planted-{moves}"] = benches
     return suites
 
 
@@ -543,7 +569,7 @@ def main(argv=None) -> None:
     parser.add_argument("--checkpoint", default=None,
                         help="weights to evaluate (default: checkpoints/best.pt if it exists; a path given here must exist)")
     parser.add_argument("--suite", action="append", choices=SUITE_CHOICES, metavar="NAME",
-                        help=f"evaluate only this suite; repeatable (default: all but dev). One of: {', '.join(SUITE_CHOICES)}")
+                        help=f"evaluate only this suite; repeatable (default: all but dev and planted). One of: {', '.join(SUITE_CHOICES)}")
     parser.add_argument("--tag", default=None,
                         help="prefix for the files written to results/ (default: 'eval', or none when one --suite is given)")
     parser.add_argument("--heldout", type=int, default=200, help="held-out synthetic problems per tier")

@@ -83,3 +83,34 @@ def test_examples_are_the_moves_of_the_known_proof_as_the_network_writes_them():
 
 def test_a_plain_problem_has_no_known_proof():
     assert planted_proof(ITEMS[0]) is None and planted_examples(ITEMS[0]) == []
+
+
+def test_the_frozen_problems_with_known_proofs_replay_and_cannot_reach_a_training_pool():
+    """benchmarks/synthetic/planted.jsonl: 200 problems for each proof length, proofs that replay, keys protected."""
+    from alphafe.checker import Problem
+    from alphafe.eval import planted_heldout, select_suites
+    from alphafe.generate import canonical_key, protected_keys
+    from alphafe.moves import parse_move
+
+    suites = planted_heldout()
+    assert sorted(suites) == [2, 3, 4] and all(len(benches) == 200 for benches in suites.values())
+    records = [bench.meta for benches in suites.values() for bench in benches]
+    assert len({record["key"] for record in records}) == 600
+    protected = protected_keys()
+    for record in records:
+        assert int(record["base"][:8], 16) % 10 == 0                   # the plain problem is on the "test" side
+        assert record["key"] in protected and record["base"] in protected
+    for moves, benches in suites.items():
+        for bench in benches[::20]:
+            record = bench.meta
+            problem = Problem.parse(record["equation"], record["domain"])
+            assert canonical_key(problem.poly) == record["key"]
+            assert canonical_key(Problem.parse(record["plain"], record["domain"]).poly) == record["base"]
+            proof = [parse_move(text) for text in record["proof"]]
+            assert len(proof) == moves and solves(problem, proof)
+            assert not start(problem)[0].solved
+            # No move of the known proof can be left out.
+            assert not any(solves(problem, proof[:index] + proof[index + 1:]) for index in range(len(proof)))
+    assert set(select_suites(["planted"])) == {"planted-2", "planted-3", "planted-4"}
+    assert set(select_suites(["planted-3", "seed"])) == {"seed", "planted-3"}
+    assert not any(name.startswith("planted") for name in select_suites(None))
