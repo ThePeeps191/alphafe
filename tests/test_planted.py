@@ -2,16 +2,25 @@
 
 import random
 
+import pytest
+
 from alphafe.checker import check
 from alphafe.env import start, step
 from alphafe.generate import disguise, generate
 from alphafe.moves import EqRef, show_move
 from alphafe.planted import planted_proof, solves, written
 from alphafe.tokenizer import decode_move, encode_move, encode_state
-from alphafe.train import planted_examples
 
 DATA = generate(11, 30)
 ITEMS = [item for items in DATA.values() for item in items]
+
+
+def planted_examples(item):
+    """``train.planted_examples``; the tests that use it are skipped where torch is not installed."""
+    pytest.importorskip("torch")
+    from alphafe.train import planted_examples as examples
+
+    return examples(item)
 
 
 def _hidden(limit: int) -> list:
