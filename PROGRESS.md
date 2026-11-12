@@ -66,25 +66,34 @@ A fresh session should read this file, `DECISIONS.md` and `git log` first.
   training with self-play workers, an adaptive curriculum and a step cap.
   Numbers are in RESULTS.md, M9.
 
+- **M9 real benchmark and v0.3.0**: third run of the real benchmark, 45 of
+  the 124 unseen problems at 2,000 calls against 43 in M8. The rows without
+  a trained network roughly doubled at small budgets, and the m3 weights
+  (150 minutes) are not measurably better than random weights on real
+  problems. Four problems solved in M8 are lost (#110).
+
 ## Next
 
 The task list is the GitHub issue tracker; issue #99 is the roadmap and its
 comments record what is done. The rule for every milestone: choose the
 configuration on the seed and held-out sets only, then run the real
-benchmark once, under a protocol committed before the run (RESULTS.md, M7 and
-M8, show the form). Most promising next, in order:
+benchmark once, under a protocol committed before the run (RESULTS.md, M7 to
+M9, show the form). Most promising next, in order:
 
-1. The trained weights add little once the search has page-based proposals
-   and the environment makes the opening substitutions: with random weights
-   the same search is within a few problems at 2,000 calls (#107). The policy
-   gives the moves that matter almost no probability (`scripts/diagnose.py
-   --suite dev`). More self-play data per minute and problems with a known
-   first move (#92) are the two leads.
-2. Shifted instances such as f(x - 2) are what the routine moves still
+1. Training (#107). The trained weights do no better than random ones on
+   real problems. Self-play problems are mostly solved by the routine moves,
+   so the trainer sees few proofs with several proposed moves, and the
+   network reads 14 of a median 25 identities. In progress on the local
+   branch `work`: problems hidden behind changes of variables whose proofs
+   are known by construction (`alphafe/planted.py`, #83), and an encoder
+   that reads every identity (#108, #16). The comparison that decides is
+   trained against random weights on a held-out set sorted by proof length.
+2. The four real problems lost since M8 (#110) and searches that stop with
+   an empty frontier (#111).
+3. Shifted instances such as f(x - 2) are what the routine moves still
    refuse; a plain cap on them feeds itself (#106).
-3. A proposed move costs about three times more in the larger states (#109),
-   and the network reads only 14 identities of a case (#108).
-4. More moves for 15M to 20M problems: #77 and #78, then #80 and #81.
+4. A proposed move costs about three times more in the larger states (#109).
+5. More moves for 15M to 20M problems: #77 and #78, then #80 and #81.
 
 Nothing heavy may run on the machine while a training run is going: a run is
 limited by wall-clock time (DECISIONS.md).
@@ -110,8 +119,9 @@ limited by wall-clock time (DECISIONS.md).
 
 ## State of the local (uncommitted) artefacts
 
-- `checkpoints/alphafe-m1-56min.pt` (M8, release v0.2.0; also copied to `checkpoints/best.pt`, which
-  `alphafe solve` loads) and the full training state in `checkpoints/m1/`. Older: `checkpoints/v1/m5.pt` (M5),
+- `checkpoints/alphafe-m3-150min.pt` (M9, release v0.3.0; also copied to `checkpoints/best.pt`, which
+  `alphafe solve` loads) and the full training state in `checkpoints/m3/`. `checkpoints/alphafe-m1-56min.pt`
+  (M8, release v0.2.0) and `checkpoints/m1/`. Older: `checkpoints/v1/m5.pt` (M5),
   `checkpoints/v2/e4.pt` and `e6.pt` (version 1, on the v0.1.0 release), `checkpoints/v3/e5.pt`. None are in
   git. Retrain with `alphafe train` if they are gone.
 - `logs/` has the raw training logs; compact copies are in `results/train_*_log.json`.

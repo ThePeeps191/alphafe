@@ -1235,8 +1235,8 @@ estimates):
   and the problems beyond that have not come closer.
 * **M8's reading that the network beats brute force no longer credits
   training.** The network row is still ahead of brute force at 2,000 calls
-  (45 against 38) and level with brute force at 20,000 (43), but the
-  untrained network with the same proposal machinery is too (44). The lead
+  (45 against 38) and at least level with brute force at 20,000 (43), but
+  so is the untrained network with the same proposal machinery (44). The lead
   belongs to the sampling search and the proposals taken from the page, not
   to the weights.
 * **The target range got slightly worse.** At 0M to 10M the headline row
@@ -1254,7 +1254,7 @@ estimates):
   Counting any row and any seed, 52 of the 124 are solved here (63 of 137)
   against 48 (58) in M8, and 56 (67) in at least one of the two. Every
   problem solved in M7 is still solved. The four have not been inspected;
-  doing so means flagging them as seen in development.
+  doing so means flagging them as seen in development. Issue #110.
 * **Searches that stop early.** Three problems end with an empty frontier in
   the network search on all three seeds: `memo-2016-t2` after 22 to 24
   calls, `taiwan-tst-2023-is1-1a` after 18 to 20 and `usajmo-2016-6` after
