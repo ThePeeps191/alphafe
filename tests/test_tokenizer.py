@@ -189,3 +189,37 @@ def test_problems_in_other_letters_are_renamed_for_the_network(plain_environment
     bench = BenchProblem("uv", Problem.parse("f(u + v) = f(u) + v"), None)
     rows = run_policy([bench], UniformProposer(random.Random(0)), "search", 64)
     assert rows[0].solved and rows[0].equation == "f(u + v) = f(u) + v"
+
+
+def test_a_split_is_offered_only_where_the_checker_accepts_one():
+    """Every fact the grammar offers for a case split is one the checker splits; facts it refuses are among the rest."""
+    rng = random.Random(5)
+    offered = refused = 0
+    for item in generate(11, 30)[4][:30]:
+        try:
+            state, _ = start(item.problem())
+        except Reject:
+            continue
+        for _ in range(6):
+            if state.solved:
+                break
+            view = encode_state(state)
+            for label, index in view.row_index.items():
+                row = state.current.rows[index]
+                if row.variables():
+                    continue
+                try:
+                    apply(state, Split(index))
+                    accepted = True
+                except Reject as err:
+                    accepted = "too many" in str(err)          # room for the cases is not the grammar's business
+                if label in view.splittable:
+                    assert accepted
+                    offered += 1
+                elif not accepted:
+                    refused += 1
+            try:
+                state, _ = step(state, decode_move(sample_uniform(view, rng)[0], view))
+            except Reject:
+                pass
+    assert offered and refused

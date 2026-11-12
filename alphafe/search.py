@@ -30,7 +30,7 @@ from .tokenizer import StateView, decode_move, encode_state, sample_uniform
 class Node:
     """A state reached during search, with the proof that reaches it."""
 
-    __slots__ = ("state", "proof", "parent", "move_ids", "logp", "depth", "_view", "expansions", "fresh")
+    __slots__ = ("state", "proof", "parent", "move_ids", "logp", "depth", "_view", "expansions", "fresh", "tried", "idle")
 
     def __init__(self, state: State, proof: list, parent: Optional["Node"], move_ids, logp: float, depth: int, fresh=()):
         self.state = state
@@ -42,6 +42,8 @@ class Node:
         self._view: Optional[StateView] = None
         self.expansions = 0
         self.fresh = fresh            # identities newly derived by that move (for hindsight examples)
+        self.tried: set = set()       # proposed moves (token ids) already sent to the checker from this state
+        self.idle = 0                 # proposal rounds in a row that had nothing new to send
 
     @property
     def view(self) -> StateView:
@@ -151,6 +153,10 @@ class GreedySearch(_Search):
         for ids, logp in sorted(proposals, key=lambda p: -p[1]):
             if self.calls >= self.budget:
                 break
+            key = tuple(ids)
+            if key in node.tried:         # refused from this state before: sending it again changes nothing
+                continue
+            node.tried.add(key)
             child = self._try(node, ids, logp)
             if self.done:
                 return
@@ -174,8 +180,13 @@ class BestFirstSearch(_Search):
 
     A state's priority is the log-probability of the moves leading to it. An
     expanded state goes back on the frontier with a penalty, so it can be
-    revisited for fresh proposals once the alternatives look worse.
+    revisited for fresh proposals once the alternatives look worse. A move
+    is sent to the checker once per state: proposing it again costs nothing
+    and does nothing. A state leaves the frontier for good when
+    ``IDLE_ROUNDS`` rounds of proposals in a row held nothing new.
     """
+
+    IDLE_ROUNDS = 3
 
     source = "network-search"
 
@@ -248,9 +259,15 @@ class BestFirstSearch(_Search):
         ordered = sorted(proposals, key=lambda p: -p[1])
         if self.systematic:
             ordered += self._systematic_proposals(node, proposals)
+        sent = 0
         for ids, logp in ordered:
             if self.calls >= self.budget:
                 break
+            key = tuple(ids)
+            if key in node.tried:
+                continue
+            node.tried.add(key)
+            sent += 1
             child = self._try(node, ids, logp)
             if self.done:
                 return
@@ -283,7 +300,8 @@ class BestFirstSearch(_Search):
         if self.calls >= self.budget:
             self.done, self.reason = True, "budget exhausted"
             return
-        if node.expansions < 6:
+        node.idle = 0 if sent else node.idle + 1
+        if node.idle < self.IDLE_ROUNDS:
             self._push(node)
 
 

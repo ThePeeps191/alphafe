@@ -22,7 +22,7 @@ from dataclasses import dataclass, field
 from typing import Optional
 
 from . import terms as T
-from .algebra import Poly, atom_arg, leading_mono, poly_term
+from .algebra import Poly, atom_arg, div_exact, factor_hint, leading_mono, poly_term
 from .checker import State, _single_atom
 from .moves import Move, Onto, Pre, Split, SplitNZ, Subst
 
@@ -61,12 +61,28 @@ class StateView:
     tokens: list                       # token ids
     row_index: dict                    # label (e.g. "R2") -> index into branch.rows
     row_vars: dict                     # label -> sorted variable names of that row
-    splittable: list                   # labels of facts about constants that could be case-split
+    splittable: list                   # labels of the facts about constants that factor: a case split is possible
     p_vars: list                       # variables of the original equation
     witnesses: list
     surjective: bool
     label_of: dict = field(default_factory=dict)   # row index -> label
     subterms: list = field(default_factory=list)   # expressions occurring in the state (for exploration)
+
+
+def _factors(row: Poly) -> bool:
+    """Would a case split on this fact about constants be accepted? The test of ``checker._do_split``.
+
+    Offering only such facts keeps a policy from spending its proposals on
+    a split that the checker is certain to refuse.
+    """
+    hinted = factor_hint(row)
+    if not hinted or (len(hinted) == 1 and hinted[0][1] == 1):
+        return False
+    product = Poly.const(1)
+    for factor, mult in hinted:
+        product = product * factor ** mult
+    ratio = div_exact(row, product)
+    return ratio is not None and ratio.const_value() not in (None, 0)
 
 
 def _hidden_renaming(row: Poly, rows: set) -> bool:
@@ -120,7 +136,7 @@ def encode_state(state: State, goal: Optional[Poly] = None) -> StateView:
         label_of[index] = label
         names = sorted(row.variables())
         row_vars[label] = names
-        if not names and _single_atom(leading_mono(row)) is None:
+        if not names and _single_atom(leading_mono(row)) is None and _factors(row):
             splittable.append(label)
     shown_rows = [branch.rows[i] for i in label_of]
     unknown = sorted({t for t in out if t not in TOKEN_ID})

@@ -67,3 +67,37 @@ def test_search_commits_when_a_case_closes():
     run_searches([search], UniformProposer(random.Random(3)), k=8)
     assert search.result().solved and search.commits >= 1
     assert search.result().solutions == parse_solution_set(["f(x) = x + 1"])
+
+
+class Scripted:
+    """A proposer that reads its proposals for each round from a list (the last entry repeats)."""
+
+    def __init__(self, rounds):
+        self.rounds, self.asked = rounds, 0
+
+    def propose(self, views, k):
+        from alphafe.moves import parse_move
+        from alphafe.tokenizer import encode_move
+
+        texts = self.rounds[min(self.asked, len(self.rounds) - 1)]
+        self.asked += 1
+        return [[(encode_move(parse_move(text), view), -float(i)) for i, text in enumerate(texts)] for view in views]
+
+
+def test_a_move_is_sent_once_per_state_and_a_state_with_nothing_new_is_dropped():
+    # x := x makes nothing new, so the checker refuses it. Proposed for ever, it costs one call.
+    search = BestFirstSearch(Problem.parse("f(x-y) = f(x)f(y)", "R"), budget=50)
+    run_searches([search], Scripted([["sub P: x:=x"]]), k=8)
+    result = search.result()
+    assert not result.solved and result.checker_calls == 1 and result.reason == "frontier empty"
+    greedy = GreedySearch(Problem.parse("f(x-y) = f(x)f(y)", "R"), budget=50)
+    run_searches([greedy], Scripted([["sub P: x:=x"]]), k=8)
+    assert greedy.result().checker_calls == 1 and greedy.result().reason == "no proposal was accepted"
+
+
+def test_a_state_stays_on_the_frontier_while_it_yields_new_moves():
+    # Ten rounds of a different refused move each, then the move that solves: no fixed number of visits ends the search.
+    refused = [[f"sub P: x:=x, y:=y + {n} - {n}"] for n in range(1, 11)]
+    search = BestFirstSearch(Problem.parse("f(x+y) = f(x) + y", "R"), budget=50)
+    run_searches([search], Scripted(refused + [["sub P: x:=0"]]), k=8)
+    assert search.result().solved and search.root.expansions == 11
