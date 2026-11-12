@@ -78,7 +78,7 @@ def test_tiers_follow_structure_only():
     assert all(g.depth == 1 for g in DATA[1]) and all(g.depth >= 2 for g in DATA[3])
 
 
-def test_a_disguised_problem_has_the_same_solutions_and_its_undo_move_recovers_the_plain_one():
+def test_a_disguised_problem_has_the_same_solutions_and_its_undo_moves_recover_the_plain_one():
     import random
 
     from alphafe.algebra import monic
@@ -87,17 +87,35 @@ def test_a_disguised_problem_has_the_same_solutions_and_its_undo_move_recovers_t
     from alphafe.moves import parse_move
 
     rng = random.Random(4)
-    made = 0
-    for item in [g for items in DATA.values() for g in items][:60]:
-        hidden = disguise(item, rng)
+    made = {1: 0, 2: 0, 3: 0}
+    for index, item in enumerate([g for items in DATA.values() for g in items][:120]):
+        layers = 1 + index % 3
+        hidden = disguise(item, rng, layers)
         if hidden is None:
             continue
-        made += 1
-        assert hidden.undo and hidden.planted == item.planted and hidden.key != item.key
+        made[layers] += 1
+        assert len(hidden.plan) == layers and hidden.undo == hidden.plan[0] and hidden.plain == item.equation
+        assert hidden.planted == item.planted and hidden.key != item.key
         problem = hidden.problem()
         assert verify_solution(problem, hidden.planted), hidden.equation
-        # The undo move, applied to the disguised equation, gives the plain equation back.
-        state = apply(initial_state(problem), parse_move(hidden.undo))
+        # The undo moves, applied in order by the plain checker, give the plain equation back.
+        state = initial_state(problem)
+        for text in hidden.plan:
+            state = apply(state, parse_move(text))
         plain = monic(item.problem().poly)
-        assert state.current.known_zero(plain), (item.equation, hidden.equation, hidden.undo)
-    assert made >= 30
+        assert state.current.known_zero(plain), (item.equation, hidden.equation, hidden.plan)
+    assert made[1] >= 20 and made[2] >= 10 and made[3] >= 5, made
+
+
+def test_every_change_of_variables_is_undone_by_its_inverse():
+    from alphafe.algebra import parse_poly
+    from alphafe.generate import CHANGES, _renamed
+    from alphafe.algebra import to_poly
+
+    probe = parse_poly("f(x + 2y) + x*f(y) - 3x*y^2 + f(f(x) - y)")
+    for _, change, inverse in CHANGES:
+        for v, u in (("x", "y"), ("y", "x")):
+            where = {"v": v, "u": u}
+            forward = {where[name]: to_poly(_renamed(text, v, u)) for name, text in change.items()}
+            back = {where[name]: to_poly(_renamed(text, v, u)) for name, text in inverse.items()}
+            assert probe.subst(forward).subst(back) == probe, (change, inverse)

@@ -76,7 +76,9 @@ class Generated:
     depth: int
     size: int
     key: str              # canonical hash (invariant under renaming variables and scaling)
-    undo: str = ""        # for a disguised problem: the move that gives the plain equation back (see ``disguise``)
+    undo: str = ""        # for a disguised problem: the first move of ``plan``
+    plan: tuple = ()      # ... the moves that give the plain equation back, outermost layer first (see ``disguise``)
+    plain: str = ""       # ... and the plain equation
 
     def problem(self) -> Problem:
         return Problem.parse(self.equation, self.domain, self.key[:10])
@@ -187,52 +189,115 @@ def generate_one(rng: random.Random, level: int) -> Optional[Generated]:
     return Generated(text, domain, f"f(x) = {planted}", tier_of(depth, size), depth, size, canonical_key(problem.poly))
 
 
-# Changes of variables v -> v + s(u), written with u for the other variable. (weight, s)
-SHIFTS = [
-    (6, "f(u)"), (4, "-f(u)"), (4, "u"), (2, "-u"), (2, "f(u) + u"), (2, "f(u) - u"), (2, "2u"), (2, "1"), (1, "-1"),
-    (2, "f(0)"), (1, "2f(u)"),
+# Changes of variables that hide an equation, each with the substitution that undoes it. They are
+# written for v and u, which stand for the two variables in either order. (weight, change, inverse)
+CHANGES = [
+    (6, {"v": "v + f(u)"}, {"v": "v - f(u)"}),
+    (4, {"v": "v - f(u)"}, {"v": "v + f(u)"}),
+    (4, {"v": "v + u"}, {"v": "v - u"}),
+    (2, {"v": "v - u"}, {"v": "v + u"}),
+    (2, {"v": "v + f(u) + u"}, {"v": "v - f(u) - u"}),
+    (2, {"v": "v + f(u) - u"}, {"v": "v - f(u) + u"}),
+    (2, {"v": "v + 2u"}, {"v": "v - 2u"}),
+    (2, {"v": "v + 1"}, {"v": "v - 1"}),
+    (1, {"v": "v - 1"}, {"v": "v + 1"}),
+    (2, {"v": "v + f(0)"}, {"v": "v - f(0)"}),
+    (1, {"v": "v + 2f(u)"}, {"v": "v - 2f(u)"}),
+    (2, {"v": "2v"}, {"v": "v/2"}),
+    (1, {"v": "v/2"}, {"v": "2v"}),
+    (1, {"v": "2v + u"}, {"v": "(v - u)/2"}),
+    (1, {"v": "2v + f(u)"}, {"v": "(v - f(u))/2"}),
+    (3, {"v": "v + u", "u": "v - u"}, {"v": "(v + u)/2", "u": "(v - u)/2"}),
 ]
+MAX_HIDDEN_SIZE = 48
 
 
-def disguise(item: Generated, rng: random.Random) -> Optional[Generated]:
-    """The same problem after a change of variables, together with the move that undoes it.
+def _renamed(text: str, v: str, u: str) -> T.Term:
+    """The term ``text``, written with the placeholders v and u, for the variables ``v`` and ``u``."""
+    names = {"v": T.Var(v), "u": T.Var(u)}
+
+    def walk(term: T.Term) -> T.Term:
+        if isinstance(term, T.Var):
+            return names[term.name]
+        if isinstance(term, (T.Add, T.Sub, T.Mul)):
+            return type(term)(walk(term.left), walk(term.right))
+        if isinstance(term, (T.Neg, T.App)):
+            return type(term)(walk(term.arg))
+        if isinstance(term, T.Pow):
+            return T.Pow(walk(term.base), term.exp)
+        return term
+
+    return walk(T.parse(text))
+
+
+def disguise(item: Generated, rng: random.Random, layers: int = 1) -> Optional[Generated]:
+    """The same problem after ``layers`` changes of variables, together with the moves that undo them.
 
     Replacing v by v + s(u) throughout turns an identity that holds for all
     v and u into another one, and replacing v by v - s(u) turns it back, so
-    the two equations have exactly the same solutions. If the plain problem
-    is one the environment solves by itself, the disguised one has a proof
-    that starts with a single idea, ``sub P: v:=v - s(u)``: the kind of
-    substitution, chosen to simplify an argument of f, that randomly built
-    equations almost never reward. Returns None if the result is too large
-    or does not survive printing and parsing.
+    the two equations have exactly the same solutions. The same holds for
+    every change in ``CHANGES``: each is a bijection of the pair (v, u) for
+    any f. The proof of the hidden problem then starts with ideas that are
+    known: ``sub P: v:=v - s(u)`` gives back the equation one layer down,
+    and so on to the plain equation. This is the kind of substitution,
+    chosen to simplify an argument of f, that randomly built equations
+    almost never reward.
+
+    The result records the undo moves in ``plan`` (the first into P, each
+    later one into the equation that the one before it gives, quoted) and the
+    plain equation in ``plain``. Returns None if a layer is too large or does
+    not survive printing and parsing.
     """
     from .algebra import equation_str
-    from .moves import parse_move, show_move
+    from .moves import EqRef, Subst, show_move
 
-    problem = item.problem()
-    names = sorted(problem.poly.variables())
-    if len(names) != 2:
-        return None
-    v = rng.choice(names)
-    u = names[0] if v == names[1] else names[1]
-    shift_text = _weighted(rng, SHIFTS).replace("u", u)
-    hidden = problem.poly.subst({v: Poly.var(v) + parse_poly(shift_text)})
-    if len(hidden.variables()) != 2:
-        return None
-    text = equation_str(hidden)
-    try:
-        new = Problem.parse(text, item.domain)
-    except ValueError:
-        return None
-    if monic(new.poly) != monic(hidden):
-        return None
-    lhs, rhs = T.parse_equation(text)
+    domain = item.domain
+    poly = item.problem().poly
+    texts = [item.equation]           # the equation of each layer, plain one first
+    keys = {canonical_key(poly)}      # a layer that gives an earlier equation back hides nothing
+    undo: list = []                   # the bindings that take layer i + 1 back to layer i
+    for _ in range(layers):
+        names = sorted(poly.variables())
+        if len(names) != 2:
+            return None
+        v = rng.choice(names)
+        u = names[0] if v == names[1] else names[1]
+        change, inverse = _weighted(rng, [(w, (c, i)) for w, c, i in CHANGES])
+        where = {"v": v, "u": u}
+        forward = {where[name]: to_poly(_renamed(text, v, u)) for name, text in change.items()}
+        back = {where[name]: _renamed(text, v, u) for name, text in inverse.items()}
+        hidden = poly.subst(forward)
+        if len(hidden.variables()) != 2:
+            return None
+        text = equation_str(hidden)
+        try:
+            new = Problem.parse(text, domain)
+        except ValueError:
+            return None
+        if monic(new.poly) != monic(hidden):
+            return None
+        # The inverse really is one: putting it into the hidden equation gives the layer below.
+        if monic(new.poly.subst({name: to_poly(term) for name, term in back.items()})) != monic(poly):
+            return None
+        lhs, rhs = T.parse_equation(text)
+        if T.term_size(lhs) + T.term_size(rhs) > MAX_HIDDEN_SIZE:
+            return None
+        key = canonical_key(new.poly)
+        if key in keys:
+            return None
+        keys.add(key)
+        texts.append(text)
+        undo.append(tuple(sorted(back.items())))
+        poly = new.poly
+    plan = []
+    for depth_below in range(layers, 0, -1):
+        target = "P" if depth_below == layers else EqRef(*T.parse_equation(texts[depth_below]))
+        plan.append(show_move(Subst(target, undo[depth_below - 1])))
+    lhs, rhs = T.parse_equation(texts[-1])
     depth = max(T.nesting_depth(lhs), T.nesting_depth(rhs))
     size = T.term_size(lhs) + T.term_size(rhs)
-    if size > 48:
-        return None
-    undo = show_move(parse_move(f"sub P: {v}:={v} - ({shift_text})"))
-    return Generated(text, item.domain, item.planted, tier_of(depth, size), depth, size, canonical_key(new.poly), undo)
+    return Generated(texts[-1], domain, item.planted, tier_of(depth, size), depth, size, canonical_key(poly),
+                     plan[0], tuple(plan), item.equation)
 
 
 def generate(seed: int, per_tier: int, exclude: Iterable[str] = ()) -> dict:

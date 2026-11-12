@@ -39,6 +39,7 @@ import torch
 import torch.nn.functional as F
 
 from .generate import N_TIERS, benchmark_keys, disguise, generate, protected_keys
+from .planted import planted_proof, written
 from .model import (DIVERSE, SRC_BUCKET, TGT_BUCKET, ModelConfig, NeuralProposer, PolicyValueNet, check_vocabulary,
                     pad_batch, pick_device, save_checkpoint)
 from .search import BestFirstSearch, GreedySearch, UniformProposer, run_searches
@@ -58,7 +59,9 @@ class TrainConfig:
     seed: int = 0
     init: str = ""                  # a checkpoint whose weights a new run starts from (default: random weights)
     per_tier: int = 3000            # synthetic problems generated per tier (about 10% are held out)
-    disguised: bool = False         # add disguised problems, and learn their known first move when an attempt fails
+    disguised: bool = False         # add disguised problems and learn their known proofs (``alphafe.planted``)
+    disguises: int = 3              # ... this many disguises are tried per generated problem, of 1, 2, 3 layers in turn
+    planted_fraction: float = 0.3   # ... and this share of each batch is steps of known proofs
     start_tier: int = 1
     max_tier: int = N_TIERS
     iterations: int = 1000
@@ -108,41 +111,40 @@ class ProblemPool:
     """
 
     def __init__(self, seed: int, per_tier: int, for_training: bool = False, disguised: bool = False,
-                 processes: int = 0):
+                 processes: int = 0, disguises: int = 3):
         protected = protected_keys() if for_training else benchmark_keys()
         data = generate(seed, per_tier, exclude=protected)
-        easy: list = []
-        if for_training:
-            # Starting a problem runs every opening substitution, so sorting out the ones the
-            # environment solves by itself is the slow part of building a pool: spread it over processes.
-            everything = [item for items in data.values() for item in items]
+        everything = [item for items in data.values() for item in items]
+
+        def spread(function, jobs, chunk):
+            # Starting a problem runs every opening substitution, so anything that starts each
+            # problem of a pool is slow: spread it over processes.
             if processes > 1:
                 with multiprocessing.get_context("spawn").Pool(processes) as helpers:
-                    flags = helpers.map(_solved_at_start, everything, chunksize=64)
-            else:
-                flags = [_solved_at_start(item) for item in everything]
+                    return helpers.map(function, jobs, chunksize=chunk)
+            return [function(job) for job in jobs]
+
+        if for_training:
+            flags = spread(_solved_at_start, everything, 64)
             solved = {item.key for item, flag in zip(everything, flags) if flag}
-            kept: dict = {}
-            for tier, items in data.items():
-                kept[tier] = [item for item in items if item.key not in solved]
-                easy += [item for item in items if item.key in solved]
-            data = kept
+            data = {tier: [item for item in items if item.key not in solved] for tier, items in data.items()}
         self.train = {tier: [g for g in items if g.split == "train"] for tier, items in data.items()}
         self.test = {tier: [g for g in items if g.split == "test"] for tier, items in data.items()}
         self.disguised = 0
+        self.planted: list = []       # solve examples from the known proofs of the disguised problems
         if for_training and disguised:
-            # The problems the environment solves by itself teach nothing as they are. Hidden behind
-            # a change of variables each becomes a problem with a known proof that starts with one idea.
-            rng = random.Random(seed + 7919)
-            seen = {g.key for items in data.values() for g in items} | set(protected)
-            for item in easy:
-                hidden = disguise(item, rng)
-                if hidden is None or hidden.key in seen or hidden.split != "train" or _solved_at_start(hidden):
+            # Hidden behind changes of variables, a problem becomes one with a known proof of several
+            # proposed moves. All disguises of a problem stay on its side of the train/test split.
+            jobs = [(item, 1 + attempt % 3, f"{seed}:{item.key}:{attempt}")
+                    for item in everything if item.split == "train" for attempt in range(disguises)]
+            seen = {item.key for item in everything} | set(protected)
+            for hidden, examples in spread(_plant, jobs, 16):
+                if hidden is None or hidden.key in seen or hidden.split != "train":
                     continue
-                if planted_examples(hidden):
-                    seen.add(hidden.key)
-                    self.train[hidden.tier].append(hidden)
-                    self.disguised += 1
+                seen.add(hidden.key)
+                self.train[hidden.tier].append(hidden)
+                self.planted += examples
+                self.disguised += 1
 
     def sample_train(self, rng: random.Random, tier: int, n: int) -> list:
         """Half from the current tier, half spread over the earlier ones."""
@@ -197,38 +199,45 @@ class Progress:
         return sum(1 for count in self.solved if count)
 
 
-_PLANTED: dict = {}
-
-
 def planted_examples(item) -> list:
     """Solve examples from the known proof of a disguised problem: [(state tokens, move tokens)], or [].
 
-    The proof is the undo move followed by whatever the environment then
-    does by itself. It counts only if replaying it through the checker
-    really solves the problem; then the one proposed move is an example
-    like any found by self-play, and so is its mirror image.
+    The proof (``planted.planted_proof``) is replayed through the environment,
+    so every example is a real (state, move) pair, with the move written the
+    way the network writes it. A step whose identity is not among the rows
+    the network is shown gives no example. The mirror image of the proof is
+    added when every step could be written.
     """
-    if not item.undo:
+    proof = planted_proof(item)
+    if proof is None:
         return []
-    cached = _PLANTED.get(item.key)
-    if cached is None:
-        from .moves import parse_move
-
-        cached = []
-        problem = item.problem()
-        move = parse_move(item.undo)
-        try:
-            state, _ = start(problem)
+    problem = item.problem()
+    pairs, moves = [], []
+    try:
+        state, _ = start(problem)
+        for move in proof:
             view = encode_state(state)
-            ids = encode_move(move, view)
-            if ids is not None and not state.solved and step(state, move)[0].solved:
-                cached = [(tuple(view.tokens), tuple(ids))] + swapped_examples(problem, [move])
-        except Reject:
-            cached = []
-        if len(_PLANTED) > 100_000:
-            _PLANTED.clear()
-        _PLANTED[item.key] = cached
-    return cached
+            shown = written(state, move)
+            ids = encode_move(shown, view) if shown is not None else None
+            if ids is not None:
+                pairs.append((tuple(view.tokens), tuple(ids)))
+            moves.append(shown if ids is not None else None)
+            state, _ = step(state, move)
+    except Reject:
+        return []
+    if all(move is not None for move in moves):
+        pairs += swapped_examples(problem, moves)
+    return pairs
+
+
+def _plant(job: tuple) -> tuple:
+    """One disguise of one generated problem, with the examples of its known proof: (problem, examples) or (None, [])."""
+    item, layers, seed = job
+    hidden = disguise(item, random.Random(seed), layers)
+    if hidden is None:
+        return None, []
+    examples = planted_examples(hidden)
+    return (hidden, examples) if examples else (None, [])
 
 
 def _solved_at_start(item) -> bool:
@@ -240,13 +249,14 @@ def _solved_at_start(item) -> bool:
 
 
 class ReplayBuffer:
-    """Three bounded lists of examples: solve, hindsight and negative-value."""
+    """Three bounded lists of examples: solve, hindsight and negative-value. And the steps of known proofs."""
 
     def __init__(self, size: int):
         self.size = size
         self.solve: list = []       # (src ids, move ids)   value target 1
         self.hindsight: list = []   # (src ids with goal, move ids)
         self.negative: list = []    # (src ids,)            value target 0
+        self.planted: list = []     # (src ids, move ids)   steps of known proofs; set once, never dropped
 
     def add(self, kind: str, item: tuple) -> None:
         store = getattr(self, kind)
@@ -390,18 +400,10 @@ def minimal_examples(search) -> list:
 
 
 def harvest(searches: list, buffer: ReplayBuffer, rng: random.Random, max_hindsight: int = 4,
-            minimise: bool = True, mirror: bool = False, items: Optional[list] = None) -> None:
-    """Turn finished self-play searches into training examples.
-
-    ``items`` are the generated problems the searches were for. A failed
-    attempt at a disguised problem is answered with its known proof
-    (``planted_examples``).
-    """
-    for index, search in enumerate(searches):
+            minimise: bool = True, mirror: bool = False) -> None:
+    """Turn finished self-play searches into training examples."""
+    for search in searches:
         path = search.solution_path()
-        if not path and items is not None:
-            for pair in planted_examples(items[index]):
-                buffer.add("solve", pair)
         if len(path) > 1:
             if minimise:
                 pairs = minimal_examples(search)
@@ -438,7 +440,8 @@ def make_batch(buffer: ReplayBuffer, config: TrainConfig, rng: random.Random, de
     n = config.batch_size
     n_hind = int(n * config.hindsight_fraction) if buffer.hindsight else 0
     n_neg = int(n * config.negative_fraction) if buffer.negative else 0
-    n_solve = n - n_hind - n_neg if buffer.solve else 0
+    n_planted = int(n * config.planted_fraction) if buffer.planted else 0
+    n_solve = n - n_hind - n_neg - n_planted if buffer.solve else 0
 
     def draw(store, count):
         out = []
@@ -450,6 +453,7 @@ def make_batch(buffer: ReplayBuffer, config: TrainConfig, rng: random.Random, de
 
     rows = []    # (src, tgt, value target, value mask)
     rows += [(src[:MAX_TRAIN_SRC], tgt, 1.0, 1.0) for src, tgt in draw(buffer.solve, n_solve)]
+    rows += [(src[:MAX_TRAIN_SRC], tgt, 1.0, 1.0) for src, tgt in draw(buffer.planted, n_planted)]
     rows += [(src[:MAX_TRAIN_SRC], tgt, 0.0, 0.0) for src, tgt in draw(buffer.hindsight, n_hind)]
     rows += [(src[:MAX_TRAIN_SRC], (), 0.0, 1.0) for (src,) in draw(buffer.negative, n_neg)]
     rows.sort(key=lambda row: len(row[0]))
@@ -528,7 +532,7 @@ def _actor(job: tuple) -> dict:
     torch.manual_seed(seed)
     searches = play(model, torch.device("cpu"), items, config, rng)
     examples = ReplayBuffer(10 ** 9)
-    harvest(searches, examples, rng, minimise=config.minimise, mirror=config.mirror, items=items)
+    harvest(searches, examples, rng, minimise=config.minimise, mirror=config.mirror)
     return {"solved": [s.solved_node is not None for s in searches], "calls": [s.calls for s in searches],
             "solve": examples.solve, "hindsight": examples.hindsight, "negative": examples.negative}
 
@@ -562,10 +566,11 @@ def train(config: TrainConfig, resume: bool = False) -> dict:
     torch.manual_seed(config.seed)
 
     pool = ProblemPool(config.seed, config.per_tier, for_training=True, disguised=config.disguised,
-                       processes=config.workers)
+                       processes=config.workers, disguises=config.disguises)
     model = PolicyValueNet(ModelConfig(**config.model)).to(device)
     optimizer = torch.optim.AdamW(model.parameters(), lr=config.lr, weight_decay=config.weight_decay)
     buffer = ReplayBuffer(config.buffer_size)
+    buffer.planted = pool.planted
     state = {"iteration": 0, "step": 0, "tier": config.start_tier, "tier_iters": 0, "ema": 0.0, "seconds": 0.0}
     if config.curriculum not in ("tiers", "adaptive"):
         raise ValueError(f"curriculum is 'tiers' or 'adaptive', not {config.curriculum!r}")
@@ -612,7 +617,7 @@ def train(config: TrainConfig, resume: bool = False) -> dict:
         progress = Progress(everything, state.get("fails"), state.get("solved"))
     log_path = log_dir / "train.jsonl"
     print(f"run {config.run}: device {device}, {model.n_parameters():,} parameters, "
-          f"train problems per tier {[len(v) for v in pool.train.values()]} ({pool.disguised} of them disguised), "
+          f"train problems per tier {[len(v) for v in pool.train.values()]} ({pool.disguised} of them disguised, with {len(pool.planted)} steps of known proofs), "
           f"held out {[len(v) for v in pool.test.values()]}")
     uniform = UniformProposer(random.Random(config.seed + 1))
     record: dict = {}
@@ -658,7 +663,7 @@ def _train_loop(config, began, device, ckpt_dir, log_path, last, pool, progress,
             give_up = time.time() + config.round_seconds
             # The workers play on CPU cores and the gradient steps run on ``device``, so the two
             # overlap: learn from the examples already in the buffer until this round is in.
-            if buffer.solve:
+            if buffer.solve or buffer.planted:
                 # ... but not without limit: a slow round must not turn into thousands of steps on the
                 # same examples, which is how a policy becomes certain of one move per state.
                 budget = {"left": config.max_steps_per_iter - config.steps_per_iter}
@@ -698,8 +703,8 @@ def _train_loop(config, began, device, ckpt_dir, log_path, last, pool, progress,
                     for example in share[kind]:
                         buffer.add(kind, example)
         else:
-            harvest(searches, buffer, rng, minimise=config.minimise, mirror=config.mirror, items=items)
-            if buffer.solve:
+            harvest(searches, buffer, rng, minimise=config.minimise, mirror=config.mirror)
+            if buffer.solve or buffer.planted:
                 losses, state["step"] = train_steps(model, optimizer, buffer, config, rng, device, state["step"])
 
         record = {
