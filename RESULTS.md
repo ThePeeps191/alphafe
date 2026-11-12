@@ -1017,7 +1017,7 @@ Q(sqrt 2) and others must survive every accepted sequence of moves, and
 removing the injectivity guard of `cancel` or the domain guard of `cauchy`
 makes it fail.
 
-### Training in the new environment (runs `m2` and `m3`): no gain over random weights
+### Training in the new environment (runs `m2` and `m3`): a few problems at small budgets, none at 2,000 calls
 
 The trainer now plays its searches in worker processes while the gradient
 steps run on the GPU, picks the tier of each round from how the tiers are
@@ -1047,6 +1047,32 @@ network alone, without proposals from the page, gives the same picture at
 128 calls (seed 1000): `m3` 21, 48, 139, 106 and random weights 22, 47, 136,
 105.
 
+The evaluation of record for `m3` (`alphafe eval`, three sampling seeds, GPU;
+`results/m9_dev_*`, `m9_seed_*`, `m9_synthetic-*`, summary in
+`results/m9_development.md`; commit `86edcb3`) was run after the comparison
+above and before the real benchmark. No proof gave an answer different from
+a recorded one.
+
+| solver | dev (32) | seed (51) | tier 1 | tier 2 | tier 3 | tier 4 |
+|---|---|---|---|---|---|---|
+| network, no backtracking (32 calls) | 21, 22, 19 | 48, 45, 46 | 188, 189, 188 | 193, 193, 193 | 139, 139, 140 | 105, 103, 104 |
+| untrained network, no backtracking (32) | 20 | 45 | 183 | 185 | 133 | 96 |
+| uniform policy, no backtracking (32) | 23 | 45 | 182 | 187 | 134 | 102 |
+| network, search (128 calls) | 22, 23, 20 | 45, 45, 46 | 189, 189, 190 | 194, 194, 193 | 141, 139, 140 | 109, 107, 107 |
+| untrained network, search (128) | 21 | 47 | 186 | 188 | 140 | 104 |
+| uniform policy, search (128) | 23 | 45 | 186 | 190 | 135 | 105 |
+| brute force (128 calls) | 18 | 47 | 188 | 191 | 138 | 97 |
+| network, search (2,000 calls) | 23, 24, 23 | 51, 51, 51 | | | | |
+| untrained network, search (2,000) | 24 | 49 | | | | |
+| brute force (2,000 calls) | 23 | 50 | 190 | 194 | 144 | 114 |
+
+So training is worth something where the problems resemble the training
+problems and the budget is small: 5 to 8 problems of 200 on every held-out
+tier without backtracking, and 3 to 6 at 128 calls on tiers 1, 2 and 4. On
+the dev suite it is worth nothing at any budget (a uniform policy does as
+well), and at 2,000 calls the seed set shows 51 against 49. Brute force at
+2,000 calls is level with or ahead of every 128-call row.
+
 In the M8 environment the M8 weights were clearly ahead of random weights at
 128 calls: 132, 131 against 114, 116 on tier 3 and 92, 90 against 79, 80 on
 tier 4. The larger opening set raised both to about 140 and 107. What the
@@ -1060,21 +1086,35 @@ Why 150 more minutes did not move it, from the log and the replay buffer of
   rounds and 0.24 over the last ten, and the number of problems solved for
   the first time fell from 117 in the first round to 33 in the last.
 * The buffer ended with 8,128 solved steps (both mirror images counted).
-  About 420,000 such rows were drawn for gradient steps, about fifty draws
+  About 400,000 such rows were drawn for gradient steps, about fifty draws
   per stored step, and the policy loss fell to 0.44. The network fits the
   few proofs that the search already finds.
 * 51% of those steps are a case split on a shown identity and 36% are
   substitutions, so the network was shown fewer than 3,000 substitutions
   that led to a proof.
-* On the hand proofs of the dev suite the least likely step now has a median
-  log-probability of -11, up from -29, and is above -5 in one proof of
-  eight. `splitnz f(0)` gets -11 to -12 and `pre -1` gets -11. Three of the
-  eight proofs need a move the network cannot write, because it quotes an
-  identity that is not among the 14 shown (issue #108).
+* On the eight dev hand proofs that still need a proposed move in this
+  environment, the least likely step has a median log-probability of -11.0
+  for `m3`, -7.0 for the M8 weights and -8.2 for random weights
+  (`scripts/diagnose.py --suite dev` at this commit). Training did not make
+  the moves of these proofs more likely. The -29 quoted earlier in this
+  milestone was measured in the M8 environment over twelve proofs; the
+  environment now makes the moves that scored worst there. `m3` puts nearly
+  all of its probability on one kind of move per state: where a hand proof
+  wants `splitnz f(0)`, it gives a case split on a shown identity
+  probability 1.00. Three of the eight proofs need a move the network
+  cannot write, because it quotes an identity that is not among the 14
+  shown (issue #108).
+* Most problems of the training distribution need no proposed move at all
+  in this environment. Of the 200 held-out problems of tier 4, brute force
+  at 2,000 calls solves 114: 78 with no call, 24 within 128 calls and 12
+  with more. On tier 3 it is 120, 15 and 9 of 144
+  (`results/m9_ablation_full_2000.json`). A policy has about a dozen
+  problems per tier to show itself on.
 
-Self-play at this rate cannot teach the policy moves that its own searches
-do not find, and the proofs they do find are one or two moves long. Issue
-#107 has the plan that follows from this.
+Self-play on this distribution cannot teach the policy moves that its own
+searches do not find, and the proofs they do find are one or two moves long.
+The next step is a training distribution whose problems need several
+proposed moves and are known to be solvable (issues #92 and #107).
 
 ### Protocol for the real benchmark (written and committed before the run)
 
@@ -1102,10 +1142,19 @@ do not find, and the proofs they do find are one or two moves long. Issue
 * **What counts as the network's contribution.** The trained row minus the
   untrained row at the same budget (the evaluation now has an untrained row
   at 2,000 calls as well). A difference inside the spread of the three
-  sampling seeds is reported as no difference. On the development sets
-  there is none, and the expectation written here in advance is that the
-  real benchmark shows the same: whatever is gained over M8 comes from the
+  sampling seeds is reported as no difference. On the development sets it
+  is a few problems per held-out tier at 32 and 128 calls, nothing on the
+  dev suite and two problems on the seed set at 2,000 calls (table above).
+  The expectation written here in advance is that the real benchmark shows
+  no difference at 2,000 calls: whatever is gained over M8 comes from the
   environment and the proposals from the page.
+* **Corrections before the run.** This section and the one above were
+  corrected once, after the evaluation on the development suites and before
+  any run on the real benchmark: the heading and this expectation said
+  "none" where the held-out tiers show a few problems, the count of draws
+  was 420,000, and the diagnosis compared two environments. No code changed;
+  the real benchmark runs at the commit of this correction, whose solver is
+  that of `86edcb3`.
 * **Brute force at 20,000 calls is not comparable across milestones.** It
   stops at 120 seconds per problem and a call now costs about three times
   as much as in M8, so more problems end at the time limit. The number that
