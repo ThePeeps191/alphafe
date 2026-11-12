@@ -119,3 +119,23 @@ def test_every_change_of_variables_is_undone_by_its_inverse():
             forward = {where[name]: to_poly(_renamed(text, v, u)) for name, text in change.items()}
             back = {where[name]: to_poly(_renamed(text, v, u)) for name, text in inverse.items()}
             assert probe.subst(forward).subst(back) == probe, (change, inverse)
+
+
+def test_a_training_disguise_never_uses_a_held_out_change():
+    import random
+
+    from alphafe.generate import CHANGES, HELD_OUT_CHANGES, TRAIN_CHANGES, disguise
+
+    assert HELD_OUT_CHANGES and TRAIN_CHANGES and HELD_OUT_CHANGES | TRAIN_CHANGES == set(range(len(CHANGES)))
+    seen_all, seen_train = set(), set()
+    for index, item in enumerate(ALL):
+        layers = 1 + index % 3
+        free = disguise(item, random.Random(f"a{index}"), layers)
+        kept = disguise(item, random.Random(f"a{index}"), layers, TRAIN_CHANGES)
+        if free is not None:
+            assert len(free.changes) == layers
+            seen_all |= set(free.changes)
+        if kept is not None:
+            assert len(kept.changes) == layers
+            seen_train |= set(kept.changes)
+    assert not seen_train & HELD_OUT_CHANGES and seen_all & HELD_OUT_CHANGES

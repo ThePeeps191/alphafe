@@ -15,6 +15,11 @@ suites therefore measure what a solver does on problems that are known to
 have a proof of that length, and brute force on the same problems says how
 hard they are in practice.
 
+Five of the sixteen changes of variables are never used by a training pool
+(``generate.HELD_OUT_CHANGES``). A line with ``unseen_change`` true needs an
+undo move of a shape the trainer was never shown, so results are also
+reported for those lines alone.
+
 Nothing here can reach a training pool. Every plain problem behind a line of
 the file has split == "test" by its canonical hash, so a pool neither
 contains it nor disguises it, and ``generate.protected_keys`` excludes the
@@ -28,7 +33,7 @@ import sys
 from alphafe.bench import BENCH_DIR
 from alphafe.checker import Reject
 from alphafe.env import start
-from alphafe.generate import disguise, protected_keys
+from alphafe.generate import HELD_OUT_CHANGES, disguise, protected_keys
 from alphafe.moves import show_move
 from alphafe.planted import planted_proof
 from alphafe.train import ProblemPool
@@ -57,7 +62,8 @@ def one(job):
         return None
     return {"id": hidden.key[:10], "equation": hidden.equation, "domain": hidden.domain, "tier": base.tier,
             "moves": len(proof), "layers": layers, "plain": hidden.plain, "proof": [show_move(move) for move in proof],
-            "key": hidden.key, "base": base.key, "attempt": attempt, "source": f"planted-{len(proof)}"}
+            "key": hidden.key, "base": base.key, "attempt": attempt, "source": f"planted-{len(proof)}",
+            "changes": list(hidden.changes), "unseen_change": any(index in HELD_OUT_CHANGES for index in hidden.changes)}
 
 
 def lines(processes: int) -> list:

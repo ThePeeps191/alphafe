@@ -79,6 +79,7 @@ class Generated:
     undo: str = ""        # for a disguised problem: the first move of ``plan``
     plan: tuple = ()      # ... the moves that give the plain equation back, outermost layer first (see ``disguise``)
     plain: str = ""       # ... and the plain equation
+    changes: tuple = ()   # ... and which of ``CHANGES`` hid it, innermost layer first
 
     def problem(self) -> Problem:
         return Problem.parse(self.equation, self.domain, self.key[:10])
@@ -210,6 +211,12 @@ CHANGES = [
     (3, {"v": "v + u", "u": "v - u"}, {"v": "(v + u)/2", "u": "(v - u)/2"}),
 ]
 MAX_HIDDEN_SIZE = 48
+# Changes (indices into CHANGES) that no training pool uses. The frozen problems with known proofs
+# (benchmarks/synthetic/planted.jsonl) use all sixteen, so those that use one of these ask for an undo
+# move of a shape the trainer never showed: a shift by f(u) - u, by 2u, by f(0), by 2f(u), and a
+# scaling with f(u). Without them a good score there could be sixteen memorised templates.
+HELD_OUT_CHANGES = frozenset({5, 6, 9, 10, 14})
+TRAIN_CHANGES = frozenset(range(len(CHANGES))) - HELD_OUT_CHANGES
 
 
 def _renamed(text: str, v: str, u: str) -> T.Term:
@@ -230,7 +237,7 @@ def _renamed(text: str, v: str, u: str) -> T.Term:
     return walk(T.parse(text))
 
 
-def disguise(item: Generated, rng: random.Random, layers: int = 1) -> Optional[Generated]:
+def disguise(item: Generated, rng: random.Random, layers: int = 1, changes: Optional[Iterable[int]] = None) -> Optional[Generated]:
     """The same problem after ``layers`` changes of variables, together with the moves that undo them.
 
     Replacing v by v + s(u) throughout turns an identity that holds for all
@@ -244,9 +251,12 @@ def disguise(item: Generated, rng: random.Random, layers: int = 1) -> Optional[G
     almost never reward.
 
     The result records the undo moves in ``plan`` (the first into P, each
-    later one into the equation that the one before it gives, quoted) and the
-    plain equation in ``plain``. Returns None if a layer is too large or does
-    not survive printing and parsing.
+    later one into the equation that the one before it gives, quoted), the
+    plain equation in ``plain`` and the changes used in ``changes``. Returns
+    None if a layer is too large or does not survive printing and parsing.
+
+    ``changes`` restricts the choice to these indices into ``CHANGES``
+    (default: all of them). Training pools pass ``TRAIN_CHANGES``.
     """
     from .algebra import equation_str
     from .moves import EqRef, Subst, show_move
@@ -256,13 +266,16 @@ def disguise(item: Generated, rng: random.Random, layers: int = 1) -> Optional[G
     texts = [item.equation]           # the equation of each layer, plain one first
     keys = {canonical_key(poly)}      # a layer that gives an earlier equation back hides nothing
     undo: list = []                   # the bindings that take layer i + 1 back to layer i
+    used: list = []
+    allowed = [(weight, index) for index, (weight, _, _) in enumerate(CHANGES) if changes is None or index in changes]
     for _ in range(layers):
         names = sorted(poly.variables())
         if len(names) != 2:
             return None
         v = rng.choice(names)
         u = names[0] if v == names[1] else names[1]
-        change, inverse = _weighted(rng, [(w, (c, i)) for w, c, i in CHANGES])
+        index = _weighted(rng, allowed)
+        _, change, inverse = CHANGES[index]
         where = {"v": v, "u": u}
         forward = {where[name]: to_poly(_renamed(text, v, u)) for name, text in change.items()}
         back = {where[name]: _renamed(text, v, u) for name, text in inverse.items()}
@@ -288,6 +301,7 @@ def disguise(item: Generated, rng: random.Random, layers: int = 1) -> Optional[G
         keys.add(key)
         texts.append(text)
         undo.append(tuple(sorted(back.items())))
+        used.append(index)
         poly = new.poly
     plan = []
     for depth_below in range(layers, 0, -1):
@@ -297,7 +311,7 @@ def disguise(item: Generated, rng: random.Random, layers: int = 1) -> Optional[G
     depth = max(T.nesting_depth(lhs), T.nesting_depth(rhs))
     size = T.term_size(lhs) + T.term_size(rhs)
     return Generated(texts[-1], domain, item.planted, tier_of(depth, size), depth, size, canonical_key(poly),
-                     plan[0], tuple(plan), item.equation)
+                     plan[0], tuple(plan), item.equation, tuple(used))
 
 
 def generate(seed: int, per_tier: int, exclude: Iterable[str] = ()) -> dict:

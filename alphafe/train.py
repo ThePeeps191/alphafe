@@ -38,7 +38,7 @@ from . import model as _model      # first: it silences torch's NumPy warning be
 import torch
 import torch.nn.functional as F
 
-from .generate import N_TIERS, benchmark_keys, disguise, generate, protected_keys
+from .generate import N_TIERS, TRAIN_CHANGES, benchmark_keys, disguise, generate, protected_keys
 from .planted import planted_proof, written
 from .model import (DIVERSE, SRC_BUCKET, TGT_BUCKET, ModelConfig, NeuralProposer, PolicyValueNet, check_vocabulary,
                     pad_batch, pick_device, save_checkpoint)
@@ -233,7 +233,7 @@ def planted_examples(item) -> list:
 def _plant(job: tuple) -> tuple:
     """One disguise of one generated problem, with the examples of its known proof: (problem, examples) or (None, [])."""
     item, layers, seed = job
-    hidden = disguise(item, random.Random(seed), layers)
+    hidden = disguise(item, random.Random(seed), layers, TRAIN_CHANGES)
     if hidden is None:
         return None, []
     examples = planted_examples(hidden)

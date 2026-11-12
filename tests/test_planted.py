@@ -97,7 +97,15 @@ def test_the_frozen_problems_with_known_proofs_replay_and_cannot_reach_a_trainin
     records = [bench.meta for benches in suites.values() for bench in benches]
     assert len({record["key"] for record in records}) == 600
     protected = protected_keys()
+    from alphafe.generate import HELD_OUT_CHANGES
+
+    for moves, benches in suites.items():
+        # Both kinds in every suite: undone by shapes the trainer saw, and needing one it never saw.
+        unseen = sum(bench.meta["unseen_change"] for bench in benches)
+        assert 20 <= unseen <= 180, (moves, unseen)
     for record in records:
+        assert len(record["changes"]) == record["layers"]
+        assert record["unseen_change"] == any(index in HELD_OUT_CHANGES for index in record["changes"])
         assert int(record["base"][:8], 16) % 10 == 0                   # the plain problem is on the "test" side
         assert record["key"] in protected and record["base"] in protected
     for moves, benches in suites.items():
