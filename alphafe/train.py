@@ -73,6 +73,7 @@ class TrainConfig:
     k: int = 8                      # proposals per expanded state ...
     n_uniform: int = 2              # ... of which this many are uniform-random (exploration)
     n_subterm: int = 0              # ... and this many substitute an expression already in the state
+    n_argument: int = 0             # ... and this many solve an argument of f for a variable (tokenizer.sample_argument_move)
     temperature: float = 1.0
     diverse: bool = True            # sample proposals at a spread of temperatures (model.DIVERSE)
     steps_per_iter: int = 60
@@ -504,7 +505,7 @@ def play(model, device, items: list, config: TrainConfig, rng: random.Random) ->
     """One self-play attempt at every problem with the current network. Returns the finished searches."""
     searches = [BestFirstSearch(item.problem(), budget=config.budget) for item in items]
     proposer = NeuralProposer(model, device, DIVERSE if config.diverse else config.temperature, config.n_uniform, rng,
-                              n_subterm=config.n_subterm)
+                              n_subterm=config.n_subterm, n_argument=config.n_argument)
     run_searches(searches, proposer, config.k)
     return searches
 

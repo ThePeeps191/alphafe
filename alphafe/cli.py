@@ -51,7 +51,7 @@ def _solve_with_network(problem: Problem, model, dev, budget: int, max_depth: in
     import random
     import time
 
-    from .model import DIVERSE, SUBTERM_PROPOSALS, NeuralProposer
+    from .model import ARGUMENT_PROPOSALS, DIVERSE, SUBTERM_PROPOSALS, NeuralProposer
     from .search import BestFirstSearch, GreedySearch, run_searches
 
     began = time.time()
@@ -62,7 +62,8 @@ def _solve_with_network(problem: Problem, model, dev, budget: int, max_depth: in
         result = greedy.result()
     else:
         search = BestFirstSearch(problem, budget=budget - greedy.calls, max_depth=max_depth)
-        mixed = NeuralProposer(model, dev, temperature=DIVERSE, n_subterm=SUBTERM_PROPOSALS, rng=random.Random(seed))
+        mixed = NeuralProposer(model, dev, temperature=DIVERSE, n_subterm=SUBTERM_PROPOSALS, n_argument=ARGUMENT_PROPOSALS,
+                               rng=random.Random(seed))
         run_searches([search], mixed, k=8, deadline=deadline)
         result = search.result()
         result.checker_calls += greedy.calls

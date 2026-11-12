@@ -67,6 +67,8 @@ class StateView:
     surjective: bool
     label_of: dict = field(default_factory=dict)   # row index -> label
     subterms: list = field(default_factory=list)   # expressions occurring in the state (for exploration)
+    polys: dict = field(default_factory=dict)      # "P" and each row label -> the identity (for ``sample_argument_move``)
+    argument_moves: dict = field(default_factory=dict)   # target -> its argument-solving substitutions, built on demand
 
 
 def _factors(row: Poly) -> bool:
@@ -148,6 +150,7 @@ def encode_state(state: State, goal: Optional[Poly] = None) -> StateView:
         p_vars=sorted(state.problem.poly.variables()), witnesses=list(branch.witnesses),
         surjective="surjective" in branch.props, label_of=label_of,
         subterms=_subterms([state.problem.poly] + shown_rows),
+        polys={"P": state.problem.poly, **{label: branch.rows[index] for label, index in row_index.items()}},
     )
 
 
@@ -446,6 +449,113 @@ def sample_subterm_move(view: StateView, rng) -> Optional[tuple]:
         return None          # e.g. the term is longer than the grammar allows
     logp = -math.log(len(targets) * len(names) * len(view.subterms) * 4)
     return ids, logp
+
+
+def _arguments(poly: Poly) -> list:
+    """The arguments of f in an identity that mention a variable, nested ones included, each once."""
+    out: list = []
+
+    def visit(part: Poly) -> None:
+        for mono in part.terms:
+            for atom, _ in mono:
+                if atom[0] == "f":
+                    arg = atom_arg(atom)
+                    if arg.variables() and arg not in out:
+                        out.append(arg)
+                        visit(arg)
+
+    visit(poly)
+    return out
+
+
+def _solve_for(poly: Poly, name: str) -> Optional[Poly]:
+    """The value of the variable ``name`` at which ``poly`` vanishes, if ``poly`` is c*name + rest with c a
+    nonzero number and rest free of ``name`` (also inside f). None otherwise."""
+    rest = poly.subst({name: Poly.const(0)})
+    lead = poly - rest
+    if len(lead.terms) != 1:
+        return None
+    (mono, coef), = lead.terms.items()
+    if mono != ((("v", name), 1),):
+        return None
+    return rest.scale(-1 / coef)
+
+
+def argument_substitutions(poly: Poly) -> list:
+    """Substitutions that solve an argument of f for a variable: [(variable, value as a Poly)].
+
+    For an argument A of f in the identity and a variable v in which A is
+    c*v + rest: the v that makes A vanish, that makes A equal another
+    variable, that makes A equal another argument of f in the identity, and
+    the change v -> (v - rest)/c after which the argument is v alone. These
+    are the shapes of most idea substitutions in written proofs: y := -f(x)
+    for f(x) + y, y := (x^2 - f(x))/2 to make f(x) + y and x^2 - y equal,
+    x := x - f(y) to clear an argument (issue #33).
+    """
+    names = sorted(poly.variables())
+    arguments = _arguments(poly)
+    out: list = []
+    for arg in arguments:
+        for name in names:
+            own = Poly.var(name)
+            rest = arg.subst({name: Poly.const(0)})
+            if _solve_for(arg, name) is None:
+                continue
+            coef = (arg - rest).terms[((("v", name), 1),)]
+            goals = [Poly.const(0)] + [Poly.var(other) for other in names if other != name]
+            goals += [other for other in arguments if other is not arg]
+            values = [_solve_for(arg - goal, name) for goal in goals]
+            values.append((own - rest).scale(1 / coef))
+            for value in values:
+                if value is not None and value != own and (name, value) not in out:
+                    out.append((name, value))
+    return out
+
+
+PRE_CONSTANTS = (0, 1, -1, 2)      # values a preimage is proposed for by ``sample_argument_move``
+
+
+def sample_argument_move(view: StateView, rng) -> Optional[tuple]:
+    """A random substitution that solves an argument of f for a variable (``argument_substitutions``).
+
+    The target is the original equation, one of the three newest identities
+    shown, or any other shown identity. With a surjective f it is sometimes
+    a preimage of a small constant instead. Returns (token ids, a nominal
+    log-probability) or None. Like ``sample_subterm_move`` this is a way of
+    proposing moves that are built from the page; the checker judges them
+    like any other move.
+    """
+    import math
+
+    if view.surjective and rng.random() < 0.15:
+        ids = encode_move(Pre(T.num(rng.choice(PRE_CONSTANTS))), view)
+        return (ids, -math.log(len(PRE_CONSTANTS)) - 2.0) if ids is not None else None
+    rows = [label for label, names in view.row_vars.items() if names]
+    pick = rng.random()
+    if view.p_vars and (pick < 0.35 or not rows):
+        target = "P"
+    elif not rows:
+        return None
+    elif pick < 0.8:
+        target = rng.choice(rows[-3:])
+    else:
+        target = rng.choice(rows)
+    moves = view.argument_moves.get(target)
+    if moves is None:
+        moves = view.argument_moves[target] = argument_substitutions(view.polys[target])
+    if not moves:
+        return None
+    name, value = rng.choice(moves)
+    ids = encode_move(Subst("P" if target == "P" else view.row_index[target], ((name, poly_term(value)),)), view)
+    if ids is None:
+        return None
+    grammar = MoveGrammar(view)
+    try:
+        for token in ids:
+            grammar.advance(token)
+    except ValueError:
+        return None          # e.g. the term is longer than the grammar allows
+    return ids, -math.log(len(moves)) - math.log(3.0)
 
 
 def sample_uniform(view: StateView, rng) -> tuple[list, float]:

@@ -390,7 +390,7 @@ def full_eval(checkpoint, tag: Optional[str] = "eval", heldout: int = 200, basel
     """
     import random
 
-    from .model import DIVERSE, SUBTERM_PROPOSALS, ModelConfig, NeuralProposer, PolicyValueNet, load_model, pick_device
+    from .model import ARGUMENT_PROPOSALS, DIVERSE, SUBTERM_PROPOSALS, ModelConfig, NeuralProposer, PolicyValueNet, load_model, pick_device
 
     import torch      # after .model, which silences torch's NumPy warning before importing it
     from .search import MAX_DEPTH, UniformProposer
@@ -413,7 +413,7 @@ def full_eval(checkpoint, tag: Optional[str] = "eval", heldout: int = 200, basel
     chosen = select_suites(suites, heldout)
     stamp = provenance(checkpoint if model is not None else None, dev, {
         "suites": list(chosen), "heldout_per_tier": heldout, "sampling_seeds": [SAMPLING_SEED + i for i in range(seeds)],
-        "proposals_per_state": PROPOSALS, "subterm_proposals": SUBTERM_PROPOSALS, "temperature": list(temperature) if isinstance(temperature, (list, tuple)) else temperature,
+        "proposals_per_state": PROPOSALS, "subterm_proposals": SUBTERM_PROPOSALS, "argument_proposals": ARGUMENT_PROPOSALS, "temperature": list(temperature) if isinstance(temperature, (list, tuple)) else temperature,
         "value_weight": value_weight, "greedy_budget": GREEDY_BUDGET, "search_budget": SEARCH_BUDGET,
         "big_budget": big_budget, "baseline_budgets": list(baseline_budgets), "baseline_seconds": baseline_seconds,
         "baseline_workers": workers, "max_depth": max_depth, "routine_moves": dict(ROUTINE),
@@ -430,7 +430,8 @@ def full_eval(checkpoint, tag: Optional[str] = "eval", heldout: int = 200, basel
         def proposer_for(net, mode, seed):
             # A search mixes in proposals built from the page; "no backtracking" is the network alone.
             return NeuralProposer(net, dev, temperature=temperature, rng=random.Random(seed),
-                                  n_subterm=SUBTERM_PROPOSALS if mode == "search" else 0)
+                                  n_subterm=SUBTERM_PROPOSALS if mode == "search" else 0,
+                                  n_argument=ARGUMENT_PROPOSALS if mode == "search" else 0)
 
         def network_rows(label, mode, budget, weight):
             for index in range(seeds):

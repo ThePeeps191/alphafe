@@ -223,3 +223,42 @@ def test_a_split_is_offered_only_where_the_checker_accepts_one():
             except Reject:
                 pass
     assert offered and refused
+
+
+def test_argument_substitutions_solve_an_argument_of_f_for_a_variable():
+    from alphafe.algebra import poly_str
+    from alphafe.tokenizer import argument_substitutions
+
+    poly = Problem.parse("f(f(x) + y) = f(x^2 - y) + 4y f(x)", "R").poly
+    found = {(name, poly_str(value)) for name, value in argument_substitutions(poly)}
+    assert ("y", "-f(x)") in found                            # f(x) + y vanishes
+    assert ("y", "x^2") in found                              # x^2 - y vanishes
+    assert ("y", "x^2/2 - f(x)/2") in found                   # the two arguments become equal
+    assert ("y", "y - f(x)") in found                         # the first argument becomes y alone
+    assert ("x", "y") in found and ("x", "0") in found        # the inner argument x
+    assert not any(name == "x" and "f" in text for name, text in found)   # nothing is solved through f or a square
+    # One variable, one argument: the only thing to do is to make it vanish.
+    assert [(name, poly_str(value)) for name, value in argument_substitutions(Problem.parse("f(x) = x", "R").poly)] == [("x", "0")]
+
+
+def test_argument_moves_are_well_formed_and_some_are_accepted(plain_environment):
+    from alphafe.tokenizer import sample_argument_move
+
+    rng = random.Random(3)
+    state, _ = start(Problem.parse("f(x + f(y)) = f(x) + y", "R"))
+    state = apply(state, parse_move("surj")) if "surjective" not in state.current.props else state
+    view = encode_state(state)
+    kinds, accepted = set(), 0
+    for _ in range(200):
+        sample = sample_argument_move(view, rng)
+        if sample is None:
+            continue
+        move = decode_move(sample[0], view)
+        assert encode_move(move, view) == sample[0] and sample[1] < 0
+        kinds.add(type(move).__name__)
+        try:
+            apply(state, move)
+            accepted += 1
+        except Reject:
+            pass
+    assert kinds == {"Subst", "Pre"} and accepted

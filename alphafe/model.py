@@ -22,7 +22,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from .tokenizer import (BOS, EOS, MAX_MOVE_TOKENS, MAX_STATE_TOKENS, PAD, VOCAB_SIZE, MoveGrammar,
-                        sample_subterm_move, sample_uniform)
+                        sample_argument_move, sample_subterm_move, sample_uniform)
 
 
 SRC_BUCKET = 64     # state token sequences are padded to a multiple of this
@@ -205,6 +205,10 @@ DIVERSE = (0.6, 0.8, 1.0, 1.0, 1.3, 1.6, 2.0, 3.0)
 # already on the page (tokenizer.sample_subterm_move). A trained policy gives some whole kinds of
 # move, x := f(x) for one, almost no probability, and no number of samples then finds them.
 SUBTERM_PROPOSALS = 2
+# ... and this many that solve an argument of f for a variable, or take a preimage of a small constant
+# (tokenizer.sample_argument_move). Measured at 128 calls with random weights: 44, 40 and 32 of 60 on
+# the planted suites against 20, 11 and 7 without them; no difference on the dev suite or the seed set.
+ARGUMENT_PROPOSALS = 2
 
 
 class NeuralProposer:
@@ -220,10 +224,11 @@ class NeuralProposer:
     """
 
     def __init__(self, model: PolicyValueNet, device, temperature=1.0, n_uniform: int = 0, rng=None,
-                 max_batch: int = 2048, n_subterm: int = 0):
+                 max_batch: int = 2048, n_subterm: int = 0, n_argument: int = 0):
         self.model = model
         self.device = device
         self.n_subterm = n_subterm        # exploration proposals built from expressions in the state
+        self.n_argument = n_argument      # ... and proposals that solve an argument of f for a variable
         self.temperature = temperature
         self.n_uniform = n_uniform
         self.rng = rng
@@ -270,7 +275,7 @@ class NeuralProposer:
     @torch.no_grad()
     def propose(self, views: list, k: int) -> list:
         self.model.eval()
-        k_net = max(k - self.n_uniform - self.n_subterm, 0)
+        k_net = max(k - self.n_uniform - self.n_subterm - self.n_argument, 0)
         out: list = [dict() for _ in views]
         if k_net:
             chunk = max(1, self.max_batch // k_net)
@@ -282,8 +287,12 @@ class NeuralProposer:
                         key = tuple(ids)
                         if key not in bucket or logp > bucket[key]:
                             bucket[key] = logp
-        if self.n_uniform or self.n_subterm:
+        if self.n_uniform or self.n_subterm or self.n_argument:
             for view, bucket in zip(views, out):
+                for _ in range(self.n_argument):
+                    sample = sample_argument_move(view, self.rng)
+                    if sample is not None:
+                        bucket.setdefault(tuple(sample[0]), sample[1])
                 for _ in range(self.n_uniform):
                     ids, logp = sample_uniform(view, self.rng)
                     bucket.setdefault(tuple(ids), logp)
