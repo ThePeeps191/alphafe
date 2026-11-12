@@ -1,0 +1,5783 @@
+{
+ "name": "m10t34_synthetic-tier3_network_search_128_calls",
+ "config": {
+  "suite": "synthetic-tier3",
+  "solver": "network, search (128 calls)",
+  "checkpoint": "checkpoints/m4/last.pt",
+  "solved_per_seed": [
+   140,
+   142,
+   141
+  ]
+ },
+ "provenance": {
+  "commit": "5e13035fd7a7d75c7282700b4a39c9abdbb3d4e5",
+  "dirty": false,
+  "time_utc": "2026-11-12T12:42:47Z",
+  "python": "3.12.15",
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "torch": "2.15.0",
+  "device": "cpu",
+  "checkpoint": "checkpoints/m4/last.pt",
+  "checkpoint_sha256": "827892d40a652a763e925e75c69d4eabce41f8e1ed881c9d205ceb1f903825f1",
+  "settings": {
+   "suites": [
+    "synthetic-tier3",
+    "synthetic-tier4"
+   ],
+   "heldout_per_tier": 200,
+   "sampling_seeds": [
+    1000,
+    1001,
+    1002
+   ],
+   "proposals_per_state": 8,
+   "subterm_proposals": 2,
+   "temperature": [
+    0.6,
+    0.8,
+    1.0,
+    1.0,
+    1.3,
+    1.6,
+    2.0,
+    3.0
+   ],
+   "value_weight": 0.0,
+   "greedy_budget": 32,
+   "search_budget": 128,
+   "big_budget": 2000,
+   "baseline_budgets": [
+    128,
+    2000
+   ],
+   "baseline_seconds": 120.0,
+   "baseline_workers": 3,
+   "max_depth": 16,
+   "routine_moves": {
+    "opening": true,
+    "ones": true,
+    "fterms": true,
+    "swap": true,
+    "instances": true,
+    "witness": true
+   }
+  }
+ },
+ "summary": {
+  "problems": 200,
+  "solved": 140,
+  "rate": 0.7,
+  "mean_calls_solved": 3.5,
+  "median_calls_solved": 0,
+  "mean_seconds": 1.572
+ },
+ "by_mohs": {
+  "?": [
+   140,
+   200
+  ]
+ },
+ "per_seed": [
+  {
+   "e13f403046": [
+    1,
+    1
+   ],
+   "487f7770b3": [
+    1,
+    0
+   ],
+   "fea93cb64b": [
+    1,
+    0
+   ],
+   "cdbdbdde74": [
+    0,
+    128
+   ],
+   "9197fb620d": [
+    1,
+    0
+   ],
+   "2c496fcaaf": [
+    1,
+    0
+   ],
+   "f3f6c95a21": [
+    1,
+    0
+   ],
+   "b7922fea04": [
+    1,
+    0
+   ],
+   "7e6831068d": [
+    1,
+    0
+   ],
+   "6d5be13c27": [
+    1,
+    0
+   ],
+   "b521be0691": [
+    1,
+    0
+   ],
+   "d555788449": [
+    1,
+    0
+   ],
+   "1c58599651": [
+    1,
+    1
+   ],
+   "72985f18a5": [
+    1,
+    0
+   ],
+   "c7c05d4c89": [
+    1,
+    0
+   ],
+   "44774d601f": [
+    1,
+    0
+   ],
+   "26a89988e7": [
+    0,
+    128
+   ],
+   "8cd9cf2eb7": [
+    1,
+    0
+   ],
+   "ea9eeb9402": [
+    1,
+    0
+   ],
+   "571e0454eb": [
+    0,
+    128
+   ],
+   "9c1bbf3817": [
+    1,
+    114
+   ],
+   "2f242c62c3": [
+    1,
+    2
+   ],
+   "e382fc109c": [
+    1,
+    0
+   ],
+   "a20f296642": [
+    1,
+    0
+   ],
+   "88f4b68ae0": [
+    0,
+    128
+   ],
+   "e231d12e2b": [
+    1,
+    0
+   ],
+   "60144e7425": [
+    1,
+    0
+   ],
+   "9e1f916040": [
+    0,
+    128
+   ],
+   "958de1469c": [
+    0,
+    128
+   ],
+   "47c25a82c8": [
+    0,
+    128
+   ],
+   "c5ca29f0b8": [
+    0,
+    128
+   ],
+   "d11e24323a": [
+    1,
+    0
+   ],
+   "4f1447b447": [
+    1,
+    0
+   ],
+   "8863c292d2": [
+    0,
+    128
+   ],
+   "61fe243ab5": [
+    1,
+    0
+   ],
+   "c61eb2908d": [
+    1,
+    0
+   ],
+   "38f1e77074": [
+    1,
+    0
+   ],
+   "72644af291": [
+    1,
+    0
+   ],
+   "a57a9bda26": [
+    1,
+    0
+   ],
+   "9d23ec1640": [
+    0,
+    128
+   ],
+   "2f7ba5bee6": [
+    1,
+    0
+   ],
+   "4e80808878": [
+    1,
+    0
+   ],
+   "690ba5b89e": [
+    0,
+    128
+   ],
+   "9d9daa4ce2": [
+    1,
+    0
+   ],
+   "8bfec96091": [
+    1,
+    0
+   ],
+   "ee72e25251": [
+    1,
+    0
+   ],
+   "03e2103c85": [
+    0,
+    128
+   ],
+   "9a4fca0a6b": [
+    0,
+    128
+   ],
+   "984e0e24b2": [
+    1,
+    0
+   ],
+   "c4482e1a05": [
+    0,
+    128
+   ],
+   "6d76fee001": [
+    1,
+    0
+   ],
+   "6159a0aed5": [
+    1,
+    0
+   ],
+   "992b1a8af0": [
+    0,
+    128
+   ],
+   "c9efdd689d": [
+    0,
+    128
+   ],
+   "72446c5ae9": [
+    1,
+    0
+   ],
+   "f58f3a4a61": [
+    1,
+    1
+   ],
+   "db7796acbf": [
+    0,
+    128
+   ],
+   "da7132fe4b": [
+    1,
+    0
+   ],
+   "0e1b660caf": [
+    1,
+    0
+   ],
+   "6f152efc97": [
+    0,
+    128
+   ],
+   "b7d1bb4210": [
+    1,
+    0
+   ],
+   "8a1349fa21": [
+    1,
+    0
+   ],
+   "60c9bd5ee8": [
+    0,
+    128
+   ],
+   "f9eaa54838": [
+    1,
+    0
+   ],
+   "fc4b873af9": [
+    0,
+    128
+   ],
+   "ad5dc9262d": [
+    0,
+    128
+   ],
+   "a319d1d045": [
+    1,
+    0
+   ],
+   "3927b42224": [
+    1,
+    0
+   ],
+   "ccbd0728e5": [
+    0,
+    128
+   ],
+   "b1082bd448": [
+    1,
+    0
+   ],
+   "3212479c9a": [
+    1,
+    0
+   ],
+   "7b64e74245": [
+    1,
+    0
+   ],
+   "76fd86aa2d": [
+    0,
+    128
+   ],
+   "79395a52c1": [
+    1,
+    0
+   ],
+   "cc1f821477": [
+    1,
+    1
+   ],
+   "7f4829147f": [
+    1,
+    0
+   ],
+   "2db86730e9": [
+    1,
+    0
+   ],
+   "d4f357ee2b": [
+    1,
+    0
+   ],
+   "28ba7e58f8": [
+    1,
+    0
+   ],
+   "ab1c7860d5": [
+    1,
+    0
+   ],
+   "6a07930068": [
+    1,
+    0
+   ],
+   "9cbc6a0a09": [
+    1,
+    0
+   ],
+   "7b6334cee7": [
+    1,
+    0
+   ],
+   "031322fe40": [
+    0,
+    128
+   ],
+   "56ad06f094": [
+    1,
+    0
+   ],
+   "423a5222d1": [
+    1,
+    0
+   ],
+   "da9f6016fa": [
+    0,
+    128
+   ],
+   "97d9c258ae": [
+    1,
+    0
+   ],
+   "2ddb257c86": [
+    1,
+    0
+   ],
+   "e9679e7ec1": [
+    1,
+    0
+   ],
+   "a0aca4f47b": [
+    1,
+    0
+   ],
+   "0a0c924877": [
+    0,
+    128
+   ],
+   "a45b988a74": [
+    1,
+    58
+   ],
+   "5e217056c6": [
+    1,
+    0
+   ],
+   "b6d7a83255": [
+    1,
+    36
+   ],
+   "077fee44e8": [
+    1,
+    0
+   ],
+   "d3fddc4262": [
+    0,
+    128
+   ],
+   "0e78795ace": [
+    0,
+    128
+   ],
+   "6e78529492": [
+    1,
+    0
+   ],
+   "40cf6a1c31": [
+    1,
+    0
+   ],
+   "871382b0e1": [
+    0,
+    128
+   ],
+   "dad723fc91": [
+    0,
+    128
+   ],
+   "5bb100b6a0": [
+    0,
+    128
+   ],
+   "0c6b5c54dc": [
+    1,
+    1
+   ],
+   "33863b2e36": [
+    1,
+    0
+   ],
+   "470cc21226": [
+    0,
+    128
+   ],
+   "692da2bc10": [
+    1,
+    0
+   ],
+   "ef9257446e": [
+    1,
+    0
+   ],
+   "cc972f3adc": [
+    1,
+    104
+   ],
+   "645edad046": [
+    1,
+    0
+   ],
+   "7b018bf269": [
+    1,
+    0
+   ],
+   "e7dcabe4f7": [
+    1,
+    0
+   ],
+   "a524b18e8d": [
+    0,
+    128
+   ],
+   "1056537874": [
+    1,
+    0
+   ],
+   "e160fab844": [
+    1,
+    0
+   ],
+   "18918cd88c": [
+    0,
+    128
+   ],
+   "c53c982e35": [
+    1,
+    11
+   ],
+   "7a68b062b0": [
+    1,
+    0
+   ],
+   "28c3f19ad9": [
+    1,
+    1
+   ],
+   "11e374fac7": [
+    1,
+    0
+   ],
+   "20a4152653": [
+    0,
+    128
+   ],
+   "f0461bee01": [
+    1,
+    0
+   ],
+   "f229af9879": [
+    0,
+    128
+   ],
+   "cf805b689d": [
+    1,
+    0
+   ],
+   "2ea77c30bb": [
+    1,
+    0
+   ],
+   "e36c4308d7": [
+    0,
+    128
+   ],
+   "3ea81fe019": [
+    1,
+    1
+   ],
+   "9de3a5c4c1": [
+    1,
+    0
+   ],
+   "70aec41c83": [
+    1,
+    79
+   ],
+   "f9f2cb24f9": [
+    1,
+    0
+   ],
+   "7f59924eeb": [
+    1,
+    0
+   ],
+   "a5b8e0e8be": [
+    0,
+    128
+   ],
+   "4763c81e16": [
+    1,
+    0
+   ],
+   "8e302224a4": [
+    1,
+    0
+   ],
+   "205ce5c029": [
+    0,
+    128
+   ],
+   "847b794a37": [
+    0,
+    128
+   ],
+   "14d94fc24a": [
+    1,
+    0
+   ],
+   "1b89e49e83": [
+    1,
+    0
+   ],
+   "70288eceb3": [
+    1,
+    0
+   ],
+   "b18233deb4": [
+    1,
+    0
+   ],
+   "f73ee5ca35": [
+    1,
+    0
+   ],
+   "83e907680c": [
+    1,
+    0
+   ],
+   "a365b3668e": [
+    0,
+    128
+   ],
+   "2dc57862ad": [
+    1,
+    0
+   ],
+   "d08dfd8042": [
+    1,
+    0
+   ],
+   "c3680196ad": [
+    0,
+    128
+   ],
+   "3de42428e3": [
+    1,
+    0
+   ],
+   "a81c7e0865": [
+    1,
+    0
+   ],
+   "f221443459": [
+    1,
+    1
+   ],
+   "b1ddcfb4ba": [
+    0,
+    128
+   ],
+   "08c10ed253": [
+    1,
+    17
+   ],
+   "9d65081835": [
+    1,
+    1
+   ],
+   "5227f66c36": [
+    0,
+    128
+   ],
+   "1c719514b0": [
+    1,
+    0
+   ],
+   "0d5f5f7051": [
+    1,
+    0
+   ],
+   "e974d4c23f": [
+    1,
+    0
+   ],
+   "93efafe0de": [
+    0,
+    128
+   ],
+   "c52c6c2e2c": [
+    1,
+    0
+   ],
+   "a388960655": [
+    0,
+    128
+   ],
+   "56452f4e38": [
+    0,
+    128
+   ],
+   "3509fe7caf": [
+    1,
+    0
+   ],
+   "d29648800a": [
+    0,
+    128
+   ],
+   "2901a59e49": [
+    1,
+    0
+   ],
+   "79fd089473": [
+    1,
+    0
+   ],
+   "2443d15867": [
+    1,
+    5
+   ],
+   "a6475fbce7": [
+    1,
+    0
+   ],
+   "df3409a68e": [
+    1,
+    0
+   ],
+   "f9d557c4af": [
+    0,
+    128
+   ],
+   "daea92847d": [
+    0,
+    128
+   ],
+   "5c969f3667": [
+    0,
+    128
+   ],
+   "6e68eec6aa": [
+    1,
+    0
+   ],
+   "6affb85a21": [
+    1,
+    56
+   ],
+   "f930e09ae9": [
+    1,
+    0
+   ],
+   "8c2953882e": [
+    1,
+    0
+   ],
+   "246fe4aa44": [
+    0,
+    128
+   ],
+   "3993471e4c": [
+    1,
+    0
+   ],
+   "698701aeda": [
+    0,
+    128
+   ],
+   "d3764534af": [
+    1,
+    0
+   ],
+   "b062aa0692": [
+    1,
+    0
+   ],
+   "57382fa036": [
+    1,
+    0
+   ],
+   "8151871edb": [
+    1,
+    0
+   ],
+   "c65569a21f": [
+    0,
+    128
+   ],
+   "00b220be94": [
+    1,
+    0
+   ],
+   "a3d6f0b277": [
+    0,
+    128
+   ],
+   "a33cb78602": [
+    0,
+    128
+   ],
+   "4e6f414cdc": [
+    1,
+    1
+   ],
+   "8e6b621c3c": [
+    1,
+    0
+   ],
+   "ce0f7d9a29": [
+    1,
+    0
+   ],
+   "2bc17822e0": [
+    1,
+    0
+   ],
+   "6796cc9e02": [
+    1,
+    0
+   ],
+   "34bca94213": [
+    1,
+    0
+   ],
+   "769344f2ed": [
+    0,
+    128
+   ],
+   "3ebe981a12": [
+    1,
+    0
+   ],
+   "dd7ef544b7": [
+    1,
+    0
+   ],
+   "be97d740a4": [
+    0,
+    128
+   ],
+   "81e514fc78": [
+    1,
+    0
+   ],
+   "93002682cb": [
+    1,
+    0
+   ],
+   "4211e63e6a": [
+    0,
+    128
+   ],
+   "9728febef0": [
+    0,
+    128
+   ],
+   "aafd6736ee": [
+    1,
+    0
+   ]
+  },
+  {
+   "e13f403046": [
+    1,
+    1
+   ],
+   "487f7770b3": [
+    1,
+    0
+   ],
+   "fea93cb64b": [
+    1,
+    0
+   ],
+   "cdbdbdde74": [
+    0,
+    128
+   ],
+   "9197fb620d": [
+    1,
+    0
+   ],
+   "2c496fcaaf": [
+    1,
+    0
+   ],
+   "f3f6c95a21": [
+    1,
+    0
+   ],
+   "b7922fea04": [
+    1,
+    0
+   ],
+   "7e6831068d": [
+    1,
+    0
+   ],
+   "6d5be13c27": [
+    1,
+    0
+   ],
+   "b521be0691": [
+    1,
+    0
+   ],
+   "d555788449": [
+    1,
+    0
+   ],
+   "1c58599651": [
+    1,
+    1
+   ],
+   "72985f18a5": [
+    1,
+    0
+   ],
+   "c7c05d4c89": [
+    1,
+    0
+   ],
+   "44774d601f": [
+    1,
+    0
+   ],
+   "26a89988e7": [
+    0,
+    128
+   ],
+   "8cd9cf2eb7": [
+    1,
+    0
+   ],
+   "ea9eeb9402": [
+    1,
+    0
+   ],
+   "571e0454eb": [
+    0,
+    128
+   ],
+   "9c1bbf3817": [
+    1,
+    16
+   ],
+   "2f242c62c3": [
+    1,
+    2
+   ],
+   "e382fc109c": [
+    1,
+    0
+   ],
+   "a20f296642": [
+    1,
+    0
+   ],
+   "88f4b68ae0": [
+    0,
+    128
+   ],
+   "e231d12e2b": [
+    1,
+    0
+   ],
+   "60144e7425": [
+    1,
+    0
+   ],
+   "9e1f916040": [
+    0,
+    128
+   ],
+   "958de1469c": [
+    0,
+    128
+   ],
+   "47c25a82c8": [
+    0,
+    128
+   ],
+   "c5ca29f0b8": [
+    0,
+    128
+   ],
+   "d11e24323a": [
+    1,
+    0
+   ],
+   "4f1447b447": [
+    1,
+    0
+   ],
+   "8863c292d2": [
+    1,
+    31
+   ],
+   "61fe243ab5": [
+    1,
+    0
+   ],
+   "c61eb2908d": [
+    1,
+    0
+   ],
+   "38f1e77074": [
+    1,
+    0
+   ],
+   "72644af291": [
+    1,
+    0
+   ],
+   "a57a9bda26": [
+    1,
+    0
+   ],
+   "9d23ec1640": [
+    0,
+    128
+   ],
+   "2f7ba5bee6": [
+    1,
+    0
+   ],
+   "4e80808878": [
+    1,
+    0
+   ],
+   "690ba5b89e": [
+    0,
+    128
+   ],
+   "9d9daa4ce2": [
+    1,
+    0
+   ],
+   "8bfec96091": [
+    1,
+    0
+   ],
+   "ee72e25251": [
+    1,
+    0
+   ],
+   "03e2103c85": [
+    0,
+    128
+   ],
+   "9a4fca0a6b": [
+    0,
+    128
+   ],
+   "984e0e24b2": [
+    1,
+    0
+   ],
+   "c4482e1a05": [
+    0,
+    128
+   ],
+   "6d76fee001": [
+    1,
+    0
+   ],
+   "6159a0aed5": [
+    1,
+    0
+   ],
+   "992b1a8af0": [
+    1,
+    121
+   ],
+   "c9efdd689d": [
+    0,
+    128
+   ],
+   "72446c5ae9": [
+    1,
+    0
+   ],
+   "f58f3a4a61": [
+    1,
+    1
+   ],
+   "db7796acbf": [
+    0,
+    128
+   ],
+   "da7132fe4b": [
+    1,
+    0
+   ],
+   "0e1b660caf": [
+    1,
+    0
+   ],
+   "6f152efc97": [
+    0,
+    128
+   ],
+   "b7d1bb4210": [
+    1,
+    0
+   ],
+   "8a1349fa21": [
+    1,
+    0
+   ],
+   "60c9bd5ee8": [
+    0,
+    128
+   ],
+   "f9eaa54838": [
+    1,
+    0
+   ],
+   "fc4b873af9": [
+    0,
+    128
+   ],
+   "ad5dc9262d": [
+    0,
+    128
+   ],
+   "a319d1d045": [
+    1,
+    0
+   ],
+   "3927b42224": [
+    1,
+    0
+   ],
+   "ccbd0728e5": [
+    0,
+    128
+   ],
+   "b1082bd448": [
+    1,
+    0
+   ],
+   "3212479c9a": [
+    1,
+    0
+   ],
+   "7b64e74245": [
+    1,
+    0
+   ],
+   "76fd86aa2d": [
+    0,
+    128
+   ],
+   "79395a52c1": [
+    1,
+    0
+   ],
+   "cc1f821477": [
+    1,
+    1
+   ],
+   "7f4829147f": [
+    1,
+    0
+   ],
+   "2db86730e9": [
+    1,
+    0
+   ],
+   "d4f357ee2b": [
+    1,
+    0
+   ],
+   "28ba7e58f8": [
+    1,
+    0
+   ],
+   "ab1c7860d5": [
+    1,
+    0
+   ],
+   "6a07930068": [
+    1,
+    0
+   ],
+   "9cbc6a0a09": [
+    1,
+    0
+   ],
+   "7b6334cee7": [
+    1,
+    0
+   ],
+   "031322fe40": [
+    0,
+    128
+   ],
+   "56ad06f094": [
+    1,
+    0
+   ],
+   "423a5222d1": [
+    1,
+    0
+   ],
+   "da9f6016fa": [
+    0,
+    128
+   ],
+   "97d9c258ae": [
+    1,
+    0
+   ],
+   "2ddb257c86": [
+    1,
+    0
+   ],
+   "e9679e7ec1": [
+    1,
+    0
+   ],
+   "a0aca4f47b": [
+    1,
+    0
+   ],
+   "0a0c924877": [
+    0,
+    128
+   ],
+   "a45b988a74": [
+    0,
+    128
+   ],
+   "5e217056c6": [
+    1,
+    0
+   ],
+   "b6d7a83255": [
+    1,
+    28
+   ],
+   "077fee44e8": [
+    1,
+    0
+   ],
+   "d3fddc4262": [
+    0,
+    128
+   ],
+   "0e78795ace": [
+    0,
+    128
+   ],
+   "6e78529492": [
+    1,
+    0
+   ],
+   "40cf6a1c31": [
+    1,
+    0
+   ],
+   "871382b0e1": [
+    0,
+    128
+   ],
+   "dad723fc91": [
+    0,
+    128
+   ],
+   "5bb100b6a0": [
+    0,
+    128
+   ],
+   "0c6b5c54dc": [
+    1,
+    1
+   ],
+   "33863b2e36": [
+    1,
+    0
+   ],
+   "470cc21226": [
+    0,
+    128
+   ],
+   "692da2bc10": [
+    1,
+    0
+   ],
+   "ef9257446e": [
+    1,
+    0
+   ],
+   "cc972f3adc": [
+    0,
+    128
+   ],
+   "645edad046": [
+    1,
+    0
+   ],
+   "7b018bf269": [
+    1,
+    0
+   ],
+   "e7dcabe4f7": [
+    1,
+    0
+   ],
+   "a524b18e8d": [
+    0,
+    128
+   ],
+   "1056537874": [
+    1,
+    0
+   ],
+   "e160fab844": [
+    1,
+    0
+   ],
+   "18918cd88c": [
+    0,
+    128
+   ],
+   "c53c982e35": [
+    1,
+    10
+   ],
+   "7a68b062b0": [
+    1,
+    0
+   ],
+   "28c3f19ad9": [
+    1,
+    1
+   ],
+   "11e374fac7": [
+    1,
+    0
+   ],
+   "20a4152653": [
+    0,
+    128
+   ],
+   "f0461bee01": [
+    1,
+    0
+   ],
+   "f229af9879": [
+    0,
+    128
+   ],
+   "cf805b689d": [
+    1,
+    0
+   ],
+   "2ea77c30bb": [
+    1,
+    0
+   ],
+   "e36c4308d7": [
+    0,
+    128
+   ],
+   "3ea81fe019": [
+    1,
+    1
+   ],
+   "9de3a5c4c1": [
+    1,
+    0
+   ],
+   "70aec41c83": [
+    1,
+    57
+   ],
+   "f9f2cb24f9": [
+    1,
+    0
+   ],
+   "7f59924eeb": [
+    1,
+    0
+   ],
+   "a5b8e0e8be": [
+    0,
+    128
+   ],
+   "4763c81e16": [
+    1,
+    0
+   ],
+   "8e302224a4": [
+    1,
+    0
+   ],
+   "205ce5c029": [
+    0,
+    128
+   ],
+   "847b794a37": [
+    0,
+    128
+   ],
+   "14d94fc24a": [
+    1,
+    0
+   ],
+   "1b89e49e83": [
+    1,
+    0
+   ],
+   "70288eceb3": [
+    1,
+    0
+   ],
+   "b18233deb4": [
+    1,
+    0
+   ],
+   "f73ee5ca35": [
+    1,
+    0
+   ],
+   "83e907680c": [
+    1,
+    0
+   ],
+   "a365b3668e": [
+    0,
+    128
+   ],
+   "2dc57862ad": [
+    1,
+    0
+   ],
+   "d08dfd8042": [
+    1,
+    0
+   ],
+   "c3680196ad": [
+    0,
+    128
+   ],
+   "3de42428e3": [
+    1,
+    0
+   ],
+   "a81c7e0865": [
+    1,
+    0
+   ],
+   "f221443459": [
+    1,
+    1
+   ],
+   "b1ddcfb4ba": [
+    0,
+    128
+   ],
+   "08c10ed253": [
+    1,
+    22
+   ],
+   "9d65081835": [
+    1,
+    1
+   ],
+   "5227f66c36": [
+    0,
+    128
+   ],
+   "1c719514b0": [
+    1,
+    0
+   ],
+   "0d5f5f7051": [
+    1,
+    0
+   ],
+   "e974d4c23f": [
+    1,
+    0
+   ],
+   "93efafe0de": [
+    0,
+    128
+   ],
+   "c52c6c2e2c": [
+    1,
+    0
+   ],
+   "a388960655": [
+    0,
+    128
+   ],
+   "56452f4e38": [
+    0,
+    128
+   ],
+   "3509fe7caf": [
+    1,
+    0
+   ],
+   "d29648800a": [
+    0,
+    128
+   ],
+   "2901a59e49": [
+    1,
+    0
+   ],
+   "79fd089473": [
+    1,
+    0
+   ],
+   "2443d15867": [
+    1,
+    90
+   ],
+   "a6475fbce7": [
+    1,
+    0
+   ],
+   "df3409a68e": [
+    1,
+    0
+   ],
+   "f9d557c4af": [
+    0,
+    128
+   ],
+   "daea92847d": [
+    1,
+    6
+   ],
+   "5c969f3667": [
+    0,
+    128
+   ],
+   "6e68eec6aa": [
+    1,
+    0
+   ],
+   "6affb85a21": [
+    1,
+    56
+   ],
+   "f930e09ae9": [
+    1,
+    0
+   ],
+   "8c2953882e": [
+    1,
+    0
+   ],
+   "246fe4aa44": [
+    0,
+    128
+   ],
+   "3993471e4c": [
+    1,
+    0
+   ],
+   "698701aeda": [
+    0,
+    128
+   ],
+   "d3764534af": [
+    1,
+    0
+   ],
+   "b062aa0692": [
+    1,
+    0
+   ],
+   "57382fa036": [
+    1,
+    0
+   ],
+   "8151871edb": [
+    1,
+    0
+   ],
+   "c65569a21f": [
+    0,
+    128
+   ],
+   "00b220be94": [
+    1,
+    0
+   ],
+   "a3d6f0b277": [
+    0,
+    128
+   ],
+   "a33cb78602": [
+    0,
+    128
+   ],
+   "4e6f414cdc": [
+    1,
+    1
+   ],
+   "8e6b621c3c": [
+    1,
+    0
+   ],
+   "ce0f7d9a29": [
+    1,
+    0
+   ],
+   "2bc17822e0": [
+    1,
+    0
+   ],
+   "6796cc9e02": [
+    1,
+    0
+   ],
+   "34bca94213": [
+    1,
+    0
+   ],
+   "769344f2ed": [
+    1,
+    95
+   ],
+   "3ebe981a12": [
+    1,
+    0
+   ],
+   "dd7ef544b7": [
+    1,
+    0
+   ],
+   "be97d740a4": [
+    0,
+    128
+   ],
+   "81e514fc78": [
+    1,
+    0
+   ],
+   "93002682cb": [
+    1,
+    0
+   ],
+   "4211e63e6a": [
+    0,
+    128
+   ],
+   "9728febef0": [
+    0,
+    128
+   ],
+   "aafd6736ee": [
+    1,
+    0
+   ]
+  },
+  {
+   "e13f403046": [
+    1,
+    1
+   ],
+   "487f7770b3": [
+    1,
+    0
+   ],
+   "fea93cb64b": [
+    1,
+    0
+   ],
+   "cdbdbdde74": [
+    0,
+    128
+   ],
+   "9197fb620d": [
+    1,
+    0
+   ],
+   "2c496fcaaf": [
+    1,
+    0
+   ],
+   "f3f6c95a21": [
+    1,
+    0
+   ],
+   "b7922fea04": [
+    1,
+    0
+   ],
+   "7e6831068d": [
+    1,
+    0
+   ],
+   "6d5be13c27": [
+    1,
+    0
+   ],
+   "b521be0691": [
+    1,
+    0
+   ],
+   "d555788449": [
+    1,
+    0
+   ],
+   "1c58599651": [
+    1,
+    1
+   ],
+   "72985f18a5": [
+    1,
+    0
+   ],
+   "c7c05d4c89": [
+    1,
+    0
+   ],
+   "44774d601f": [
+    1,
+    0
+   ],
+   "26a89988e7": [
+    0,
+    128
+   ],
+   "8cd9cf2eb7": [
+    1,
+    0
+   ],
+   "ea9eeb9402": [
+    1,
+    0
+   ],
+   "571e0454eb": [
+    0,
+    128
+   ],
+   "9c1bbf3817": [
+    1,
+    5
+   ],
+   "2f242c62c3": [
+    1,
+    3
+   ],
+   "e382fc109c": [
+    1,
+    0
+   ],
+   "a20f296642": [
+    1,
+    0
+   ],
+   "88f4b68ae0": [
+    0,
+    128
+   ],
+   "e231d12e2b": [
+    1,
+    0
+   ],
+   "60144e7425": [
+    1,
+    0
+   ],
+   "9e1f916040": [
+    0,
+    128
+   ],
+   "958de1469c": [
+    0,
+    128
+   ],
+   "47c25a82c8": [
+    0,
+    128
+   ],
+   "c5ca29f0b8": [
+    0,
+    128
+   ],
+   "d11e24323a": [
+    1,
+    0
+   ],
+   "4f1447b447": [
+    1,
+    0
+   ],
+   "8863c292d2": [
+    0,
+    128
+   ],
+   "61fe243ab5": [
+    1,
+    0
+   ],
+   "c61eb2908d": [
+    1,
+    0
+   ],
+   "38f1e77074": [
+    1,
+    0
+   ],
+   "72644af291": [
+    1,
+    0
+   ],
+   "a57a9bda26": [
+    1,
+    0
+   ],
+   "9d23ec1640": [
+    0,
+    128
+   ],
+   "2f7ba5bee6": [
+    1,
+    0
+   ],
+   "4e80808878": [
+    1,
+    0
+   ],
+   "690ba5b89e": [
+    0,
+    128
+   ],
+   "9d9daa4ce2": [
+    1,
+    0
+   ],
+   "8bfec96091": [
+    1,
+    0
+   ],
+   "ee72e25251": [
+    1,
+    0
+   ],
+   "03e2103c85": [
+    0,
+    128
+   ],
+   "9a4fca0a6b": [
+    0,
+    128
+   ],
+   "984e0e24b2": [
+    1,
+    0
+   ],
+   "c4482e1a05": [
+    0,
+    128
+   ],
+   "6d76fee001": [
+    1,
+    0
+   ],
+   "6159a0aed5": [
+    1,
+    0
+   ],
+   "992b1a8af0": [
+    1,
+    98
+   ],
+   "c9efdd689d": [
+    0,
+    128
+   ],
+   "72446c5ae9": [
+    1,
+    0
+   ],
+   "f58f3a4a61": [
+    1,
+    1
+   ],
+   "db7796acbf": [
+    0,
+    128
+   ],
+   "da7132fe4b": [
+    1,
+    0
+   ],
+   "0e1b660caf": [
+    1,
+    0
+   ],
+   "6f152efc97": [
+    0,
+    128
+   ],
+   "b7d1bb4210": [
+    1,
+    0
+   ],
+   "8a1349fa21": [
+    1,
+    0
+   ],
+   "60c9bd5ee8": [
+    0,
+    128
+   ],
+   "f9eaa54838": [
+    1,
+    0
+   ],
+   "fc4b873af9": [
+    0,
+    128
+   ],
+   "ad5dc9262d": [
+    0,
+    128
+   ],
+   "a319d1d045": [
+    1,
+    0
+   ],
+   "3927b42224": [
+    1,
+    0
+   ],
+   "ccbd0728e5": [
+    0,
+    128
+   ],
+   "b1082bd448": [
+    1,
+    0
+   ],
+   "3212479c9a": [
+    1,
+    0
+   ],
+   "7b64e74245": [
+    1,
+    0
+   ],
+   "76fd86aa2d": [
+    0,
+    128
+   ],
+   "79395a52c1": [
+    1,
+    0
+   ],
+   "cc1f821477": [
+    1,
+    1
+   ],
+   "7f4829147f": [
+    1,
+    0
+   ],
+   "2db86730e9": [
+    1,
+    0
+   ],
+   "d4f357ee2b": [
+    1,
+    0
+   ],
+   "28ba7e58f8": [
+    1,
+    0
+   ],
+   "ab1c7860d5": [
+    1,
+    0
+   ],
+   "6a07930068": [
+    1,
+    0
+   ],
+   "9cbc6a0a09": [
+    1,
+    0
+   ],
+   "7b6334cee7": [
+    1,
+    0
+   ],
+   "031322fe40": [
+    0,
+    128
+   ],
+   "56ad06f094": [
+    1,
+    0
+   ],
+   "423a5222d1": [
+    1,
+    0
+   ],
+   "da9f6016fa": [
+    0,
+    128
+   ],
+   "97d9c258ae": [
+    1,
+    0
+   ],
+   "2ddb257c86": [
+    1,
+    0
+   ],
+   "e9679e7ec1": [
+    1,
+    0
+   ],
+   "a0aca4f47b": [
+    1,
+    0
+   ],
+   "0a0c924877": [
+    0,
+    128
+   ],
+   "a45b988a74": [
+    0,
+    128
+   ],
+   "5e217056c6": [
+    1,
+    0
+   ],
+   "b6d7a83255": [
+    1,
+    7
+   ],
+   "077fee44e8": [
+    1,
+    0
+   ],
+   "d3fddc4262": [
+    0,
+    128
+   ],
+   "0e78795ace": [
+    0,
+    128
+   ],
+   "6e78529492": [
+    1,
+    0
+   ],
+   "40cf6a1c31": [
+    1,
+    0
+   ],
+   "871382b0e1": [
+    0,
+    128
+   ],
+   "dad723fc91": [
+    1,
+    68
+   ],
+   "5bb100b6a0": [
+    0,
+    128
+   ],
+   "0c6b5c54dc": [
+    1,
+    1
+   ],
+   "33863b2e36": [
+    1,
+    0
+   ],
+   "470cc21226": [
+    0,
+    128
+   ],
+   "692da2bc10": [
+    1,
+    0
+   ],
+   "ef9257446e": [
+    1,
+    0
+   ],
+   "cc972f3adc": [
+    0,
+    128
+   ],
+   "645edad046": [
+    1,
+    0
+   ],
+   "7b018bf269": [
+    1,
+    0
+   ],
+   "e7dcabe4f7": [
+    1,
+    0
+   ],
+   "a524b18e8d": [
+    0,
+    128
+   ],
+   "1056537874": [
+    1,
+    0
+   ],
+   "e160fab844": [
+    1,
+    0
+   ],
+   "18918cd88c": [
+    0,
+    128
+   ],
+   "c53c982e35": [
+    1,
+    10
+   ],
+   "7a68b062b0": [
+    1,
+    0
+   ],
+   "28c3f19ad9": [
+    1,
+    1
+   ],
+   "11e374fac7": [
+    1,
+    0
+   ],
+   "20a4152653": [
+    0,
+    128
+   ],
+   "f0461bee01": [
+    1,
+    0
+   ],
+   "f229af9879": [
+    0,
+    128
+   ],
+   "cf805b689d": [
+    1,
+    0
+   ],
+   "2ea77c30bb": [
+    1,
+    0
+   ],
+   "e36c4308d7": [
+    0,
+    128
+   ],
+   "3ea81fe019": [
+    1,
+    1
+   ],
+   "9de3a5c4c1": [
+    1,
+    0
+   ],
+   "70aec41c83": [
+    1,
+    38
+   ],
+   "f9f2cb24f9": [
+    1,
+    0
+   ],
+   "7f59924eeb": [
+    1,
+    0
+   ],
+   "a5b8e0e8be": [
+    0,
+    128
+   ],
+   "4763c81e16": [
+    1,
+    0
+   ],
+   "8e302224a4": [
+    1,
+    0
+   ],
+   "205ce5c029": [
+    0,
+    128
+   ],
+   "847b794a37": [
+    0,
+    128
+   ],
+   "14d94fc24a": [
+    1,
+    0
+   ],
+   "1b89e49e83": [
+    1,
+    0
+   ],
+   "70288eceb3": [
+    1,
+    0
+   ],
+   "b18233deb4": [
+    1,
+    0
+   ],
+   "f73ee5ca35": [
+    1,
+    0
+   ],
+   "83e907680c": [
+    1,
+    0
+   ],
+   "a365b3668e": [
+    0,
+    128
+   ],
+   "2dc57862ad": [
+    1,
+    0
+   ],
+   "d08dfd8042": [
+    1,
+    0
+   ],
+   "c3680196ad": [
+    0,
+    128
+   ],
+   "3de42428e3": [
+    1,
+    0
+   ],
+   "a81c7e0865": [
+    1,
+    0
+   ],
+   "f221443459": [
+    1,
+    1
+   ],
+   "b1ddcfb4ba": [
+    0,
+    128
+   ],
+   "08c10ed253": [
+    1,
+    28
+   ],
+   "9d65081835": [
+    1,
+    1
+   ],
+   "5227f66c36": [
+    0,
+    128
+   ],
+   "1c719514b0": [
+    1,
+    0
+   ],
+   "0d5f5f7051": [
+    1,
+    0
+   ],
+   "e974d4c23f": [
+    1,
+    0
+   ],
+   "93efafe0de": [
+    0,
+    128
+   ],
+   "c52c6c2e2c": [
+    1,
+    0
+   ],
+   "a388960655": [
+    0,
+    128
+   ],
+   "56452f4e38": [
+    0,
+    128
+   ],
+   "3509fe7caf": [
+    1,
+    0
+   ],
+   "d29648800a": [
+    0,
+    128
+   ],
+   "2901a59e49": [
+    1,
+    0
+   ],
+   "79fd089473": [
+    1,
+    0
+   ],
+   "2443d15867": [
+    1,
+    35
+   ],
+   "a6475fbce7": [
+    1,
+    0
+   ],
+   "df3409a68e": [
+    1,
+    0
+   ],
+   "f9d557c4af": [
+    0,
+    128
+   ],
+   "daea92847d": [
+    1,
+    128
+   ],
+   "5c969f3667": [
+    0,
+    128
+   ],
+   "6e68eec6aa": [
+    1,
+    0
+   ],
+   "6affb85a21": [
+    0,
+    128
+   ],
+   "f930e09ae9": [
+    1,
+    0
+   ],
+   "8c2953882e": [
+    1,
+    0
+   ],
+   "246fe4aa44": [
+    0,
+    128
+   ],
+   "3993471e4c": [
+    1,
+    0
+   ],
+   "698701aeda": [
+    0,
+    128
+   ],
+   "d3764534af": [
+    1,
+    0
+   ],
+   "b062aa0692": [
+    1,
+    0
+   ],
+   "57382fa036": [
+    1,
+    0
+   ],
+   "8151871edb": [
+    1,
+    0
+   ],
+   "c65569a21f": [
+    0,
+    128
+   ],
+   "00b220be94": [
+    1,
+    0
+   ],
+   "a3d6f0b277": [
+    0,
+    128
+   ],
+   "a33cb78602": [
+    0,
+    128
+   ],
+   "4e6f414cdc": [
+    1,
+    1
+   ],
+   "8e6b621c3c": [
+    1,
+    0
+   ],
+   "ce0f7d9a29": [
+    1,
+    0
+   ],
+   "2bc17822e0": [
+    1,
+    0
+   ],
+   "6796cc9e02": [
+    1,
+    0
+   ],
+   "34bca94213": [
+    1,
+    0
+   ],
+   "769344f2ed": [
+    1,
+    55
+   ],
+   "3ebe981a12": [
+    1,
+    0
+   ],
+   "dd7ef544b7": [
+    1,
+    0
+   ],
+   "be97d740a4": [
+    0,
+    128
+   ],
+   "81e514fc78": [
+    1,
+    0
+   ],
+   "93002682cb": [
+    1,
+    0
+   ],
+   "4211e63e6a": [
+    0,
+    128
+   ],
+   "9728febef0": [
+    0,
+    128
+   ],
+   "aafd6736ee": [
+    1,
+    0
+   ]
+  }
+ ],
+ "rows": [
+  {
+   "id": "e13f403046",
+   "equation": "2f(f(x) + y) = f(yf(x)) + 2x - xy + 6",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 1,
+   "seconds": 1.572,
+   "proof_len": 30,
+   "answer": "f(x) = x + 2",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\ninj\nsurj\nsub P: y:=x\nsub P: y:=-x\nsub P: x:=1\nsub R6: x:=0\nsub P: y:=1\nsub R7: x:=0\nsub P: x:=-1\nsub R16: x:=0\nsub P: y:=-1\nsub R17: x:=0\nsub P: x:=f(x)\nsub P: y:=f(y)\nsub P: x:=f(y)\nsub R25: x:=0\nsub P: y:=f(x)\nsub R11: x:=f(-1)\nsub R24: x:=0\nsub P: x:=-f(y)\nsub R33: x:=0\nsub P: y:=-f(x)\nsub R31: x:=0\npre 0^3\nsub P: x:=a\nconclude",
+   "solutions": [
+    "f(x) = x + 2"
+   ],
+   "flags": []
+  },
+  {
+   "id": "487f7770b3",
+   "equation": "f(y) = f(x + f(y)) + 2x - 6y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 8,
+   "answer": "f(x) = -2x",
+   "reason": "",
+   "proof": "inj\nsurj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\ncancel\nsub P: x:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = -2x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "fea93cb64b",
+   "equation": "2f(f(y)) + f(2x) = 2x + 2y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 6,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "inj\nsurj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "cdbdbdde74",
+   "equation": "f(x) + f(x + f(y)) = 0",
+   "domain": "R",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "9197fb620d",
+   "equation": "f(f(x) + y) = xf(xf(y)) + x - x^2y + y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 4,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "2c496fcaaf",
+   "equation": "2f(xy) = f(xf(y)) + xy",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 10,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: y:=x\nsub P: y:=-x\nsub P: x:=1\ninj\ncancel\nsub P: y:=1\ncancel\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "f3f6c95a21",
+   "equation": "2f(x + y + 1) + f(x - f(y)) = f(xy)",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 21,
+   "answer": "f(x) = 0",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsub P: y:=x\nsub P: y:=-x\nsub P: x:=1\nsub R6: x:=0\nsub P: y:=1\nsub R9: x:=0\nsub P: x:=-1\nsub R16: x:=0\nsub P: y:=-1\nsub R19: x:=0\nsub P: x:=f(x)\nsub P: y:=f(y)\nsub P: x:=f(y)\nsub R11: x:=0\nsub R21: x:=f(0) + 1\nsub R8: x:=-f(0) - 1\nconclude",
+   "solutions": [
+    "f(x) = 0"
+   ],
+   "flags": []
+  },
+  {
+   "id": "b7922fea04",
+   "equation": "f(x) + f(x + f(y)) = 2x + y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 9,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "inj\nsurj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsub P: y:=x\nsub R6: x:=f(0)\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "7e6831068d",
+   "equation": "f(yf(x)) = 2f(2x) + xy - 4x",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 4,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "6d5be13c27",
+   "equation": "f(0) = (x + y)f(x + f(y)) + x^2 - y^2",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 5,
+   "answer": "f(x) = -x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = -x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "b521be0691",
+   "equation": "f(xy) + f(x + y + f(y)) = -xy - x",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 6,
+   "answer": "f(x) = -x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub R2: x:=f(0)\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = -x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "d555788449",
+   "equation": "f(f(x)) = 2f(xy + x)",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 7,
+   "answer": "f(x) = 0",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: y:=0\nsub P: y:=x\nsub P: y:=-x\nsub P: x:=1\nconclude",
+   "solutions": [
+    "f(x) = 0"
+   ],
+   "flags": []
+  },
+  {
+   "id": "1c58599651",
+   "equation": "2f(x + f(y)) + f(2f(x)) = 4x + 2y",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 1,
+   "seconds": 1.572,
+   "proof_len": 39,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "inj\nsurj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsub P: y:=x\nsub P: y:=-x\nsub P: x:=1\nsub R4: x:=0\nsub P: y:=1\nsub R7: x:=0\nsub P: x:=-1\nsub R16: x:=0\nsub P: y:=-1\nsub R19: x:=0\nsub P: x:=f(x)\nsub P: y:=f(y)\nsub P: x:=f(y)\nsub R26: x:=0\nsub P: y:=f(x)\nsub R27: x:=0\nsub P: x:=-f(y)\nsub R10: x:=f(-1)\nsub R21: x:=f(1)\nsub R34: x:=0\nsub P: y:=-f(x)\nsub R35: x:=0\npre 0^3\nsub P: x:=a\nsub P: y:=a\ncancel\nsub R13: x:=0\ncancel\nsub R14: x:=-1\nsub R15: x:=-f(0)\nsub R16: x:=f(0)\nsub R19: x:=f(x) + (3/4)f(0)\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "72985f18a5",
+   "equation": "2f(x + y + f(y)) + f(x - f(y)) = 3x + 3y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 24,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsub P: y:=x\nsub P: y:=-x\nsub P: x:=1\nsub R6: x:=0\nsub P: y:=1\nsub R9: x:=0\nsub P: x:=-1\nsub R16: x:=0\nsub P: y:=-1\nsub R21: x:=0\nsub P: x:=f(x)\nsub P: y:=f(y)\nsub P: x:=f(y)\nsub R16: x:=0\nsub P: y:=f(x)\nsub R28: x:=0\nsub P: x:=-f(y)\ninj\ncancel\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "c7c05d4c89",
+   "equation": "f(yf(x)) = f(xf(x)) + 4xy - 4x^2",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 12,
+   "answer": "f(x) = -2x; f(x) = 2x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0\nsub P: y:=0\nsub P: y:=-x\nsub P: x:=1\nsurj\nsub R3: x:=0\nsub P: y:=1\ninj\ncancel\ncancel\nconclude",
+   "solutions": [
+    "f(x) = -2x",
+    "f(x) = 2x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "44774d601f",
+   "equation": "f(f(x) + f(y)) + f(f(x) - y) = 8x + 2y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 24,
+   "answer": "f(x) = 2x",
+   "reason": "",
+   "proof": "inj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsub P: y:=x\nsub P: y:=-x\nsub P: x:=1\nsub R6: x:=0\nsub P: y:=1\nsub R7: x:=0\nsub P: x:=-1\nsub R16: x:=0\nsub P: y:=-1\nsub R17: x:=0\nsub P: x:=f(x)\nsub P: y:=f(y)\nsub P: x:=f(y)\nsub R24: x:=0\nsub P: y:=f(x)\nsub R9: x:=f(0)\ncancel\ncancel\nconclude",
+   "solutions": [
+    "f(x) = 2x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "26a89988e7",
+   "equation": "f(f(x) - f(y)) = f(f(x) + 2y) + 2f(-y) + -y - 6",
+   "domain": "R",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "8cd9cf2eb7",
+   "equation": "2f(y) + f(x + f(y)) = x + 3y",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 7,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "inj\nsurj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "ea9eeb9402",
+   "equation": "f(y) + f(f(x) + f(y)) = x + 2y + 8",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 7,
+   "answer": "f(x) = x + 2",
+   "reason": "",
+   "proof": "inj\nsurj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = x + 2"
+   ],
+   "flags": []
+  },
+  {
+   "id": "571e0454eb",
+   "equation": "f(y)f(2x) + f(f(y) - x) = 2",
+   "domain": "R",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "9c1bbf3817",
+   "equation": "f(x - f(y)) = 2f(2x - y) + y - 3x",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 114,
+   "seconds": 1.572,
+   "proof_len": 31,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsub P: y:=x\nsub P: y:=-x\nsub P: x:=1\nsub R6: x:=0\nsub P: y:=1\nsub R9: x:=0\nsub P: x:=-1\nsub R16: x:=0\nsub P: y:=-1\nsub R19: x:=0\nsub P: x:=f(x)\nsub P: y:=f(y)\nsub P: x:=f(y)\nsub R23: x:=0\nsub R15: x:=2f(0)\nsub R21: x:=2f(y) - y\ninj\nsub P: y:=f(x)\nsub P: x:=-f(y)\nsub R6: x:=-f(x)\nsub P: y:=-f(x)\nsub R10: x:=-x\nsub R20: y:=y + x\nsub R23: x:=x + y\nsub R30: x:=0, y:=x - f(x)\nsub R30: x:=2x\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "2f242c62c3",
+   "equation": "f(x + f(y))f(0) + f(x) = -x",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 2,
+   "seconds": 1.572,
+   "proof_len": 28,
+   "answer": "f(x) = -x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsub P: y:=x\nsub P: y:=-x\nsub P: x:=1\nsub R6: x:=0\nsub P: y:=1\nsub R9: x:=0\nsub P: x:=-1\nsub R16: x:=0\nsub P: y:=-1\nsub R19: x:=0\nsub P: x:=f(x)\nsub P: y:=f(y)\nsub P: x:=f(y)\nsub R16: x:=0\nsub P: y:=f(x)\nsub R28: x:=0\nsub P: x:=-f(y)\nsub R12: x:=0\nsub P: y:=-f(x)\nsub R32: x:=0\nsplitnz f(0)\nconclude\nsub R9: x:=1\nsub R10: x:=f(0) + 1",
+   "solutions": [
+    "f(x) = -x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "e382fc109c",
+   "equation": "f(x + y) = 2f(x + f(y)) + 3 - x - y",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 9,
+   "answer": "f(x) = x - 1",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\ninj\ncancel\nsurj\nsub P: y:=0\ncancel\nconclude",
+   "solutions": [
+    "f(x) = x - 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "a20f296642",
+   "equation": "f(x - y) + f(f(x) + f(y)) = 2x",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 12,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\ninj\nsub R5: x:=2f(0)\nsub P: y:=x\nsurj\nsub P: y:=-x\nsub R5: x:=2f(x)\nsub R3: x:=f(x)\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "88f4b68ae0",
+   "equation": "2f(x + y + f(y)) = 2f(f(x) + y) + 2y",
+   "domain": "R",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "e231d12e2b",
+   "equation": "f(f(y) - x) = 2f(x - f(y)) + 3y - 3x",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 8,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "inj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsub R2: x:=f(0)\nsub R2: x:=-f(x)\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "60144e7425",
+   "equation": "f(2f(x)) + f(x - y) = f(f(x) + y)",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 23,
+   "answer": "f(x) = 0",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsub P: y:=x\nsub P: y:=-x\nsub P: x:=1\nsub R4: x:=0\nsub P: y:=1\nsub R5: x:=0\nsub P: x:=-1\nsub R16: x:=0\nsub P: y:=-1\nsub R17: x:=0\nsub P: x:=f(x)\nsub P: y:=f(y)\nsub P: x:=f(y)\nsub R26: x:=0\nsub P: y:=f(x)\nsub R13: x:=x - f(x)\nsub R13: x:=f(x)\nsub P: x:=-f(y)\nconclude",
+   "solutions": [
+    "f(x) = 0"
+   ],
+   "flags": []
+  },
+  {
+   "id": "9e1f916040",
+   "equation": "f(f(x) + 1) + f(2x + f(y)) = f(f(x)f(y))",
+   "domain": "Q",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "958de1469c",
+   "equation": "f(x - f(y)) + f(y)f(2x) = 0",
+   "domain": "Q",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "47c25a82c8",
+   "equation": "f(f(x) + y)f(x - y) + f(x) = 0",
+   "domain": "R",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "c5ca29f0b8",
+   "equation": "f(f(y)) + 2f(2f(x)) = 6",
+   "domain": "Q",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "d11e24323a",
+   "equation": "2f(x) + f(f(x) + y) = f(x) + 6x + 2y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 6,
+   "answer": "f(x) = 2x",
+   "reason": "",
+   "proof": "inj\nsurj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = 2x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "4f1447b447",
+   "equation": "f(f(x)) = f(x) + f(f(x) - f(y)) + y - x",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 24,
+   "answer": "f(x) = x + c for any constant c",
+   "reason": "",
+   "proof": "inj\nsurj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsub P: y:=x\nsub P: y:=-x\nsub R4: x:=f(0) - f(x)\nsub P: x:=1\nsub R4: x:=1\nsub R13: x:=0\nsub P: y:=1\nsub R14: x:=0\nsub R15: x:=f(1)\nsub P: x:=-1\nsub R7: x:=-1\nsub P: y:=-1\nsub P: x:=f(x)\nsub R8: x:=f(x)\nsub R10: x:=0\nsub P: y:=f(y)\nsub P: x:=f(y)\nconclude",
+   "solutions": [
+    "f(x) = x + c"
+   ],
+   "flags": []
+  },
+  {
+   "id": "8863c292d2",
+   "equation": "f(f(y)) + f(x) = f(x - f(y)) + 2y",
+   "domain": "Q",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "61fe243ab5",
+   "equation": "f(y) + f(x + f(y)) = x + 2y - 3",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 7,
+   "answer": "f(x) = x - 1",
+   "reason": "",
+   "proof": "inj\nsurj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = x - 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "c61eb2908d",
+   "equation": "f(x - f(y)) = 2f(y) + x - 3y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 7,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "inj\nsurj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "38f1e77074",
+   "equation": "f(x + f(y)) = f(y) + x + 2",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 6,
+   "answer": "f(x) = x + 2",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = x + 2"
+   ],
+   "flags": []
+  },
+  {
+   "id": "72644af291",
+   "equation": "f(f(x) + y) = 2f(f(y)) + x - 3y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 7,
+   "answer": "f(x) = c - x for any constant c",
+   "reason": "",
+   "proof": "inj\nsurj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = c - x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "a57a9bda26",
+   "equation": "f(y) + 2f(x + f(y)) = y - 2x",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 7,
+   "answer": "f(x) = -x",
+   "reason": "",
+   "proof": "inj\nsurj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = -x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "9d23ec1640",
+   "equation": "f(f(x) + f(y)) + f(x^2 + f(y)) = x - x^2 + 2y + 1",
+   "domain": "R",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "2f7ba5bee6",
+   "equation": "f(f(y) - x) = 2f(x) + 3x + y",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 9,
+   "answer": "f(x) = -x",
+   "reason": "",
+   "proof": "inj\nsurj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsub R4: x:=f(0)\nsub R2: x:=-x\nconclude",
+   "solutions": [
+    "f(x) = -x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "4e80808878",
+   "equation": "f(f(x)) = f(x + y) + 1 - y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 5,
+   "answer": "f(x) = x + 1",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x + 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "690ba5b89e",
+   "equation": "f(x - f(y)) + f(x + f(y)) = -2y^4 - 2x^2",
+   "domain": "R",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "9d9daa4ce2",
+   "equation": "f(f(x)) + f(yf(x)) = xy + x + y + 3",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 11,
+   "answer": "f(x) = x + 1",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsurj\nsub P: y:=0\ninj\nsub P: y:=x\nsub P: y:=-x\nsub P: x:=1\nsub R2: x:=1\nconclude",
+   "solutions": [
+    "f(x) = x + 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "8bfec96091",
+   "equation": "f(f(x) + f(y)) + f(y - x) = 0",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 7,
+   "answer": "f(x) = 0",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsub P: y:=x\nsub P: y:=-x\nconclude",
+   "solutions": [
+    "f(x) = 0"
+   ],
+   "flags": []
+  },
+  {
+   "id": "ee72e25251",
+   "equation": "f(x) = f(f(y) - x) + 4x - 4y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 10,
+   "answer": "f(x) = 2x",
+   "reason": "",
+   "proof": "inj\nsurj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\ncancel\nsub P: x:=0\nsub P: y:=0\nsub P: y:=x\ncancel\nconclude",
+   "solutions": [
+    "f(x) = 2x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "03e2103c85",
+   "equation": "f(xy + f(x)) + 2f(xf(y)) = xy + x",
+   "domain": "R",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "9a4fca0a6b",
+   "equation": "f(f(x) + y) + f(x - f(y)) + f(x + y) = 3",
+   "domain": "R",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "984e0e24b2",
+   "equation": "xf(f(y)) = f(f(x) - y) + xy - x + y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 4,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "c4482e1a05",
+   "equation": "f(f(x) + y) = 2f(2x + f(y)) + -4x - 6y",
+   "domain": "Q",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "6d76fee001",
+   "equation": "f(x + f(y)) = f(xf(y)) + y - xy - x + 2",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 27,
+   "answer": "f(x) = x + 2",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\ninj\nsurj\nsub P: y:=0\nsub P: y:=x\nsub P: y:=-x\nsub P: x:=1\nsub R6: x:=0\nsub P: y:=1\nsub R9: x:=0\ncancel\nsub P: x:=-1\nsub R16: x:=0\nsub P: y:=-1\nsub R19: x:=0\ncancel\nsub R6: x:=-1\nsub R7: x:=f(x) - 1\nsub R7: x:=x + 1\nsub R7: x:=x + 2\nsub R17: x:=-f(x)\nsub R19: x:=2x\nsub R25: x:=-f(x)\nsub R19: x:=f(x) - 1\nconclude",
+   "solutions": [
+    "f(x) = x + 2"
+   ],
+   "flags": []
+  },
+  {
+   "id": "6159a0aed5",
+   "equation": "f(f(x) + y) + 2f(x - y) = 3x - y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 26,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\ninj\nsub P: y:=x\nsurj\nsub P: y:=-x\nsub P: x:=1\nsub R6: x:=0\nsub P: y:=1\nsub R7: x:=0\nsub P: x:=-1\nsub R16: x:=0\nsub P: y:=-1\nsub R17: x:=0\nsub P: x:=f(x)\nsub P: y:=f(y)\nsub P: x:=f(y)\nsub R25: x:=0\nsub P: y:=f(x)\nsub R23: x:=0\nsub R8: x:=-f(0)\nsub R4: x:=-x - 1\nsub R4: x:=x - 1\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "992b1a8af0",
+   "equation": "2f(x - y)f(y) = 2f(yf(x)) - 2y^2",
+   "domain": "R",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "c9efdd689d",
+   "equation": "f(xf(y))f(-x) + 2f(0) = -x^2y",
+   "domain": "R",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "72446c5ae9",
+   "equation": "f(f(x)) + f(f(x) - y) = 2x + y",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 6,
+   "answer": "f(x) = c - x for any constant c",
+   "reason": "",
+   "proof": "inj\nsurj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = c - x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "f58f3a4a61",
+   "equation": "f(2f(x)) + f(x + f(y)) + f(x) = 4x + y + 6",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 1,
+   "seconds": 1.572,
+   "proof_len": 40,
+   "answer": "f(x) = x + 1",
+   "reason": "",
+   "proof": "inj\nsurj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsub P: y:=x\nsub P: y:=-x\nsub P: x:=1\nsub R4: x:=0\nsub P: y:=1\nsub R7: x:=0\nsub P: x:=-1\nsub R16: x:=0\nsub P: y:=-1\nsub R19: x:=0\nsub P: x:=f(x)\nsub P: y:=f(y)\nsub P: x:=f(y)\nsub R26: x:=0\nsub P: y:=f(x)\nsub R27: x:=0\nsub P: x:=-f(y)\nsub R10: x:=f(-1)\nsub R21: x:=f(1)\nsub R34: x:=0\nsub P: y:=-f(x)\nsub R35: x:=0\npre 0^3\nsub P: x:=a\nsub P: y:=a\ncancel\nsub R13: x:=0\ncancel\nsub R14: x:=-1\nsub R15: x:=-f(0)\nsub R16: x:=f(0)\nsub R18: x:=-1\nsub R16: x:=f(x) - 1\nconclude",
+   "solutions": [
+    "f(x) = x + 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "db7796acbf",
+   "equation": "f(x + f(y))f(y) + 2f(x - f(y)) = 0",
+   "domain": "R",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "da7132fe4b",
+   "equation": "2f(xf(y)) = f(f(y)) + 2xy - y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 14,
+   "answer": "f(x) = -x; f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\ninj\nsurj\ncancel\nsub P: y:=0\ncancel\nsub P: y:=x\nsub P: y:=-x\nsub P: y:=1\nsub P: x:=-1\nsub R5: x:=f(1)x\nconclude",
+   "solutions": [
+    "f(x) = -x",
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "0e1b660caf",
+   "equation": "f(2x) = f(f(x) + y)",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 4,
+   "answer": "f(x) = c for any constant c",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = c"
+   ],
+   "flags": []
+  },
+  {
+   "id": "6f152efc97",
+   "equation": "f(y^2) = f(f(x)) + y^2 - x",
+   "domain": "R",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "b7d1bb4210",
+   "equation": "f(x^2) = f(f(x) + y) + 3x^2 - 9x - 3y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 5,
+   "answer": "f(x) = 3x",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = 3x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "8a1349fa21",
+   "equation": "f(f(y)) = 2f(x + y)",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 5,
+   "answer": "f(x) = 0",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = 0"
+   ],
+   "flags": []
+  },
+  {
+   "id": "60c9bd5ee8",
+   "equation": "f(y) = f(f(x) + y) - 4x",
+   "domain": "R",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "f9eaa54838",
+   "equation": "2f(f(x) - y) = f(y) + 2x - 3y + 3",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 8,
+   "answer": "f(x) = x + 1",
+   "reason": "",
+   "proof": "inj\nsurj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub R2: x:=f(0)\nsub R3: x:=1 - x\nconclude",
+   "solutions": [
+    "f(x) = x + 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "fc4b873af9",
+   "equation": "2f(f(x) + f(y)) = f(x + y)",
+   "domain": "R",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "ad5dc9262d",
+   "equation": "f(2x + f(y)) = 2f(x + f(x)) + y - 2x - 2",
+   "domain": "R",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "a319d1d045",
+   "equation": "f(f(y))f(x) = f(y) + xy + 4x + y + 6",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 23,
+   "answer": "f(x) = x + 2",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\ninj\nsub P: y:=0\nsub R2: x:=f(0)\nsub R3: x:=f(x)\nsub P: y:=x\nsub P: y:=-x\nsub R3: x:=f(-x)\nsub R3: x:=-x\nsub R7: x:=-x\nsub R13: x:=-x\nsub R19: x:=-x\nsub P: x:=1\nsub R3: x:=1\nsub R12: x:=-x\nsub P: y:=1\nsub R4: x:=f(1)\nsub R9: x:=0\nsub R10: x:=1\nsub R11: x:=f(0)\nconclude",
+   "solutions": [
+    "f(x) = x + 2"
+   ],
+   "flags": []
+  },
+  {
+   "id": "3927b42224",
+   "equation": "2(x - y)f(x + f(x)) + f(x) = f(y) + y - x",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 3,
+   "answer": "f(x) = -1/2; f(x) = c - x for any constant c",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = -1/2",
+    "f(x) = c - x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "ccbd0728e5",
+   "equation": "f(x - f(y)) = 2f(f(x) + f(y)) + -x - 3y",
+   "domain": "Q",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "b1082bd448",
+   "equation": "f(x) = 2f(f(x) - y) + 2y - x",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 6,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "inj\nsurj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "3212479c9a",
+   "equation": "f(-y) + f(x + f(y)) = f(y) + 3y - x",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 6,
+   "answer": "f(x) = c - x for any constant c",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = c - x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "7b64e74245",
+   "equation": "f(f(x)f(y)) = f(f(x) + y) + xy",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 14,
+   "answer": "f(x) = x + 1",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsub P: y:=x\nsub P: y:=-x\nsub P: x:=1\nsub R7: x:=0\nsub P: y:=1\ninj\ncancel\ncancel\ncancel\nconclude",
+   "solutions": [
+    "f(x) = x + 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "76fd86aa2d",
+   "equation": "f(x + y + f(y)) + f(x - f(y)) + f(f(x) - f(y)) = 0",
+   "domain": "R",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "79395a52c1",
+   "equation": "f(x^2) = 2f(f(x)) + f(x - y) + -x^2 - x - y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 5,
+   "answer": "f(x) = c - x for any constant c",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = c - x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "cc1f821477",
+   "equation": "f(f(x) + 1) + 2f(x - f(y)) = 3x - 2y + 1",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 1,
+   "seconds": 1.572,
+   "proof_len": 37,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "inj\nsurj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsub P: y:=x\nsub P: y:=-x\nsub P: x:=1\nsub R6: x:=0\nsub P: y:=1\nsub R9: x:=0\nsub P: x:=-1\nsub R16: x:=0\nsub P: y:=-1\nsub R19: x:=0\nsub P: x:=f(x)\nsub P: y:=f(y)\nsub P: x:=f(y)\nsub R25: x:=0\nsub R9: x:=f(f(0)) + 1\nsub R12: x:=f(f(0)) + 1\nsub P: y:=f(x)\nsub R30: x:=0\nsub P: x:=-f(y)\nsub R34: x:=0\nsub P: y:=-f(x)\nsub R35: x:=0\npre 0^3\nsub P: x:=a\nsub P: y:=a\ncancel\nsub R14: x:=0\ncancel\nsub R14: x:=f(f(0)) + 1\nsub R15: x:=-f(0)\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "7f4829147f",
+   "equation": "f(x + f(y)) + 2f(x) = 3x + y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 24,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "inj\nsurj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsub P: y:=x\nsub P: y:=-x\nsub P: x:=1\nsub R6: x:=0\nsub P: y:=1\nsub R9: x:=0\nsub P: x:=-1\nsub R16: x:=0\nsub P: y:=-1\nsub R19: x:=0\nsub P: x:=f(x)\nsub P: y:=f(y)\nsub P: x:=f(y)\nsub R16: x:=0\nsub P: y:=f(x)\nsub R24: x:=0\nsub R18: x:=-2f(0)\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "2db86730e9",
+   "equation": "f(f(x)) = f(2f(x)) + f(yf(x)) + -xy - x",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 20,
+   "answer": "f(x) = -x; f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\ninj\ncancel\ncancel\nsub P: y:=x\nsub P: y:=-x\nsub P: x:=1\nsurj\nsub R3: x:=0\nsub R4: x:=1\nsub R8: x:=f(1)\nsub P: y:=1\nsub P: x:=-1\nsub R7: x:=-1\nsub P: y:=-1\ncancel\nconclude",
+   "solutions": [
+    "f(x) = -x",
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "d4f357ee2b",
+   "equation": "f(y) = f(x - f(y))",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 5,
+   "answer": "f(x) = c for any constant c",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = c"
+   ],
+   "flags": []
+  },
+  {
+   "id": "28ba7e58f8",
+   "equation": "f(f(y)) = f(x - y) + x",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 6,
+   "answer": "f(x) = -x",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = -x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "ab1c7860d5",
+   "equation": "f(f(y)) = f(f(x) + y) + 2y - 4x",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 6,
+   "answer": "f(x) = 2x + c for any constant c",
+   "reason": "",
+   "proof": "inj\nsurj\nsub P: x:=y, y:=x\nsub P: x:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = 2x + c"
+   ],
+   "flags": []
+  },
+  {
+   "id": "6a07930068",
+   "equation": "f(x^2 + y) = 2f(f(x) - y)",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 6,
+   "answer": "f(x) = 0",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub R2: x:=f(0)\nsub R2: x:=-x\nconclude",
+   "solutions": [
+    "f(x) = 0"
+   ],
+   "flags": []
+  },
+  {
+   "id": "9cbc6a0a09",
+   "equation": "f(x + f(y)) = f(-y) + x + 2y",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 6,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "7b6334cee7",
+   "equation": "xf(x + f(y)) = f(f(x)) + xy + x^2 - x",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 14,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: y:=0\nsub P: y:=x\nsub R4: x:=f(0)\nsub P: y:=-x\nsub P: x:=1\ninj\nsurj\nsub R2: x:=1\ncancel\nsub P: y:=1\nsub R3: x:=f(x)\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "031322fe40",
+   "equation": "f(x^2 + f(y)) + f(f(x) + y) + f(-y) = 0",
+   "domain": "R",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "56ad06f094",
+   "equation": "2f(f(x)) = f(x + f(y)) + 6x - 4y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 8,
+   "answer": "f(x) = 2x",
+   "reason": "",
+   "proof": "inj\nsurj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub R2: x:=f(0)\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = 2x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "423a5222d1",
+   "equation": "f(xf(y)) + f(y) = xy + y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 4,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "da9f6016fa",
+   "equation": "2f(f(x) + f(y)) + f(x + y) = x + y",
+   "domain": "R",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "97d9c258ae",
+   "equation": "2f(x + y + f(y)) + f(f(y) - x) = x + 5y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 7,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub R2: x:=f(0)\nsub P: y:=0\nsub R2: x:=-x\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "2ddb257c86",
+   "equation": "f(f(x)) + f(xf(y)) = 4xy + 6x + 4",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 11,
+   "answer": "f(x) = 2x + 1",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: y:=0\nsub P: y:=x\nsub P: y:=-x\nsub P: x:=1\ninj\nsurj\nsub R2: x:=0\nsub R3: x:=1\nconclude",
+   "solutions": [
+    "f(x) = 2x + 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "e9679e7ec1",
+   "equation": "f(2x) + f(f(x)f(y)) = xy + 3x + y + 3",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 7,
+   "answer": "f(x) = x + 1",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsurj\nsub P: x:=0, y:=0\nsub P: x:=0\ninj\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = x + 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "a0aca4f47b",
+   "equation": "f(f(x) + f(y)) = f(-y) + x + 2",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 7,
+   "answer": "f(x) = -x - 1",
+   "reason": "",
+   "proof": "inj\nsurj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = -x - 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "0a0c924877",
+   "equation": "f(x + f(y)) = f(f(x) + f(y)) - 1",
+   "domain": "R",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "a45b988a74",
+   "equation": "f(f(x) - f(y)) = f(x + y)f(x) + x - xy - x^2 - y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 58,
+   "seconds": 1.572,
+   "proof_len": 76,
+   "answer": "f(x) = -x; f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\ninj\nsub P: y:=0\nsub P: y:=x\nsub P: y:=-x\nsub P: x:=1\nsub R8: x:=0\nsub P: y:=1\nsub R9: x:=0\nsub P: x:=-1\nsub R16: x:=0\nsub P: y:=-1\nsub R17: x:=0\nsub P: x:=f(x)\nsub P: y:=f(y)\nsub P: x:=f(y)\nsub R24: x:=0\nsub P: y:=f(x)\nsub R25: x:=0\nsub P: x:=-f(y)\nsub R32: x:=0\nsub P: y:=-f(x)\nsub R33: x:=0\nsplit R1\nsurj\nsub R8: x:=-f(-1)\nsub R9: x:=-f(1)\nsub R10: x:=f(x) - f(-x)\nsub R12: x:=-f(x)\nsub R8: x:=f(x) - f(-1)\nsub R8: x:=f(-1)\nsub R9: x:=f(-1) - f(x)\nsub R9: x:=f(x) - f(1)\nsub R9: x:=f(1)\nsub R6: x:=f(1) - f(x)\nsplit R4\nsub R4: x:=f(x)^2 - f(x) - x^2 + x\nsub R4: x:=f(y) - f(x)\nsub R4: x:=-f(x) - x\nsub R4: x:=f(x)\nsub R4: x:=f(x) - f(x)^2 + x^2 - x\nsub R4: x:=f(x) - f(y)\nsub R4: x:=f(x) + x\nsub R4: x:=-x\nsub R12: x:=-f(x) - 1\nsub R8: x:=-f(x) - 1\nsub R38: x:=-f(y)\nconclude\nsub R4: x:=f(x)^2 - f(x) - x^2 + x\nsub R4: x:=f(y) - f(x)\nsub R4: x:=-f(x) - x\nsub R4: x:=f(x)\nsub R4: x:=f(x) - f(x)^2 + x^2 - x\nsub R4: x:=f(x) - f(y)\nsub R4: x:=f(x) + x\nsub R4: x:=-x\nsub R12: x:=-f(x) - 1\nsub R12: x:=1 - f(x)\nsub R30: x:=-1\nsub R6: x:=f(x) - 1\nsub R6: x:=f(x) + 1\nsub R9: x:=-f(x) - 1\nsub R9: x:=1 - f(x)\nsub R5: x:=-f(x) - 1\nsub R5: x:=1 - f(x)\nsub R5: x:=-f(x) - 1\nconclude\nsub P: y:=y + x\nsub R32: x:=-f(0)\nsub R11: x:=1 - f(-1)\nsub R20: x:=1 - f(-1)\nsub R23: x:=1 - f(-1)\nsub R12: x:=11/5 - (2/5)f(1)\nsub R23: x:=6/5 - (2/5)f(1)",
+   "solutions": [
+    "f(x) = -x",
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "5e217056c6",
+   "equation": "f(2y) + 2f(f(x + y)) = 6",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 5,
+   "answer": "f(x) = 2",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = 2"
+   ],
+   "flags": []
+  },
+  {
+   "id": "b6d7a83255",
+   "equation": "f(f(y)) + f(f(x + y)) + f(x - f(y)) = y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 36,
+   "seconds": 1.572,
+   "proof_len": 31,
+   "answer": "f(x) = -x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\ninj\nsub P: y:=0\nsub P: y:=x\nsub P: y:=-x\nsub P: x:=1\nsub R6: x:=0\nsub P: y:=1\nsub R9: x:=0\nsub P: x:=-1\nsub R16: x:=0\nsub P: y:=-1\nsub R19: x:=0\nsub P: x:=f(x)\nsub P: y:=f(y)\nsub P: x:=f(y)\nsub R24: x:=0\nsub P: y:=f(x)\nsub R28: x:=0\nsub P: x:=-f(y)\nsub R32: x:=0\nsub P: y:=-f(x)\nsub R30: x:=0\nsub R36: x:=-f(y)\nsub R38: x:=0\nsub R29: x:=f(y)\nsub R39: x:=0\nsub R12: x:=f(f(0)) + f(0)\nconclude",
+   "solutions": [
+    "f(x) = -x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "077fee44e8",
+   "equation": "f(y^2) = 2f(f(y) - x)",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 5,
+   "answer": "f(x) = 0",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = 0"
+   ],
+   "flags": []
+  },
+  {
+   "id": "d3fddc4262",
+   "equation": "f(x - f(y))f(2y) + f(x + y + f(y)) = 6",
+   "domain": "R",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "0e78795ace",
+   "equation": "f(f(y))f(y) + f(f(x) + y) = f(2x + f(y)) + y^2 - x",
+   "domain": "Q",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "6e78529492",
+   "equation": "2f(f(x) + y) + f(-x) = 6x + 4y + 7",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 5,
+   "answer": "f(x) = 2x + 1",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = 2x + 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "40cf6a1c31",
+   "equation": "f(x) + f(f(x) - y) = 2x - y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 6,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "inj\nsurj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "871382b0e1",
+   "equation": "f(f(x)) = f(x^2 + f(y))",
+   "domain": "Q",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "dad723fc91",
+   "equation": "f(xy + x) + f(xf(y)) = 6 - 4x",
+   "domain": "R",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "5bb100b6a0",
+   "equation": "2f(f(y)) = 2f(f(x) + f(y)) + -2x - 2",
+   "domain": "Q",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "0c6b5c54dc",
+   "equation": "2f(xf(y)) + f(1) = 8xy + 4x + 5",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 1,
+   "seconds": 1.572,
+   "proof_len": 25,
+   "answer": "f(x) = 2x + 1",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: y:=0\nsurj\nsub P: y:=x\nsub P: y:=-x\nsub P: x:=1\ninj\nsub R4: x:=0\nsub P: y:=1\nsub P: x:=-1\nsub R7: x:=0\nsub P: y:=-1\nsub P: x:=f(x)\nsub P: y:=f(y)\nsub P: x:=f(y)\nsub R18: x:=0\nsub P: y:=f(x)\nsub P: x:=-f(y)\nsub R24: x:=0\nsub R8: x:=-f(0)^2\nsub R21: x:=-f(0)^2\nsub P: y:=-f(x)\nsplit R1\nconclude",
+   "solutions": [
+    "f(x) = 2x + 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "33863b2e36",
+   "equation": "f(x - f(y)) = f(x^2 + y) + x - x^2 - 2y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 11,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\ninj\ncancel\nsub P: y:=0\nsub P: y:=x\nsub P: y:=-x\nsub R2: x:=-x\ncancel\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "470cc21226",
+   "equation": "f(f(x)) + f(xy + x)f(1) = x",
+   "domain": "R",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "692da2bc10",
+   "equation": "f(f(x) + f(y)) + 2f(y) = x + 3y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 7,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "inj\nsurj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "ef9257446e",
+   "equation": "f(xy) = f(f(x) - f(y))",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 8,
+   "answer": "f(x) = c for any constant c",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0\nsub P: y:=0\nsub P: y:=x\nsub P: y:=-x\nsub P: x:=1\nsub R1: x:=1\nconclude",
+   "solutions": [
+    "f(x) = c"
+   ],
+   "flags": []
+  },
+  {
+   "id": "cc972f3adc",
+   "equation": "f(f(x)) + f(f(x) - y) + f(x + 2y) = x - y + 3",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 104,
+   "seconds": 1.572,
+   "proof_len": 37,
+   "answer": "f(x) = 3 - x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\ninj\nsub P: y:=x\nsub P: y:=-x\nsub P: x:=1\nsub R2: x:=1\nsub P: y:=1\nsub R9: x:=0\nsub P: x:=-1\nsub R4: x:=-1\nsub P: y:=-1\nsub R7: x:=0\nsub P: x:=f(x)\nsub R6: x:=f(x)\nsub R24: x:=0\nsub P: y:=f(y)\nsub P: x:=f(y)\nsub P: y:=f(x)\nsub R21: x:=0\nsub R22: x:=f(-1)\nsub P: x:=-f(y)\nsub R9: x:=-f(x)\nsub R35: x:=0\nsub P: y:=-f(x)\nsub R22: x:=0\nsub R17: x:=-2f(0)\nsub R11: x:=2\nsub R11: x:=-2\nsub P: x:=x - y\nsub R17: x:=x - y\nsub P: y:=y - f(x)\nsub R35: y:=-x\nsub R21: x:=-2f(x) - x\nconclude",
+   "solutions": [
+    "f(x) = 3 - x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "645edad046",
+   "equation": "2f(x - y) + f(f(y)) = 2x - y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 6,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "7b018bf269",
+   "equation": "f(f(x) + y) = f(x) + y - 1",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 5,
+   "answer": "f(x) = x - 1",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x - 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "e7dcabe4f7",
+   "equation": "2f(y)f(0) = 2f(x - f(y)) + 8y - 4x",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 7,
+   "answer": "f(x) = 2x",
+   "reason": "",
+   "proof": "inj\nsurj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = 2x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "a524b18e8d",
+   "equation": "f(x - f(y)) = f(f(x) - y)",
+   "domain": "Q",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "1056537874",
+   "equation": "f(yf(x)) = f(y) + xy - y",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 23,
+   "answer": "f(x) = 2 - x; f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0\nsub P: y:=x\nsub P: y:=-x\nsub P: x:=1\nsub P: y:=1\ninj\nsurj\ncancel\nsub P: x:=-1\nsub P: y:=-1\nsub R4: x:=0\nsub P: x:=f(x)\nsub P: y:=f(y)\nsub P: x:=f(y)\nsub R4: x:=-x\nsub R6: x:=-f(0)\nsub R7: x:=-f(x)\nsub R7: x:=-xf(x)\nsub R9: x:=-1\nsub R10: x:=-f(0)\nsub R5: x:=-f(x)\nconclude",
+   "solutions": [
+    "f(x) = 2 - x",
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "e160fab844",
+   "equation": "f(f(x) + y) + f(f(x))f(x) = -x^2 - y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 5,
+   "answer": "f(x) = -x - 1",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = -x - 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "18918cd88c",
+   "equation": "f(f(x)) + 2f(f(y)) = -x^4 - 2y^4",
+   "domain": "R",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "c53c982e35",
+   "equation": "2f(f(x)) + f(xy)f(y^2) = 3",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 11,
+   "seconds": 1.572,
+   "proof_len": 53,
+   "answer": "f(x) = -3; f(x) = 1",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsub P: y:=x\nsub P: y:=-x\nsub P: x:=1\nsub R2: x:=1\nsub R5: x:=0\nsub R6: x:=1\nsub P: y:=1\nsub R7: x:=f(0)\nsub R8: x:=xy\nsub R8: x:=-x^2\nsub R8: x:=x^2\nsub P: x:=-1\nsub R8: x:=-1\nsub R9: x:=f(-1)\nsub R10: x:=-x\nsub R17: x:=-x\nsub P: x:=f(x)\nsub R10: x:=3/2 - f(0)^2/2\nsub R11: x:=yf(x)\nsub R30: x:=f(0)\nsub P: y:=f(y)\nsub R9: x:=f(y)\nsub R11: x:=f(x)^2\nsub R11: x:=xf(y)\nsub R18: x:=f(x)\nsub R25: x:=f(x)\nsub R32: x:=0\nsub R12: x:=f(0)^2\nsub R38: x:=0\nsub R45: x:=0\nsub P: x:=f(y)\nsub R15: x:=xf(x)\nsub P: y:=f(x)\nsub P: x:=-f(y)\nsub R15: x:=f(-f(x))\nsub R15: x:=-f(x)\nsub R15: x:=-xf(x)\nsub R22: x:=-f(x)\nsub R34: x:=-f(x)\nsub R38: x:=0\nsub R23: x:=-f(0)\nsub R62: x:=-1\nsub R67: x:=0\nsub P: y:=-f(x)\nsplit R4\nsplit R6\nsplit R3\nconclude\nconclude",
+   "solutions": [
+    "f(x) = -3",
+    "f(x) = 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "7a68b062b0",
+   "equation": "f(x + 2y) = f(f(x)f(y)) + x - xy + 2y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 7,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\ninj\ncancel\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "28c3f19ad9",
+   "equation": "f(x) + f(f(x)) + 2f(x - f(y)) = 10x - 8y + 2",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 1,
+   "seconds": 1.572,
+   "proof_len": 38,
+   "answer": "f(x) = 2x + 1",
+   "reason": "",
+   "proof": "inj\nsurj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsub P: y:=x\nsub P: y:=-x\nsub P: x:=1\nsub R6: x:=0\nsub P: y:=1\nsub R9: x:=0\nsub P: x:=-1\nsub R16: x:=0\nsub P: y:=-1\nsub R19: x:=0\nsub P: x:=f(x)\nsub P: y:=f(y)\nsub P: x:=f(y)\nsub R25: x:=0\nsub P: y:=f(x)\nsub R28: x:=0\nsub P: x:=-f(y)\nsub R32: x:=0\nsub P: y:=-f(x)\nsub R35: x:=0\npre 0^3\nsub P: x:=a\nsub P: y:=a\nsub R11: x:=0\nsub R12: x:=-1\nsub R13: x:=1/4 - f(f(0))/8 - (3/8)f(0)\nsub R14: x:=1\nsub R15: x:=-f(0)\nsub R16: x:=f(0)\nsub R17: x:=-f(x)\nsub R19: x:=f(x)\nconclude",
+   "solutions": [
+    "f(x) = 2x + 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "11e374fac7",
+   "equation": "2f(f(x) + f(y)) = 2f(2x + y) + 6x + 4y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 9,
+   "answer": "f(x) = -x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\ninj\ncancel\nsub P: y:=0\nsub P: y:=x\nsub R2: x:=f(x)\nconclude",
+   "solutions": [
+    "f(x) = -x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "20a4152653",
+   "equation": "f(x + f(x)) + f(x^2 + f(y)) = x^2 + 2x + y + 8",
+   "domain": "Q",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "f0461bee01",
+   "equation": "f(xy) + f(f(y)) = 4y - 2xy",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 10,
+   "answer": "f(x) = c - 2x for any constant c",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\ninj\nsurj\nsub P: y:=x\nsub P: y:=-x\nsub R5: x:=-x\nsub P: x:=1\nconclude",
+   "solutions": [
+    "f(x) = c - 2x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "f229af9879",
+   "equation": "2f(f(y)) + f(x^2) = x^2 + 2y",
+   "domain": "R",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "cf805b689d",
+   "equation": "f(y)f(xy) = f(f(x)) + xy^2 - x",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 50,
+   "answer": "f(x) = -x; f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub R2: x:=f(0)\nsub R3: x:=f(x)\nsub R3: x:=f(y)\nsub R3: x:=xy\nsub P: y:=0\ninj\nsurj\nsub R3: x:=f(x)\nsub P: y:=x\nsub P: y:=-x\nsub R3: x:=-x\nsub R8: x:=-x\nsub P: x:=1\nsub R2: x:=-x\nsub R2: x:=xy\nsub R2: x:=-x^2\nsub R2: x:=x^2\nsub P: y:=1\nsub R2: x:=1\nsub R3: x:=-x\nsub R3: x:=xy\nsub R3: x:=-x^2\nsub R3: x:=x^2\nsub P: x:=-1\nsub R12: x:=-x^2\nsub P: y:=-1\nsub R3: x:=-1\nsub R6: x:=-1\nsub R20: x:=-x\nsub R9: x:=xy\nsub R9: x:=-x^2\nsub R9: x:=x^2\nsub P: x:=f(x)\nsub R5: x:=yf(x)\nsub R7: x:=yf(x)\nsub R9: x:=yf(x)\nsub P: y:=f(y)\nsub R5: x:=xf(y)\nsub R7: x:=xf(y)\nsub R9: x:=xf(y)\nsub P: x:=f(y)\nsub R5: x:=xf(x)\nsub R7: x:=xf(x)\nsub R9: x:=xf(x)\nsub R54: x:=1\nsub P: y:=f(x)\nconclude",
+   "solutions": [
+    "f(x) = -x",
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "2ea77c30bb",
+   "equation": "f(f(y) - x) + f(f(x)) = 2x + 4y + 6",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 7,
+   "answer": "f(x) = 2x + 1",
+   "reason": "",
+   "proof": "inj\nsurj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = 2x + 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "e36c4308d7",
+   "equation": "f(f(x) + 2y) = f(x^2 + f(y)) + x - x^2 + y",
+   "domain": "R",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "3ea81fe019",
+   "equation": "f(x + f(x)) + 2f(xf(y)) = 2xy",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 1,
+   "seconds": 1.572,
+   "proof_len": 31,
+   "answer": "f(x) = -x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: y:=0\nsub P: y:=x\nsub P: y:=-x\nsub P: x:=1\ninj\nsurj\nsub R2: x:=0\nsub P: y:=1\nsub P: x:=-1\nsub R7: x:=0\nsub P: y:=-1\nsub P: x:=f(x)\nsub P: y:=f(y)\nsub P: x:=f(y)\nsub R22: y:=0\nsub P: y:=f(x)\nsub P: x:=-f(y)\nsub R27: x:=0\nsub P: y:=-f(x)\nsub R26: x:=f(0)\nsub R29: x:=f(-f(0)) - f(0)\npre 0^3\nsub P: x:=a\nsub P: y:=a\nsub R9: x:=-1\ncancel\nsub R10: x:=1\ncancel\nconclude",
+   "solutions": [
+    "f(x) = -x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "9de3a5c4c1",
+   "equation": "f(f(y)) = f(-x) + y - x",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 7,
+   "answer": "f(x) = -x",
+   "reason": "",
+   "proof": "inj\nsurj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\ncancel\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = -x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "70aec41c83",
+   "equation": "f(xy + f(x)) + xf(x + y) = 2xy + x^2 + x",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 79,
+   "seconds": 1.572,
+   "proof_len": 27,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: y:=0\nsub R2: x:=f(0)\nsub P: y:=x\nsub P: y:=-x\nsub P: x:=1\nsub R4: x:=0\nsub P: y:=1\nsub P: x:=-1\nsub R13: x:=0\nsub P: y:=-1\nsub P: x:=f(x)\nsub P: y:=f(y)\nsub P: x:=f(y)\nsub R4: x:=-1\nsub P: y:=f(x)\nsub R21: x:=-1\nsub P: x:=-f(y)\nsub P: y:=-f(x)\nsub R15: x:=-x\nsub R6: x:=-x - 1\nsub P: y:=y/2\nsub R8: x:=1\nsub R7: x:=1\nsub R18: x:=2\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "f9f2cb24f9",
+   "equation": "yf(f(y)) = f(x + f(x)) + y^2 - 2x - 2y + 2",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 19,
+   "answer": "f(x) = x - 1",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\ninj\nsub P: y:=-x\nsub P: x:=1\nsub R3: x:=f(1) + 1\nsub R7: x:=f(0) + 2\nsub P: x:=-1\nsub P: y:=-1\nsub P: x:=f(x)\nsub P: y:=f(y)\nsub R6: x:=f(x) + x\nsub R6: x:=f(x) + x - 2\nsub R6: x:=x - 2\nsub R6: x:=f(-x)\nsub R6: x:=f(x)\nconclude",
+   "solutions": [
+    "f(x) = x - 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "7f59924eeb",
+   "equation": "f(f(y) - x) + 2f(f(y)) = 3y - x",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 7,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "inj\nsurj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "a5b8e0e8be",
+   "equation": "f(2x)f(x - y) = 2f(yf(x)) + f(2x + y)",
+   "domain": "R",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "4763c81e16",
+   "equation": "f(f(x) - y) = 2f(x + 1) + 3x - 3y - 6",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 5,
+   "answer": "f(x) = 3x",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = 3x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "8e302224a4",
+   "equation": "f(f(x) + f(y)) = f(2x) + 3x + y - 6",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 7,
+   "answer": "f(x) = 3 - x",
+   "reason": "",
+   "proof": "inj\nsurj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = 3 - x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "205ce5c029",
+   "equation": "f(f(x) - f(y)) + 2f(f(x) + 1) = 3x - y + 2",
+   "domain": "R",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "847b794a37",
+   "equation": "f(y - x) = f(f(x) + y) + -2x - 2",
+   "domain": "R",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "14d94fc24a",
+   "equation": "f(f(x)) + f(2x - y) = y - x + 3",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 5,
+   "answer": "f(x) = 3 - x",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = 3 - x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "1b89e49e83",
+   "equation": "2f(x + y) = f(f(x) + 1) + 4y - 3",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 5,
+   "answer": "f(x) = 2x + 1",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = 2x + 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "70288eceb3",
+   "equation": "f(x) = f(f(x)) + 2f(x + y) + -2x - 2y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 5,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "b18233deb4",
+   "equation": "f(f(x) - y) = 2f(x - y) + y - x",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 8,
+   "answer": "f(x) = x + c for any constant c",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\ninj\nsub P: y:=x\ncancel\nconclude",
+   "solutions": [
+    "f(x) = x + c"
+   ],
+   "flags": []
+  },
+  {
+   "id": "f73ee5ca35",
+   "equation": "f(f(y)) = f(xy + f(x)) + xy - x + y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 9,
+   "answer": "f(x) = c - x for any constant c",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0\ninj\nsurj\nsub P: y:=x\nsub P: y:=-x\nsub R1: x:=-x\nsub P: x:=1\nconclude",
+   "solutions": [
+    "f(x) = c - x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "83e907680c",
+   "equation": "f(x + y) = f(x + f(x)) + 2y - 4x",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 5,
+   "answer": "f(x) = 2x",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = 2x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "a365b3668e",
+   "equation": "f(x + y) + 2f(f(x) + f(y)) = 3x + 3y",
+   "domain": "R",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "2dc57862ad",
+   "equation": "2f(f(y)) + f(xf(y)) = f(x + f(y)) + xy - x + y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 20,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\ninj\nsurj\nsub P: y:=0\nsub P: y:=x\nsub P: y:=-x\nsub R4: x:=-x\nsub P: x:=1\nsub R6: x:=0\nsub P: y:=1\nsub R5: x:=1\nsub P: x:=-1\nsub R18: x:=0\nsub R13: x:=-f(0)\nsub R15: x:=-f(0)\nsub R21: x:=f(1)\nsub R24: x:=f(0)\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "d08dfd8042",
+   "equation": "f(x + 2y) + 2f(f(y)) = -x",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 6,
+   "answer": "f(x) = -x",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = -x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "c3680196ad",
+   "equation": "f(xy + x) + f(x - f(y)) = 2f(f(x) + y)f(x)",
+   "domain": "R",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "3de42428e3",
+   "equation": "f(x + y + f(y)) + f(x - y) = f(y)",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 21,
+   "answer": "f(x) = 0",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsub P: y:=x\nsub P: y:=-x\nsub P: x:=1\nsub R8: x:=0\nsub P: y:=1\nsub R9: x:=0\nsub P: x:=-1\nsub R18: x:=0\nsub P: y:=-1\nsub R21: x:=0\nsub P: x:=f(x)\nsub P: y:=f(y)\nsub P: x:=f(y)\nsub R18: x:=0\nsub P: y:=f(x)\nsub R18: x:=f(0)\nconclude",
+   "solutions": [
+    "f(x) = 0"
+   ],
+   "flags": []
+  },
+  {
+   "id": "a81c7e0865",
+   "equation": "f(x - f(y)) = f(xy) + xy - x - y + 3",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 8,
+   "answer": "f(x) = 3 - x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\ninj\nsurj\ncancel\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = 3 - x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "f221443459",
+   "equation": "f(yf(x)) = f(2f(x)) + xy - 2x - y + 2",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 1,
+   "seconds": 1.572,
+   "proof_len": 33,
+   "answer": "f(x) = x - 1; f(x) = 1 - x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsurj\nsub P: y:=0\ninj\nsub P: y:=x\nsub P: y:=-x\nsub P: x:=1\ncancel\nsub P: y:=1\nsub R5: x:=0\nsub P: x:=-1\nsub R8: x:=-1\nsub P: y:=-1\nsub R9: x:=0\nsub P: x:=f(x)\nsub R11: x:=f(x)\nsub R22: x:=0\nsub P: y:=f(y)\nsub P: x:=f(y)\nsub R26: x:=-f(0)\nsub P: y:=f(x)\nsub R24: x:=0\nsub R15: x:=f(0)^2\nsub P: x:=-f(y)\nsub R15: x:=-f(x)\nsub R31: x:=0\nsub P: y:=-f(x)\nsub R30: x:=0\nsplit R1\nconclude\nconclude",
+   "solutions": [
+    "f(x) = x - 1",
+    "f(x) = 1 - x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "b1ddcfb4ba",
+   "equation": "f(y^2) + f(f(x) + 1) = y^2 + x + 1",
+   "domain": "Q",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "08c10ed253",
+   "equation": "f(f(x) + y) = 2f(y^2) + x - 2y^2 + y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 17,
+   "seconds": 1.572,
+   "proof_len": 38,
+   "answer": "f(x) = x + c for any constant c",
+   "reason": "",
+   "proof": "inj\nsurj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsub P: y:=x\nsub P: y:=-x\nsub P: x:=1\nsub R6: x:=0\nsub P: y:=1\nsub R7: x:=0\nsub P: x:=-1\nsub R16: x:=0\nsub P: y:=-1\nsub R17: x:=0\nsub P: x:=f(x)\nsub P: y:=f(y)\nsub P: x:=f(y)\nsub R21: x:=0\nsub P: y:=f(x)\nsub R11: x:=f(-1)\nsub R20: x:=f(1)\nsub R28: x:=0\nsub P: x:=-f(y)\nsub R32: x:=0\ncancel\nsub P: y:=-f(x)\nsub R18: x:=-y\ncancel\nsub R9: x:=-f(x)\npre (-1)^2\nsub P: x:=a\nsub P: y:=a\nsub R11: x:=0\nsub R12: x:=f(0) - 1\nsub R13: x:=f(x)\nconclude",
+   "solutions": [
+    "f(x) = x + c"
+   ],
+   "flags": []
+  },
+  {
+   "id": "9d65081835",
+   "equation": "f(f(x) + y) + f(f(y)) = f(yf(x)) + x - xy + y + 3",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 1,
+   "seconds": 1.572,
+   "proof_len": 35,
+   "answer": "f(x) = x + 1",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\ninj\nsurj\nsub P: y:=x\nsub P: y:=-x\nsub R4: x:=-x\nsub P: x:=1\nsub R6: x:=0\nsub P: y:=1\nsub R7: x:=0\nsub P: x:=-1\nsub R18: x:=0\nsub P: y:=-1\nsub R19: x:=0\nsub P: x:=f(x)\nsub P: y:=f(y)\nsub R8: x:=f(y)\nsub R27: x:=0\nsub P: x:=f(y)\nsub R11: x:=f(-1)\nsub P: y:=f(x)\nsub R26: x:=0\nsub R30: x:=(3/2)f(0) - 3/2\nsub P: x:=-f(y)\nsub R38: x:=0\nsub P: y:=-f(x)\nsub R13: x:=-f(x)\nsub R36: x:=0\ncancel\npre 0\nsub P: x:=a\nconclude",
+   "solutions": [
+    "f(x) = x + 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "5227f66c36",
+   "equation": "f(f(x)) + 2f(f(x) - f(y)) = 12x - 8y",
+   "domain": "R",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "1c719514b0",
+   "equation": "yf(x + y) + f(f(x)) = xy + y^2 + x - y - 2",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 13,
+   "answer": "f(x) = x - 1",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub R2: x:=f(0)\nsub R3: x:=f(x)\nsub R3: x:=f(y)\nsub R3: x:=x + y\nsub P: y:=0\ninj\nsurj\nsub R3: x:=f(x)\nsub R5: x:=f(0)\nconclude",
+   "solutions": [
+    "f(x) = x - 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "0d5f5f7051",
+   "equation": "f(xf(y)) = f(y) + xy + y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 3,
+   "answer": "f(x) = -x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = -x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "e974d4c23f",
+   "equation": "f(x + y) + 2f(f(x) - y) = 2f(2f(x))",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 6,
+   "answer": "f(x) = 0",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub R2: x:=f(0)\nsub R3: x:=f(0) - x\nconclude",
+   "solutions": [
+    "f(x) = 0"
+   ],
+   "flags": []
+  },
+  {
+   "id": "93efafe0de",
+   "equation": "f(x + y + f(y)) = f(f(x) + 2y)",
+   "domain": "R",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "c52c6c2e2c",
+   "equation": "(x + y)f(f(x)) + f(x + y) = 2x + 2y + 2",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 4,
+   "answer": "f(x) = 2",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = 2"
+   ],
+   "flags": []
+  },
+  {
+   "id": "a388960655",
+   "equation": "f(x + f(y)) + 2f(f(x)) = f(f(x) + f(y)) + 2x + 3",
+   "domain": "Q",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "56452f4e38",
+   "equation": "f(f(x)) + f(f(y)) = x + y",
+   "domain": "Q",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "3509fe7caf",
+   "equation": "f(f(y)) = f(f(x) + y) + f(x + f(y)) + -2x - y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 6,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\ninj\nsurj\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "d29648800a",
+   "equation": "f(f(x) + f(y)) = x + y + 1",
+   "domain": "R",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "2901a59e49",
+   "equation": "f(f(x)) + f(x + 1) = f(xf(y))",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 11,
+   "answer": "f(x) = 0",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: y:=0\nsub P: y:=x\nsub P: y:=-x\nsub P: x:=1\nsub R2: x:=0\nsub R3: x:=1\nsub R6: x:=2\nsub P: y:=1\nconclude",
+   "solutions": [
+    "f(x) = 0"
+   ],
+   "flags": []
+  },
+  {
+   "id": "79fd089473",
+   "equation": "xf(2f(x)) = f(f(x))f(-y) + xy + 2x^2",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 18,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub R2: x:=-x\nsub R2: x:=f(0)\nsub P: y:=0\nsub R2: x:=f(0)\ninj\nsurj\nsub P: y:=x\nsub P: y:=-x\nsub P: x:=1\nsub R2: x:=0\nsub R3: x:=-x\nsub R3: x:=1\nsub R4: x:=f(1)\nsub R5: x:=2f(1)\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "2443d15867",
+   "equation": "f(x) + f(f(y))f(y) + f(x + f(y)) = y - y^2 - 2x",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 5,
+   "seconds": 1.572,
+   "proof_len": 30,
+   "answer": "f(x) = -x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsub P: y:=x\nsub P: y:=-x\nsub R8: x:=-x\nsub P: x:=1\nsub R4: x:=0\nsub P: y:=1\nsub R7: x:=0\nsub P: x:=-1\nsub R14: x:=0\nsub P: y:=-1\nsub R17: x:=0\nsub P: x:=f(x)\nsub P: y:=f(y)\nsub R21: x:=f(y)\nsub R28: x:=0\nsub P: x:=f(y)\nsub R15: x:=0\nsub P: y:=f(x)\nsub P: x:=-f(y)\nsub R14: x:=0\nsub R28: x:=2f(0)\nsub P: y:=-f(x)\nsub R29: x:=-f(x)\nsub R42: x:=0\nsplit R2\nconclude",
+   "solutions": [
+    "f(x) = -x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "a6475fbce7",
+   "equation": "f(xf(y)) = f(y^2) + xy - y^2",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 11,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0\nsub P: y:=0\nsub P: y:=x\nsub P: y:=-x\nsub P: x:=1\ninj\nsurj\ncancel\ncancel\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "df3409a68e",
+   "equation": "f(2y) + xf(f(x) + 1) = x^2 - x - 2y + 3",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 5,
+   "answer": "f(x) = 3 - x",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = 3 - x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "f9d557c4af",
+   "equation": "f(x + 1) + f(f(y) - x) = 0",
+   "domain": "Q",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "daea92847d",
+   "equation": "2f(x + y) = f(f(y))f(x^2 + y) + 2f(y) - 4",
+   "domain": "R",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "5c969f3667",
+   "equation": "f(f(x) - f(y)) + f(xy) = x^4 - x^2y^2 + y^4 + 2",
+   "domain": "R",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "6e68eec6aa",
+   "equation": "f(x) = 2f(f(x) + f(y))",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 5,
+   "answer": "f(x) = 0",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub R2: x:=0\nsub P: x:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = 0"
+   ],
+   "flags": []
+  },
+  {
+   "id": "6affb85a21",
+   "equation": "f(f(x) + 2y) = f(2x + y) + 8x - 2y",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 56,
+   "seconds": 1.572,
+   "proof_len": 29,
+   "answer": "f(x) = -2x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsub P: y:=x\nsub R6: x:=f(0)\ninj\nsub P: y:=-x\nsub P: x:=1\nsub R6: x:=0\nsub P: y:=1\nsub R3: x:=1\nsub P: x:=-1\nsub R18: x:=0\nsub P: y:=-1\nsub R5: x:=-1\nsub P: x:=f(x)\nsub P: y:=f(y)\nsub P: x:=f(y)\nsub P: y:=f(x)\nsub P: x:=-f(y)\nsub P: y:=-f(x)\nsub P: y:=x/2\nsub P: x:=x/2\nsub R6: x:=x/2\nsub R10: x:=x/2\nsub R24: x:=f(x) + x\nsub R14: x:=2x\nconclude",
+   "solutions": [
+    "f(x) = -2x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "f930e09ae9",
+   "equation": "f(x + f(y)) = (x - y)f(f(x) + y)",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 21,
+   "answer": "f(x) = 0",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsub P: y:=x\nsub P: y:=-x\nsub R10: x:=-x\nsub P: x:=1\nsub R8: x:=0\nsub P: y:=1\nsub R3: x:=1\nsub P: x:=-1\nsub R16: x:=0\nsub P: y:=-1\nsub R5: x:=-1\nsub P: x:=f(x)\nsub P: y:=f(y)\nsub P: x:=f(y)\nsub R27: x:=0\nsub R28: x:=f(0)\nconclude",
+   "solutions": [
+    "f(x) = 0"
+   ],
+   "flags": []
+  },
+  {
+   "id": "8c2953882e",
+   "equation": "f(x + 1) + f(f(x) + f(y)) = 2x + y + 9",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 7,
+   "answer": "f(x) = x + 2",
+   "reason": "",
+   "proof": "inj\nsurj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = x + 2"
+   ],
+   "flags": []
+  },
+  {
+   "id": "246fe4aa44",
+   "equation": "2f(0) = 2f(f(x)) + f(f(x) + f(y)) + 3 - 3x - y",
+   "domain": "R",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "3993471e4c",
+   "equation": "f(f(x) + f(y)) = 2f(-y) + x + 3y",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 7,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "inj\nsurj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "698701aeda",
+   "equation": "f(x - f(y)) + f(f(x)) = 4",
+   "domain": "Q",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "d3764534af",
+   "equation": "f(f(x) + 1) + f(y - x) = 4",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 4,
+   "answer": "f(x) = 2",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = 2"
+   ],
+   "flags": []
+  },
+  {
+   "id": "b062aa0692",
+   "equation": "f(x) + f(f(x) + 2y) = 0",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 4,
+   "answer": "f(x) = 0",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = 0"
+   ],
+   "flags": []
+  },
+  {
+   "id": "57382fa036",
+   "equation": "f(f(x)) + 2f(xf(y)) = 2xy - x - 4",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 11,
+   "answer": "f(x) = x - 1",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: y:=0\nsub P: y:=x\nsub P: y:=-x\nsub P: x:=1\ninj\nsurj\nsub R2: x:=0\nsub R3: x:=1\nconclude",
+   "solutions": [
+    "f(x) = x - 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "8151871edb",
+   "equation": "f(xf(y)) = f(1) + xy - x + 1",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 11,
+   "answer": "f(x) = 1 - x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: y:=0\nsurj\nsub P: y:=x\nsub P: y:=-x\nsub P: x:=1\ninj\nsub R4: x:=0\ncancel\nconclude",
+   "solutions": [
+    "f(x) = 1 - x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "c65569a21f",
+   "equation": "f(2x + y) + f(f(x) + f(y)) = f(f(x)) + 4x + 6y",
+   "domain": "Q",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "00b220be94",
+   "equation": "f(x - y) + f(x + y + f(y)) = y - 2x",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 8,
+   "answer": "f(x) = -x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsub P: y:=x\nsurj\nsub R7: x:=f(0)\nconclude",
+   "solutions": [
+    "f(x) = -x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "a3d6f0b277",
+   "equation": "f(f(y) - x) = f(x + y + f(y)) + -2x - y",
+   "domain": "Q",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "a33cb78602",
+   "equation": "f(2y) + f(x + f(y)) = f(f(x) - y) + 4y + 1",
+   "domain": "R",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "4e6f414cdc",
+   "equation": "f(yf(x)) = f(f(x)) + xy - x - y + 1",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 1,
+   "seconds": 1.572,
+   "proof_len": 49,
+   "answer": "f(x) = x - 1; f(x) = 1 - x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsurj\nsub P: y:=0\ninj\nsub P: y:=x\nsub P: y:=-x\nsub P: x:=1\ncancel\nsub P: x:=-1\nsub R5: x:=-1\nsub P: y:=-1\nsub R8: x:=0\nsub P: x:=f(x)\nsub R7: x:=f(x)\nsub R15: x:=0\nsub R16: x:=-f(0)\nsub P: y:=f(y)\nsub P: x:=f(y)\nsub R24: x:=-f(0)\nsub P: y:=f(x)\nsub R24: x:=0\nsub R16: x:=f(0)^2\nsub P: x:=-f(y)\nsub R12: x:=-f(x)\nsub R24: x:=0\nsub R33: x:=f(0) - x + 1\nsub R11: x:=f(0)^2\nsub R12: x:=f(x)f(y)\nsub R12: x:=f(x)^2\nsub R15: x:=x + f(0) - 1\nsub R14: x:=f(x)f(y)\nsub R14: x:=yf(x)\nsub R14: x:=f(x)^2\nsub P: y:=-f(x)\nsub R14: x:=xf(y)\nsub R17: x:=xy + f(0)y - y\nsub R17: x:=f(x)f(y)\nsub R17: x:=yf(x)\nsub R17: x:=-f(x)^2\nsub R17: x:=xf(y)\nsub R24: x:=x + f(0) - 1\nsub R21: x:=f(0)^2\nsub R22: x:=f(x)f(y)\nsub R22: x:=yf(x)\nsplit R1\nconclude\nconclude",
+   "solutions": [
+    "f(x) = x - 1",
+    "f(x) = 1 - x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "8e6b621c3c",
+   "equation": "f(x + f(y)) + f(f(x) + y) + f(f(x) - y) = x + y",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 8,
+   "answer": "f(x) = c - x for any constant c",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsub P: y:=x\nsub P: y:=-x\nsub R4: x:=-x\nconclude",
+   "solutions": [
+    "f(x) = c - x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "ce0f7d9a29",
+   "equation": "f(x + f(y)) + f(f(y)) = 2f(x - y) + 12y - 2x",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 23,
+   "answer": "f(x) = 2x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsub P: y:=x\nsub P: y:=-x\nsub R4: x:=-x\nsub P: x:=1\nsub R6: x:=0\nsub P: y:=1\nsub R9: x:=0\nsub P: x:=-1\nsub R18: x:=0\nsub P: y:=-1\nsub R7: x:=-1\nsub P: x:=f(x)\nsub P: y:=f(y)\nsub P: x:=f(y)\nsub R25: x:=0\nsub P: y:=f(x)\nsub R30: x:=0\nsub R8: x:=-f(0)\nconclude",
+   "solutions": [
+    "f(x) = 2x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "2bc17822e0",
+   "equation": "f(f(x)) = f(yf(x)) + 4x - 4xy",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 14,
+   "answer": "f(x) = -2x; f(x) = 2x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\ninj\nsurj\ncancel\ncancel\nsub P: y:=x\nsub P: y:=-x\nsub P: x:=1\nsub R3: x:=1\ncancel\nconclude",
+   "solutions": [
+    "f(x) = -2x",
+    "f(x) = 2x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "6796cc9e02",
+   "equation": "f(x + f(y)) + f(x + f(x)) = 3x + y - 4",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 8,
+   "answer": "f(x) = x - 1",
+   "reason": "",
+   "proof": "inj\nsurj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsub P: y:=x\nconclude",
+   "solutions": [
+    "f(x) = x - 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "34bca94213",
+   "equation": "f(x + y + f(y)) + f(f(y)) = 2x + 10y + 6",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 6,
+   "answer": "f(x) = 2x + 1",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = 2x + 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "769344f2ed",
+   "equation": "f(2x + f(y)) + f(x^2) = f(f(y)) + x^2 + 2x",
+   "domain": "R",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "3ebe981a12",
+   "equation": "f(y)f(-y) + f(yf(x)) = xy - y^2",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 16,
+   "answer": "f(x) = -x; f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=x\nsub P: y:=-x\nsub P: x:=1\nsub P: y:=1\ninj\nsurj\nsub R4: x:=0\nsub P: x:=-1\nsub P: y:=-1\nsub R9: x:=0\ncancel\ncancel\nconclude",
+   "solutions": [
+    "f(x) = -x",
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "dd7ef544b7",
+   "equation": "f(f(y) - x) + f(x - f(y)) + f(f(x) + y) = x + y",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 29,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsub P: y:=x\nsub P: y:=-x\nsub P: x:=1\nsub R6: x:=0\nsub P: y:=1\nsub R9: x:=0\nsub P: x:=-1\nsub R16: x:=0\nsub P: y:=-1\nsub R19: x:=0\nsub P: x:=f(x)\nsub P: y:=f(y)\nsub P: x:=f(y)\nsub R24: x:=0\nsub R25: x:=f(0)\nsub R8: x:=2f(0)\nsub R6: x:=-f(-1)\nsub P: y:=f(x)\nsub P: x:=-f(y)\nsub P: y:=-f(x)\nsub R4: x:=f(x) - x\nsurj\nsub R9: x:=f(x)\nsub R9: x:=-x\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "be97d740a4",
+   "equation": "f(f(x)) = 2f(f(y)) + x^4 - 2y^4",
+   "domain": "R",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "81e514fc78",
+   "equation": "f(y) = f(f(x) + y) + f(xy) + -xy - x",
+   "domain": "Q",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 8,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsub P: y:=x\nsub P: y:=-x\nsub P: x:=1\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "93002682cb",
+   "equation": "2f(f(x) - y) + 2f(f(y)) = 8",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 5,
+   "answer": "f(x) = 2",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = 2"
+   ],
+   "flags": []
+  },
+  {
+   "id": "4211e63e6a",
+   "equation": "2f(f(x) + f(y)) = 2f(x + f(y)) + 12x",
+   "domain": "R",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "9728febef0",
+   "equation": "f(x) + f(x - f(y)) = f(f(x) - f(y)) + x",
+   "domain": "Q",
+   "mohs": null,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 1.572,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "aafd6736ee",
+   "equation": "f(f(x)) = f(x + y) + 2x - 2y",
+   "domain": "R",
+   "mohs": null,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 1.572,
+   "proof_len": 5,
+   "answer": "f(x) = 2x",
+   "reason": "",
+   "proof": "surj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = 2x"
+   ],
+   "flags": []
+  }
+ ]
+}

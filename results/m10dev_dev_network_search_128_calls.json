@@ -1,0 +1,1093 @@
+{
+ "name": "m10dev_dev_network_search_128_calls",
+ "config": {
+  "suite": "dev",
+  "solver": "network, search (128 calls)",
+  "checkpoint": "checkpoints/m4/last.pt",
+  "solved_per_seed": [
+   21,
+   23,
+   21
+  ]
+ },
+ "provenance": {
+  "commit": "5e13035fd7a7d75c7282700b4a39c9abdbb3d4e5",
+  "dirty": false,
+  "time_utc": "2026-11-12T12:42:47Z",
+  "python": "3.12.15",
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "torch": "2.15.0",
+  "device": "cpu",
+  "checkpoint": "checkpoints/m4/last.pt",
+  "checkpoint_sha256": "827892d40a652a763e925e75c69d4eabce41f8e1ed881c9d205ceb1f903825f1",
+  "settings": {
+   "suites": [
+    "seed",
+    "dev"
+   ],
+   "heldout_per_tier": 200,
+   "sampling_seeds": [
+    1000,
+    1001,
+    1002
+   ],
+   "proposals_per_state": 8,
+   "subterm_proposals": 2,
+   "temperature": [
+    0.6,
+    0.8,
+    1.0,
+    1.0,
+    1.3,
+    1.6,
+    2.0,
+    3.0
+   ],
+   "value_weight": 0.0,
+   "greedy_budget": 32,
+   "search_budget": 128,
+   "big_budget": 2000,
+   "baseline_budgets": [
+    128,
+    2000
+   ],
+   "baseline_seconds": 120.0,
+   "baseline_workers": 3,
+   "max_depth": 16,
+   "routine_moves": {
+    "opening": true,
+    "ones": true,
+    "fterms": true,
+    "swap": true,
+    "instances": true,
+    "witness": true
+   }
+  }
+ },
+ "summary": {
+  "problems": 32,
+  "solved": 21,
+  "rate": 0.6562,
+  "mean_calls_solved": 9.7,
+  "median_calls_solved": 0,
+  "mean_seconds": 2.57
+ },
+ "by_mohs": {
+  "0M": [
+   3,
+   3
+  ],
+  "5M": [
+   6,
+   7
+  ],
+  "10M": [
+   3,
+   6
+  ],
+  "15M": [
+   7,
+   9
+  ],
+  "20M": [
+   1,
+   3
+  ],
+  "25M": [
+   0,
+   1
+  ],
+  "35M": [
+   1,
+   2
+  ],
+  "40M": [
+   0,
+   1
+  ]
+ },
+ "summary_unflagged": {
+  "problems": 20,
+  "solved": 13,
+  "rate": 0.65,
+  "mean_calls_solved": 1.6,
+  "median_calls_solved": 0,
+  "mean_seconds": 2.57
+ },
+ "by_mohs_unflagged": {
+  "0M": [
+   2,
+   2
+  ],
+  "5M": [
+   3,
+   4
+  ],
+  "10M": [
+   1,
+   2
+  ],
+  "15M": [
+   6,
+   8
+  ],
+  "20M": [
+   1,
+   3
+  ],
+  "25M": [
+   0,
+   1
+  ]
+ },
+ "per_seed": [
+  {
+   "imo-1992-2": [
+    1,
+    0
+   ],
+   "isl-2005-a4": [
+    0,
+    128
+   ],
+   "study-b09": [
+    1,
+    20
+   ],
+   "study-b14": [
+    1,
+    0
+   ],
+   "study-b15": [
+    0,
+    128
+   ],
+   "study-b17": [
+    1,
+    0
+   ],
+   "study-b19": [
+    1,
+    0
+   ],
+   "study-b20": [
+    1,
+    0
+   ],
+   "study-b21": [
+    1,
+    0
+   ],
+   "imo-2019-1-over-q": [
+    1,
+    0
+   ],
+   "classic-01": [
+    0,
+    128
+   ],
+   "classic-02": [
+    1,
+    0
+   ],
+   "classic-03": [
+    0,
+    128
+   ],
+   "classic-04": [
+    0,
+    128
+   ],
+   "classic-05": [
+    1,
+    1
+   ],
+   "classic-06": [
+    1,
+    0
+   ],
+   "classic-07": [
+    1,
+    0
+   ],
+   "classic-08": [
+    0,
+    128
+   ],
+   "classic-09": [
+    0,
+    128
+   ],
+   "classic-10": [
+    1,
+    0
+   ],
+   "egmo-2012-3": [
+    0,
+    128
+   ],
+   "france-04525b-ex14": [
+    1,
+    1
+   ],
+   "imo-1999-6": [
+    1,
+    89
+   ],
+   "imo-2015-5": [
+    0,
+    128
+   ],
+   "imo-2017-2": [
+    0,
+    128
+   ],
+   "inmo-2011-5": [
+    1,
+    0
+   ],
+   "singapore-2014-open-r2-p2": [
+    1,
+    93
+   ],
+   "swiss-mo-2006-1": [
+    1,
+    0
+   ],
+   "swiss-tst-2000-7": [
+    0,
+    128
+   ],
+   "switzerland-2010-6": [
+    1,
+    0
+   ],
+   "switzerland-tst-570013-3": [
+    1,
+    0
+   ],
+   "vietnam-2005-4": [
+    1,
+    0
+   ]
+  },
+  {
+   "imo-1992-2": [
+    1,
+    0
+   ],
+   "isl-2005-a4": [
+    1,
+    119
+   ],
+   "study-b09": [
+    1,
+    20
+   ],
+   "study-b14": [
+    1,
+    0
+   ],
+   "study-b15": [
+    0,
+    128
+   ],
+   "study-b17": [
+    1,
+    0
+   ],
+   "study-b19": [
+    1,
+    0
+   ],
+   "study-b20": [
+    1,
+    0
+   ],
+   "study-b21": [
+    1,
+    0
+   ],
+   "imo-2019-1-over-q": [
+    1,
+    0
+   ],
+   "classic-01": [
+    0,
+    128
+   ],
+   "classic-02": [
+    1,
+    0
+   ],
+   "classic-03": [
+    0,
+    128
+   ],
+   "classic-04": [
+    0,
+    128
+   ],
+   "classic-05": [
+    1,
+    1
+   ],
+   "classic-06": [
+    1,
+    0
+   ],
+   "classic-07": [
+    1,
+    0
+   ],
+   "classic-08": [
+    0,
+    128
+   ],
+   "classic-09": [
+    1,
+    75
+   ],
+   "classic-10": [
+    1,
+    0
+   ],
+   "egmo-2012-3": [
+    0,
+    128
+   ],
+   "france-04525b-ex14": [
+    1,
+    1
+   ],
+   "imo-1999-6": [
+    1,
+    105
+   ],
+   "imo-2015-5": [
+    0,
+    128
+   ],
+   "imo-2017-2": [
+    0,
+    128
+   ],
+   "inmo-2011-5": [
+    1,
+    0
+   ],
+   "singapore-2014-open-r2-p2": [
+    1,
+    19
+   ],
+   "swiss-mo-2006-1": [
+    1,
+    0
+   ],
+   "swiss-tst-2000-7": [
+    0,
+    128
+   ],
+   "switzerland-2010-6": [
+    1,
+    0
+   ],
+   "switzerland-tst-570013-3": [
+    1,
+    0
+   ],
+   "vietnam-2005-4": [
+    1,
+    0
+   ]
+  },
+  {
+   "imo-1992-2": [
+    1,
+    0
+   ],
+   "isl-2005-a4": [
+    0,
+    128
+   ],
+   "study-b09": [
+    1,
+    14
+   ],
+   "study-b14": [
+    1,
+    0
+   ],
+   "study-b15": [
+    0,
+    128
+   ],
+   "study-b17": [
+    1,
+    0
+   ],
+   "study-b19": [
+    1,
+    0
+   ],
+   "study-b20": [
+    1,
+    0
+   ],
+   "study-b21": [
+    1,
+    0
+   ],
+   "imo-2019-1-over-q": [
+    1,
+    0
+   ],
+   "classic-01": [
+    0,
+    128
+   ],
+   "classic-02": [
+    1,
+    0
+   ],
+   "classic-03": [
+    0,
+    128
+   ],
+   "classic-04": [
+    0,
+    128
+   ],
+   "classic-05": [
+    1,
+    1
+   ],
+   "classic-06": [
+    1,
+    0
+   ],
+   "classic-07": [
+    1,
+    0
+   ],
+   "classic-08": [
+    0,
+    128
+   ],
+   "classic-09": [
+    0,
+    128
+   ],
+   "classic-10": [
+    1,
+    0
+   ],
+   "egmo-2012-3": [
+    0,
+    128
+   ],
+   "france-04525b-ex14": [
+    1,
+    1
+   ],
+   "imo-1999-6": [
+    1,
+    92
+   ],
+   "imo-2015-5": [
+    0,
+    128
+   ],
+   "imo-2017-2": [
+    0,
+    128
+   ],
+   "inmo-2011-5": [
+    1,
+    0
+   ],
+   "singapore-2014-open-r2-p2": [
+    1,
+    6
+   ],
+   "swiss-mo-2006-1": [
+    1,
+    0
+   ],
+   "swiss-tst-2000-7": [
+    0,
+    128
+   ],
+   "switzerland-2010-6": [
+    1,
+    0
+   ],
+   "switzerland-tst-570013-3": [
+    1,
+    0
+   ],
+   "vietnam-2005-4": [
+    1,
+    0
+   ]
+  }
+ ],
+ "rows": [
+  {
+   "id": "imo-1992-2",
+   "equation": "f(x^2 + f(y)) = y + f(x)^2",
+   "domain": "R",
+   "mohs": 20,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 2.57,
+   "proof_len": 22,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "inj\nsurj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsub P: y:=x\nsub P: y:=-x\nsub R4: x:=-x\nsub P: x:=1\nsub R6: x:=0\nsub P: y:=1\nsub R11: x:=0\nsub P: x:=-1\nsub P: y:=-1\nsub R19: x:=0\nsub P: x:=f(x)\nsub P: y:=f(y)\nsub R8: x:=x^2 + y + f(0)^2\nsqadd\nsqlin\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "isl-2005-a4",
+   "equation": "f(x+y) + f(x)f(y) = f(xy) + 2xy + 1",
+   "domain": "R",
+   "mohs": 25,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 2.57,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "study-b09",
+   "equation": "f(f(x+y)) = f(x+y) + f(x)f(y) - xy",
+   "domain": "R",
+   "mohs": 15,
+   "solved": true,
+   "checker_calls": 20,
+   "seconds": 2.57,
+   "proof_len": 31,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=0, y:=0\nsub P: x:=0\nsub R2: x:=x + y\nsub P: y:=x\nsub R3: x:=2x\nsub P: y:=-x\nsub P: x:=1\nsub R7: x:=x + 1\nsub R11: x:=0\nsub P: x:=-1\nsub R3: x:=-1\nsub R4: x:=x - 1\nsub R13: x:=x - 1\nsub R9: x:=x + 1\nsub R24: x:=0\nsub P: x:=f(x)\nsub R18: x:=f(x) + y\nsub P: y:=f(y)\nsub R18: x:=f(y) + x\nsub P: x:=f(y)\nsub R18: x:=f(x) + x\nsub R31: x:=0\nsub P: x:=-f(y)\nsub R13: x:=-f(x)\nsub R19: x:=x - f(x)\nsub R34: x:=0\nsub R41: x:=0\nsub R10: x:=x - y\nsplit R6\nconclude\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "study-b14",
+   "equation": "f(xy + 1) = f(x)f(y) - f(y) - x + 2",
+   "domain": "R",
+   "mohs": 5,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 2.57,
+   "proof_len": 7,
+   "answer": "f(x) = x + 1",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\ninj\nsurj\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nconclude",
+   "solutions": [
+    "f(x) = x + 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "study-b15",
+   "equation": "f(f(x) + y) = f(f(x) - y) + 4f(x)y",
+   "domain": "R",
+   "mohs": 20,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 2.57,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "study-b17",
+   "equation": "f(f(x)^2 + f(y)) = xf(x) + y",
+   "domain": "R",
+   "mohs": 15,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 2.57,
+   "proof_len": 42,
+   "answer": "f(x) = -x; f(x) = x",
+   "reason": "",
+   "proof": "inj\nsurj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsub P: y:=x\nsub R6: x:=f(0)^2 + f(0)\nsub P: y:=-x\nsub P: x:=1\nsub R4: x:=0\ncancel\nsub R4: x:=f(1)^2\nsub P: y:=1\nsub P: x:=-1\nsub R17: x:=0\nsub R6: x:=f(-1)^2\nsub P: y:=-1\nsub P: x:=f(x)\ncancel\nsub R7: x:=-1\nsub R8: x:=f(x)^2 + f(-1)\nsub R8: x:=f(-1)^2\nsub R9: x:=f(x) + f(-1)^2\nsub R9: x:=f(x)^2 + f(1)\nsub R9: x:=f(1)^2\nsub R10: x:=f(x) + f(1)^2\nsub R10: x:=f(x)^2 + f(-x)\nsub R10: x:=f(x)^2 + f(x)\nsub R10: x:=f(y)^2 + f(x)\nsub P: y:=f(y)\nsub R10: x:=f(x)^2\nsub R10: x:=f(x)^2 + f(y)\nsub R10: x:=f(x)^2 + y\nsub R10: x:=f(y) + x^2\nsub R10: x:=-x\nsub R14: x:=-1\nsub R15: x:=f(x)^2 + f(-1)\nsub R15: x:=f(x) + f(-1)^2\nsub R13: x:=-1\nsub R14: x:=1\nconclude",
+   "solutions": [
+    "f(x) = -x",
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "study-b19",
+   "equation": "f(x+y) - 2f(x-y) + f(x) - 2f(y) = y - 2",
+   "domain": "R",
+   "mohs": 5,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 2.57,
+   "proof_len": 5,
+   "answer": "f(x) = x + 1",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub R2: x:=-x\nconclude",
+   "solutions": [
+    "f(x) = x + 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "study-b20",
+   "equation": "f(xy) = xf(x) + yf(y)",
+   "domain": "R",
+   "mohs": 0,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 2.57,
+   "proof_len": 3,
+   "answer": "f(x) = 0",
+   "reason": "",
+   "proof": "sub P: x:=0, y:=0\nsub P: x:=0\nconclude",
+   "solutions": [
+    "f(x) = 0"
+   ],
+   "flags": []
+  },
+  {
+   "id": "study-b21",
+   "equation": "2f(x) + f(1-x) = x^2",
+   "domain": "R",
+   "mohs": 0,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 2.57,
+   "proof_len": 4,
+   "answer": "f(x) = x^2/3 + (2/3)x - 1/3",
+   "reason": "",
+   "proof": "sub R1: x:=0\nsub R2: x:=1\nsub R3: x:=1 - x\nconclude",
+   "solutions": [
+    "f(x) = x^2/3 + (2/3)x - 1/3"
+   ],
+   "flags": []
+  },
+  {
+   "id": "imo-2019-1-over-q",
+   "equation": "f(2x) + 2f(y) = f(f(x+y))",
+   "domain": "Q",
+   "mohs": 5,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 2.57,
+   "proof_len": 7,
+   "answer": "f(x) = 0; f(x) = 2x + c for any constant c",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub R3: x:=x + y\nsub P: y:=0\ncauchy\nconclude",
+   "solutions": [
+    "f(x) = 0",
+    "f(x) = 2x + c"
+   ],
+   "flags": []
+  },
+  {
+   "id": "classic-01",
+   "equation": "f(x+y) + f(x)f(y) = f(xy) + f(x) + f(y)",
+   "domain": "R",
+   "mohs": 15,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 2.57,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "classic-02",
+   "equation": "f(f(x) + y) = f(x+y) + xf(y) - xy - x + 1",
+   "domain": "R",
+   "mohs": 10,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 2.57,
+   "proof_len": 24,
+   "answer": "f(x) = x + 1",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsub P: y:=x\nsub P: y:=-x\nsub P: x:=1\nsub R6: x:=0\nsub P: y:=1\nsub R5: x:=x + f(0)\nsub R3: x:=0\nsub R4: x:=f(x)\nsub R6: x:=0\nsub R7: x:=1\nsub R8: x:=f(x) + 1\nsub R9: x:=f(x) - x\nsub R9: x:=f(x) + x\nsub R9: x:=f(x) + y\nsub R9: x:=f(y) + x\nsub P: x:=-1\nsub R7: x:=-1\nsub R8: x:=x + f(0) - 1\nsub R8: x:=x - 1\nconclude",
+   "solutions": [
+    "f(x) = x + 1"
+   ],
+   "flags": []
+  },
+  {
+   "id": "classic-03",
+   "equation": "f(xf(y) + f(x)) = 2f(x) + xy",
+   "domain": "R",
+   "mohs": 10,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 2.57,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "classic-04",
+   "equation": "f(x+y)^2 = f(x)^2 + f(y)^2",
+   "domain": "R",
+   "mohs": 5,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 2.57,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "classic-05",
+   "equation": "f(xy)(x + f(y)) = x^2 f(y) + y^2 f(x)",
+   "domain": "R",
+   "mohs": 15,
+   "solved": true,
+   "checker_calls": 1,
+   "seconds": 2.57,
+   "proof_len": 49,
+   "answer": "f(x) = 0; f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: y:=x\nsub P: y:=-x\nsub R3: x:=-x\nsub R8: x:=-x\nsub P: x:=1\nsub R2: x:=1\nsub R3: x:=-x\nsub R3: x:=xy\nsub R3: x:=-x^2\nsub R3: x:=x^2\nsub P: y:=1\nsub R3: x:=-x\nsub R3: x:=xy\nsub R3: x:=-x^2\nsub R3: x:=x^2\nsub P: x:=-1\nsub R3: x:=-1\nsub R6: x:=-1\nsub R11: x:=-x^2\nsub P: y:=-1\nsub R20: x:=-x\nsub R9: x:=-x^2\nsub R9: x:=x^2\nsub P: x:=f(x)\nsub R5: x:=f(x)\nsub R5: x:=yf(x)\nsub R7: x:=f(x)\nsub R7: x:=yf(x)\nsub P: y:=f(y)\nsub R5: x:=xf(y)\nsub R7: x:=xf(y)\nsub P: x:=f(y)\nsub R5: x:=xf(x)\nsub R7: x:=xf(x)\nsub P: y:=f(x)\nsub P: x:=-f(y)\nsub R5: x:=-f(x)\nsub R7: x:=-f(x)\nsub R9: x:=-f(x)\nsub R9: x:=f(x)\nsub R13: x:=-f(x)\nsub P: y:=-f(x)\nsub R5: x:=-xf(x)\nsub R7: x:=-xf(x)\nsplit R2\nconclude\nconclude",
+   "solutions": [
+    "f(x) = 0",
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "classic-06",
+   "equation": "f(x^2 + y) = f(x)^2 + f(y)",
+   "domain": "R",
+   "mohs": 15,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 2.57,
+   "proof_len": 6,
+   "answer": "f(x) = 0; f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: y:=0\nsqadd\nsqlin\nconclude",
+   "solutions": [
+    "f(x) = 0",
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "classic-07",
+   "equation": "f(x^2 + f(y)) = xf(x) + y",
+   "domain": "R",
+   "mohs": 15,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 2.57,
+   "proof_len": 19,
+   "answer": "f(x) = -x; f(x) = x",
+   "reason": "",
+   "proof": "inj\nsurj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsub P: y:=x\nsub P: y:=-x\nsub R1: x:=-x\nsub P: x:=1\nsub R3: x:=0\ncancel\nsub P: y:=1\nsub P: y:=-1\nsub P: x:=f(x)\ncancel\nsub R3: x:=1\nsub R4: x:=f(x) + 1\nconclude",
+   "solutions": [
+    "f(x) = -x",
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "classic-08",
+   "equation": "f(f(x) + 2y) = 6x + f(f(y) - x)",
+   "domain": "R",
+   "mohs": 20,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 2.57,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "classic-09",
+   "equation": "f(x^3) + f(y^3) = (x + y)(f(x^2) + f(y^2) - f(xy))",
+   "domain": "R",
+   "mohs": 15,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 2.57,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": []
+  },
+  {
+   "id": "classic-10",
+   "equation": "f(xy + f(x)) = xf(y) + f(x)",
+   "domain": "R",
+   "mohs": 15,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 2.57,
+   "proof_len": 34,
+   "answer": "f(x) = 0; f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: y:=0\nsub R2: x:=f(0)\nsub P: y:=x\nsub P: y:=-x\nsub P: x:=1\nsub R4: x:=0\nsub P: y:=1\nsub P: x:=-1\nsub R13: x:=0\nsub P: y:=-1\nsub R10: x:=f(-1)\nsub R11: x:=f(1)\nsub R12: x:=f(x)\nsub R6: x:=f(x) - x^2\nsub P: x:=f(x)\nsub R6: x:=yf(x) + f(x)\nsub P: y:=f(y)\nsub P: x:=f(y)\nsub R6: x:=xf(x) + f(x)\nsub R11: x:=-1\nsub R12: x:=1\nsub R13: x:=f(-1) - x\nsub R13: x:=x + f(1)\nsub R12: x:=-1\nsub R13: x:=xf(x) + f(x)\nsub R13: x:=yf(x) + f(x)\nsub R13: x:=f(x) - x^2\nsub R16: x:=xf(x) + f(x)\nsub P: y:=f(x)\nsub R9: x:=1\nsub R10: x:=f(-1) - x\nconclude",
+   "solutions": [
+    "f(x) = 0",
+    "f(x) = x"
+   ],
+   "flags": []
+  },
+  {
+   "id": "egmo-2012-3",
+   "equation": "f(yf(x + y) + f(x)) = 4x + 2yf(x + y)",
+   "domain": "R",
+   "mohs": 10,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 2.57,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": [
+    "seen_in_development"
+   ]
+  },
+  {
+   "id": "france-04525b-ex14",
+   "equation": "f(xf(x) + f(y)) = f(x)^2 + y",
+   "domain": "R",
+   "mohs": 10,
+   "solved": true,
+   "checker_calls": 1,
+   "seconds": 2.57,
+   "proof_len": 35,
+   "answer": "f(x) = -x; f(x) = x",
+   "reason": "",
+   "proof": "inj\nsurj\nsub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsub P: y:=x\nsub P: y:=-x\nsub P: x:=1\nsub R6: x:=0\nsub P: y:=1\nsub R9: x:=0\nsub P: x:=-1\nsub R12: x:=-1\nsub R17: x:=0\nsub P: y:=-1\nsub R20: x:=0\nsub P: x:=f(x)\nsub P: y:=f(y)\nsub P: x:=f(y)\nsub R26: x:=0\nsub P: y:=f(x)\nsub R20: x:=0\nsub P: x:=-f(y)\nsub R33: x:=0\nsub P: y:=-f(x)\nsub R34: x:=0\npre 0^3\nsub P: x:=a\ncancel\ncancel\nsub R5: x:=xf(x) - f(1)\nsub R5: x:=f(x) + f(1)\nsub R5: x:=xf(x) - f(1)\nconclude",
+   "solutions": [
+    "f(x) = -x",
+    "f(x) = x"
+   ],
+   "flags": [
+    "seen_in_development"
+   ]
+  },
+  {
+   "id": "imo-1999-6",
+   "equation": "f(x - f(y)) = f(f(y)) + xf(y) + f(x) - 1",
+   "domain": "R",
+   "mohs": 35,
+   "solved": true,
+   "checker_calls": 89,
+   "seconds": 2.57,
+   "proof_len": 41,
+   "answer": "f(x) = 1 - x^2/2",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsub R2: x:=f(0)\nsub P: y:=x\nsub P: y:=-x\nsub P: x:=1\nsub R7: x:=0\nsub P: y:=1\nsub R10: x:=0\nsub R11: x:=f(1)\nsub P: x:=-1\nsub R18: x:=0\nsub P: y:=-1\nsub R21: x:=0\nsub R22: x:=f(-1)\nsub P: x:=f(x)\nsub P: y:=f(y)\nsub P: x:=f(y)\nsub R9: x:=f(y)\nsub R9: x:=-x\nsub R32: x:=0\nsub P: y:=f(x)\nsub R35: x:=0\nsub P: x:=-f(y)\nsub R16: x:=0\nsub P: y:=-f(x)\nsub R12: x:=-f(x)\nsub R37: x:=0\nsub R45: x:=0\nsub P: y:=y - 1\nsub R14: x:=y - 1\nsub P: y:=x - 1\nsub P: y:=y + f(x)\nsub R14: x:=f(x) + y\nsub R28: x:=f(x)\nsub R38: x:=0\nsub R39: x:=1 - f(0)\nsub R9: x:=1/2 - f(x)\nconclude",
+   "solutions": [
+    "f(x) = 1 - x^2/2"
+   ],
+   "flags": [
+    "seen_in_development"
+   ]
+  },
+  {
+   "id": "imo-2015-5",
+   "equation": "f(x + f(x + y)) + f(xy) = x + f(x + y) + yf(x)",
+   "domain": "R",
+   "mohs": 35,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 2.57,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": [
+    "seen_in_development"
+   ]
+  },
+  {
+   "id": "imo-2017-2",
+   "equation": "f(f(x)f(y)) + f(x + y) = f(xy)",
+   "domain": "R",
+   "mohs": 40,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 2.57,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": [
+    "seen_in_development"
+   ]
+  },
+  {
+   "id": "inmo-2011-5",
+   "equation": "f(x + y)f(x - y) = (f(x) + f(y))^2 - 4x^2f(y)",
+   "domain": "R",
+   "mohs": 10,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 2.57,
+   "proof_len": 16,
+   "answer": "f(x) = 0; f(x) = x^2",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub R2: x:=-x\nsub R2: x:=y - x\nsub R2: x:=x - y\nsub P: y:=x\nsub R2: x:=-x\nsub R2: x:=x - y\nsub R2: x:=x + y\nsub P: x:=1\nsub R2: x:=1\nsub R3: x:=1 - x\nsub R3: x:=x + 1\nsub P: y:=1\nconclude",
+   "solutions": [
+    "f(x) = 0",
+    "f(x) = x^2"
+   ],
+   "flags": [
+    "seen_in_development"
+   ]
+  },
+  {
+   "id": "singapore-2014-open-r2-p2",
+   "equation": "f(xf(y) + x) = xy + f(x)",
+   "domain": "R",
+   "mohs": 5,
+   "solved": true,
+   "checker_calls": 93,
+   "seconds": 2.57,
+   "proof_len": 21,
+   "answer": "f(x) = -x; f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: y:=0\nsub P: y:=x\nsub P: y:=-x\nsub P: x:=1\ninj\nsurj\ncancel\nsub P: y:=1\nsub P: x:=-1\nsub P: y:=-1\nsub P: x:=f(x)\nsub P: y:=f(y)\nsub P: x:=f(y)\nsub P: y:=f(x)\nsub P: x:=-f(y)\nsub P: y:=-f(x)\nsub R12: x:=1\nsub R8: x:=-f(1)\nsub R11: x:=f(-1) + 1\nconclude",
+   "solutions": [
+    "f(x) = -x",
+    "f(x) = x"
+   ],
+   "flags": [
+    "seen_in_development"
+   ]
+  },
+  {
+   "id": "swiss-mo-2006-1",
+   "equation": "y f(2x) - x f(2y) = 8xy(x^2 - y^2)",
+   "domain": "R",
+   "mohs": 0,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 2.57,
+   "proof_len": 4,
+   "answer": "f(x) = x^3 + cx for any constant c",
+   "reason": "",
+   "proof": "sub P: x:=0\nsub P: y:=-x\nsub P: x:=1\nconclude",
+   "solutions": [
+    "f(x) = x^3 + cx"
+   ],
+   "flags": [
+    "seen_in_development"
+   ]
+  },
+  {
+   "id": "swiss-tst-2000-7",
+   "equation": "f(f(x) + y) = f(x^2 - y) + 4y f(x)",
+   "domain": "R",
+   "mohs": 10,
+   "solved": false,
+   "checker_calls": 128,
+   "seconds": 2.57,
+   "proof_len": 0,
+   "answer": "",
+   "reason": "budget exhausted",
+   "proof": "",
+   "solutions": [],
+   "flags": [
+    "seen_in_development"
+   ]
+  },
+  {
+   "id": "switzerland-2010-6",
+   "equation": "f(f(x)) + f(f(y)) = 2y + f(x - y)",
+   "domain": "R",
+   "mohs": 5,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 2.57,
+   "proof_len": 6,
+   "answer": "f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsub P: y:=x\nconclude",
+   "solutions": [
+    "f(x) = x"
+   ],
+   "flags": [
+    "seen_in_development"
+   ]
+  },
+  {
+   "id": "switzerland-tst-570013-3",
+   "equation": "f((x - y)^2) = x^2 - 2y f(x) + f(y)^2",
+   "domain": "R",
+   "mohs": 5,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 2.57,
+   "proof_len": 7,
+   "answer": "f(x) = x + 1; f(x) = x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub P: y:=0\nsub R5: x:=x^2 - 2xy + y^2\nsub P: y:=x\nconclude",
+   "solutions": [
+    "f(x) = x + 1",
+    "f(x) = x"
+   ],
+   "flags": [
+    "seen_in_development"
+   ]
+  },
+  {
+   "id": "vietnam-2005-4",
+   "equation": "f(f(x - y)) = f(x)f(y) - f(x) + f(y) - xy",
+   "domain": "R",
+   "mohs": 15,
+   "solved": true,
+   "checker_calls": 0,
+   "seconds": 2.57,
+   "proof_len": 33,
+   "answer": "f(x) = -x",
+   "reason": "",
+   "proof": "sub P: x:=y, y:=x\nsub P: x:=0, y:=0\nsub P: x:=0\nsub R2: x:=y - x\nsub R3: x:=x - y\nsub P: y:=0\nsub R4: x:=-x\nsub R2: x:=-x\nsub R2: x:=f(0)\nsub R3: x:=f(y - x)\nsub R3: x:=y - x\nsub R3: x:=x - y\nsub R5: x:=y - x\nsub P: y:=x\nsub R9: x:=f(0)\nsub R10: x:=f(y) - f(x) + f(0)\nsub R11: x:=2f(0) - f(x)\nsub R8: x:=f(0)\nsub P: y:=-x\nsub R2: x:=f(2x)\nsub R7: x:=2x\nsub P: x:=1\nsub R4: x:=1\nsub R5: x:=1 - x\nsub R5: x:=f(1 - x)\nsub R8: x:=1\nsub R9: x:=1 - x\nsub R9: x:=f(1 - x)\nsub R9: x:=f(x)\nsub R9: x:=1\nsurj\nsub R10: x:=1 - x\nconclude",
+   "solutions": [
+    "f(x) = -x"
+   ],
+   "flags": [
+    "seen_in_development"
+   ]
+  }
+ ]
+}

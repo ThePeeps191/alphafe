@@ -1387,3 +1387,82 @@ full evaluation is part of the plan below.
 * **The real benchmark** is run once, after this, under its own protocol,
   and only if the seed, dev and held-out sets do not fall below their M9
   numbers.
+
+### Result of run m4
+
+**The run.** 25 self-play rounds and 1,886 gradient steps, against 23 rounds
+and 5,280 steps in m3. Two things cost steps and neither was planned:
+building the pool (6,649 disguised problems with 40,858 steps of known
+proofs) took 45 of the 150 minutes, because the time limit counts it, and a
+gradient step with the new encoder takes 1.2 seconds alone on the machine
+and about 3.7 next to six self-play workers. Each known-proof step was
+drawn about twice. Policy loss 0.57 and still falling; 994 pool problems
+solved at least once; self-play solve rate 0.10 rising to 0.32
+(`results/train_m4_log.json`).
+
+**Evaluation.** Commit `5e13035` (branch `encoder`: `main` plus the encoder),
+on the CPU, six processes side by side, three hours. Files
+`results/m10p2*`, `m10p3*`, `m10p4*`, `m10dev*`, `m10t12*`, `m10t34*`. No
+answer mismatch. "Untrained" is random weights in the same architecture.
+
+Planted suites, solved of 200 (trained rows: three sampling seeds):
+
+| | m4, no backtracking (32) | untrained, no backtracking (32) | m4, search (128) | untrained, search (128) | brute force (128) | brute force (2,000) |
+|---|---|---|---|---|---|---|
+| planted-2 | 146, 142, 143 | 18 | 168, 163, 169 | 47 | 63 | 109 |
+| planted-3 | 108, 102, 107 | 12 | 111, 110, 117 | 31 | 34 | 66 |
+| planted-4 | 77, 92, 77 | 9 | 78, 83, 76 | 19 | 22 | 48 |
+
+At 128 calls, split by the changes of variables that hide the problem
+(m3 from the baseline above, in the old encoder):
+
+| | only changes used in training: m4 | untrained | m3 | at least one change never used: m4 | untrained | m3 |
+|---|---|---|---|---|---|---|
+| planted-2 | 109, 109, 116 of 122 | 37 | 70 | 59, 54, 53 of 78 | 10 | 21 |
+| planted-3 | 73, 73, 75 of 109 | 16 | 29 | 38, 37, 42 of 91 | 15 | 22 |
+| planted-4 | 47, 52, 49 of 105 | 8 | 20 | 31, 31, 27 of 95 | 11 | 20 |
+
+The other sets (m4 over three seeds, then untrained):
+
+| | no backtracking (32) | search (128) | search (2,000) | brute force (2,000) |
+|---|---|---|---|---|
+| held-out tier 1 | 188, 188, 188 / 185 | 189, 189, 189 / 188 | | 190 |
+| held-out tier 2 | 193, 190, 193 / 185 | 192, 192, 193 / 190 | | 194 |
+| held-out tier 3 | 138, 137, 136 / 132 | 140, 142, 141 / 138 | | 144 |
+| held-out tier 4 | 102, 105, 101 / 102 | 107, 106, 107 / 107 | | 114 |
+| seed (51) | 46, 49, 47 / 45 | 48, 48, 49 / 45 | 49, 50, 50 / 48 | 50 |
+| dev (32) | 20, 19, 21 / 20 | 21, 23, 21 / 23 | 24, 24, 25 / 23 | 23 |
+
+Read against the plan:
+
+* **The network learned to undo a change of variables, and not only the
+  eleven it was shown.** On the problems that use a change kept out of
+  training it solves 53 to 59 of 78, 37 to 42 of 91 and 27 to 31 of 95 at
+  128 calls, against 10, 15 and 11 for random weights and 21, 22 and 20 for
+  m3. Both conditions written in advance hold in all three suites and for
+  every sampling seed. It does better still where it knew the changes (109
+  of 122 against 59 of 78 on planted-2), so part of what it learned is
+  specific to them.
+* **It finds these proofs almost without search.** With no backtracking and
+  32 calls m4 solves 146, 108 and 77, more than brute force with 2,000
+  calls (109, 66, 48). For random weights the same row is 18, 12 and 9.
+  This is the first set on which the trained network is worth more than a
+  sixty times larger search budget.
+* **None of it carries over to the other sets.** Tier 4 is 107 against
+  107, tier 3 is 140 to 142 against 138, the dev suite 21 to 23 against 23
+  at 128 calls and 24 or 25 against 23 at 2,000. The seed set is three
+  problems up at 128 calls (48 or 49 against 45) and one or two at 2,000.
+  The condition for progress there is not met.
+* **Why not.** The hand-written proofs of dev problems
+  (`scripts/diagnose.py --suite dev`) need a case split on f(0), a preimage
+  of a small constant, or a substitution that makes two arguments of f
+  equal. m4 gives the least likely step of those proofs a median
+  log-probability of -12.55; m3 gave -10.98. Undoing a change of variables
+  is one idea, and the pool now teaches that one.
+* **The encoder alone is not the gain.** Random weights solve 47, 31 and 19
+  at 128 calls in the new encoder and 60, 33 and 26 in the old one.
+* **The real benchmark was not run.** The seed set at 2,000 calls is 49 or
+  50, below the 51 of M9, and nothing on the development sets says the
+  real number would move. The encoder stays on its branch: merging it
+  would make the released weights unloadable for no measured gain on real
+  problems.
