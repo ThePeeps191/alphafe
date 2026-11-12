@@ -191,3 +191,67 @@ def test_step_decoder_gives_the_logits_of_the_full_decoder():
     model.train()
     with pytest.raises(ValueError):
         StepDecoder(model, memory, pad, k)
+
+
+def test_the_grid_puts_every_piece_of_a_state_on_its_own_row():
+    from alphafe.tokenizer import PIECE_STARTS, TOKEN_ID, VOCAB
+
+    model = PolicyValueNet(TINY)
+    views = [view_of("f(x+y) = f(x) + y"), view_of("f(x)f(y) = f(x+y) + xy")]
+    src = pad_batch([view.tokens for view in views], multiple=64)
+    row, column, rows = model.layout(src)
+    starts = {TOKEN_ID[token] for token in PIECE_STARTS}
+    width = TINY.row_width
+    for b, view in enumerate(views):
+        expected_row, expected_column = -1, 0
+        cells = set()
+        for s, token in enumerate(view.tokens):
+            if token in starts or expected_column == width:
+                expected_row, expected_column = expected_row + 1, 0
+            assert (int(row[b, s]), int(column[b, s])) == (expected_row, expected_column), (VOCAB[token], s)
+            cells.add((expected_row, expected_column))
+            expected_column += 1
+        assert len(cells) == len(view.tokens)                       # no two tokens share a cell
+        assert expected_row < rows - 1                               # the last row is kept for padding
+        assert all(int(row[b, s]) == rows - 1 for s in range(len(view.tokens), src.size(1)))
+    assert rows % 8 == 0
+
+
+def test_a_piece_longer_than_a_row_is_read_as_several_rows():
+    from alphafe.tokenizer import TOKEN_ID
+
+    model = PolicyValueNet(TINY)
+    width = TINY.row_width
+    tokens = [BOS, TOKEN_ID["DOM_R"], TOKEN_ID["SOLVE"], TOKEN_ID["P"]] + [TOKEN_ID["x"]] * (2 * width + 5) + [TOKEN_ID["R1"], TOKEN_ID["y"]]
+    row, column, rows = model.layout(torch.tensor([tokens]))
+    assert row[0].tolist() == [0, 0, 0] + [1] * width + [2] * width + [3] * 6 + [4, 4]
+    assert column[0, 3:3 + width].tolist() == list(range(width)) and column[0, -2:].tolist() == [0, 1]
+    memory, pad = model.eval().encode(torch.tensor([tokens]))
+    assert memory.shape == (1, len(tokens), TINY.d_model) and torch.isfinite(memory).all() and not pad.any()
+
+
+def test_a_state_is_encoded_the_same_alone_and_in_a_batch():
+    model = PolicyValueNet(TINY).eval()
+    short, long = view_of("f(x+y) = f(x) + y"), view_of("f(x)f(y) = f(x+y) + xy")
+    with torch.no_grad():
+        alone, _ = model.encode(pad_batch([short.tokens]))
+        together, pad = model.encode(pad_batch([long.tokens, short.tokens], multiple=64))
+    assert torch.allclose(alone[0], together[1, :len(short.tokens)], atol=1e-5)
+    assert pad[1, len(short.tokens):].all() and not pad[1, :len(short.tokens)].any()
+
+
+def test_every_identity_of_a_large_state_is_shown(monkeypatch):
+    from alphafe import env
+    from alphafe.tokenizer import MAX_STATE_TOKENS, _hidden_renaming
+
+    for name in env.ROUTINE:                                         # the full environment: IMO 2015/5 starts with dozens of identities
+        monkeypatch.setitem(env.ROUTINE, name, True)
+    state, _ = start(Problem.parse("f(x + f(x + y)) + f(xy) = x + f(x + y) + y*f(x)"))
+    assert not state.solved
+    view = encode_state(state)
+    rows = state.current.rows
+    wanted = [row for row in rows if not _hidden_renaming(row, set(rows))]
+    assert len(wanted) > 14 and len(view.tokens) <= MAX_STATE_TOKENS
+    assert len(view.row_index) == len(wanted)
+    memory, _ = PolicyValueNet(TINY).eval().encode(pad_batch([view.tokens]))
+    assert memory.shape[1] == len(view.tokens) and torch.isfinite(memory).all()

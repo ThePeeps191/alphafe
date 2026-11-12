@@ -1,6 +1,7 @@
 """The policy/value network: a small encoder-decoder transformer.
 
-* The encoder reads the tokenised proof state.
+* The encoder reads the tokenised proof state: each identity by itself first,
+  then the identities together (``PolicyValueNet.encode``).
 * The decoder writes the next move token by token (including the substitution
   term itself; there is no fixed pool of terms).
 * A value head on the pooled encoder output estimates whether the state is solvable.
@@ -21,25 +22,27 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from .tokenizer import (BOS, EOS, MAX_MOVE_TOKENS, MAX_STATE_TOKENS, PAD, VOCAB_SIZE, MoveGrammar,
-                        sample_subterm_move, sample_uniform)
+from .tokenizer import (BOS, EOS, MAX_MOVE_TOKENS, MAX_STATE_TOKENS, PAD, PIECE_STARTS, TOKEN_ID, VOCAB_SIZE,
+                        MoveGrammar, sample_subterm_move, sample_uniform)
 
 
 SRC_BUCKET = 64     # state token sequences are padded to a multiple of this
 TGT_BUCKET = 8      # move token sequences likewise
-MAX_SRC = 448       # longest state the network reads (longer ones are cut off)
+MAX_SRC = MAX_STATE_TOKENS + 256     # longest state the network reads (a hindsight example adds its goal)
+ROW_BUCKET = 8      # the number of pieces of a state is rounded up to a multiple of this
 
 
 @dataclass
 class ModelConfig:
     d_model: int = 192
     n_heads: int = 4
-    enc_layers: int = 4
+    enc_layers: int = 2         # layers that read one piece of the state (an identity) by itself
+    row_layers: int = 2         # layers that read the pieces together, one vector for each
+    row_width: int = 48         # tokens read together; a longer piece is read as several
     dec_layers: int = 2
     d_ff: int = 512
     dropout: float = 0.1
     vocab_size: int = VOCAB_SIZE
-    max_src: int = MAX_SRC
     max_tgt: int = 56
 
 
@@ -55,31 +58,83 @@ def pick_device(prefer: str = "auto") -> torch.device:
 
 
 class PolicyValueNet(nn.Module):
+    """Encoder, decoder and value head.
+
+    A state is a set of identities, up to 80 of them and often more than a
+    thousand tokens. Reading it as one sequence costs the square of its
+    length, which is why the network used to be shown the first 14
+    identities only. The encoder here works in two steps instead. The state
+    is laid out as a grid with one piece per row (the header, the original
+    equation, each identity; a piece longer than ``row_width`` tokens takes
+    several rows). ``enc_layers`` layers read every row by itself.
+    ``row_layers`` layers then read one vector per row, the output at its
+    first token, so every piece learns about the others. The output for a
+    token is its own output plus the vector of its row. The cost grows with
+    the number of tokens, and the decoder attends to all of them.
+    """
+
     def __init__(self, config: ModelConfig = ModelConfig()):
         super().__init__()
         self.config = config
         d = config.d_model
         self.embed = nn.Embedding(config.vocab_size, d, padding_idx=PAD)
-        self.src_pos = nn.Embedding(config.max_src, d)
+        self.src_pos = nn.Embedding(config.row_width, d)
         self.tgt_pos = nn.Embedding(config.max_tgt, d)
-        enc_layer = nn.TransformerEncoderLayer(d, config.n_heads, config.d_ff, config.dropout, batch_first=True, norm_first=True)
+
+        def layer():
+            return nn.TransformerEncoderLayer(d, config.n_heads, config.d_ff, config.dropout, batch_first=True, norm_first=True)
+
         dec_layer = nn.TransformerDecoderLayer(d, config.n_heads, config.d_ff, config.dropout, batch_first=True, norm_first=True)
-        self.encoder = nn.TransformerEncoder(enc_layer, config.enc_layers, enable_nested_tensor=False)
+        self.encoder = nn.TransformerEncoder(layer(), config.enc_layers, enable_nested_tensor=False)
+        self.row_encoder = nn.TransformerEncoder(layer(), config.row_layers, enable_nested_tensor=False)
         self.decoder = nn.TransformerDecoder(dec_layer, config.dec_layers)
         self.enc_norm = nn.LayerNorm(d)
         self.dec_norm = nn.LayerNorm(d)
         self.policy_head = nn.Linear(d, config.vocab_size)
         self.value_head = nn.Sequential(nn.Linear(d, d), nn.ReLU(), nn.Linear(d, 1))
+        self.piece_start = torch.zeros(config.vocab_size, dtype=torch.bool)     # stays on the CPU, see ``layout``
+        self.piece_start[[TOKEN_ID[token] for token in PIECE_STARTS]] = True
 
     def n_parameters(self) -> int:
         return sum(p.numel() for p in self.parameters())
 
+    def layout(self, src: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor, int]:
+        """Where each token of a batch of states sits in the grid: (row [B, S], column [B, S], number of rows).
+
+        A row begins at every token that starts a piece and again after
+        ``row_width`` tokens of one piece. Padding is sent to one spare row
+        at the end. Worked out on the CPU, where the running sums it needs
+        exist for integers on every backend.
+        """
+        width = self.config.row_width
+        flat = src.cpu()
+        index = torch.arange(flat.size(1)).expand_as(flat)
+        starts = self.piece_start[flat]
+        begun = torch.where(starts, index, torch.zeros_like(index)).cummax(dim=1).values     # where the token's piece began
+        column = (index - begun) % width
+        row = (starts | (column == 0)).long().cumsum(dim=1) - 1
+        pad = flat == PAD
+        rows = int(row.masked_fill(pad, 0).max()) + 2                  # one spare row for the padding
+        rows = -(-rows // ROW_BUCKET) * ROW_BUCKET
+        row = row.masked_fill(pad, rows - 1).clamp(min=0)
+        column = column.masked_fill(pad, 0)
+        return row.to(src.device), column.to(src.device), rows
+
     def encode(self, src: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
         """src: [B, S] token ids. Returns (memory [B, S, d], padding mask [B, S])."""
         pad = src == PAD
-        positions = torch.arange(src.size(1), device=src.device)
-        x = self.embed(src) + self.src_pos(positions)
-        memory = self.enc_norm(self.encoder(x, src_key_padding_mask=pad))
+        batch, width, d = src.size(0), self.config.row_width, self.config.d_model
+        row, column, rows = self.layout(src)
+        which = torch.arange(batch, device=src.device).unsqueeze(1).expand_as(src)
+        grid = torch.full((batch, rows, width), PAD, dtype=src.dtype, device=src.device)
+        grid[which, row, column] = src                                  # padding writes padding into the spare row
+        x = self.embed(grid) + self.src_pos(torch.arange(width, device=src.device))
+        empty = grid == PAD
+        blocked = empty.view(batch * rows, width).clone()
+        blocked[:, 0] = False                                           # a row of padding only must still attend to something
+        local = self.encoder(x.view(batch * rows, width, d), src_key_padding_mask=blocked).view(batch, rows, width, d)
+        context = self.row_encoder(local[:, :, 0], src_key_padding_mask=empty[:, :, 0])
+        memory = self.enc_norm(local[which, row, column] + context[which, row])
         return memory, pad
 
     def value(self, memory: torch.Tensor, pad: torch.Tensor) -> torch.Tensor:

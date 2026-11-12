@@ -40,7 +40,7 @@ import torch.nn.functional as F
 
 from .generate import N_TIERS, TRAIN_CHANGES, benchmark_keys, disguise, generate, protected_keys
 from .planted import planted_proof, written
-from .model import (DIVERSE, SRC_BUCKET, TGT_BUCKET, ModelConfig, NeuralProposer, PolicyValueNet, check_vocabulary,
+from .model import (DIVERSE, MAX_SRC, SRC_BUCKET, TGT_BUCKET, ModelConfig, NeuralProposer, PolicyValueNet, check_vocabulary,
                     pad_batch, pick_device, save_checkpoint)
 from .search import BestFirstSearch, GreedySearch, UniformProposer, run_searches
 from . import terms as T
@@ -422,11 +422,11 @@ def harvest(searches: list, buffer: ReplayBuffer, rng: random.Random, max_hindsi
         for node in rng.sample(derived, min(max_hindsight, len(derived))):
             goal = rng.choice(node.fresh)
             view = encode_state(node.parent.state, goal=goal)
-            if len(view.tokens) <= 440:
+            if len(view.tokens) <= MAX_TRAIN_SRC:
                 buffer.add("hindsight", (tuple(view.tokens), tuple(node.move_ids)))
 
 
-MAX_TRAIN_SRC = 360      # tokenizer.MAX_STATE_TOKENS: with routine substitutions applied, states are long
+MAX_TRAIN_SRC = MAX_SRC  # the longest state a training example may have
 LENGTH_GROUPS = 3        # a batch is processed in this many length-sorted pieces
 
 

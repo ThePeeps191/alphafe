@@ -26,8 +26,8 @@ from .algebra import Poly, atom_arg, div_exact, factor_hint, leading_mono, poly_
 from .checker import State, _single_atom
 from .moves import Move, Onto, Pre, Split, SplitNZ, Subst
 
-MAX_ROWS_SHOWN = 14
-MAX_STATE_TOKENS = 360
+MAX_ROWS_SHOWN = 80         # checker.MAX_ROWS: every identity of a case is shown
+MAX_STATE_TOKENS = 2048     # an identity that would take the state past this is left out
 MAX_TERM_TOKENS = 12        # tokens in one term written by the network
 MAX_MOVE_TOKENS = 2 + 3 * (1 + MAX_TERM_TOKENS) + 1
 MAX_LEAF_INT = 6
@@ -40,6 +40,10 @@ VARIABLES = ["x", "y", "z"]
 WITNESSES = ["a", "b", "c"]
 INTEGERS = [str(i) for i in range(T.MAX_INT_TOKEN + 1)] + [T.BIG_INT]
 HEADS = ["SUB", "SPLIT", "SPLITNZ", "PRE", "ONTO"]
+# A state is a list of pieces, each beginning with one of these: the header, the goal of a hindsight
+# example, the original equation, a quantity known to be nonzero, an identity. The network reads a
+# piece at a time and then the pieces together (model.PolicyValueNet.encode).
+PIECE_STARTS = ["<bos>", "GOAL", "P", "NZ"] + ROW_LABELS
 
 VOCAB = SPECIALS + STRUCTURE + ROW_LABELS + OPERATORS + VARIABLES + WITNESSES + INTEGERS + HEADS
 TOKEN_ID = {tok: i for i, tok in enumerate(VOCAB)}
@@ -127,7 +131,7 @@ def encode_state(state: State, goal: Optional[Poly] = None) -> StateView:
             continue
         piece = poly_tokens(row)
         if len(out) + 1 + len(piece) > MAX_STATE_TOKENS:
-            break
+            continue
         label = ROW_LABELS[shown]
         shown += 1
         out.append(label)
