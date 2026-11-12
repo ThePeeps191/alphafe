@@ -30,9 +30,11 @@ The design follows [AlphaGeometry](https://www.nature.com/articles/s41586-023-06
 and makes the routine deductions, including the standard opening
 substitutions (the example above needs nothing else). A search then proposes
 the moves that need an idea: other substitutions, case splits and preimages.
-The search is guided by a small neural network trained from random weights on
-its own attempts, or runs as plain brute force. AlphaFE is not affiliated with
-Google DeepMind.
+It runs as plain brute force, or as a sampling search over proposals from a
+small neural network trained from random weights on its own attempts. So far
+the training adds little: on real problems the same search with random
+weights does about as well (see [Results](#results)). AlphaFE is not
+affiliated with Google DeepMind.
 
 When AlphaFE cannot find a proof it says so. All it prints then is a guess
 among polynomials of degree at most 2, labelled as a guess. On competition
@@ -49,18 +51,18 @@ git clone https://github.com/ThePeeps191/alphafe.git
 cd alphafe
 uv venv .venv --python 3.12
 uv pip install --python .venv/bin/python -e ".[dev]"
-.venv/bin/python -m pytest            # about 500 tests, under a minute
+.venv/bin/python -m pytest            # about 680 tests
 ```
 
 Download the trained network (10 MB) from the
-[v0.2.0 release](https://github.com/ThePeeps191/alphafe/releases/tag/v0.2.0):
+[v0.3.0 release](https://github.com/ThePeeps191/alphafe/releases/tag/v0.3.0):
 
 ```sh
 mkdir -p checkpoints
 curl -L -o checkpoints/best.pt \
-  https://github.com/ThePeeps191/alphafe/releases/download/v0.2.0/alphafe-m1-56min.pt
+  https://github.com/ThePeeps191/alphafe/releases/download/v0.3.0/alphafe-m3-150min.pt
 shasum -a 256 checkpoints/best.pt
-# d4fa23410759e994abfe8a71032c049e38dbcb62d85a9e776b3ce5bb2957eaed
+# e52bcd02665f22f3ff2f44253e50aa8a83170aa1390a56b361805aa6f4ca63af
 ```
 
 Then solve something:
@@ -74,9 +76,8 @@ Without `checkpoints/best.pt`, `solve` uses brute-force search and says so.
 Proposals are sampled, so the proof and the number of checker calls vary from
 run to run unless you pass `--seed`. A checkpoint records the token vocabulary
 it was trained with, and loading one that does not match the code is
-refused. The version 1 weights (release v0.1.0) still load, but they were
-trained before the routine moves existed and are no better than brute force
-now.
+refused. The v0.2.0 weights still load and were not measurably worse on the
+development sets.
 
 ## Commands
 
@@ -133,64 +134,81 @@ committed before the run.
 
 Solved, of the 124:
 
-| | network, search (128 calls) | network, search (2,000 calls) | brute force (2,000 calls) | brute force (20,000 calls) |
-|---|---|---|---|---|
-| version 1 (first run) | 10 | 13 | 8 | 12 |
-| current version | 28 | 43 | 27 | 38 |
+| | network, search (128 calls) | network, search (2,000 calls) | untrained network, search (2,000 calls) | brute force (2,000 calls) | brute force (20,000 calls) |
+|---|---|---|---|---|---|
+| v0.1.0 | 10 | 13 | not run | 8 | 12 |
+| v0.2.0 | 28 | 43 | not run | 27 | 38 |
+| v0.3.0 | 35 | 45 | 44 | 38 | 43 |
 
-So about a third of real problems in scope are solved, up from a tenth. In
-the target range of 0M to 10M the best row solves 35 of 60. A few problems
-rated 15M and 20M are solved (5 of 32 and 3 of 19), and nothing rated 25M
-or above. On all 137 the best row solves 50.
+About a third of real problems in scope are solved (45 of 124, 36%). In the
+target range of 0M to 10M the best row solves 33 of 60. Above it, 6 of 32
+problems rated 15M are solved, 5 of 19 rated 20M and 1 of 13 rated 25M or
+more. On all 137 the best row solves 56.
 
-Three changes separate the two rows. The environment now makes the routine
-substitutions by itself (the standard openings, the swap, instances of
-identities already found). Two lemmas about squares were added. And the
-network was retrained from random weights for 56 minutes in that
-environment. Brute force has no network, so its gain (8 to 27) is the
-environment's share; the network adds the rest and is ahead of brute force
-at every budget tried.
+From v0.1.0 to v0.2.0 the count tripled. The environment began to make the
+routine substitutions by itself (the standard openings, the swap, instances
+of identities already found), two lemmas about squares were added, and the
+network was retrained.
+
+From v0.2.0 to v0.3.0 the best row gained two problems, which is within the
+spread of the sampling seeds (44 to 47 now, 42 to 43 before). What changed
+is the cheap end: the set of opening substitutions grew and the search began
+to take proposals from expressions already on the page, so the rows without
+a trained network roughly doubled at small budgets. The routine moves alone,
+with no search, now solve 24 of the 124, against 8 before. Four problems
+that v0.2.0 solved are no longer solved by any row.
+
+The trained network is not what solves these problems. With random weights
+the same search solves 44 at 2,000 calls against 45, and 35 at 128 calls
+against 35. The network row beats brute force at equal budget, but so does
+the untrained network, so that lead belongs to the search and the way it
+builds proposals and not to the weights.
+Training was 150 minutes of self-play on one laptop; most generated problems
+are solved before any search starts, so it saw few proofs longer than two
+moves. Issue #107 has the diagnosis and what is being tried.
 
 A "call" is one move sent to the checker. The network rows are the first of
-three sampling seeds, which solve 50, 50 and 49 of the 137. One training run
-was made. `RESULTS.md` (M7 and M8) has the protocols and the full tables.
+three sampling seeds. Each version is one training run. `RESULTS.md` (M7, M8
+and M9) has the protocols and the full tables.
 
 ### Synthetic and seed problems
 
 These are the problems the solver was developed on. They are much easier
 than the real ones, and choices between versions are made on them.
 
-Problems solved, out of 200 per held-out tier and 51 on the seed benchmark;
-a range is the minimum and maximum over three sampling seeds.
+Problems solved, out of 200 per held-out tier, 51 on the seed benchmark and
+32 on the development suite; a range is the minimum and maximum over three
+sampling seeds.
 
-| | network, no backtracking (32 calls) | network, search (128 calls) | brute force (128 calls) | brute force (2,000 calls) |
-|---|---|---|---|---|
-| held-out synthetic, tier 1 | 185-186 | 187-188 | 188 | 190 |
-| held-out synthetic, tier 2 | 186-190 | 191-194 | 185 | 192 |
-| held-out synthetic, tier 3 | 123-126 | 129-131 | 114 | 130 |
-| held-out synthetic, tier 4 | 81-82 | 87-89 | 79 | 99 |
-| seed benchmark | 41-42 | 43-45 | 42 | 48 |
+| | network, no backtracking (32 calls) | network, search (128 calls) | untrained network, search (128 calls) | brute force (128 calls) | brute force (2,000 calls) |
+|---|---|---|---|---|---|
+| held-out synthetic, tier 1 | 188-189 | 189-190 | 186 | 188 | 190 |
+| held-out synthetic, tier 2 | 193 | 193-194 | 188 | 191 | 194 |
+| held-out synthetic, tier 3 | 139-140 | 139-141 | 140 | 138 | 144 |
+| held-out synthetic, tier 4 | 103-105 | 107-109 | 104 | 97 | 114 |
+| seed benchmark | 45-48 | 45-46 | 47 | 47 | 50 |
+| development suite | 19-22 | 20-23 | 21 | 18 | 23 |
 
-At 128 calls the network solves more than brute force on tiers 2 to 4, and
-about as many as brute force does with 2,000 calls on tiers 2 and 3. With a
-large budget brute force is still ahead on tier 4 and on the seed set (48
-against 46 at 2,000 calls). The routine moves alone, without any search,
-solve 175, 154, 83 and 52 of the four tiers. Many held-out problems in
-tiers 3 and 4 have no proof at all, so 200 is not the ceiling.
+Training is worth three to six problems on tiers 1, 2 and 4 at 128 calls and
+nothing on tier 3, the seed benchmark or the development suite. Brute force
+with 2,000 calls matches or beats the network with 128 everywhere. With 2,000 calls the network solves all 51
+seed problems and 23 or 24 of the development suite. The routine moves
+alone, without any search, solve 182, 179, 120 and 78 of the four tiers.
+Many held-out problems in tiers 3 and 4 have no proof at all, so 200 is not
+the ceiling.
 
-A network proposal costs far more time than a checker call, and the routine
-moves made each checker call several times slower, so the network saves
-calls and does not save seconds: its 2,000-call row takes about 20 seconds
-per real problem.
+A network proposal costs far more time than a checker call, so the network
+row is slower than brute force at the same number of calls: about 18 seconds
+per real problem at 2,000 calls against under 3.
 
 No proof accepted by the checker has produced an answer different from a
 recorded one.
 
-The seed benchmark was used to choose fixes during development, so its
-numbers are optimistic. `RESULTS.md` has every measurement, including the
-first trained network, which did worse than an untrained one, the version 1
-network, which turned out to be worth nothing once the routine moves were
-free, and the experiments that made no difference.
+The seed benchmark and the development suite were used to choose fixes, so
+their numbers are optimistic; IMO 1992/2, for one, is in the development
+suite and is now solved by the routine moves and the square lemmas with no
+search. `RESULTS.md` has every measurement, including the experiments that
+made no difference.
 
 ## How it works
 
@@ -255,9 +273,15 @@ a map of the modules.
 * The generator produces two-variable problems only, so the network has never
   trained on a three-variable problem, though the four in the seed benchmark
   are solved.
-* Most seed problems the network misses hinge on one substitution to which it
-  gives almost no probability (`scripts/diagnose.py` shows which). Two others
-  need two nested case splits.
+* Training does not yet improve on random weights for real problems. The
+  network is shown only the first 14 identities of a proof state, and an
+  unsolved starting state has a median of 25. Self-play problems are mostly
+  solved by the routine moves, so few proofs with several proposed moves
+  reach the trainer.
+* On hand-written proofs of development problems the network gives the
+  needed move almost no probability at some step (`scripts/diagnose.py`
+  shows where), and three of eight such proofs contain a move its grammar
+  cannot write.
 
 ## More
 
